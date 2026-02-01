@@ -13,6 +13,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 export function AppHeader() {
   const today = new Date();
@@ -56,6 +57,8 @@ export function AppHeader() {
               </SheetHeader>
 
               <div className="mt-5 grid gap-2">
+                <ThemeToggle variant="row" />
+
                 <Button
                   asChild
                   variant="outline"
@@ -91,6 +94,8 @@ export function AppHeader() {
           <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
             OCA sources
           </Badge>
+
+          <ThemeToggle />
 
           <Button
             asChild

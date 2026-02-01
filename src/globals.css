@@ -4,7 +4,52 @@
 
 @layer base {
   :root {
-    /* Black + red palette (fixed) */
+    /* Light mode (default variables; app defaults to dark via next-themes) */
+    --background: 34 42% 96%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Vivid red */
+    --primary: 0 78% 52%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Warm neutral */
+    --secondary: 30 20% 92%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 30 18% 92%;
+    --muted-foreground: 220 10% 35%;
+
+    /* Warm gold */
+    --accent: 38 92% 55%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 70% 42%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 14% 84%;
+    --input: 30 14% 84%;
+    --ring: 0 78% 52%;
+
+    --radius: 1.1rem;
+
+    --sidebar-background: 34 42% 96%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 0 78% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 18% 92%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 30 14% 84%;
+    --sidebar-ring: 0 78% 52%;
+  }
+
+  .dark {
+    /* Current palette (dark mode) */
     --background: 0 0% 6%;
     --foreground: 0 0% 98%;
 
@@ -14,18 +59,15 @@
     --popover: 0 0% 9%;
     --popover-foreground: 0 0% 98%;
 
-    /* Vivid red */
     --primary: 0 78% 52%;
     --primary-foreground: 0 0% 100%;
 
-    /* Deep charcoal */
     --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 72%;
 
-    /* Complement: warm gold (sparingly) */
     --accent: 38 92% 55%;
     --accent-foreground: 0 0% 10%;
 
