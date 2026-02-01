@@ -11,18 +11,18 @@ export function LearnHub() {
   return (
     <div className="grid gap-4">
       <Tabs defaultValue="guide" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 rounded-2xl bg-muted/30 p-1">
-          <TabsTrigger value="guide" className="rounded-xl">
-            <BookOpen className="mr-2 h-4 w-4" /> Daily guide
+        <TabsList className="flex w-full justify-start gap-1 overflow-x-auto rounded-2xl bg-muted/30 p-1 [-webkit-overflow-scrolling:touch]">
+          <TabsTrigger value="guide" className="rounded-xl px-3">
+            <BookOpen className="mr-2 h-4 w-4" /> Guide
           </TabsTrigger>
-          <TabsTrigger value="qa" className="rounded-xl">
+          <TabsTrigger value="qa" className="rounded-xl px-3">
             <HelpCircle className="mr-2 h-4 w-4" /> Q&A
           </TabsTrigger>
-          <TabsTrigger value="bible" className="rounded-xl">
+          <TabsTrigger value="bible" className="rounded-xl px-3">
             <BookOpen className="mr-2 h-4 w-4" /> Bible
           </TabsTrigger>
-          <TabsTrigger value="library" className="rounded-xl">
-            <LibraryBig className="mr-2 h-4 w-4" /> OCA library
+          <TabsTrigger value="library" className="rounded-xl px-3">
+            <LibraryBig className="mr-2 h-4 w-4" /> Library
           </TabsTrigger>
         </TabsList>
 

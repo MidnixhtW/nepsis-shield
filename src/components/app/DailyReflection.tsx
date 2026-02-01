@@ -9,6 +9,12 @@ import {
   Sparkles,
   Trash2,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -157,9 +163,9 @@ export function DailyReflection() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">Reflection of the day</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Reflection</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              A simple prompt + a place to write.
+              One prompt + a few honest sentences.
             </p>
           </div>
           <Sparkles className="h-5 w-5 text-muted-foreground" />
@@ -170,9 +176,7 @@ export function DailyReflection() {
         {q.isLoading ? (
           <div className="text-sm text-muted-foreground">Loading today…</div>
         ) : q.isError ? (
-          <div className="text-sm text-destructive">
-            Couldn't load today's prompt.
-          </div>
+          <div className="text-sm text-destructive">Couldn't load today's prompt.</div>
         ) : q.data ? (
           <div className="grid gap-4">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
@@ -182,88 +186,91 @@ export function DailyReflection() {
               <p className="mt-2 text-sm leading-relaxed">{prompt}</p>
             </div>
 
-            <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
-              <div className="flex items-start gap-3">
-                <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold">Privacy</p>
-                  <p className="mt-1 text-xs leading-relaxed text-amber-900/80">
-                    Journal notes can be sensitive. If you enable saving, notes are stored on this device.
-                    Encryption helps protect notes at rest, but your passphrase is required to read them.
-                  </p>
+            {/* Collapsible privacy/settings to reduce visual clutter */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="privacy" className="border-none">
+                <AccordionTrigger className="rounded-2xl border border-amber-200/70 bg-amber-50/70 px-4 text-left text-amber-900 hover:no-underline">
+                  <span className="inline-flex items-center gap-2">
+                    <ShieldAlert className="h-4 w-4 text-amber-800" /> Privacy & saving
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-3">
+                  <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
+                    <p className="text-xs leading-relaxed text-amber-900/80">
+                      Journal notes can be sensitive. If you enable saving, notes are stored on this device. Encryption helps protect notes at rest, but your passphrase is required to read them.
+                    </p>
 
-                  <div className="mt-3 grid gap-2">
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
-                      <div>
-                        <p className="text-sm font-medium">Save on this device</p>
-                        <p className="text-xs text-amber-900/70">Off by default</p>
-                      </div>
-                      <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
-                      <div>
-                        <p className="text-sm font-medium">Encrypt saved notes</p>
-                        <p className="text-xs text-amber-900/70">Recommended</p>
-                      </div>
-                      <Switch
-                        checked={encryptEnabled}
-                        onCheckedChange={setEncryptEnabled}
-                        disabled={!saveEnabled}
-                      />
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
-                        onClick={() => {
-                          clearStoredByPrefix("reflection:");
-                          showSuccess("Saved reflections deleted.");
-                        }}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
-                      </Button>
-                      <p className="text-xs text-amber-900/70">
-                        Notes auto-expire after 30 days.
-                      </p>
-                    </div>
-                  </div>
-
-                  {saveEnabled && encryptEnabled ? (
-                    <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
-                      <p className="text-xs font-semibold tracking-wide text-amber-900/80">
-                        Passphrase (session-only)
-                      </p>
-                      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <div className="relative flex-1">
-                          <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-900/60" />
-                          <Input
-                            type="password"
-                            value={passphrase}
-                            onChange={(e) => setPassphrase(e.target.value)}
-                            placeholder="Enter a passphrase"
-                            className="h-11 rounded-2xl border-amber-200 bg-white/70 pl-10"
-                          />
+                    <div className="mt-3 grid gap-2">
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                        <div>
+                          <p className="text-sm font-medium">Save on this device</p>
+                          <p className="text-xs text-amber-900/70">Off by default</p>
                         </div>
+                        <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                        <div>
+                          <p className="text-sm font-medium">Encrypt saved notes</p>
+                          <p className="text-xs text-amber-900/70">Recommended</p>
+                        </div>
+                        <Switch
+                          checked={encryptEnabled}
+                          onCheckedChange={setEncryptEnabled}
+                          disabled={!saveEnabled}
+                        />
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
                         <Button
                           type="button"
-                          className="h-11 rounded-2xl"
-                          onClick={unlockAndLoad}
-                          disabled={!passphrase}
+                          variant="outline"
+                          className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
+                          onClick={() => {
+                            clearStoredByPrefix("reflection:");
+                            showSuccess("Saved reflections deleted.");
+                          }}
                         >
-                          Unlock
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
                         </Button>
+                        <p className="text-xs text-amber-900/70">Notes auto-expire after 30 days.</p>
                       </div>
-                      <p className="mt-2 text-xs text-amber-900/70">
-                        Your passphrase is never stored. If you forget it, encrypted notes can't be recovered.
-                      </p>
                     </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
+
+                    {saveEnabled && encryptEnabled ? (
+                      <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
+                        <p className="text-xs font-semibold tracking-wide text-amber-900/80">
+                          Passphrase (session-only)
+                        </p>
+                        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+                          <div className="relative flex-1">
+                            <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-900/60" />
+                            <Input
+                              type="password"
+                              value={passphrase}
+                              onChange={(e) => setPassphrase(e.target.value)}
+                              placeholder="Enter a passphrase"
+                              className="h-11 rounded-2xl border-amber-200 bg-white/70 pl-10"
+                            />
+                          </div>
+                          <Button
+                            type="button"
+                            className="h-11 rounded-2xl"
+                            onClick={unlockAndLoad}
+                            disabled={!passphrase}
+                          >
+                            Unlock
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-xs text-amber-900/70">
+                          Your passphrase is never stored. If you forget it, encrypted notes can't be recovered.
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
 
             <div>
               <p className="text-xs font-semibold tracking-wide text-muted-foreground">
@@ -288,9 +295,7 @@ export function DailyReflection() {
             </div>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-xs text-muted-foreground">
-                Source: OCA daily readings page.
-              </div>
+              <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
               <div className="flex gap-2">
                 <Button asChild variant="outline" className="rounded-2xl border-border/60">
                   <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noreferrer">

@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ExternalLink, Flame, Leaf, BookOpen, Hand, ScrollText, Sparkles, HelpCircle } from "lucide-react";
+import {
+  ExternalLink,
+  Flame,
+  Leaf,
+  BookOpen,
+  Hand,
+  GraduationCap,
+  Target,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,7 +75,7 @@ function QuickAction({
 export function TodayOverview({
   onNavigate,
 }: {
-  onNavigate?: (s: AppSection) => void;
+  onNavigate?: (to: { section: AppSection; tab?: string }) => void;
 }) {
   const today = useMemo(() => new Date(), []);
 
@@ -89,7 +97,7 @@ export function TodayOverview({
                 {format(today, "MMMM d")}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                One place for your daily Orthodox rhythm.
+                The essentials for today — nothing extra.
               </p>
             </div>
             <div className="hidden sm:block">
@@ -107,7 +115,7 @@ export function TodayOverview({
           <Separator className="my-4" />
 
           {q.isLoading ? (
-            <div className="text-sm text-muted-foreground">Loading today's details…</div>
+            <div className="text-sm text-muted-foreground">Loading today…</div>
           ) : q.isError ? (
             <div className="text-sm text-destructive">
               Couldn't load today's details. You can still open the OCA page.
@@ -139,9 +147,7 @@ export function TodayOverview({
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-xs text-muted-foreground">
-                  Verify today on the OCA daily page.
-                </div>
+                <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
                 <div className="flex gap-2">
                   <Button
                     asChild
@@ -160,9 +166,9 @@ export function TodayOverview({
       </Card>
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <h3 className="text-base font-semibold tracking-tight">Next step</h3>
+        <h3 className="text-base font-semibold tracking-tight">Next</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Jump straight to what you need.
+          One tap to get where you want.
         </p>
         <Separator className="my-4" />
 
@@ -170,51 +176,23 @@ export function TodayOverview({
           <QuickAction
             label="Prayers"
             icon={<Hand className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.("prayers")}
+            onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}
           />
           <QuickAction
             label="Readings"
             icon={<BookOpen className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.("readings")}
+            onClick={() => onNavigate?.({ section: "read" })}
           />
           <QuickAction
             label="Jesus Prayer"
-            icon={<ScrollText className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.("counter")}
+            icon={<Target className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
           />
           <QuickAction
-            label="Reflection"
-            icon={<Sparkles className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.("reflection")}
+            label="Learn"
+            icon={<GraduationCap className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "learn" })}
           />
-          <QuickAction
-            label="Catechesis"
-            icon={<HelpCircle className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.("catechesis")}
-          />
-        </div>
-      </Card>
-
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-semibold tracking-tight">Daily flow</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Morning prayer → Scripture → Jesus Prayer → reflection.
-            </p>
-          </div>
-          <ExternalLink className="h-4 w-4 text-muted-foreground" />
-        </div>
-        <Separator className="my-4" />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-semibold text-muted-foreground">Morning</p>
-            <p className="mt-1 text-sm">Begin simply; keep attention on Christ.</p>
-          </div>
-          <div className="rounded-2xl border border-border/60 bg-muted/30 p-4">
-            <p className="text-xs font-semibold text-muted-foreground">Evening</p>
-            <p className="mt-1 text-sm">End with thanksgiving; ask mercy where needed.</p>
-          </div>
         </div>
       </Card>
     </div>

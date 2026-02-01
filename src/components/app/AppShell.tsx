@@ -1,37 +1,18 @@
 import { ReactNode, useMemo, useState } from "react";
-import {
-  BookOpen,
-  Hand,
-  HelpCircle,
-  Home,
-  ScrollText,
-  Sparkles,
-} from "lucide-react";
+import { BookOpen, GraduationCap, Hand, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-export type AppSection =
-  | "today"
-  | "prayers"
-  | "counter"
-  | "readings"
-  | "reflection"
-  | "catechesis";
+export type AppSection = "today" | "pray" | "read" | "learn";
 
 const sectionMeta: Record<
   AppSection,
   { label: string; icon: typeof Home; aria: string }
 > = {
   today: { label: "Today", icon: Home, aria: "Today" },
-  prayers: { label: "Prayers", icon: Hand, aria: "Prayers" },
-  counter: {
-    label: "Jesus Prayer",
-    icon: ScrollText,
-    aria: "Jesus Prayer counter",
-  },
-  readings: { label: "Readings", icon: BookOpen, aria: "Epistle and Gospel" },
-  reflection: { label: "Reflect", icon: Sparkles, aria: "Reflection" },
-  catechesis: { label: "Learn", icon: HelpCircle, aria: "Catechesis" },
+  pray: { label: "Pray", icon: Hand, aria: "Prayer" },
+  read: { label: "Read", icon: BookOpen, aria: "Daily readings" },
+  learn: { label: "Learn", icon: GraduationCap, aria: "Learn" },
 };
 
 export function AppShell({
@@ -61,7 +42,7 @@ export function AppShell({
         </div>
       </div>
 
-      <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(9.75rem+env(safe-area-inset-bottom))] sm:px-4 sm:pb-[calc(7rem+env(safe-area-inset-bottom))]">
+      <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.75rem+env(safe-area-inset-bottom))] sm:px-4">
         {children}
       </main>
 
@@ -73,7 +54,7 @@ export function AppShell({
             onValueChange={(v) => {
               if (v) onSectionChange(v as AppSection);
             }}
-            className="grid grid-cols-3 gap-2 sm:grid-cols-6"
+            className="grid grid-cols-4 gap-2"
           >
             {items.map(([key, meta]) => {
               const Icon = meta.icon;
