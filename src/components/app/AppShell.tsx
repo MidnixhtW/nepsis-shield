@@ -25,7 +25,7 @@ const sectionMeta: Record<
   today: { label: "Today", icon: Home, aria: "Today" },
   prayers: { label: "Prayers", icon: Hand, aria: "Prayers" },
   counter: {
-    label: "Jesus Prayer Count",
+    label: "Jesus Prayer",
     icon: ScrollText,
     aria: "Jesus Prayer counter",
   },
@@ -56,22 +56,24 @@ export function AppShell({
   return (
     <div className="min-h-dvh bg-background">
       <div className="sticky top-0 z-30 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto w-full max-w-5xl px-4 py-3">{header}</div>
+        <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4">
+          {header}
+        </div>
       </div>
 
-      <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-4">
+      <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(9.75rem+env(safe-area-inset-bottom))] sm:px-4 sm:pb-[calc(7rem+env(safe-area-inset-bottom))]">
         {children}
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70">
-        <div className="mx-auto w-full max-w-5xl px-3 py-3">
+        <div className="mx-auto w-full max-w-5xl px-2 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-3">
           <ToggleGroup
             type="single"
             value={section}
             onValueChange={(v) => {
               if (v) onSectionChange(v as AppSection);
             }}
-            className="grid grid-cols-6 gap-2"
+            className="grid grid-cols-3 gap-2 sm:grid-cols-6"
           >
             {items.map(([key, meta]) => {
               const Icon = meta.icon;
@@ -82,13 +84,13 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-12 rounded-2xl border border-border/60 px-1 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10 data-[state=on]:text-primary",
+                    "h-14 rounded-2xl border border-border/60 px-1 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10 data-[state=on]:text-primary",
                     "transition-colors",
                   )}
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1">
-                    <Icon className={cn("h-4 w-4", active && "text-primary")} />
-                    <span className="text-[10px] font-medium leading-none">
+                    <Icon className={cn("h-[18px] w-[18px]", active && "text-primary")} />
+                    <span className="text-[11px] font-semibold leading-none tracking-tight">
                       {meta.label}
                     </span>
                   </div>
