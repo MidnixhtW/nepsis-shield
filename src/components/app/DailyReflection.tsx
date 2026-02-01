@@ -1,16 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ExternalLink, PenLine, Sparkles } from "lucide-react";
+import { ExternalLink, PenLine, ShieldAlert, Sparkles, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchDailyData } from "@/lib/orthocal";
+import {
+  cleanupStoredByPrefix,
+  clearStoredByPrefix,
+  getStoredItem,
+  setStoredItem,
+} from "@/lib/deviceStorage";
 
 function keyForDay(dayKey: string) {
   return `reflection:${dayKey}`;
 }
+
+function saveEnabledKey() {
+  return "privacy:reflection_save";
+}
+
+const NOTE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
 export function DailyReflection() {
   const today = useMemo(() => new Date(), []);
@@ -22,15 +35,34 @@ export function DailyReflection() {
   });
 
   const [note, setNote] = useState("");
+  const [saveEnabled, setSaveEnabled] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem(keyForDay(dayKey));
+    cleanupStoredByPrefix("reflection:", NOTE_TTL_MS);
+    const saved = getStoredItem<boolean>(saveEnabledKey());
+    setSaveEnabled(saved ?? false);
+  }, []);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    const raw = getStoredItem<string>(keyForDay(dayKey));
     setNote(raw ?? "");
-  }, [dayKey]);
+  }, [dayKey, saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(keyForDay(dayKey), note);
-  }, [note, dayKey]);
+    // Persist preference (not sensitive).
+    setStoredItem(saveEnabledKey(), saveEnabled);
+
+    // If enabling saving mid-session, capture the current note for today.
+    if (saveEnabled) {
+      setStoredItem(keyForDay(dayKey), note, { ttlMs: NOTE_TTL_MS });
+    }
+  }, [saveEnabled, dayKey, note]);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    setStoredItem(keyForDay(dayKey), note, { ttlMs: NOTE_TTL_MS });
+  }, [note, dayKey, saveEnabled]);
 
   const prompt = useMemo(() => {
     if (!q.data) return "";
@@ -62,7 +94,7 @@ export function DailyReflection() {
           <div className="text-sm text-muted-foreground">Loading today…</div>
         ) : q.isError ? (
           <div className="text-sm text-destructive">
-            Couldn’t load today’s prompt.
+            Couldn't load today's prompt.
           </div>
         ) : q.data ? (
           <div className="grid gap-4">
@@ -71,6 +103,42 @@ export function DailyReflection() {
                 Prompt
               </p>
               <p className="mt-2 text-sm leading-relaxed">{prompt}</p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">Privacy</p>
+                  <p className="mt-1 text-xs leading-relaxed text-amber-900/80">
+                    Journal notes can be sensitive. If you enable "Save on this device", they're stored in your browser's local storage and may be readable by scripts/extensions on this site.
+                  </p>
+
+                  <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                    <div>
+                      <p className="text-sm font-medium">Save on this device</p>
+                      <p className="text-xs text-amber-900/70">Off by default</p>
+                    </div>
+                    <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
+                      onClick={() => {
+                        clearStoredByPrefix("reflection:");
+                      }}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
+                    </Button>
+                    <p className="text-xs text-amber-900/70">
+                      Notes auto-expire after 30 days.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -84,7 +152,9 @@ export function DailyReflection() {
                 className="mt-2 min-h-32 rounded-2xl"
               />
               <p className="mt-2 text-xs text-muted-foreground">
-                Saved on this device.
+                {saveEnabled
+                  ? "Saved on this device (local storage)."
+                  : "Not saved locally — this text will be lost if you refresh."}
               </p>
             </div>
 

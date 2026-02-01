@@ -1,12 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { ExternalLink, ListChecks, RotateCcw } from "lucide-react";
+import { ExternalLink, ListChecks, RotateCcw, ShieldAlert, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import {
+  cleanupStoredByPrefix,
+  getStoredItem,
+  removeStoredItem,
+  setStoredItem,
+} from "@/lib/deviceStorage";
 
 type RulePrefs = {
   includeMeals: boolean;
@@ -30,38 +36,54 @@ function progressKey(dayKey: string) {
   return `prayer_rule:progress:${dayKey}`;
 }
 
-function safeJsonParse<T>(raw: string | null): T | null {
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
+function saveEnabledKey() {
+  return "privacy:prayer_rule_save";
 }
+
+const PROGRESS_TTL_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
+const CLEANUP_OLDER_THAN_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
 export function PrayerRule() {
   const dayKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
 
   const [prefs, setPrefs] = useState<RulePrefs>(DEFAULT_PREFS);
   const [progress, setProgress] = useState<RuleProgress>({});
+  const [saveEnabled, setSaveEnabled] = useState(true);
 
   useEffect(() => {
-    const savedPrefs = safeJsonParse<RulePrefs>(localStorage.getItem(prefsKey()));
+    cleanupStoredByPrefix("prayer_rule:progress:", CLEANUP_OLDER_THAN_MS);
+
+    const saved = getStoredItem<boolean>(saveEnabledKey());
+    setSaveEnabled(saved ?? true);
+  }, []);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+
+    const savedPrefs = getStoredItem<RulePrefs>(prefsKey());
     if (savedPrefs) setPrefs({ ...DEFAULT_PREFS, ...savedPrefs });
 
-    const savedProgress = safeJsonParse<RuleProgress>(
-      localStorage.getItem(progressKey(dayKey)),
-    );
+    const savedProgress = getStoredItem<RuleProgress>(progressKey(dayKey));
     setProgress(savedProgress ?? {});
-  }, [dayKey]);
+  }, [dayKey, saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(prefsKey(), JSON.stringify(prefs));
-  }, [prefs]);
+    setStoredItem(saveEnabledKey(), saveEnabled);
+    if (!saveEnabled) {
+      removeStoredItem(prefsKey());
+      cleanupStoredByPrefix("prayer_rule:progress:", 0);
+    }
+  }, [saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(progressKey(dayKey), JSON.stringify(progress));
-  }, [progress, dayKey]);
+    if (!saveEnabled) return;
+    setStoredItem(prefsKey(), prefs);
+  }, [prefs, saveEnabled]);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    setStoredItem(progressKey(dayKey), progress, { ttlMs: PROGRESS_TTL_MS });
+  }, [progress, dayKey, saveEnabled]);
 
   const steps = useMemo(() => {
     const base = [
@@ -96,7 +118,7 @@ export function PrayerRule() {
             </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            A simple “most common” daily rhythm. Use the sections below for the texts.
+            A simple "most common" daily rhythm. Use the sections below for the texts.
           </p>
         </div>
         <ListChecks className="h-5 w-5 text-muted-foreground" />
@@ -120,6 +142,11 @@ export function PrayerRule() {
               />
             </label>
           ))}
+          {!saveEnabled ? (
+            <p className="text-xs text-muted-foreground">
+              Saving is disabled — your checkmarks won't persist if you refresh.
+            </p>
+          ) : null}
         </div>
 
         <div className="grid gap-3 rounded-2xl border border-border/60 bg-background p-4">
@@ -181,6 +208,44 @@ export function PrayerRule() {
               </a>
             </Button>
           </div>
+        </div>
+
+        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold">Privacy</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                If enabled, your checkmarks and preferences are stored in local storage (behavioral data). Progress auto-expires after 14 days.
+              </p>
+            </div>
+            <ShieldAlert className="h-5 w-5 text-muted-foreground" />
+          </div>
+
+          <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
+            <div>
+              <p className="text-sm font-medium">Remember on this device</p>
+              <p className="text-xs text-muted-foreground">On by default</p>
+            </div>
+            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+          </div>
+
+          {saveEnabled ? (
+            <div className="mt-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-2xl border-border/60"
+                onClick={() => {
+                  removeStoredItem(prefsKey());
+                  cleanupStoredByPrefix("prayer_rule:progress:", 0);
+                  setPrefs(DEFAULT_PREFS);
+                  setProgress({});
+                }}
+              >
+                <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
+              </Button>
+            </div>
+          ) : null}
         </div>
 
         <p className="text-xs text-muted-foreground">

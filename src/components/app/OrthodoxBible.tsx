@@ -7,10 +7,11 @@ import {
   ChevronRight,
   ExternalLink,
   Search,
+  ShieldAlert,
   Star,
+  Trash2,
 } from "lucide-react";
 import { BIBLE_BOOKS, getBookByName } from "@/lib/bible/books";
-import type { BibleBook } from "@/lib/bible/books";
 import {
   apiNameForBook,
   translationForBook,
@@ -28,8 +29,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  getStoredItem,
+  removeStoredItem,
+  setStoredItem,
+} from "@/lib/deviceStorage";
 
 type BibleApiVerse = {
   book_name?: string;
@@ -65,14 +72,12 @@ function lastReadKey() {
   return "bible:last_read";
 }
 
-function safeJsonParse<T>(raw: string | null): T | null {
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
+function saveEnabledKey() {
+  return "privacy:bible_save";
 }
+
+const LAST_READ_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+const BOOKMARKS_TTL_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
 
 function splitBookChapter(ref: string): { bookName: string; chapter: number } | null {
   const match = ref.match(/^(.*)\s+(\d+)\s*$/);
@@ -93,18 +98,26 @@ export function OrthodoxBible() {
   const [refSubmitted, setRefSubmitted] = useState("John 3:16");
 
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
+  const [saveEnabled, setSaveEnabled] = useState(true);
 
   const book = useMemo(() => getBookByName(bookName), [bookName]);
   const apiBookName = apiNameForBook(book);
   const translation = translationForBook(book, base);
 
   useEffect(() => {
-    const saved = safeJsonParse<{
+    const saved = getStoredItem<boolean>(saveEnabledKey());
+    setSaveEnabled(saved ?? true);
+  }, []);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+
+    const saved = getStoredItem<{
       base?: BaseTranslation;
       bookName?: string;
       chapter?: number;
       ref?: string;
-    }>(localStorage.getItem(lastReadKey()));
+    }>(lastReadKey());
 
     if (saved?.base) setBase(saved.base);
     if (saved?.bookName) setBookName(saved.bookName);
@@ -114,22 +127,32 @@ export function OrthodoxBible() {
       setRefSubmitted(saved.ref);
     }
 
-    const savedBookmarks = safeJsonParse<BookmarkItem[]>(
-      localStorage.getItem(bookmarksKey()),
-    );
+    const savedBookmarks = getStoredItem<BookmarkItem[]>(bookmarksKey());
     setBookmarks(savedBookmarks ?? []);
-  }, []);
+  }, [saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(
+    setStoredItem(saveEnabledKey(), saveEnabled);
+
+    if (!saveEnabled) {
+      removeStoredItem(lastReadKey());
+      removeStoredItem(bookmarksKey());
+    }
+  }, [saveEnabled]);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    setStoredItem(
       lastReadKey(),
-      JSON.stringify({ base, bookName, chapter, ref: refSubmitted }),
+      { base, bookName, chapter, ref: refSubmitted },
+      { ttlMs: LAST_READ_TTL_MS },
     );
-  }, [base, bookName, chapter, refSubmitted]);
+  }, [base, bookName, chapter, refSubmitted, saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(bookmarksKey(), JSON.stringify(bookmarks));
-  }, [bookmarks]);
+    if (!saveEnabled) return;
+    setStoredItem(bookmarksKey(), bookmarks, { ttlMs: BOOKMARKS_TTL_MS });
+  }, [bookmarks, saveEnabled]);
 
   const browseRef = `${apiBookName} ${chapter}`;
   const browseUrl = useMemo(
@@ -202,7 +225,7 @@ export function OrthodoxBible() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Bible (OSB book list)</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              This aligns to the Orthodox Study Bible’s book list. Text is from public sources (not the OSB translation).
+              This aligns to the Orthodox Study Bible's book list. Text is from public sources (not the OSB translation).
             </p>
           </div>
           <BookOpen className="h-5 w-5 text-muted-foreground" />
@@ -253,6 +276,48 @@ export function OrthodoxBible() {
         <p className="mt-1 text-xs text-muted-foreground">
           Text API source: "https://bible-api.com" (public). OSB text (Septuagint-based OT + NKJV NT) is copyrighted.
         </p>
+      </Card>
+
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold tracking-tight">Privacy</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              If enabled, bookmarks and "last read" are stored locally (behavioral data).
+            </p>
+          </div>
+          <ShieldAlert className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <Separator className="my-4" />
+
+        <div className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">Remember on this device</p>
+              <p className="text-xs text-muted-foreground">
+                Last read auto-expires after 30 days.
+              </p>
+            </div>
+            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+          </div>
+
+          {saveEnabled ? (
+            <div className="mt-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-2xl border-border/60"
+                onClick={() => {
+                  removeStoredItem(lastReadKey());
+                  removeStoredItem(bookmarksKey());
+                  setBookmarks([]);
+                }}
+              >
+                <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </Card>
 
       <Tabs defaultValue="browse" className="w-full">
@@ -385,7 +450,7 @@ export function OrthodoxBible() {
               {browseQuery.isError ? (
                 <div className="space-y-2">
                   <p className="text-sm text-destructive">
-                    Couldn’t load {bookName} {chapter} from the current public text source.
+                    Couldn't load {bookName} {chapter} from the current public text source.
                   </p>
                   <p className="text-sm text-muted-foreground">
                     If this is an Orthodox-only book, it may not be available in this dataset.
@@ -484,7 +549,7 @@ export function OrthodoxBible() {
 
               {refQuery.isError ? (
                 <p className="text-sm text-destructive">
-                  Couldn’t load that reference. Try “John 3:16” or use Browse.
+                  Couldn't load that reference. Try "John 3:16" or use Browse.
                 </p>
               ) : refQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching passage…</p>
@@ -511,7 +576,9 @@ export function OrthodoxBible() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-base font-semibold tracking-tight">Bookmarks</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Saved on this device.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {saveEnabled ? "Saved on this device." : "Not saved locally — cleared on refresh."}
+                </p>
               </div>
               <Star className="h-5 w-5 text-muted-foreground" />
             </div>
