@@ -11,18 +11,30 @@ export function LearnHub() {
   return (
     <div className="grid gap-4">
       <Tabs defaultValue="guide" className="w-full">
-        <TabsList className="flex w-full justify-start gap-1 overflow-x-auto rounded-2xl bg-muted/30 p-1 [-webkit-overflow-scrolling:touch]">
-          <TabsTrigger value="guide" className="rounded-xl px-3">
-            <BookOpen className="mr-2 h-4 w-4" /> Guide
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-4">
+          <TabsTrigger
+            value="guide"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <BookOpen className="h-4 w-4 sm:mr-2" /> Guide
           </TabsTrigger>
-          <TabsTrigger value="qa" className="rounded-xl px-3">
-            <HelpCircle className="mr-2 h-4 w-4" /> Q&A
+          <TabsTrigger
+            value="qa"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <HelpCircle className="h-4 w-4 sm:mr-2" /> Q&A
           </TabsTrigger>
-          <TabsTrigger value="bible" className="rounded-xl px-3">
-            <BookOpen className="mr-2 h-4 w-4" /> Bible
+          <TabsTrigger
+            value="bible"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <BookOpen className="h-4 w-4 sm:mr-2" /> Bible
           </TabsTrigger>
-          <TabsTrigger value="library" className="rounded-xl px-3">
-            <LibraryBig className="mr-2 h-4 w-4" /> Library
+          <TabsTrigger
+            value="library"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <LibraryBig className="h-4 w-4 sm:mr-2" /> Library
           </TabsTrigger>
         </TabsList>
 
@@ -53,7 +65,12 @@ export function LearnHub() {
                 variant="outline"
                 className="h-11 justify-between rounded-2xl border-border/60"
               >
-                <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
+                <a
+                  href="https://www.oca.org/questions"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="min-w-0"
+                >
                   Questions & Answers <ExternalLink className="h-4 w-4" />
                 </a>
               </Button>
@@ -66,6 +83,7 @@ export function LearnHub() {
                   href="https://www.oca.org/orthodoxy/prayers"
                   target="_blank"
                   rel="noreferrer"
+                  className="min-w-0"
                 >
                   Prayers <ExternalLink className="h-4 w-4" />
                 </a>
@@ -79,6 +97,7 @@ export function LearnHub() {
                   href="https://www.oca.org/orthodoxy/the-orthodox-faith"
                   target="_blank"
                   rel="noreferrer"
+                  className="min-w-0"
                 >
                   The Orthodox Faith <ExternalLink className="h-4 w-4" />
                 </a>
@@ -88,14 +107,20 @@ export function LearnHub() {
                 variant="outline"
                 className="h-11 justify-between rounded-2xl border-border/60"
               >
-                <a href="https://www.oca.org/readings" target="_blank" rel="noreferrer">
+                <a
+                  href="https://www.oca.org/readings"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="min-w-0"
+                >
                   Daily readings <ExternalLink className="h-4 w-4" />
                 </a>
               </Button>
             </div>
 
-            <p className="mt-4 text-xs text-muted-foreground">
-              Sources: "https://www.oca.org/questions" • "https://www.oca.org/orthodoxy/prayers" •
+            <p className="mt-4 break-words text-xs text-muted-foreground">
+              Sources: "https://www.oca.org/questions" •
+              "https://www.oca.org/orthodoxy/prayers" •
               "https://www.oca.org/orthodoxy/the-orthodox-faith"
             </p>
           </Card>

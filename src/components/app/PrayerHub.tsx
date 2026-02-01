@@ -1,5 +1,4 @@
 import { ScrollText, Sparkles, Target, BookMarked } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
@@ -18,23 +17,30 @@ export function PrayerHub({
   return (
     <div className="grid gap-4">
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as PrayerTab)}>
-        <TabsList
-          className={cn(
-            "w-full justify-start gap-1 rounded-2xl bg-muted/30 p-1",
-            "flex overflow-x-auto [-webkit-overflow-scrolling:touch]",
-          )}
-        >
-          <TabsTrigger value="rule" className="rounded-xl px-3">
-            <BookMarked className="mr-2 h-4 w-4" /> Rule
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-4">
+          <TabsTrigger
+            value="rule"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <BookMarked className="h-4 w-4 sm:mr-2" /> Rule
           </TabsTrigger>
-          <TabsTrigger value="prayers" className="rounded-xl px-3">
-            <ScrollText className="mr-2 h-4 w-4" /> Texts
+          <TabsTrigger
+            value="prayers"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <ScrollText className="h-4 w-4 sm:mr-2" /> Texts
           </TabsTrigger>
-          <TabsTrigger value="counter" className="rounded-xl px-3">
-            <Target className="mr-2 h-4 w-4" /> Counter
+          <TabsTrigger
+            value="counter"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <Target className="h-4 w-4 sm:mr-2" /> Counter
           </TabsTrigger>
-          <TabsTrigger value="journal" className="rounded-xl px-3">
-            <Sparkles className="mr-2 h-4 w-4" /> Journal
+          <TabsTrigger
+            value="journal"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <Sparkles className="h-4 w-4 sm:mr-2" /> Journal
           </TabsTrigger>
         </TabsList>
 
