@@ -240,7 +240,7 @@ export function OrthodoxBible() {
       await navigator.clipboard.writeText(text);
       showSuccess("Copied to clipboard.");
     } catch {
-      showError("Couldn’t copy.");
+      showError("Couldn't copy.");
     }
   }
 
@@ -249,9 +249,9 @@ export function OrthodoxBible() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">Bible (OSB book list)</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Bible</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              This aligns to the Orthodox Study Bible’s book list. Text is from public sources (not the OSB translation).
+              OSB-aligned book list. Text is from public sources (not the OSB translation).
             </p>
           </div>
           <BookOpen className="h-5 w-5 text-muted-foreground" />
@@ -285,7 +285,11 @@ export function OrthodoxBible() {
             </ToggleGroup>
           </div>
 
-          <Button asChild variant="outline" className="h-9 rounded-2xl border-border/60">
+          <Button
+            asChild
+            variant="outline"
+            className="btn-wrap rounded-2xl border-border/60"
+          >
             <a
               href="https://www.oca.org/questions/scripture/canon-of-scripture"
               target="_blank"
@@ -300,7 +304,7 @@ export function OrthodoxBible() {
           Orthodox canon guidance source: "https://www.oca.org/questions/scripture/canon-of-scripture"
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
-          Text API source: "https://bible-api.com" (public). OSB text (Septuagint-based OT + NKJV NT) is copyrighted.
+          Text API source: "https://bible-api.com" (public). OSB text is copyrighted.
         </p>
       </Card>
 
@@ -309,7 +313,7 @@ export function OrthodoxBible() {
           <div>
             <h3 className="text-base font-semibold tracking-tight">Privacy</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              If enabled, bookmarks and “last read” are stored locally (behavioral data).
+              If enabled, bookmarks and "last read" are stored locally.
             </p>
           </div>
           <ShieldAlert className="h-5 w-5 text-muted-foreground" />
@@ -353,15 +357,24 @@ export function OrthodoxBible() {
       </Card>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-muted/30 p-1">
-          <TabsTrigger value="browse" className="rounded-xl">
-            <BookOpen className="mr-2 h-4 w-4" /> Browse
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-3">
+          <TabsTrigger
+            value="browse"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <BookOpen className="h-4 w-4 sm:mr-2" /> Browse
           </TabsTrigger>
-          <TabsTrigger value="reference" className="rounded-xl">
-            <Search className="mr-2 h-4 w-4" /> Reference
+          <TabsTrigger
+            value="reference"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <Search className="h-4 w-4 sm:mr-2" /> Reference
           </TabsTrigger>
-          <TabsTrigger value="bookmarks" className="rounded-xl">
-            <Star className="mr-2 h-4 w-4" /> Bookmarks
+          <TabsTrigger
+            value="bookmarks"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            <Star className="h-4 w-4 sm:mr-2" /> Bookmarks
           </TabsTrigger>
         </TabsList>
 
@@ -501,7 +514,7 @@ export function OrthodoxBible() {
               {browseQuery.isError ? (
                 <div className="space-y-2">
                   <p className="text-sm text-destructive">
-                    Couldn’t load {bookName} {chapter} from the current public text source.
+                    Couldn't load {bookName} {chapter} from the current public text source.
                   </p>
                   <p className="text-sm text-muted-foreground">
                     If this is an Orthodox-only book, it may not be available in this dataset.
@@ -633,7 +646,7 @@ export function OrthodoxBible() {
 
               {refQuery.isError ? (
                 <p className="text-sm text-destructive">
-                  Couldn’t load that reference. Try “John 3:16” or use Browse.
+                  Couldn't load that reference. Try "John 3:16" or use Browse.
                 </p>
               ) : refQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching passage…</p>
@@ -740,10 +753,10 @@ export function OrthodoxBible() {
         <h3 className="text-base font-semibold tracking-tight">Orthodox note</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           The OSB uses a Septuagint-based Old Testament and the NKJV for the New Testament.
-          This in-app reader matches the OSB *book list* and uses public text sources.
+          This in-app reader matches the OSB book list and uses public text sources.
         </p>
         <div className="mt-4">
-          <Button asChild className="rounded-2xl">
+          <Button asChild className="btn-wrap rounded-2xl">
             <a
               href="https://www.oca.org/questions/scripture/canon-of-scripture"
               target="_blank"

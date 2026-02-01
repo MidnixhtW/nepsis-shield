@@ -77,3 +77,10 @@
     letter-spacing: -0.01em;
   }
 }
+
+@layer utilities {
+  /* For long labels/URLs inside buttons: prevents any horizontal overflow. */
+  .btn-wrap {
+    @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
+  }
+}

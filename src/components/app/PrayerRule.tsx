@@ -6,8 +6,15 @@ import {
   ListChecks,
   RotateCcw,
   ShieldAlert,
+  SlidersHorizontal,
   Trash2,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -122,7 +129,7 @@ export function PrayerRule() {
             </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            A simple "most common" daily rhythm. Use the sections below for the texts.
+            Keep it small. Keep it daily.
           </p>
         </div>
         <ListChecks className="h-5 w-5 text-muted-foreground" />
@@ -148,132 +155,170 @@ export function PrayerRule() {
           ))}
           {!saveEnabled ? (
             <p className="text-xs text-muted-foreground">
-              Saving is disabled — your checkmarks won't persist if you refresh.
+              Saving is off — checkmarks won't persist.
             </p>
           ) : null}
         </div>
 
-        <div className="grid gap-3 rounded-2xl border border-border/60 bg-background p-4">
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-            Customize
-          </p>
-
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium">Include Before/After Meals</p>
-              <p className="text-xs text-muted-foreground">OCA Common Prayers</p>
-            </div>
-            <Switch
-              checked={prefs.includeMeals}
-              onCheckedChange={(checked) =>
-                setPrefs((p) => ({ ...p, includeMeals: checked }))
-              }
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium">Include Psalm 50</p>
-              <p className="text-xs text-muted-foreground">Optional</p>
-            </div>
-            <Switch
-              checked={prefs.includePsalm50}
-              onCheckedChange={(checked) =>
-                setPrefs((p) => ({ ...p, includePsalm50: checked }))
-              }
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium">Include the Creed</p>
-              <p className="text-xs text-muted-foreground">Optional</p>
-            </div>
-            <Switch
-              checked={prefs.includeCreed}
-              onCheckedChange={(checked) =>
-                setPrefs((p) => ({ ...p, includeCreed: checked }))
-              }
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 pt-1">
-            <Button
-              variant="outline"
-              className="rounded-2xl border-border/60"
-              onClick={() => setProgress({})}
-            >
-              <RotateCcw className="mr-2 h-4 w-4" /> Reset today
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              className="rounded-2xl border-border/60"
-              onClick={() => {
-                const now = new Date();
-                const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 7, 0, 0));
-                const end = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 7, 15, 0));
-                const ics = createSimpleIcs({
-                  title: "Morning Prayer (Ortho Companion)",
-                  description: "A small daily anchor: morning prayer + Scripture.",
-                  start,
-                  end,
-                });
-                downloadTextFile("morning-prayer.ics", ics, "text/calendar");
-              }}
-            >
-              <CalendarPlus className="mr-2 h-4 w-4" /> Add morning anchor
-            </Button>
-
-            <Button asChild variant="outline" className="rounded-2xl border-border/60">
-              <a href="https://www.oca.org/orthodoxy/prayers" target="_blank" rel="noreferrer">
-                Browse OCA prayer texts <ExternalLink className="ml-2 h-4 w-4" />
-              </a>
-            </Button>
-          </div>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            className="rounded-2xl border-border/60"
+            onClick={() => setProgress({})}
+          >
+            <RotateCcw className="mr-2 h-4 w-4" /> Reset today
+          </Button>
         </div>
 
-        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold">Privacy</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                If enabled, checkmarks/preferences are stored locally (behavioral data). Progress auto-expires after 14 days.
-              </p>
-            </div>
-            <ShieldAlert className="h-5 w-5 text-muted-foreground" />
-          </div>
+        <Accordion type="multiple" className="w-full">
+          <AccordionItem value="customize" className="border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <SlidersHorizontal className="h-4 w-4 text-primary" /> Customize
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3 rounded-2xl border border-border/60 bg-background p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium">Include Before/After Meals</p>
+                    <p className="text-xs text-muted-foreground">Common prayers</p>
+                  </div>
+                  <Switch
+                    checked={prefs.includeMeals}
+                    onCheckedChange={(checked) =>
+                      setPrefs((p) => ({ ...p, includeMeals: checked }))
+                    }
+                  />
+                </div>
 
-          <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
-            <div>
-              <p className="text-sm font-medium">Remember on this device</p>
-              <p className="text-xs text-muted-foreground">On by default</p>
-            </div>
-            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
-          </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium">Include Psalm 50</p>
+                    <p className="text-xs text-muted-foreground">Optional</p>
+                  </div>
+                  <Switch
+                    checked={prefs.includePsalm50}
+                    onCheckedChange={(checked) =>
+                      setPrefs((p) => ({ ...p, includePsalm50: checked }))
+                    }
+                  />
+                </div>
 
-          {saveEnabled ? (
-            <div className="mt-3">
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-2xl border-border/60"
-                onClick={() => {
-                  removeStoredItem(prefsKey());
-                  cleanupStoredByPrefix("prayer_rule:progress:", 0);
-                  setPrefs(DEFAULT_PREFS);
-                  setProgress({});
-                }}
-              >
-                <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
-              </Button>
-            </div>
-          ) : null}
-        </div>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium">Include the Creed</p>
+                    <p className="text-xs text-muted-foreground">Optional</p>
+                  </div>
+                  <Switch
+                    checked={prefs.includeCreed}
+                    onCheckedChange={(checked) =>
+                      setPrefs((p) => ({ ...p, includeCreed: checked }))
+                    }
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="btn-wrap rounded-2xl border-border/60"
+                    onClick={() => {
+                      const now = new Date();
+                      const start = new Date(
+                        Date.UTC(
+                          now.getUTCFullYear(),
+                          now.getUTCMonth(),
+                          now.getUTCDate(),
+                          7,
+                          0,
+                          0,
+                        ),
+                      );
+                      const end = new Date(
+                        Date.UTC(
+                          now.getUTCFullYear(),
+                          now.getUTCMonth(),
+                          now.getUTCDate(),
+                          7,
+                          15,
+                          0,
+                        ),
+                      );
+                      const ics = createSimpleIcs({
+                        title: "Morning Prayer (Ortho Companion)",
+                        description: "A small daily anchor: morning prayer + Scripture.",
+                        start,
+                        end,
+                      });
+                      downloadTextFile("morning-prayer.ics", ics, "text/calendar");
+                    }}
+                  >
+                    <CalendarPlus className="mr-2 h-4 w-4" /> Add morning anchor
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="btn-wrap rounded-2xl border-border/60"
+                  >
+                    <a
+                      href="https://www.oca.org/orthodoxy/prayers"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Browse OCA prayer texts <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="privacy" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <ShieldAlert className="h-4 w-4 text-primary" /> Privacy & saving
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <p className="text-xs text-muted-foreground">
+                  If enabled, checkmarks/preferences are stored locally. Progress auto-expires after 14 days.
+                </p>
+
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
+                  <div>
+                    <p className="text-sm font-medium">Remember on this device</p>
+                    <p className="text-xs text-muted-foreground">On by default</p>
+                  </div>
+                  <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+                </div>
+
+                {saveEnabled ? (
+                  <div className="mt-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-2xl border-border/60"
+                      onClick={() => {
+                        removeStoredItem(prefsKey());
+                        cleanupStoredByPrefix("prayer_rule:progress:", 0);
+                        setPrefs(DEFAULT_PREFS);
+                        setProgress({});
+                      }}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <p className="text-xs text-muted-foreground">
-          Tip: keep it small and consistent. For a larger rule, consult your priest/spiritual father.
+          Tip: consult your priest/spiritual father for a larger rule.
         </p>
       </div>
     </Card>

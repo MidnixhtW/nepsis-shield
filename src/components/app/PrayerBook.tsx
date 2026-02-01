@@ -295,11 +295,11 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Prayers</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Daily prayers in-app, plus official links for prayers for many occasions.
+              Daily prayers in-app, plus official links for many occasions.
             </p>
           </div>
           <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            Everyday use
+            Everyday
           </Badge>
         </div>
 
@@ -309,7 +309,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <AccordionItem value="morning" className="border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
-                <Sun className="h-4 w-4 text-primary" /> Morning Prayers
+                <Sun className="h-4 w-4 text-primary" /> Morning
               </span>
             </AccordionTrigger>
             <AccordionContent className="pt-3">
@@ -320,21 +320,19 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="To the Guardian Angel" lines={morningAngel} />
                 <PrayerBlock title="To one's Patron Saint" lines={morningPatron} />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-2xl border-border/60"
+                <Button
+                  asChild
+                  variant="outline"
+                  className="btn-wrap rounded-2xl border-border/60"
+                >
+                  <a
+                    href="https://www.oca.org/orthodoxy/prayers/morning-prayers"
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <a
-                      href="https://www.oca.org/orthodoxy/prayers/morning-prayers"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Full Morning Prayers (OCA)
-                    </a>
-                  </Button>
-                </div>
+                    Full Morning Prayers (OCA)
+                  </a>
+                </Button>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -342,7 +340,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <AccordionItem value="evening" className="mt-3 border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
-                <MoonStar className="h-4 w-4 text-primary" /> Evening Prayers
+                <MoonStar className="h-4 w-4 text-primary" /> Evening
               </span>
             </AccordionTrigger>
             <AccordionContent className="pt-3">
@@ -353,21 +351,19 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="To the Holy Spirit" lines={eveningSpirit} />
                 <PrayerBlock title="To the Virgin Theotokos" lines={eveningTheotokos} />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-2xl border-border/60"
+                <Button
+                  asChild
+                  variant="outline"
+                  className="btn-wrap rounded-2xl border-border/60"
+                >
+                  <a
+                    href="https://www.oca.org/orthodoxy/prayers/evening-prayers"
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <a
-                      href="https://www.oca.org/orthodoxy/prayers/evening-prayers"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Full Evening Prayers (OCA)
-                    </a>
-                  </Button>
-                </div>
+                    Full Evening Prayers (OCA)
+                  </a>
+                </Button>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -375,14 +371,14 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <AccordionItem value="occasions" className="mt-3 border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
-                <Hand className="h-4 w-4 text-primary" /> OCA: Various occasions
+                <Hand className="h-4 w-4 text-primary" /> OCA: Occasions
               </span>
             </AccordionTrigger>
             <AccordionContent className="pt-3">
               <div className="grid gap-3">
                 <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                    Official sources (Orthodox Church in America)
+                    Official sources (OCA)
                   </p>
                   <div className="mt-3 grid gap-2">
                     {ocaOccasions.map((x) => (
@@ -397,7 +393,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <AccordionItem value="communion" className="mt-3 border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
-                <Hand className="h-4 w-4 text-primary" /> More Orthodox sources (in communion)
+                <Hand className="h-4 w-4 text-primary" /> More sources
               </span>
             </AccordionTrigger>
             <AccordionContent className="pt-3">
@@ -417,11 +413,6 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     </div>
                   </div>
                 ))}
-
-                <p className="text-xs text-muted-foreground">
-                  If you want, I can also add: Romanian, Bulgarian, Georgian, Jerusalem,
-                  Mount Athos monasteries, etc. (links only).
-                </p>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -429,7 +420,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <AccordionItem value="meals" className="mt-3 border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
-                <Utensils className="h-4 w-4 text-primary" /> Meals (OCA)
+                <Utensils className="h-4 w-4 text-primary" /> Meals
               </span>
             </AccordionTrigger>
             <AccordionContent className="pt-3">
@@ -437,41 +428,19 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="Before meals" lines={beforeMeals} />
                 <PrayerBlock title="After meals" lines={afterMeals} />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-2xl border-border/60"
+                <Button
+                  asChild
+                  variant="outline"
+                  className="btn-wrap rounded-2xl border-border/60"
+                >
+                  <a
+                    href="https://www.oca.org/orthodoxy/prayers/before-and-after-meals"
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    <a
-                      href="https://www.oca.org/orthodoxy/prayers/before-and-after-meals"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Source: Before & After Meals (OCA)
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-
-          <AccordionItem value="notes" className="mt-3 border-none">
-            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
-              <span className="inline-flex items-center gap-2">
-                <Hand className="h-4 w-4 text-primary" /> Notes for keeping it real
-              </span>
-            </AccordionTrigger>
-            <AccordionContent className="pt-3">
-              <div className="space-y-2 text-sm leading-relaxed text-muted-foreground">
-                <p>
-                  This app includes a short rule so you can stay consistent. For the complete
-                  OCA texts, open the source links.
-                </p>
-                <p>
-                  If you're building a larger prayer rule, do it with your priest/spiritual
-                  father.
-                </p>
+                    Source: Before & After Meals (OCA)
+                  </a>
+                </Button>
               </div>
             </AccordionContent>
           </AccordionItem>

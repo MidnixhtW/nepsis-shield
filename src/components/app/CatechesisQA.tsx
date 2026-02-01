@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -685,7 +684,7 @@ export function CatechesisQA() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Catechesis (Q&A)</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Expanded summaries + direct OCA sources. Use this as a guided index (not a replacement for your priest/parish).
+              Short summaries + direct OCA sources.
             </p>
           </div>
           <HelpCircle className="h-5 w-5 text-muted-foreground" />
@@ -703,7 +702,7 @@ export function CatechesisQA() {
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Try: confession, icons, fasting, Bible, Pascha…"
+                placeholder="Try: confession, icons, fasting, Bible…"
                 className="h-11 rounded-2xl pl-10"
               />
             </div>
@@ -748,9 +747,9 @@ export function CatechesisQA() {
 
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-xs text-muted-foreground">
-            Showing <span className="font-semibold text-foreground">{filtered.length}</span> of {QA_ITEMS.length}.
+            Showing <span className="font-semibold text-foreground">{filtered.length}</span>.
           </p>
-          <Button asChild variant="outline" className="h-9 rounded-2xl border-border/60">
+          <Button asChild variant="outline" className="btn-wrap rounded-2xl border-border/60">
             <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
               Full OCA Q&A index <ExternalLink className="ml-2 h-4 w-4" />
             </a>
@@ -766,16 +765,11 @@ export function CatechesisQA() {
 
             return (
               <Card key={c} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-base font-semibold tracking-tight">{c}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {items.length} question{items.length === 1 ? "" : "s"}
-                    </p>
-                  </div>
-                  <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    {items.length}
-                  </Badge>
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold tracking-tight">{c}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {items.length} question{items.length === 1 ? "" : "s"}
+                  </p>
                 </div>
 
                 <Separator className="my-4" />
@@ -796,17 +790,17 @@ export function CatechesisQA() {
                             {item.a}
                           </p>
 
-                          <div className="flex flex-wrap items-center gap-2">
+                          <div className="grid gap-2">
                             <Button
                               asChild
                               variant="outline"
-                              className="rounded-2xl border-border/60"
+                              className="btn-wrap rounded-2xl border-border/60"
                             >
                               <a href={item.sourceUrl} target="_blank" rel="noreferrer">
                                 {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                               </a>
                             </Button>
-                            <div className="text-xs text-muted-foreground">
+                            <div className="break-words text-xs text-muted-foreground">
                               Source: "{item.sourceUrl}"
                             </div>
                           </div>
@@ -821,16 +815,11 @@ export function CatechesisQA() {
         </div>
       ) : (
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h3 className="text-base font-semibold tracking-tight">{category}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {filtered.length} question{filtered.length === 1 ? "" : "s"}
-              </p>
-            </div>
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              {filtered.length}
-            </Badge>
+          <div>
+            <h3 className="text-base font-semibold tracking-tight">{category}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {filtered.length} question{filtered.length === 1 ? "" : "s"}
+            </p>
           </div>
 
           <Separator className="my-4" />
@@ -851,17 +840,17 @@ export function CatechesisQA() {
                       {item.a}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="grid gap-2">
                       <Button
                         asChild
                         variant="outline"
-                        className="rounded-2xl border-border/60"
+                        className="btn-wrap rounded-2xl border-border/60"
                       >
                         <a href={item.sourceUrl} target="_blank" rel="noreferrer">
                           {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                         </a>
                       </Button>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="break-words text-xs text-muted-foreground">
                         Source: "{item.sourceUrl}"
                       </div>
                     </div>
@@ -871,7 +860,7 @@ export function CatechesisQA() {
             ))}
           </Accordion>
 
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="mt-4 break-words text-xs text-muted-foreground">
             Full OCA Q&A index: "https://www.oca.org/questions"
           </p>
         </Card>
