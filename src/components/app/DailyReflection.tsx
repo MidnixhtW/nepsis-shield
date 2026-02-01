@@ -1,16 +1,46 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ExternalLink, PenLine, Sparkles } from "lucide-react";
+import {
+  ExternalLink,
+  KeyRound,
+  PenLine,
+  ShieldAlert,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchDailyData } from "@/lib/orthocal";
+import {
+  cleanupStoredByPrefix,
+  clearStoredByPrefix,
+  getStoredItem,
+  setStoredItem,
+} from "@/lib/deviceStorage";
+import type { EncryptedBlob } from "@/lib/cryptoVault";
+import { decryptString, encryptString } from "@/lib/cryptoVault";
+import { showError, showSuccess } from "@/utils/toast";
 
 function keyForDay(dayKey: string) {
   return `reflection:${dayKey}`;
 }
+
+function saveEnabledKey() {
+  return "privacy:reflection_save";
+}
+
+function encryptEnabledKey() {
+  return "privacy:reflection_encrypt";
+}
+
+const NOTE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+
+type StoredNote = string | { enc: 1; blob: EncryptedBlob };
 
 export function DailyReflection() {
   const today = useMemo(() => new Date(), []);
@@ -22,15 +52,94 @@ export function DailyReflection() {
   });
 
   const [note, setNote] = useState("");
+  const [saveEnabled, setSaveEnabled] = useState(false);
+  const [encryptEnabled, setEncryptEnabled] = useState(true);
+
+  // passphrase is never persisted; it's session-only.
+  const [passphrase, setPassphrase] = useState("");
+  const [locked, setLocked] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem(keyForDay(dayKey));
-    setNote(raw ?? "");
-  }, [dayKey]);
+    cleanupStoredByPrefix("reflection:", NOTE_TTL_MS);
+
+    const saved = getStoredItem<boolean>(saveEnabledKey());
+    setSaveEnabled(saved ?? false);
+
+    const encEnabled = getStoredItem<boolean>(encryptEnabledKey());
+    setEncryptEnabled(encEnabled ?? true);
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem(keyForDay(dayKey), note);
-  }, [note, dayKey]);
+    setStoredItem(saveEnabledKey(), saveEnabled);
+  }, [saveEnabled]);
+
+  useEffect(() => {
+    setStoredItem(encryptEnabledKey(), encryptEnabled);
+    // If turning encryption on, lock until the user provides a passphrase.
+    if (encryptEnabled) setLocked(true);
+  }, [encryptEnabled]);
+
+  useEffect(() => {
+    // Load saved note when enabled.
+    if (!saveEnabled) return;
+
+    const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
+    if (!stored) return;
+
+    if (typeof stored === "string") {
+      setNote(stored);
+      setLocked(false);
+      return;
+    }
+
+    // Encrypted note
+    setLocked(true);
+  }, [dayKey, saveEnabled]);
+
+  async function unlockAndLoad() {
+    if (!saveEnabled) return;
+
+    const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
+    if (!stored || typeof stored === "string") {
+      setLocked(false);
+      return;
+    }
+
+    try {
+      const raw = await decryptString(stored.blob, passphrase);
+      setNote(raw);
+      setLocked(false);
+      showSuccess("Journal unlocked for this session.");
+    } catch {
+      showError("Couldn't unlock. Check your passphrase.");
+    }
+  }
+
+  useEffect(() => {
+    // Persist note (if enabled). When encrypted, persist only ciphertext.
+    if (!saveEnabled) return;
+
+    (async () => {
+      try {
+        if (!encryptEnabled) {
+          setStoredItem(keyForDay(dayKey), note, { ttlMs: NOTE_TTL_MS });
+          return;
+        }
+
+        if (locked) return; // don't overwrite ciphertext while locked
+        if (!passphrase) return; // need passphrase to encrypt
+
+        const blob = await encryptString(note, passphrase);
+        setStoredItem(
+          keyForDay(dayKey),
+          { enc: 1, blob } satisfies StoredNote,
+          { ttlMs: NOTE_TTL_MS },
+        );
+      } catch {
+        showError("Couldn't save securely.");
+      }
+    })();
+  }, [note, dayKey, saveEnabled, encryptEnabled, passphrase, locked]);
 
   const prompt = useMemo(() => {
     if (!q.data) return "";
@@ -62,7 +171,7 @@ export function DailyReflection() {
           <div className="text-sm text-muted-foreground">Loading today…</div>
         ) : q.isError ? (
           <div className="text-sm text-destructive">
-            Couldn’t load today’s prompt.
+            Couldn't load today's prompt.
           </div>
         ) : q.data ? (
           <div className="grid gap-4">
@@ -71,6 +180,89 @@ export function DailyReflection() {
                 Prompt
               </p>
               <p className="mt-2 text-sm leading-relaxed">{prompt}</p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
+              <div className="flex items-start gap-3">
+                <ShieldAlert className="mt-0.5 h-5 w-5 text-amber-700" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">Privacy</p>
+                  <p className="mt-1 text-xs leading-relaxed text-amber-900/80">
+                    Journal notes can be sensitive. If you enable saving, notes are stored on this device.
+                    Encryption helps protect notes at rest, but your passphrase is required to read them.
+                  </p>
+
+                  <div className="mt-3 grid gap-2">
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                      <div>
+                        <p className="text-sm font-medium">Save on this device</p>
+                        <p className="text-xs text-amber-900/70">Off by default</p>
+                      </div>
+                      <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                      <div>
+                        <p className="text-sm font-medium">Encrypt saved notes</p>
+                        <p className="text-xs text-amber-900/70">Recommended</p>
+                      </div>
+                      <Switch
+                        checked={encryptEnabled}
+                        onCheckedChange={setEncryptEnabled}
+                        disabled={!saveEnabled}
+                      />
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
+                        onClick={() => {
+                          clearStoredByPrefix("reflection:");
+                          showSuccess("Saved reflections deleted.");
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
+                      </Button>
+                      <p className="text-xs text-amber-900/70">
+                        Notes auto-expire after 30 days.
+                      </p>
+                    </div>
+                  </div>
+
+                  {saveEnabled && encryptEnabled ? (
+                    <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
+                      <p className="text-xs font-semibold tracking-wide text-amber-900/80">
+                        Passphrase (session-only)
+                      </p>
+                      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <div className="relative flex-1">
+                          <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-900/60" />
+                          <Input
+                            type="password"
+                            value={passphrase}
+                            onChange={(e) => setPassphrase(e.target.value)}
+                            placeholder="Enter a passphrase"
+                            className="h-11 rounded-2xl border-amber-200 bg-white/70 pl-10"
+                          />
+                        </div>
+                        <Button
+                          type="button"
+                          className="h-11 rounded-2xl"
+                          onClick={unlockAndLoad}
+                          disabled={!passphrase}
+                        >
+                          Unlock
+                        </Button>
+                      </div>
+                      <p className="mt-2 text-xs text-amber-900/70">
+                        Your passphrase is never stored. If you forget it, encrypted notes can't be recovered.
+                      </p>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div>
@@ -82,9 +274,16 @@ export function DailyReflection() {
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Two or three honest sentences is enough."
                 className="mt-2 min-h-32 rounded-2xl"
+                disabled={saveEnabled && encryptEnabled && locked}
               />
               <p className="mt-2 text-xs text-muted-foreground">
-                Saved on this device.
+                {!saveEnabled
+                  ? "Not saved locally — this text will be lost if you refresh."
+                  : encryptEnabled
+                    ? locked
+                      ? "Locked — enter your passphrase to view/edit saved notes."
+                      : "Saved (encrypted) on this device."
+                    : "Saved (not encrypted) on this device."}
               </p>
             </div>
 
@@ -101,9 +300,8 @@ export function DailyReflection() {
                 <Button
                   className="rounded-2xl"
                   onClick={() => {
-                    setNote((n) =>
-                      n ? n : `${prompt}\n\n` + "• "
-                    );
+                    setNote((n) => (n ? n : `${prompt}\n\n` + "• "));
+                    if (encryptEnabled && saveEnabled) setLocked(false);
                   }}
                 >
                   <PenLine className="mr-2 h-4 w-4" /> Start writing
