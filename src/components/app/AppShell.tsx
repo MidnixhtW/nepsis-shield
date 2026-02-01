@@ -18,15 +18,6 @@ export type AppSection =
   | "reflection"
   | "catechesis";
 
-export const APP_SECTIONS: AppSection[] = [
-  "today",
-  "prayers",
-  "counter",
-  "readings",
-  "reflection",
-  "catechesis",
-];
-
 const sectionMeta: Record<
   AppSection,
   { label: string; icon: typeof Home; aria: string }
@@ -111,7 +102,7 @@ export function AppShell({
   );
 }
 
-export function useAppSection(initial: AppSection = "today") {
-  const [section, setSection] = useState<AppSection>(initial);
+export function useAppSection() {
+  const [section, setSection] = useState<AppSection>("today");
   return { section, setSection };
 }

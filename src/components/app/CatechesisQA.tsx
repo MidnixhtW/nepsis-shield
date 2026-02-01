@@ -1,24 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, Filter, HelpCircle, Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ExternalLink, HelpCircle, Search } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Category =
   | "All"
@@ -36,29 +28,8 @@ type Category =
   | "Priesthood & monasticism"
   | "Death & funerals";
 
-const CATEGORY_VALUES: Category[] = [
-  "All",
-  "Daily life",
-  "Prayer",
-  "Worship",
-  "Sacraments",
-  "Scripture",
-  "Saints & icons",
-  "Parish life",
-  "Liturgical year",
-  "Liturgical arts",
-  "Church history",
-  "Other Christians",
-  "Priesthood & monasticism",
-  "Death & funerals",
-];
-
-function isCategory(x: string | null): x is Category {
-  return x != null && (CATEGORY_VALUES as string[]).includes(x);
-}
-
 type QA = {
-  category: Exclude<Category, "All">;
+  category: Category;
   q: string;
   a: string;
   sourceLabel: string;
@@ -639,92 +610,32 @@ const QA_ITEMS: QA[] = [
   },
 ];
 
-function normalize(s: string) {
-  return s.trim().toLowerCase();
-}
-
-function categoryOrder(c: Exclude<Category, "All">) {
-  // A stable order that groups common beginner topics first.
-  const order: Array<Exclude<Category, "All">> = [
-    "Daily life",
-    "Prayer",
-    "Worship",
-    "Sacraments",
-    "Scripture",
-    "Saints & icons",
-    "Parish life",
-    "Liturgical year",
-    "Liturgical arts",
-    "Church history",
-    "Other Christians",
-    "Priesthood & monasticism",
-    "Death & funerals",
-  ];
-  return order.indexOf(c) === -1 ? 999 : order.indexOf(c);
-}
-
 export function CatechesisQA() {
-  const [params, setParams] = useSearchParams();
-  const location = useLocation();
-
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category>("All");
 
-  // Initialize from URL once.
-  useEffect(() => {
-    const initialQ = params.get("qaQuery") ?? "";
-    const initialCat = params.get("qaCategory");
-    if (initialQ) setQuery(initialQ);
-    if (isCategory(initialCat)) setCategory(initialCat);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Back/forward support.
-  useEffect(() => {
-    const q = params.get("qaQuery") ?? "";
-    const cat = params.get("qaCategory");
-
-    if (q !== query) setQuery(q);
-    if (isCategory(cat) && cat !== category) setCategory(cat);
-    if (!cat && category !== "All") setCategory("All");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
-
-  // Keep filters reflected in URL.
-  useEffect(() => {
-    setParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (query.trim()) next.set("qaQuery", query);
-        else next.delete("qaQuery");
-
-        if (category !== "All") next.set("qaCategory", category);
-        else next.delete("qaCategory");
-
-        return next;
-      },
-      { replace: true },
-    );
-  }, [query, category, setParams]);
-
-  const allCategories = useMemo(() => {
-    const set = new Set<Exclude<Category, "All">>();
-    for (const item of QA_ITEMS) set.add(item.category);
-    return Array.from(set).sort((a, b) => categoryOrder(a) - categoryOrder(b));
-  }, []);
-
-  const countsByCategory = useMemo(() => {
-    const counts = new Map<Category, number>();
-    counts.set("All", QA_ITEMS.length);
-    for (const c of allCategories) counts.set(c, 0);
-    for (const item of QA_ITEMS) {
-      counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
-    }
-    return counts;
-  }, [allCategories]);
+  const categories: Category[] = useMemo(
+    () => [
+      "All",
+      "Prayer",
+      "Worship",
+      "Sacraments",
+      "Scripture",
+      "Daily life",
+      "Saints & icons",
+      "Parish life",
+      "Liturgical arts",
+      "Liturgical year",
+      "Church history",
+      "Other Christians",
+      "Priesthood & monasticism",
+      "Death & funerals",
+    ],
+    [],
+  );
 
   const filtered = useMemo(() => {
-    const q = normalize(query);
+    const q = query.trim().toLowerCase();
     return QA_ITEMS.filter((item) => {
       const categoryOk = category === "All" ? true : item.category === category;
       if (!categoryOk) return false;
@@ -734,18 +645,6 @@ export function CatechesisQA() {
     });
   }, [query, category]);
 
-  const grouped = useMemo(() => {
-    const map = new Map<Exclude<Category, "All">, QA[]>();
-    for (const c of allCategories) map.set(c, []);
-    for (const item of filtered) {
-      map.get(item.category)?.push(item);
-    }
-    return map;
-  }, [filtered, allCategories]);
-
-  const visibleTotal = filtered.length;
-  const fullTotal = QA_ITEMS.length;
-
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -753,7 +652,7 @@ export function CatechesisQA() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Catechesis (Q&A)</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Expanded summaries + direct OCA sources. Use this as a guided index (not a replacement for your priest/parish).
+              Expanded summaries + direct OCA sources. This is a curated set—use the OCA index for every topic.
             </p>
           </div>
           <HelpCircle className="h-5 w-5 text-muted-foreground" />
@@ -761,189 +660,84 @@ export function CatechesisQA() {
 
         <Separator className="my-4" />
 
-        <div className="grid gap-3 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-          <div className="grid gap-2">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-              Search
-            </p>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Try: confession, icons, fasting, Bible, Pascha…"
-                className="h-11 rounded-2xl pl-10"
-              />
-            </div>
+        <div className="grid gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search (e.g., confession, icons, fasting, Bible, Pascha…)"
+              className="h-11 rounded-2xl pl-10"
+            />
           </div>
 
-          <div className="grid gap-2">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-              Category
-            </p>
-            <div className="flex items-center gap-2">
-              <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-                <SelectTrigger className="h-11 rounded-2xl">
-                  <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <SelectValue placeholder="All" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[60vh]">
-                  <SelectItem value="All">
-                    All ({countsByCategory.get("All") ?? 0})
-                  </SelectItem>
-                  {allCategories.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c} ({countsByCategory.get(c) ?? 0})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <Tabs value={category} onValueChange={(v) => setCategory(v as Category)}>
+            <TabsList className="w-full flex-wrap justify-start rounded-2xl bg-muted/30 p-1">
+              {categories.map((c) => (
+                <TabsTrigger key={c} value={c} className="rounded-xl">
+                  {c}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
 
-              <Button
-                type="button"
-                variant="outline"
-                className="h-11 rounded-2xl border-border/60"
-                onClick={() => {
-                  setQuery("");
-                  setCategory("All");
-                }}
-              >
-                Clear
-              </Button>
-            </div>
+          <div className="text-xs text-muted-foreground">
+            Full OCA Q&A index: "https://www.oca.org/questions"
           </div>
-        </div>
-
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">
-            Showing <span className="font-semibold text-foreground">{visibleTotal}</span> of {fullTotal}.
-          </p>
-          <Button asChild variant="outline" className="h-9 rounded-2xl border-border/60">
-            <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
-              Full OCA Q&A index <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
         </div>
       </Card>
 
-      {category === "All" ? (
-        <div className="grid gap-4">
-          {allCategories.map((c) => {
-            const items = grouped.get(c) ?? [];
-            if (!items.length) return null;
-
-            return (
-              <Card key={c} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h3 className="text-base font-semibold tracking-tight">{c}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {items.length} question{items.length === 1 ? "" : "s"}
-                    </p>
-                  </div>
-                  <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    {items.length}
-                  </Badge>
-                </div>
-
-                <Separator className="my-4" />
-
-                <Accordion type="multiple" className="w-full">
-                  {items.map((item, idx) => (
-                    <AccordionItem
-                      key={`${c}:${item.q}:${idx}`}
-                      value={`${c}:${idx}`}
-                      className="border-none"
-                    >
-                      <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
-                        <span className="pr-3">{item.q}</span>
-                      </AccordionTrigger>
-                      <AccordionContent className="pt-3">
-                        <div className="grid gap-3">
-                          <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
-                            {item.a}
-                          </p>
-
-                          <div className="flex flex-wrap items-center gap-2">
-                            <Button
-                              asChild
-                              variant="outline"
-                              className="rounded-2xl border-border/60"
-                            >
-                              <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                                {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
-                              </a>
-                            </Button>
-                            <div className="text-xs text-muted-foreground">
-                              Source: "{item.sourceUrl}"
-                            </div>
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </Card>
-            );
-          })}
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className="text-base font-semibold tracking-tight">
+            Questions ({filtered.length})
+          </h3>
+          <Button asChild variant="outline" className="rounded-2xl border-border/60">
+            <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
+              Open OCA Q&A index <ExternalLink className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
         </div>
-      ) : (
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h3 className="text-base font-semibold tracking-tight">{category}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {filtered.length} question{filtered.length === 1 ? "" : "s"}
-              </p>
-            </div>
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              {filtered.length}
-            </Badge>
-          </div>
 
-          <Separator className="my-4" />
+        <Separator className="my-4" />
 
-          <Accordion type="multiple" className="w-full">
-            {filtered.map((item, idx) => (
-              <AccordionItem
-                key={`${item.category}:${item.q}:${idx}`}
-                value={`qa-${idx}`}
-                className="border-none"
-              >
-                <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
-                  <span className="pr-3">{item.q}</span>
-                </AccordionTrigger>
-                <AccordionContent className="pt-3">
-                  <div className="grid gap-3">
-                    <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
-                      {item.a}
-                    </p>
+        <Accordion type="single" collapsible className="w-full">
+          {filtered.map((item, idx) => (
+            <AccordionItem key={idx} value={`qa-${idx}`} className="border-none">
+              <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+                <div className="flex w-full items-center justify-between gap-3">
+                  <span>{item.q}</span>
+                  <span className="hidden rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary sm:inline-flex">
+                    {item.category}
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-3">
+                <div className="grid gap-3">
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/90">
+                    {item.a}
+                  </p>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="rounded-2xl border-border/60"
-                      >
-                        <a href={item.sourceUrl} target="_blank" rel="noreferrer">
-                          {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
-                        </a>
-                      </Button>
-                      <div className="text-xs text-muted-foreground">
-                        Source: "{item.sourceUrl}"
-                      </div>
+                  <div className="grid gap-2">
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-fit rounded-2xl border-border/60"
+                    >
+                      <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                        {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                    <div className="text-xs text-muted-foreground">
+                      Source: "{item.sourceUrl}"
                     </div>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-
-          <p className="mt-4 text-xs text-muted-foreground">
-            Full OCA Q&A index: "https://www.oca.org/questions"
-          </p>
-        </Card>
-      )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </Card>
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import { BookOpen, ExternalLink, HelpCircle, LibraryBig } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -7,47 +6,11 @@ import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
 import { OrthodoxBible } from "@/components/app/OrthodoxBible";
-import { useLocation, useSearchParams } from "react-router-dom";
-
-type LearnTab = "guide" | "qa" | "bible" | "library";
-
-function isLearnTab(x: string | null): x is LearnTab {
-  return x === "guide" || x === "qa" || x === "bible" || x === "library";
-}
 
 export function LearnHub() {
-  const [params, setParams] = useSearchParams();
-  const location = useLocation();
-
-  const initial = useMemo<LearnTab>(() => {
-    const t = params.get("learnTab");
-    return isLearnTab(t) ? t : "guide";
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const [tab, setTab] = useState<LearnTab>(initial);
-
-  useEffect(() => {
-    const t = params.get("learnTab");
-    if (isLearnTab(t) && t !== tab) setTab(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
-
-  useEffect(() => {
-    setParams(
-      (prev) => {
-        const next = new URLSearchParams(prev);
-        if (tab === "guide") next.delete("learnTab");
-        else next.set("learnTab", tab);
-        return next;
-      },
-      { replace: true },
-    );
-  }, [tab, setParams]);
-
   return (
     <div className="grid gap-4">
-      <Tabs value={tab} onValueChange={(v) => setTab(v as LearnTab)} className="w-full">
+      <Tabs defaultValue="guide" className="w-full">
         <TabsList className="grid w-full grid-cols-4 rounded-2xl bg-muted/30 p-1">
           <TabsTrigger value="guide" className="rounded-xl">
             <BookOpen className="mr-2 h-4 w-4" /> Daily guide
