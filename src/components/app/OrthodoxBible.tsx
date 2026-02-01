@@ -5,12 +5,15 @@ import {
   Bookmark,
   ChevronLeft,
   ChevronRight,
+  Copy,
   ExternalLink,
+  EyeOff,
   Search,
+  ShieldAlert,
   Star,
+  Trash2,
 } from "lucide-react";
 import { BIBLE_BOOKS, getBookByName } from "@/lib/bible/books";
-import type { BibleBook } from "@/lib/bible/books";
 import {
   apiNameForBook,
   translationForBook,
@@ -28,8 +31,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  getStoredItem,
+  removeStoredItem,
+  setStoredItem,
+} from "@/lib/deviceStorage";
+import { showError, showSuccess } from "@/utils/toast";
 
 type BibleApiVerse = {
   book_name?: string;
@@ -65,19 +75,28 @@ function lastReadKey() {
   return "bible:last_read";
 }
 
-function safeJsonParse<T>(raw: string | null): T | null {
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as T;
-  } catch {
-    return null;
-  }
+function saveEnabledKey() {
+  return "privacy:bible_save";
 }
+
+const LAST_READ_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+const BOOKMARKS_TTL_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
 
 function splitBookChapter(ref: string): { bookName: string; chapter: number } | null {
   const match = ref.match(/^(.*)\s+(\d+)\s*$/);
   if (!match) return null;
   return { bookName: match[1].trim(), chapter: Number(match[2]) };
+}
+
+function isInteractiveTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName.toLowerCase();
+  return (
+    tag === "input" ||
+    tag === "textarea" ||
+    tag === "select" ||
+    target.isContentEditable
+  );
 }
 
 export function OrthodoxBible() {
@@ -92,44 +111,71 @@ export function OrthodoxBible() {
   const [refInput, setRefInput] = useState("John 3:16");
   const [refSubmitted, setRefSubmitted] = useState("John 3:16");
 
+  const [tab, setTab] = useState<"browse" | "reference" | "bookmarks">("browse");
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
+  const [saveEnabled, setSaveEnabled] = useState(true);
+  const [memorizeMode, setMemorizeMode] = useState(false);
 
   const book = useMemo(() => getBookByName(bookName), [bookName]);
   const apiBookName = apiNameForBook(book);
   const translation = translationForBook(book, base);
 
   useEffect(() => {
-    const saved = safeJsonParse<{
+    const saved = getStoredItem<boolean>(saveEnabledKey());
+    setSaveEnabled(saved ?? true);
+
+    const last = getStoredItem<{
       base?: BaseTranslation;
       bookName?: string;
       chapter?: number;
       ref?: string;
-    }>(localStorage.getItem(lastReadKey()));
+    }>(lastReadKey());
 
-    if (saved?.base) setBase(saved.base);
-    if (saved?.bookName) setBookName(saved.bookName);
-    if (typeof saved?.chapter === "number") setChapter(Math.max(1, saved.chapter));
-    if (saved?.ref) {
-      setRefInput(saved.ref);
-      setRefSubmitted(saved.ref);
+    if (last?.base) setBase(last.base);
+    if (last?.bookName) setBookName(last.bookName);
+    if (typeof last?.chapter === "number") setChapter(Math.max(1, last.chapter));
+    if (last?.ref) {
+      setRefInput(last.ref);
+      setRefSubmitted(last.ref);
     }
 
-    const savedBookmarks = safeJsonParse<BookmarkItem[]>(
-      localStorage.getItem(bookmarksKey()),
-    );
+    const savedBookmarks = getStoredItem<BookmarkItem[]>(bookmarksKey());
     setBookmarks(savedBookmarks ?? []);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(
-      lastReadKey(),
-      JSON.stringify({ base, bookName, chapter, ref: refSubmitted }),
-    );
-  }, [base, bookName, chapter, refSubmitted]);
+    setStoredItem(saveEnabledKey(), saveEnabled);
+    if (!saveEnabled) {
+      removeStoredItem(lastReadKey());
+      removeStoredItem(bookmarksKey());
+    }
+  }, [saveEnabled]);
 
   useEffect(() => {
-    localStorage.setItem(bookmarksKey(), JSON.stringify(bookmarks));
-  }, [bookmarks]);
+    if (!saveEnabled) return;
+    setStoredItem(
+      lastReadKey(),
+      { base, bookName, chapter, ref: refSubmitted },
+      { ttlMs: LAST_READ_TTL_MS },
+    );
+  }, [base, bookName, chapter, refSubmitted, saveEnabled]);
+
+  useEffect(() => {
+    if (!saveEnabled) return;
+    setStoredItem(bookmarksKey(), bookmarks, { ttlMs: BOOKMARKS_TTL_MS });
+  }, [bookmarks, saveEnabled]);
+
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (isInteractiveTarget(e.target)) return;
+      if (tab !== "browse") return;
+
+      if (e.key.toLowerCase() === "j") setChapter((c) => Math.max(1, c - 1));
+      if (e.key.toLowerCase() === "k") setChapter((c) => c + 1);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [tab]);
 
   const browseRef = `${apiBookName} ${chapter}`;
   const browseUrl = useMemo(
@@ -166,14 +212,8 @@ export function OrthodoxBible() {
     return bookmarks.some((b) => b.ref === ref && b.base === base);
   }, [bookName, chapter, bookmarks, base]);
 
-  const ot = useMemo(
-    () => BIBLE_BOOKS.filter((b) => b.testament === "OT"),
-    [],
-  );
-  const nt = useMemo(
-    () => BIBLE_BOOKS.filter((b) => b.testament === "NT"),
-    [],
-  );
+  const ot = useMemo(() => BIBLE_BOOKS.filter((b) => b.testament === "OT"), []);
+  const nt = useMemo(() => BIBLE_BOOKS.filter((b) => b.testament === "NT"), []);
 
   function addBookmark(ref: string) {
     setBookmarks((prev) => {
@@ -194,6 +234,15 @@ export function OrthodoxBible() {
     if (!book.deuterocanon) return "";
     return "Some OSB books are not available in all public-domain datasets; if a book/chapter fails to load, use the OCA canon link and an Orthodox Bible in print/app.";
   }, [book]);
+
+  async function copyText(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showSuccess("Copied to clipboard.");
+    } catch {
+      showError("Couldn’t copy.");
+    }
+  }
 
   return (
     <div className="grid gap-4">
@@ -255,7 +304,55 @@ export function OrthodoxBible() {
         </p>
       </Card>
 
-      <Tabs defaultValue="browse" className="w-full">
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-base font-semibold tracking-tight">Privacy</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              If enabled, bookmarks and “last read” are stored locally (behavioral data).
+            </p>
+          </div>
+          <ShieldAlert className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <Separator className="my-4" />
+
+        <div className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium">Remember on this device</p>
+              <p className="text-xs text-muted-foreground">Last read auto-expires after 30 days.</p>
+            </div>
+            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+          </div>
+
+          <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
+            <div>
+              <p className="text-sm font-medium">Memorize mode</p>
+              <p className="text-xs text-muted-foreground">Hide verse numbers to focus.</p>
+            </div>
+            <Switch checked={memorizeMode} onCheckedChange={setMemorizeMode} />
+          </div>
+
+          {saveEnabled ? (
+            <div className="mt-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-2xl border-border/60"
+                onClick={() => {
+                  removeStoredItem(lastReadKey());
+                  removeStoredItem(bookmarksKey());
+                  setBookmarks([]);
+                }}
+              >
+                <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      </Card>
+
+      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="w-full">
         <TabsList className="grid w-full grid-cols-3 rounded-2xl bg-muted/30 p-1">
           <TabsTrigger value="browse" className="rounded-xl">
             <BookOpen className="mr-2 h-4 w-4" /> Browse
@@ -335,6 +432,7 @@ export function OrthodoxBible() {
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">{textAvailabilityNote}</p>
+                    <p className="text-[11px] text-muted-foreground">Tip: J/K to change chapters.</p>
                   </div>
                 </div>
 
@@ -347,16 +445,34 @@ export function OrthodoxBible() {
                       if (isBookmarked) removeBookmark(ref);
                       else addBookmark(ref);
                     }}
+                    disabled={!saveEnabled}
                   >
                     <Bookmark className="mr-2 h-4 w-4" />
-                    {isBookmarked ? "Bookmarked" : "Bookmark"}
+                    {saveEnabled ? (isBookmarked ? "Bookmarked" : "Bookmark") : "Bookmark (off)"}
                   </Button>
 
                   <Button
-                    asChild
+                    type="button"
                     variant="outline"
                     className="h-11 rounded-2xl border-border/60"
+                    onClick={() => {
+                      const text = [
+                        browseTitle,
+                        "",
+                        ...browseVerses.map((v) =>
+                          memorizeMode
+                            ? (v.text?.trim() ?? "")
+                            : `${v.chapter}:${v.verse} ${v.text?.trim() ?? ""}`,
+                        ),
+                      ].join("\n");
+                      void copyText(text);
+                    }}
+                    disabled={!browseVerses.length}
                   >
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+
+                  <Button asChild variant="outline" className="h-11 rounded-2xl border-border/60">
                     <a href={browseUrl} target="_blank" rel="noreferrer">
                       Open JSON <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
@@ -407,19 +523,36 @@ export function OrthodoxBible() {
               ) : browseQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching chapter…</p>
               ) : browseVerses.length ? (
-                <div className="space-y-3">
+                <div className={memorizeMode ? "space-y-4" : "space-y-3"}>
                   {browseVerses.map((v, idx) => (
                     <p key={idx} className="text-sm leading-relaxed">
-                      <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
-                        {v.chapter}:{v.verse}
-                      </span>
-                      <span className="text-foreground/90">{v.text?.trim()}</span>
+                      {memorizeMode ? (
+                        <span className="text-foreground/90">{v.text?.trim()}</span>
+                      ) : (
+                        <>
+                          <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
+                            {v.chapter}:{v.verse}
+                          </span>
+                          <span className="text-foreground/90">{v.text?.trim()}</span>
+                        </>
+                      )}
                     </p>
                   ))}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No text returned.</p>
               )}
+
+              {memorizeMode ? (
+                <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-4">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Memorize mode
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Verse numbers are hidden. Use Copy if you want a clean block of text.
+                  </p>
+                </div>
+              ) : null}
             </Card>
           </div>
         </TabsContent>
@@ -448,36 +581,52 @@ export function OrthodoxBible() {
                     Reference lookup uses the base translation (KJV/WEB). Some Orthodox books may not be supported by the public dataset.
                   </p>
                 </div>
-                <Button
-                  className="h-11 rounded-2xl"
-                  onClick={() => setRefSubmitted(refInput)}
-                >
+                <Button className="h-11 rounded-2xl" onClick={() => setRefSubmitted(refInput)}>
                   Read
                 </Button>
               </div>
             </Card>
 
             <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="text-base font-semibold tracking-tight">
-                    {refQuery.isLoading
-                      ? "Loading…"
-                      : refQuery.data?.reference || refSubmitted}
+                    {refQuery.isLoading ? "Loading…" : refQuery.data?.reference || refSubmitted}
                   </h3>
                   <p className="mt-1 text-xs text-muted-foreground">
                     Text source: bible-api.com translation "{base}"
                   </p>
                 </div>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-2xl border-border/60"
-                >
-                  <a href={refUrl} target="_blank" rel="noreferrer">
-                    Open JSON <ExternalLink className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
+
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="rounded-2xl border-border/60"
+                    onClick={() => {
+                      const title = refQuery.data?.reference || refSubmitted;
+                      const verses = refQuery.data?.verses ?? [];
+                      const text = [
+                        title,
+                        "",
+                        ...verses.map((v) =>
+                          memorizeMode
+                            ? (v.text?.trim() ?? "")
+                            : `${v.chapter}:${v.verse} ${v.text?.trim() ?? ""}`,
+                        ),
+                      ].join("\n");
+                      void copyText(text);
+                    }}
+                    disabled={!(refQuery.data?.verses?.length ?? 0)}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-2xl border-border/60">
+                    <a href={refUrl} target="_blank" rel="noreferrer">
+                      Open JSON <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
               </div>
 
               <Separator className="my-4" />
@@ -489,19 +638,31 @@ export function OrthodoxBible() {
               ) : refQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching passage…</p>
               ) : (refQuery.data?.verses?.length ?? 0) ? (
-                <div className="space-y-3">
+                <div className={memorizeMode ? "space-y-4" : "space-y-3"}>
                   {(refQuery.data?.verses ?? []).map((v, idx) => (
                     <p key={idx} className="text-sm leading-relaxed">
-                      <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
-                        {v.chapter}:{v.verse}
-                      </span>
-                      <span className="text-foreground/90">{v.text?.trim()}</span>
+                      {memorizeMode ? (
+                        <span className="text-foreground/90">{v.text?.trim()}</span>
+                      ) : (
+                        <>
+                          <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
+                            {v.chapter}:{v.verse}
+                          </span>
+                          <span className="text-foreground/90">{v.text?.trim()}</span>
+                        </>
+                      )}
                     </p>
                   ))}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">No text returned.</p>
               )}
+
+              {memorizeMode ? (
+                <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                  <EyeOff className="h-4 w-4" /> Verse numbers hidden
+                </div>
+              ) : null}
             </Card>
           </div>
         </TabsContent>
@@ -511,7 +672,9 @@ export function OrthodoxBible() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-base font-semibold tracking-tight">Bookmarks</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Saved on this device.</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {saveEnabled ? "Saved on this device." : "Saving is off (in-session only)."}
+                </p>
               </div>
               <Star className="h-5 w-5 text-muted-foreground" />
             </div>
@@ -544,6 +707,7 @@ export function OrthodoxBible() {
                           setRefInput(b.ref);
                           setRefSubmitted(b.ref);
                           setBase(b.base);
+                          setTab("browse");
                         }}
                       >
                         Open
@@ -553,9 +717,7 @@ export function OrthodoxBible() {
                         className="rounded-2xl text-muted-foreground hover:text-foreground"
                         onClick={() =>
                           setBookmarks((prev) =>
-                            prev.filter(
-                              (x) => !(x.ref === b.ref && x.base === b.base),
-                            ),
+                            prev.filter((x) => !(x.ref === b.ref && x.base === b.base)),
                           )
                         }
                       >
