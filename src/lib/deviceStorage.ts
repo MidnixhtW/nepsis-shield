@@ -59,6 +59,18 @@ function isWrappedValue(x: unknown): x is WrappedValue<unknown> {
   );
 }
 
+export function listStoredKeys() {
+  return safeKeys();
+}
+
+export function getRawStoredItem(key: string) {
+  return safeGetItem(key);
+}
+
+export function setRawStoredItem(key: string, rawValue: string) {
+  safeSetItem(key, rawValue);
+}
+
 export function getStoredItem<T>(key: string): T | null {
   const raw = safeGetItem(key);
   if (raw == null) return null;

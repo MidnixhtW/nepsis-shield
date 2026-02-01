@@ -5,8 +5,10 @@ import {
   Bookmark,
   ChevronLeft,
   ChevronRight,
+  Copy,
   ExternalLink,
   Search,
+  Share2,
   ShieldAlert,
   Star,
   Trash2,
@@ -37,6 +39,7 @@ import {
   removeStoredItem,
   setStoredItem,
 } from "@/lib/deviceStorage";
+import { showError, showSuccess } from "@/utils/toast";
 
 type BibleApiVerse = {
   book_name?: string;
@@ -58,6 +61,47 @@ type BookmarkItem = {
   createdAt: number;
   base: BaseTranslation;
 };
+
+async function copyText(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showSuccess("Copied.");
+    return;
+  } catch {
+    // fallback
+  }
+
+  try {
+    const el = document.createElement("textarea");
+    el.value = text;
+    el.style.position = "fixed";
+    el.style.left = "-9999px";
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand("copy");
+    el.remove();
+    showSuccess("Copied.");
+  } catch {
+    showError("Couldn't copy.");
+  }
+}
+
+async function shareText(title: string, text: string) {
+  // navigator.share is not available on all platforms.
+  // If absent, we fall back to copy.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nav: any = navigator;
+  if (typeof nav?.share === "function") {
+    try {
+      await nav.share({ title, text });
+      return;
+    } catch {
+      // user cancelled or not allowed
+      return;
+    }
+  }
+  await copyText(text);
+}
 
 function bibleApiUrl(ref: string, translation: string) {
   const encoded = encodeURIComponent(ref.trim());
@@ -99,6 +143,9 @@ export function OrthodoxBible() {
 
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [saveEnabled, setSaveEnabled] = useState(true);
+
+  // Reading tools
+  const [memorizeMode, setMemorizeMode] = useState(false);
 
   const book = useMemo(() => getBookByName(bookName), [bookName]);
   const apiBookName = apiNameForBook(book);
@@ -184,6 +231,35 @@ export function OrthodoxBible() {
   const browseVerses = browseQuery.data?.verses ?? [];
   const browseTitle = browseQuery.data?.reference ?? `${bookName} ${chapter}`;
 
+  const refVerses = refQuery.data?.verses ?? [];
+  const refTitle = refQuery.data?.reference ?? refSubmitted;
+
+  const browseCopyText = useMemo(() => {
+    const body = browseVerses
+      .map((v) => {
+        const t = v.text?.trim() ?? "";
+        if (!t) return "";
+        return memorizeMode ? t : `${v.chapter}:${v.verse} ${t}`;
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    return `${browseTitle}\n\n${body}`.trim();
+  }, [browseTitle, browseVerses, memorizeMode]);
+
+  const refCopyText = useMemo(() => {
+    const body = refVerses
+      .map((v) => {
+        const t = v.text?.trim() ?? "";
+        if (!t) return "";
+        return memorizeMode ? t : `${v.chapter}:${v.verse} ${t}`;
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    return `${refTitle}\n\n${body}`.trim();
+  }, [refTitle, refVerses, memorizeMode]);
+
   const isBookmarked = useMemo(() => {
     const ref = `${bookName} ${chapter}`;
     return bookmarks.some((b) => b.ref === ref && b.base === base);
@@ -259,15 +335,24 @@ export function OrthodoxBible() {
             </ToggleGroup>
           </div>
 
-          <Button asChild variant="outline" className="h-9 rounded-2xl border-border/60">
-            <a
-              href="https://www.oca.org/questions/scripture/canon-of-scripture"
-              target="_blank"
-              rel="noreferrer"
-            >
-              OCA: Canon of Scripture <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 rounded-2xl border border-border/60 bg-muted/20 px-3 py-2">
+              <span className="text-xs font-semibold text-muted-foreground">
+                Memorize mode
+              </span>
+              <Switch checked={memorizeMode} onCheckedChange={setMemorizeMode} />
+            </div>
+
+            <Button asChild variant="outline" className="h-9 rounded-2xl border-border/60">
+              <a
+                href="https://www.oca.org/questions/scripture/canon-of-scripture"
+                target="_blank"
+                rel="noreferrer"
+              >
+                OCA: Canon of Scripture <ExternalLink className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          </div>
         </div>
 
         <p className="mt-2 text-xs text-muted-foreground">
@@ -438,11 +523,31 @@ export function OrthodoxBible() {
                     Text source: bible-api.com translation "{translation}"
                   </p>
                 </div>
-                {book?.deuterocanon ? (
-                  <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    Orthodox book
-                  </Badge>
-                ) : null}
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="h-9 rounded-2xl border-border/60"
+                    onClick={() => void copyText(browseCopyText)}
+                    disabled={!browseVerses.length}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-9 rounded-2xl border-border/60"
+                    onClick={() => void shareText(browseTitle, browseCopyText)}
+                    disabled={!browseVerses.length}
+                  >
+                    <Share2 className="mr-2 h-4 w-4" /> Share
+                  </Button>
+
+                  {book?.deuterocanon ? (
+                    <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                      Orthodox book
+                    </Badge>
+                  ) : null}
+                </div>
               </div>
 
               <Separator className="my-4" />
@@ -472,12 +577,21 @@ export function OrthodoxBible() {
               ) : browseQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching chapter…</p>
               ) : browseVerses.length ? (
-                <div className="space-y-3">
+                <div className={memorizeMode ? "space-y-4" : "space-y-3"}>
                   {browseVerses.map((v, idx) => (
-                    <p key={idx} className="text-sm leading-relaxed">
-                      <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
-                        {v.chapter}:{v.verse}
-                      </span>
+                    <p
+                      key={idx}
+                      className={
+                        memorizeMode
+                          ? "text-base leading-8 text-foreground/90"
+                          : "text-sm leading-relaxed"
+                      }
+                    >
+                      {memorizeMode ? null : (
+                        <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
+                          {v.chapter}:{v.verse}
+                        </span>
+                      )}
                       <span className="text-foreground/90">{v.text?.trim()}</span>
                     </p>
                   ))}
@@ -534,15 +648,35 @@ export function OrthodoxBible() {
                     Text source: bible-api.com translation "{base}"
                   </p>
                 </div>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="rounded-2xl border-border/60"
-                >
-                  <a href={refUrl} target="_blank" rel="noreferrer">
-                    Open JSON <ExternalLink className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="h-9 rounded-2xl border-border/60"
+                    onClick={() => void copyText(refCopyText)}
+                    disabled={!refVerses.length}
+                  >
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="h-9 rounded-2xl border-border/60"
+                    onClick={() => void shareText(refTitle, refCopyText)}
+                    disabled={!refVerses.length}
+                  >
+                    <Share2 className="mr-2 h-4 w-4" /> Share
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-9 rounded-2xl border-border/60"
+                  >
+                    <a href={refUrl} target="_blank" rel="noreferrer">
+                      Open JSON <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
               </div>
 
               <Separator className="my-4" />
@@ -553,13 +687,22 @@ export function OrthodoxBible() {
                 </p>
               ) : refQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching passage…</p>
-              ) : (refQuery.data?.verses?.length ?? 0) ? (
-                <div className="space-y-3">
-                  {(refQuery.data?.verses ?? []).map((v, idx) => (
-                    <p key={idx} className="text-sm leading-relaxed">
-                      <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
-                        {v.chapter}:{v.verse}
-                      </span>
+              ) : refVerses.length ? (
+                <div className={memorizeMode ? "space-y-4" : "space-y-3"}>
+                  {refVerses.map((v, idx) => (
+                    <p
+                      key={idx}
+                      className={
+                        memorizeMode
+                          ? "text-base leading-8 text-foreground/90"
+                          : "text-sm leading-relaxed"
+                      }
+                    >
+                      {memorizeMode ? null : (
+                        <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
+                          {v.chapter}:{v.verse}
+                        </span>
+                      )}
                       <span className="text-foreground/90">{v.text?.trim()}</span>
                     </p>
                   ))}

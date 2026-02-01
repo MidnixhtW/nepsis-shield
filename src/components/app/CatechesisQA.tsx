@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, Filter, HelpCircle, Search } from "lucide-react";
 import {
   Accordion,
@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 type Category =
   | "All"
@@ -34,6 +35,27 @@ type Category =
   | "Other Christians"
   | "Priesthood & monasticism"
   | "Death & funerals";
+
+const CATEGORY_VALUES: Category[] = [
+  "All",
+  "Daily life",
+  "Prayer",
+  "Worship",
+  "Sacraments",
+  "Scripture",
+  "Saints & icons",
+  "Parish life",
+  "Liturgical year",
+  "Liturgical arts",
+  "Church history",
+  "Other Christians",
+  "Priesthood & monasticism",
+  "Death & funerals",
+];
+
+function isCategory(x: string | null): x is Category {
+  return x != null && (CATEGORY_VALUES as string[]).includes(x);
+}
 
 type QA = {
   category: Exclude<Category, "All">;
@@ -642,8 +664,48 @@ function categoryOrder(c: Exclude<Category, "All">) {
 }
 
 export function CatechesisQA() {
+  const [params, setParams] = useSearchParams();
+  const location = useLocation();
+
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category>("All");
+
+  // Initialize from URL once.
+  useEffect(() => {
+    const initialQ = params.get("qaQuery") ?? "";
+    const initialCat = params.get("qaCategory");
+    if (initialQ) setQuery(initialQ);
+    if (isCategory(initialCat)) setCategory(initialCat);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Back/forward support.
+  useEffect(() => {
+    const q = params.get("qaQuery") ?? "";
+    const cat = params.get("qaCategory");
+
+    if (q !== query) setQuery(q);
+    if (isCategory(cat) && cat !== category) setCategory(cat);
+    if (!cat && category !== "All") setCategory("All");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  // Keep filters reflected in URL.
+  useEffect(() => {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (query.trim()) next.set("qaQuery", query);
+        else next.delete("qaQuery");
+
+        if (category !== "All") next.set("qaCategory", category);
+        else next.delete("qaCategory");
+
+        return next;
+      },
+      { replace: true },
+    );
+  }, [query, category, setParams]);
 
   const allCategories = useMemo(() => {
     const set = new Set<Exclude<Category, "All">>();

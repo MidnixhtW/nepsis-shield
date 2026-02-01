@@ -1,10 +1,11 @@
 import { format } from "date-fns";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Shield } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { Link } from "react-router-dom";
 
 export function AppHeader() {
   const today = new Date();
@@ -28,6 +29,18 @@ export function AppHeader() {
           <Badge className="hidden rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary sm:inline-flex">
             OCA sources
           </Badge>
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60"
+          >
+            <Link to="/privacy">
+              <Shield className="mr-2 h-4 w-4" /> Privacy
+            </Link>
+          </Button>
+
           <Button
             asChild
             size="sm"

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
-import { Minus, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
+import { format, subDays } from "date-fns";
+import { Minus, Plus, RotateCcw, ShieldAlert, Target, Trash2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,25 @@ function saveEnabledKey() {
   return "privacy:counter_save";
 }
 
+function streakKey() {
+  return "jesus_prayer:streak";
+}
+
 const COUNT_TTL_MS = 1000 * 60 * 60 * 24 * 14; // 14 days
+const STREAK_TTL_MS = 1000 * 60 * 60 * 24 * 90; // 90 days
+
+type StreakState = {
+  streak: number;
+  lastDay: string; // yyyy-MM-dd
+};
+
+function haptic(ms = 10) {
+  try {
+    if (typeof navigator.vibrate === "function") navigator.vibrate(ms);
+  } catch {
+    // ignore
+  }
+}
 
 export function JesusPrayerCounter() {
   const dayKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
@@ -43,6 +61,7 @@ export function JesusPrayerCounter() {
   const [goal, setGoal] = useState(100);
   const [goalDraft, setGoalDraft] = useState("100");
   const [saveEnabled, setSaveEnabled] = useState(true);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     cleanupStoredByPrefix("jesus_prayer_count:", COUNT_TTL_MS);
@@ -55,6 +74,7 @@ export function JesusPrayerCounter() {
       setCount(0);
       setGoal(100);
       setGoalDraft("100");
+      setStreak(0);
       return;
     }
 
@@ -65,6 +85,9 @@ export function JesusPrayerCounter() {
     const g = rawGoal ? Number(rawGoal) || 100 : 100;
     setGoal(g);
     setGoalDraft(String(g));
+
+    const savedStreak = getStoredItem<StreakState>(streakKey());
+    setStreak(savedStreak?.streak ?? 0);
   }, [dayKey, saveEnabled]);
 
   useEffect(() => {
@@ -73,12 +96,32 @@ export function JesusPrayerCounter() {
     if (!saveEnabled) {
       clearStoredByPrefix("jesus_prayer_count:");
       removeStoredItem(goalKey());
+      removeStoredItem(streakKey());
     }
   }, [saveEnabled]);
 
   useEffect(() => {
     if (!saveEnabled) return;
     setStoredItem(storageKeyForDay(dayKey), String(count), { ttlMs: COUNT_TTL_MS });
+  }, [count, dayKey, saveEnabled]);
+
+  // Update streak when the user actually prays today (count crosses > 0).
+  useEffect(() => {
+    if (!saveEnabled) return;
+    if (count <= 0) return;
+
+    const saved = getStoredItem<StreakState>(streakKey());
+    if (saved?.lastDay === dayKey) {
+      setStreak(saved.streak);
+      return;
+    }
+
+    const yesterdayKey = format(subDays(new Date(), 1), "yyyy-MM-dd");
+    const nextStreak = saved?.lastDay === yesterdayKey ? (saved?.streak ?? 0) + 1 : 1;
+
+    const next: StreakState = { streak: nextStreak, lastDay: dayKey };
+    setStoredItem(streakKey(), next, { ttlMs: STREAK_TTL_MS });
+    setStreak(nextStreak);
   }, [count, dayKey, saveEnabled]);
 
   const pct = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
@@ -160,16 +203,41 @@ export function JesusPrayerCounter() {
             </div>
           </div>
 
+          {saveEnabled ? (
+            <div className="rounded-2xl border border-border/60 bg-background p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Streak
+                  </p>
+                  <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight">
+                    {streak}
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Increments on the first prayer count of the day.
+                  </p>
+                </div>
+                <Zap className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </div>
+          ) : null}
+
           <div className="grid grid-cols-2 gap-3">
             <Button
-              onClick={() => setCount((c) => Math.max(0, c - 1))}
+              onClick={() => {
+                haptic(8);
+                setCount((c) => Math.max(0, c - 1));
+              }}
               variant="outline"
               className="h-12 rounded-2xl border-border/60"
             >
               <Minus className="mr-2 h-4 w-4" /> -1
             </Button>
             <Button
-              onClick={() => setCount((c) => c + 1)}
+              onClick={() => {
+                haptic(10);
+                setCount((c) => c + 1);
+              }}
               className="h-12 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="mr-2 h-4 w-4" /> +1
@@ -178,14 +246,20 @@ export function JesusPrayerCounter() {
 
           <div className="grid grid-cols-2 gap-3">
             <Button
-              onClick={() => setCount((c) => Math.max(0, c - 10))}
+              onClick={() => {
+                haptic(8);
+                setCount((c) => Math.max(0, c - 10));
+              }}
               variant="outline"
               className="h-12 rounded-2xl border-border/60"
             >
               -10
             </Button>
             <Button
-              onClick={() => setCount((c) => c + 10)}
+              onClick={() => {
+                haptic(10);
+                setCount((c) => c + 10);
+              }}
               variant="outline"
               className="h-12 rounded-2xl border-border/60"
             >
@@ -194,7 +268,10 @@ export function JesusPrayerCounter() {
           </div>
 
           <Button
-            onClick={() => setCount(0)}
+            onClick={() => {
+              haptic(12);
+              setCount(0);
+            }}
             variant="ghost"
             className="h-11 rounded-2xl text-muted-foreground hover:text-foreground"
           >
@@ -235,9 +312,11 @@ export function JesusPrayerCounter() {
                 onClick={() => {
                   clearStoredByPrefix("jesus_prayer_count:");
                   removeStoredItem(goalKey());
+                  removeStoredItem(streakKey());
                   setCount(0);
                   setGoal(100);
                   setGoalDraft("100");
+                  setStreak(0);
                 }}
               >
                 <Trash2 className="mr-2 h-4 w-4" /> Clear saved data
