@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   clearStoredByPrefix,
   getStoredItem,
@@ -60,6 +61,7 @@ const ALLOWED_PREFIXES = [
   "jesus_prayer_count:",
   "prayer_rule:",
   "bible:",
+  "confess:",
 ] as const;
 
 const ALLOWED_PRIVACY_KEYS = new Set([
@@ -68,6 +70,8 @@ const ALLOWED_PRIVACY_KEYS = new Set([
   "privacy:counter_save",
   "privacy:prayer_rule_save",
   "privacy:bible_save",
+  "privacy:confess_save",
+  "privacy:confess_encrypt",
 ]);
 
 // Value schema validation
@@ -188,7 +192,7 @@ export default function Privacy() {
       );
       showSuccess("Encrypted export downloaded.");
     } catch {
-      showError("Couldn’t export.");
+      showError("Couldn't export.");
     }
   }
 
@@ -240,7 +244,7 @@ export default function Privacy() {
       payload = await decryptJson<ExportPayload>(parsed.blob, importPass);
       if (payload.v !== 1) throw new Error("bad version");
     } catch {
-      showError("Couldn’t import (wrong passphrase or file).");
+      showError("Couldn't import (wrong passphrase or file).");
       return;
     }
 
@@ -339,7 +343,7 @@ export default function Privacy() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-base font-semibold tracking-tight">What’s stored</h2>
+              <h2 className="text-base font-semibold tracking-tight">What's stored</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Estimated local keys used by the app: <span className="font-semibold text-foreground">{approxKeyCount}</span>
               </p>
@@ -481,7 +485,7 @@ export default function Privacy() {
             <div>
               <h2 className="text-base font-semibold tracking-tight">Encrypted export / import</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Creates an encrypted JSON backup of the app’s local data.
+                Creates an encrypted JSON backup of the app's local data.
               </p>
             </div>
             <Lock className="h-5 w-5 text-muted-foreground" />
@@ -489,11 +493,20 @@ export default function Privacy() {
 
           <Separator className="my-4" />
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <Alert className="rounded-2xl border-primary/30 bg-primary/5">
+            <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>
+            <AlertDescription className="mt-1 text-xs text-muted-foreground">
+              • Journal notes • Confession prep (checks + notes) • Jesus Prayer counter • Prayer Rule progress • Bible bookmarks • Related privacy settings.
+              <br />
+              Anything outside these sections is excluded. Avoid plaintext/manual backups (like copy/paste or screenshots) for sensitive notes.
+            </AlertDescription>
+          </Alert>
+
+          <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Export</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Choose a passphrase. You’ll need it to import later.
+                Choose a passphrase. You'll need it to import later.
               </p>
               <div className="mt-3 grid gap-2">
                 <Input
@@ -559,7 +572,7 @@ export default function Privacy() {
           </div>
 
           <p className="mt-4 text-xs text-muted-foreground">
-            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). If you forget the passphrase, the backup can’t be recovered.
+            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). If you forget the passphrase, the backup can't be recovered.
           </p>
         </Card>
       </div>
