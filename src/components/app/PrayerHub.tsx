@@ -6,6 +6,7 @@ import { JesusPrayerCounter } from "@/components/app/JesusPrayerCounter";
 import { DailyReflection } from "@/components/app/DailyReflection";
 import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
+import { ConfessionPrep } from "@/components/app/ConfessionPrep";
 
 export type PrayerTab = "rule" | "prayers" | "counter" | "journal";
 
@@ -51,6 +52,7 @@ export function PrayerHub({
             <PrayerRule />
             <PreparationChecklist />
             <StillnessTimer />
+            <ConfessionPrep />
           </div>
         </TabsContent>
 
