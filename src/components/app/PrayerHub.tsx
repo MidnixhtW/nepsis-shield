@@ -7,6 +7,8 @@ import { DailyReflection } from "@/components/app/DailyReflection";
 import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
 import { ConfessionPrep } from "@/components/app/ConfessionPrep";
+import { PrayerIntentions } from "@/components/app/PrayerIntentions";
+import { MercyTracker } from "@/components/app/MercyTracker";
 
 export type PrayerTab = "rule" | "prayers" | "counter" | "journal";
 
@@ -20,7 +22,7 @@ export function PrayerHub({
   return (
     <div className="grid gap-4">
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as PrayerTab)}>
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-4">
+        <TabsList className="grid h-auto w/full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-4">
           <TabsTrigger
             value="rule"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
@@ -53,6 +55,8 @@ export function PrayerHub({
             <PreparationChecklist />
             <StillnessTimer />
             <ConfessionPrep />
+            <PrayerIntentions />
+            <MercyTracker />
           </div>
         </TabsContent>
 
