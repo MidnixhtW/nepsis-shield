@@ -4,6 +4,8 @@ import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
 import { JesusPrayerCounter } from "@/components/app/JesusPrayerCounter";
 import { DailyReflection } from "@/components/app/DailyReflection";
+import { PreparationChecklist } from "@/components/app/PreparationChecklist";
+import { StillnessTimer } from "@/components/app/StillnessTimer";
 
 export type PrayerTab = "rule" | "prayers" | "counter" | "journal";
 
@@ -45,7 +47,11 @@ export function PrayerHub({
         </TabsList>
 
         <TabsContent value="rule" className="mt-4">
-          <PrayerRule />
+          <div className="grid gap-4">
+            <PrayerRule />
+            <PreparationChecklist />
+            <StillnessTimer />
+          </div>
         </TabsContent>
 
         <TabsContent value="prayers" className="mt-4">
