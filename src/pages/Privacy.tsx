@@ -22,17 +22,8 @@ import {
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
 import { downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
+// Safe localStorage helpers
 function safeKeys(): string[] {
   try {
     return Object.keys(window.localStorage);
@@ -57,41 +48,21 @@ function safeSetRaw(key: string, value: string) {
   }
 }
 
-// ADD: extra helpers for validation
-function parseWrapped(raw: string | null): { __wrapped: 1; v: unknown; ts?: number; exp?: number } | null {
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object" && (parsed as any).__wrapped === 1 && "v" in (parsed as any)) {
-      return parsed as { __wrapped: 1; v: unknown; ts?: number; exp?: number };
-    }
-  } catch {
-    // ignore
-  }
-  return null;
-}
-
-function getWrappedBoolean(raw: string | null): boolean | null {
-  const w = parseWrapped(raw);
-  return w && typeof w.v === "boolean" ? (w.v as boolean) : null;
-}
-
 type ExportPayload = {
   v: 1;
   exportedAt: number;
   items: Record<string, string>;
 };
 
-const PREFIXES = [
+// Allow-listed prefixes and exact privacy keys
+const ALLOWED_PREFIXES = [
   "reflection:",
   "jesus_prayer_count:",
   "prayer_rule:",
   "bible:",
-  "privacy:",
 ] as const;
 
-// ADD: strict allow-list for privacy keys
-const ALLOWED_PRIVACY_KEYS = new Set<string>([
+const ALLOWED_PRIVACY_KEYS = new Set([
   "privacy:reflection_save",
   "privacy:reflection_encrypt",
   "privacy:counter_save",
@@ -99,28 +70,50 @@ const ALLOWED_PRIVACY_KEYS = new Set<string>([
   "privacy:bible_save",
 ]);
 
-function isAllowedKey(key: string): boolean {
-  return (PREFIXES as readonly string[]).some((p) => key.startsWith(p));
+// Value schema validation
+function parseJsonSafe(raw: string | null): unknown {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
 }
 
-// Validate value schema per key; require wrapped shape for all allowed keys
-function validateKeyValue(key: string, raw: string): boolean {
-  if (!isAllowedKey(key)) return false;
+type WrappedValue<T = unknown> = {
+  __wrapped: 1;
+  v: T;
+  ts: number;
+  exp?: number;
+};
 
-  // Only approved privacy keys allowed; must be wrapped boolean
-  if (key.startsWith("privacy:")) {
-    if (!ALLOWED_PRIVACY_KEYS.has(key)) return false;
-    const w = parseWrapped(raw);
-    return !!(w && typeof w.v === "boolean");
+function isWrappedValue(x: unknown): x is WrappedValue {
+  return (
+    typeof x === "object" &&
+    x !== null &&
+    (x as { __wrapped?: unknown }).__wrapped === 1 &&
+    "v" in (x as Record<string, unknown>) &&
+    typeof (x as Record<string, unknown>).ts === "number"
+  );
+}
+
+function isAllowedKey(key: string): boolean {
+  if (ALLOWED_PRIVACY_KEYS.has(key)) return true;
+  return ALLOWED_PREFIXES.some((p) => key.startsWith(p));
+}
+
+function isValidValueForKey(key: string, raw: string): boolean {
+  // All imported values must be wrapped objects produced by setStoredItem
+  const parsed = parseJsonSafe(raw);
+  if (!isWrappedValue(parsed)) return false;
+
+  // Privacy keys must be boolean values
+  if (ALLOWED_PRIVACY_KEYS.has(key)) {
+    return typeof parsed.v === "boolean";
   }
 
-  // For sensitive notes, ensure wrapped structure to prevent plaintext injection
-  if (key.startsWith("reflection:")) {
-    return !!parseWrapped(raw);
-  }
-
-  // For other app keys, still require wrapped to avoid malformed shapes
-  return !!parseWrapped(raw);
+  // Other allow-listed prefixes can be any wrapped value
+  return true;
 }
 
 export default function Privacy() {
@@ -133,37 +126,16 @@ export default function Privacy() {
   const [exportPass, setExportPass] = useState("");
   const [importPass, setImportPass] = useState("");
 
-  // ADD: import confirmation + snapshot state
-  type ImportPreview = {
-    items: Record<string, string>;
-    stats: {
-      total: number;
-      allowed: number;
-      ignored: number;
-      added: number;
-      updated: number;
-      unchanged: number;
-    };
-    privacyDiffs: Array<{ key: string; from: boolean | null; to: boolean }>;
-    sourceName?: string;
-  };
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [importPreview, setImportPreview] = useState<ImportPreview | null>(null);
-  const [lastImportInfo, setLastImportInfo] = useState<{ at: number; sourceName?: string; count: number } | null>(null);
+  // Temporary snapshot for rollback within this session
+  const [rollbackSnapshot, setRollbackSnapshot] = useState<Record<string, string> | null>(null);
+  const [lastImportMeta, setLastImportMeta] = useState<{ at: number; sourceName?: string } | null>(null);
 
   useEffect(() => {
-    // Load toggles
     setReflectionSave(getStoredItem<boolean>("privacy:reflection_save") ?? false);
     setReflectionEncrypt(getStoredItem<boolean>("privacy:reflection_encrypt") ?? true);
     setCounterSave(getStoredItem<boolean>("privacy:counter_save") ?? true);
     setPrayerRuleSave(getStoredItem<boolean>("privacy:prayer_rule_save") ?? true);
     setBibleSave(getStoredItem<boolean>("privacy:bible_save") ?? true);
-
-    // Load last import snapshot info
-    const snap = getStoredItem<{ at: number; sourceName?: string; keys: Record<string, string | null> }>("meta:last_import_snapshot");
-    if (snap && snap.keys) {
-      setLastImportInfo({ at: snap.at, sourceName: snap.sourceName, count: Object.keys(snap.keys).length });
-    }
   }, []);
 
   useEffect(() => {
@@ -184,7 +156,12 @@ export default function Privacy() {
 
   const approxKeyCount = useMemo(() => {
     const keys = safeKeys();
-    return keys.filter((k) => PREFIXES.some((p) => k.startsWith(p))).length;
+    return keys.filter((k) => {
+      return (
+        ALLOWED_PREFIXES.some((p) => k.startsWith(p)) ||
+        ALLOWED_PRIVACY_KEYS.has(k)
+      );
+    }).length;
   }, [reflectionSave, reflectionEncrypt, counterSave, prayerRuleSave, bibleSave]);
 
   async function exportEncrypted() {
@@ -195,7 +172,7 @@ export default function Privacy() {
 
     const items: Record<string, string> = {};
     for (const k of safeKeys()) {
-      if (!PREFIXES.some((p) => k.startsWith(p))) continue;
+      if (!(ALLOWED_PREFIXES.some((p) => k.startsWith(p)) || ALLOWED_PRIVACY_KEYS.has(k))) continue;
       const v = safeGetRaw(k);
       if (v != null) items[k] = v;
     }
@@ -211,83 +188,42 @@ export default function Privacy() {
       );
       showSuccess("Encrypted export downloaded.");
     } catch {
-      showError("Couldn't export.");
+      showError("Couldn’t export.");
     }
   }
 
-  // APPLY CONFIRMED IMPORT
-  function applyImport(preview: ImportPreview) {
-    // Snapshot currently stored values for keys that will change
-    const toChange = Object.entries(preview.items).filter(([k, v]) => safeGetRaw(k) !== v);
-    const snapshot: Record<string, string | null> = {};
-    for (const [k] of toChange) {
-      snapshot[k] = safeGetRaw(k);
-    }
-    setStoredItem("meta:last_import_snapshot", {
-      at: Date.now(),
-      sourceName: preview.sourceName ?? undefined,
-      keys: snapshot,
-    });
+  function diffPreview(importItems: Record<string, string>) {
+    // Prepare filtered + validated items, and compute a summary for confirmation
+    const accepted: Record<string, string> = {};
+    const rejectedKeys: string[] = [];
+    const privacyChanges: Array<{ key: string; from: string; to: string }> = [];
+    let otherCount = 0;
 
-    // Apply allowed items
-    for (const [k, v] of Object.entries(preview.items)) {
-      safeSetRaw(k, v);
-    }
-
-    // Reflect privacy toggles immediately in UI (best effort)
-    for (const diff of preview.privacyDiffs) {
-      const next = diff.to;
-      switch (diff.key) {
-        case "privacy:reflection_save":
-          setReflectionSave(next);
-          break;
-        case "privacy:reflection_encrypt":
-          setReflectionEncrypt(next);
-          break;
-        case "privacy:counter_save":
-          setCounterSave(next);
-          break;
-        case "privacy:prayer_rule_save":
-          setPrayerRuleSave(next);
-          break;
-        case "privacy:bible_save":
-          setBibleSave(next);
-          break;
+    for (const [k, v] of Object.entries(importItems)) {
+      if (!isAllowedKey(k) || !isValidValueForKey(k, v)) {
+        rejectedKeys.push(k);
+        continue;
       }
-    }
+      accepted[k] = v;
 
-    // Update snapshot info shown
-    setLastImportInfo({
-      at: Date.now(),
-      sourceName: preview.sourceName,
-      count: toChange.length,
-    });
-
-    showSuccess("Import complete. Review changes below. Refresh to ensure all views update.");
-  }
-
-  // UNDO LAST IMPORT
-  function undoLastImport() {
-    const snap = getStoredItem<{ at: number; sourceName?: string; keys: Record<string, string | null> }>("meta:last_import_snapshot");
-    if (!snap || !snap.keys) {
-      showError("No previous import snapshot found.");
-      return;
-    }
-
-    const entries = Object.entries(snap.keys);
-    for (const [k, raw] of entries) {
-      if (raw === null) {
-        removeStoredItem(k);
+      if (ALLOWED_PRIVACY_KEYS.has(k)) {
+        const currentRaw = safeGetRaw(k);
+        const currentParsed = parseJsonSafe(currentRaw);
+        const newParsed = parseJsonSafe(v) as WrappedValue | null;
+        const fromVal =
+          currentParsed && isWrappedValue(currentParsed) ? String(currentParsed.v) : "unset";
+        const toVal = newParsed && isWrappedValue(newParsed) ? String(newParsed.v) : "?";
+        if (fromVal !== toVal) {
+          privacyChanges.push({ key: k, from: fromVal, to: toVal });
+        }
       } else {
-        safeSetRaw(k, raw);
+        otherCount++;
       }
     }
-    removeStoredItem("meta:last_import_snapshot");
-    setLastImportInfo(null);
-    showSuccess("Reverted last import. Refresh to ensure all views update.");
+
+    return { accepted, rejectedKeys, privacyChanges, otherCount };
   }
 
-  // PREPARE IMPORT: decrypt, filter, validate, and prompt
   async function onImportFile(file: File | null) {
     if (!file) return;
     if (!importPass) {
@@ -295,75 +231,91 @@ export default function Privacy() {
       return;
     }
 
+    // Read+decrypt
+    let payload: ExportPayload | null = null;
     try {
       const raw = await file.text();
       const parsed = JSON.parse(raw) as { enc?: number; blob?: EncryptedBlob };
       if (parsed?.enc !== 1 || !parsed.blob) throw new Error("bad format");
-
-      const payload = await decryptJson<ExportPayload>(parsed.blob, importPass);
+      payload = await decryptJson<ExportPayload>(parsed.blob, importPass);
       if (payload.v !== 1) throw new Error("bad version");
-
-      const incoming = payload.items ?? {};
-      const total = Object.keys(incoming).length;
-
-      // Filter + validate
-      const allowedEntries: Array<[string, string]> = [];
-      let ignored = 0;
-      for (const [k, v] of Object.entries(incoming)) {
-        if (typeof v !== "string") {
-          ignored++;
-          continue;
-        }
-        if (!validateKeyValue(k, v)) {
-          ignored++;
-          continue;
-        }
-        allowedEntries.push([k, v]);
-      }
-
-      // Build stats
-      let added = 0;
-      let updated = 0;
-      let unchanged = 0;
-      for (const [k, v] of allowedEntries) {
-        const cur = safeGetRaw(k);
-        if (cur == null) added++;
-        else if (cur !== v) updated++;
-        else unchanged++;
-      }
-
-      // Privacy diffs
-      const privacyDiffs: Array<{ key: string; from: boolean | null; to: boolean }> = [];
-      for (const [k, v] of allowedEntries) {
-        if (!k.startsWith("privacy:")) continue;
-        const toVal = getWrappedBoolean(v);
-        if (toVal === null) continue;
-        const curVal = getWrappedBoolean(safeGetRaw(k));
-        if (curVal !== toVal) {
-          privacyDiffs.push({ key: k, from: curVal, to: toVal });
-        }
-      }
-
-      const items: Record<string, string> = Object.fromEntries(allowedEntries);
-      const preview: ImportPreview = {
-        items,
-        stats: {
-          total,
-          allowed: allowedEntries.length,
-          ignored,
-          added,
-          updated,
-          unchanged,
-        },
-        privacyDiffs,
-        sourceName: file.name,
-      };
-
-      setImportPreview(preview);
-      setConfirmOpen(true);
     } catch {
-      showError("Couldn't import (wrong passphrase or file). ");
+      showError("Couldn’t import (wrong passphrase or file).");
+      return;
     }
+
+    // Compute preview with allow-list + schema validation
+    const { accepted, privacyChanges, otherCount } = diffPreview(payload.items);
+    if (Object.keys(accepted).length === 0) {
+      showError("Nothing to import: no valid keys found.");
+      return;
+    }
+
+    // Build confirmation text, emphasizing privacy changes
+    const privacySummary =
+      privacyChanges.length > 0
+        ? privacyChanges
+            .map((c) => `• ${c.key.replace("privacy:", "")}: ${c.from} → ${c.to}`)
+            .join("\n")
+        : "No privacy setting changes.";
+
+    const summaryLines = [
+      `This will import ${otherCount} data entr${otherCount === 1 ? "y" : "ies"}.`,
+      privacyChanges.length > 0 ? "Privacy changes:" : "Privacy changes: none",
+      privacySummary,
+      "",
+      "Proceed with import?",
+    ];
+    // Native confirm for simplicity and reliability
+    const ok = window.confirm(summaryLines.join("\n"));
+    if (!ok) {
+      return;
+    }
+
+    // Snapshot current values for rollback
+    const snapshot: Record<string, string> = {};
+    for (const k of Object.keys(accepted)) {
+      const current = safeGetRaw(k);
+      if (current != null) snapshot[k] = current;
+    }
+
+    // Apply
+    for (const [k, v] of Object.entries(accepted)) {
+      safeSetRaw(k, v);
+    }
+    setRollbackSnapshot(snapshot);
+    setLastImportMeta({ at: Date.now(), sourceName: file.name });
+
+    showSuccess("Import complete. Refresh to see updates.");
+  }
+
+  function rollbackLastImport() {
+    if (!rollbackSnapshot) {
+      showError("No recent import to roll back.");
+      return;
+    }
+    // Restore snapshot values; if a key wasn't in snapshot, remove it
+    const affectedKeys = new Set<string>([
+      ...Object.keys(rollbackSnapshot),
+      ...safeKeys().filter((k) => isAllowedKey(k)),
+    ]);
+
+    for (const k of affectedKeys) {
+      if (k in rollbackSnapshot) {
+        safeSetRaw(k, rollbackSnapshot[k]);
+      } else if (isAllowedKey(k)) {
+        // If a key was newly created by the import and isn't in the snapshot, remove it
+        try {
+          window.localStorage.removeItem(k);
+        } catch {
+          // ignore
+        }
+      }
+    }
+
+    setRollbackSnapshot(null);
+    setLastImportMeta(null);
+    showSuccess("Rolled back last import.");
   }
 
   return (
@@ -387,7 +339,7 @@ export default function Privacy() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-base font-semibold tracking-tight">What's stored</h2>
+              <h2 className="text-base font-semibold tracking-tight">What’s stored</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Estimated local keys used by the app: <span className="font-semibold text-foreground">{approxKeyCount}</span>
               </p>
@@ -529,7 +481,7 @@ export default function Privacy() {
             <div>
               <h2 className="text-base font-semibold tracking-tight">Encrypted export / import</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Creates an encrypted JSON backup of the app's local data.
+                Creates an encrypted JSON backup of the app’s local data.
               </p>
             </div>
             <Lock className="h-5 w-5 text-muted-foreground" />
@@ -541,7 +493,7 @@ export default function Privacy() {
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Export</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Choose a passphrase. You'll need it to import later.
+                Choose a passphrase. You’ll need it to import later.
               </p>
               <div className="mt-3 grid gap-2">
                 <Input
@@ -585,99 +537,32 @@ export default function Privacy() {
                     </label>
                   </Button>
 
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-11 rounded-2xl border-border/60"
-                    disabled={!lastImportInfo}
-                    onClick={undoLastImport}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" /> Undo last import
-                  </Button>
+                  {lastImportMeta && (
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="h-11 rounded-2xl border-border/60"
+                        onClick={rollbackLastImport}
+                      >
+                        Undo last import
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        Imported {lastImportMeta.sourceName ? `"${lastImportMeta.sourceName}"` : "backup"} at{" "}
+                        {new Date(lastImportMeta.at).toLocaleString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
-
-                {lastImportInfo && (
-                  <p className="text-xs text-muted-foreground">
-                    Last import snapshot: {new Date(lastImportInfo.at).toLocaleString()} {lastImportInfo.sourceName ? `• ${lastImportInfo.sourceName}` : ""} • {lastImportInfo.count} key(s)
-                  </p>
-                )}
               </div>
             </div>
           </div>
 
           <p className="mt-4 text-xs text-muted-foreground">
-            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). If you forget the passphrase, the backup can't be recovered.
+            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). If you forget the passphrase, the backup can’t be recovered.
           </p>
         </Card>
       </div>
-
-      {/* Confirm import dialog */}
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="rounded-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Review import changes</AlertDialogTitle>
-            <AlertDialogDescription>
-              {importPreview ? (
-                <div className="space-y-3">
-                  <p className="text-sm">
-                    File: <span className="font-medium">{importPreview.sourceName ?? "unknown.json"}</span>
-                  </p>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="rounded-xl bg-muted/30 p-3">
-                      <div className="text-xs text-muted-foreground">Total keys in file</div>
-                      <div className="font-semibold">{importPreview.stats.total}</div>
-                    </div>
-                    <div className="rounded-xl bg-muted/30 p-3">
-                      <div className="text-xs text-muted-foreground">Allowed / Ignored</div>
-                      <div className="font-semibold">
-                        {importPreview.stats.allowed} / {importPreview.stats.ignored}
-                      </div>
-                    </div>
-                    <div className="rounded-xl bg-muted/30 p-3">
-                      <div className="text-xs text-muted-foreground">Will add</div>
-                      <div className="font-semibold">{importPreview.stats.added}</div>
-                    </div>
-                    <div className="rounded-xl bg-muted/30 p-3">
-                      <div className="text-xs text-muted-foreground">Will update</div>
-                      <div className="font-semibold">{importPreview.stats.updated}</div>
-                    </div>
-                  </div>
-
-                  {importPreview.privacyDiffs.length > 0 && (
-                    <div className="rounded-2xl border border-border/60 bg-amber-50/70 p-3 text-amber-900">
-                      <p className="text-sm font-semibold">Privacy settings will change:</p>
-                      <ul className="mt-2 space-y-1 text-sm">
-                        {importPreview.privacyDiffs.map((d) => (
-                          <li key={d.key} className="flex items-center justify-between">
-                            <span className="truncate">{d.key.replace("privacy:", "").replaceAll("_", " ")}</span>
-                            <span className="ml-3 rounded-full bg-white/70 px-2 py-0.5 text-xs font-medium">
-                              {String(d.from)} → {String(d.to)}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              ) : null}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (importPreview) {
-                  applyImport(importPreview);
-                }
-                setConfirmOpen(false);
-                setImportPreview(null);
-              }}
-            >
-              Apply import
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
