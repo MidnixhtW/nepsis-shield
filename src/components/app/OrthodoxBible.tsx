@@ -188,6 +188,8 @@ export function OrthodoxBible() {
     queryFn: async () => {
       const res = await fetch(browseUrl);
       if (!res.ok) throw new Error(`Bible request failed (${res.status})`);
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) throw new Error("Unexpected content type from Bible API");
       return (await res.json()) as BibleApiResponse;
     },
     enabled: Boolean(apiBookName),
@@ -199,6 +201,8 @@ export function OrthodoxBible() {
     queryFn: async () => {
       const res = await fetch(refUrl);
       if (!res.ok) throw new Error(`Bible request failed (${res.status})`);
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) throw new Error("Unexpected content type from Bible API");
       return (await res.json()) as BibleApiResponse;
     },
     enabled: Boolean(refSubmitted.trim()),
@@ -242,6 +246,12 @@ export function OrthodoxBible() {
     } catch {
       showError("Couldn't copy.");
     }
+  }
+
+  function truncateVerse(text?: string) {
+    const MAX = 1200;
+    const t = (text || "").trim();
+    return t.length > MAX ? `${t.slice(0, MAX)} … [truncated]` : t;
   }
 
   return (
@@ -293,7 +303,7 @@ export function OrthodoxBible() {
             <a
               href="https://www.oca.org/questions/scripture/canon-of-scripture"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               OCA: Canon of Scripture <ExternalLink className="ml-2 h-4 w-4" />
             </a>
@@ -486,7 +496,7 @@ export function OrthodoxBible() {
                   </Button>
 
                   <Button asChild variant="outline" className="h-11 rounded-2xl border-border/60">
-                    <a href={browseUrl} target="_blank" rel="noreferrer">
+                    <a href={browseUrl} target="_blank" rel="noopener noreferrer">
                       Open JSON <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
@@ -524,7 +534,7 @@ export function OrthodoxBible() {
                     <a
                       href="https://www.oca.org/questions/scripture/canon-of-scripture"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                     >
                       OCA canon explanation <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
@@ -540,13 +550,13 @@ export function OrthodoxBible() {
                   {browseVerses.map((v, idx) => (
                     <p key={idx} className="text-sm leading-relaxed">
                       {memorizeMode ? (
-                        <span className="text-foreground/90">{v.text?.trim()}</span>
+                        <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
                         <>
                           <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
                             {v.chapter}:{v.verse}
                           </span>
-                          <span className="text-foreground/90">{v.text?.trim()}</span>
+                          <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                         </>
                       )}
                     </p>
@@ -635,7 +645,7 @@ export function OrthodoxBible() {
                     <Copy className="mr-2 h-4 w-4" /> Copy
                   </Button>
                   <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                    <a href={refUrl} target="_blank" rel="noreferrer">
+                    <a href={refUrl} target="_blank" rel="noopener noreferrer">
                       Open JSON <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
@@ -655,13 +665,13 @@ export function OrthodoxBible() {
                   {(refQuery.data?.verses ?? []).map((v, idx) => (
                     <p key={idx} className="text-sm leading-relaxed">
                       {memorizeMode ? (
-                        <span className="text-foreground/90">{v.text?.trim()}</span>
+                        <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
                         <>
                           <span className="mr-2 align-top text-xs font-semibold text-muted-foreground">
                             {v.chapter}:{v.verse}
                           </span>
-                          <span className="text-foreground/90">{v.text?.trim()}</span>
+                          <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                         </>
                       )}
                     </p>
@@ -760,7 +770,7 @@ export function OrthodoxBible() {
             <a
               href="https://www.oca.org/questions/scripture/canon-of-scripture"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Open OCA canon explanation <ExternalLink className="ml-2 h-4 w-4" />
             </a>

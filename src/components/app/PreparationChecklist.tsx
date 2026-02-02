@@ -99,7 +99,7 @@ export function PreparationChecklist() {
           <div>
             <p className="text-sm font-semibold">Helpful texts</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Use the Church’s words to prepare with attention and humility.
+              Use the Church's words to prepare with attention and humility.
             </p>
           </div>
           <ShieldAlert className="h-5 w-5 text-muted-foreground" />
@@ -109,7 +109,7 @@ export function PreparationChecklist() {
             <a
               href="https://www.oca.org/orthodoxy/prayers/prayers-before-holy-communion"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Prayers before Communion <ExternalLink className="ml-2 h-4 w-4" />
             </a>
@@ -118,7 +118,7 @@ export function PreparationChecklist() {
             <a
               href="https://www.oca.org/orthodoxy/prayers/prayers-after-holy-communion"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Prayers after Communion <ExternalLink className="ml-2 h-4 w-4" />
             </a>

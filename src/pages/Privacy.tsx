@@ -466,12 +466,12 @@ export default function Privacy() {
               <p className="text-sm font-semibold">References</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                  <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
+                  <a href="https://www.oca.org/questions" target="_blank" rel="noopener noreferrer">
                     OCA Q&A <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
                 <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                  <a href="https://www.oca.org/orthodoxy/prayers" target="_blank" rel="noreferrer">
+                  <a href="https://www.oca.org/orthodoxy/prayers" target="_blank" rel="noopener noreferrer">
                     OCA prayers <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

@@ -135,6 +135,11 @@ export function ConfessionPrep() {
   async function unlock() {
     if (!saveEnabled) return;
 
+    if (pass.length < 8) {
+      showError("Use a longer passphrase (8+ characters).");
+      return;
+    }
+
     const savedNote = getStoredItem<StoredNote>(noteKey(wk));
     if (!savedNote || typeof savedNote === "string") {
       setLocked(false);
@@ -187,7 +192,7 @@ export function ConfessionPrep() {
         <Textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="Keep notes short and concrete (names/details aren’t required)."
+          placeholder="Keep notes short and concrete (names/details aren't required)."
           className="mt-2 min-h-28 rounded-2xl"
           disabled={saveEnabled && encryptEnabled && locked}
         />
@@ -253,7 +258,15 @@ export function ConfessionPrep() {
                 </div>
                 <Switch
                   checked={encryptEnabled}
-                  onCheckedChange={setEncryptEnabled}
+                  onCheckedChange={(checked) => {
+                    if (!checked && saveEnabled) {
+                      const ok = window.confirm(
+                        "Disabling encryption will store confession notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?"
+                      );
+                      if (!ok) return;
+                    }
+                    setEncryptEnabled(checked);
+                  }}
                   disabled={!saveEnabled}
                 />
               </div>
@@ -278,7 +291,7 @@ export function ConfessionPrep() {
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Your passphrase is never stored. If forgotten, encrypted notes can’t be recovered.
+                    Your passphrase is never stored. If forgotten, encrypted notes can't be recovered.
                   </p>
                 </div>
               ) : null}
@@ -296,7 +309,7 @@ export function ConfessionPrep() {
                 <a
                   href="https://www.oca.org/questions/sacramentconfession/confessing-in-the-presence-of-a-priest"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   Confessing in the Presence of a Priest (Q&A) <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
@@ -305,7 +318,7 @@ export function ConfessionPrep() {
                 <a
                   href="https://www.oca.org/questions/sevensacraments/questions-on-the-sacraments"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   Questions on the Sacraments (Q&A) <ExternalLink className="ml-2 h-4 w-4" />
                 </a>

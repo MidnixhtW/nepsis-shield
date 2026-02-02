@@ -265,7 +265,7 @@ export function PrayerRule() {
                     <a
                       href="https://www.oca.org/orthodoxy/prayers"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                     >
                       Browse OCA prayer texts <ExternalLink className="ml-2 h-4 w-4" />
                     </a>

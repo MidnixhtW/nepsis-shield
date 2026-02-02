@@ -105,6 +105,11 @@ export function DailyReflection() {
   async function unlockAndLoad() {
     if (!saveEnabled) return;
 
+    if (passphrase.length < 8) {
+      showError("Use a longer passphrase (8+ characters).");
+      return;
+    }
+
     const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
     if (!stored || typeof stored === "string") {
       setLocked(false);
@@ -216,7 +221,15 @@ export function DailyReflection() {
                         </div>
                         <Switch
                           checked={encryptEnabled}
-                          onCheckedChange={setEncryptEnabled}
+                          onCheckedChange={(checked) => {
+                            if (!checked && saveEnabled) {
+                              const ok = window.confirm(
+                                "Disabling encryption will store journal notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?"
+                              );
+                              if (!ok) return;
+                            }
+                            setEncryptEnabled(checked);
+                          }}
                           disabled={!saveEnabled}
                         />
                       </div>
@@ -298,7 +311,7 @@ export function DailyReflection() {
               <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
               <div className="flex gap-2">
                 <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                  <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noreferrer">
+                  <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
                     Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
