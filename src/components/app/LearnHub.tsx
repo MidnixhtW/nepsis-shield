@@ -1,34 +1,27 @@
-import { BookOpen, ExternalLink, HelpCircle, LibraryBig } from "lucide-react";
+import { ExternalLink, HelpCircle, LibraryBig, ScrollText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
-import { OrthodoxBible } from "@/components/app/OrthodoxBible";
 
 export function LearnHub() {
   return (
     <div className="grid gap-4">
       <Tabs defaultValue="guide" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-4">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-3">
           <TabsTrigger
             value="guide"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
           >
-            <BookOpen className="h-4 w-4 sm:mr-2" /> Guide
+            <ScrollText className="h-4 w-4 sm:mr-2" /> Guide
           </TabsTrigger>
           <TabsTrigger
             value="qa"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
           >
             <HelpCircle className="h-4 w-4 sm:mr-2" /> Q&A
-          </TabsTrigger>
-          <TabsTrigger
-            value="bible"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
-          >
-            <BookOpen className="h-4 w-4 sm:mr-2" /> Bible
           </TabsTrigger>
           <TabsTrigger
             value="library"
@@ -44,10 +37,6 @@ export function LearnHub() {
 
         <TabsContent value="qa" className="mt-4">
           <CatechesisQA />
-        </TabsContent>
-
-        <TabsContent value="bible" className="mt-4">
-          <OrthodoxBible />
         </TabsContent>
 
         <TabsContent value="library" className="mt-4">

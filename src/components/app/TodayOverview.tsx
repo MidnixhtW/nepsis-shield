@@ -75,7 +75,7 @@ function QuickAction({
 export function TodayOverview({
   onNavigate,
 }: {
-  onNavigate?: (to: { section: AppSection; tab?: string }) => void;
+  onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
 }) {
   const today = useMemo(() => new Date(), []);
 
@@ -174,19 +174,29 @@ export function TodayOverview({
 
         <div className="grid gap-2 sm:grid-cols-2">
           <QuickAction
-            label="Prayers"
+            label="Prayer texts"
             icon={<Hand className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}
           />
           <QuickAction
-            label="Readings"
+            label="Daily readings"
             icon={<BookOpen className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "read" })}
+            onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+          />
+          <QuickAction
+            label="Bible"
+            icon={<BookOpen className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "read", read: "bible" })}
           />
           <QuickAction
             label="Jesus Prayer"
             icon={<Target className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
+          />
+          <QuickAction
+            label="Preparation"
+            icon={<Hand className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
           />
           <QuickAction
             label="Learn"

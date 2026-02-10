@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
-import { DailyReadings } from "@/components/app/DailyReadings";
 import { LearnHub } from "@/components/app/LearnHub";
 import { PrayerHub, type PrayerTab } from "@/components/app/PrayerHub";
+import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
@@ -28,6 +28,14 @@ const legacyMap: Record<
   catechesis: { section: "learn" },
   today: { section: "today" },
 };
+
+function isPrayerTab(x: string | null): x is PrayerTab {
+  return x === "rule" || x === "prayers" || x === "counter" || x === "prep" || x === "journal";
+}
+
+function isReadTab(x: string | null): x is ReadTab {
+  return x === "daily" || x === "bible";
+}
 
 const Index = () => {
   const navigate = useNavigate();
@@ -82,17 +90,28 @@ const Index = () => {
     setSection(next);
     const nextParams = new URLSearchParams(searchParams);
 
-    // Keep tab state only where it makes sense.
+    // Keep sub-tab state only where it makes sense.
     if (next !== "pray") nextParams.delete("tab");
+    if (next !== "read") nextParams.delete("read");
 
     navigate(next === "today" ? "/today" : `/${next}?${nextParams.toString()}`);
   }
 
-  const prayerTab = (searchParams.get("tab") as PrayerTab | null) ?? "rule";
+  const prayerTabRaw = searchParams.get("tab");
+  const prayerTab: PrayerTab = isPrayerTab(prayerTabRaw) ? prayerTabRaw : "rule";
 
   function setPrayerTab(t: PrayerTab) {
     const next = new URLSearchParams(searchParams);
     next.set("tab", t);
+    setSearchParams(next, { replace: true });
+  }
+
+  const readTabRaw = searchParams.get("read");
+  const readTab: ReadTab = isReadTab(readTabRaw) ? readTabRaw : "daily";
+
+  function setReadTab(t: ReadTab) {
+    const next = new URLSearchParams(searchParams);
+    next.set("read", t);
     setSearchParams(next, { replace: true });
   }
 
@@ -105,6 +124,10 @@ const Index = () => {
               const next = new URLSearchParams(searchParams);
               if (to.section === "pray" && to.tab) next.set("tab", to.tab);
               else next.delete("tab");
+
+              if (to.section === "read" && to.read) next.set("read", to.read);
+              else next.delete("read");
+
               navigate(`/${to.section}?${next.toString()}`);
               setSection(to.section);
             }}
@@ -115,7 +138,7 @@ const Index = () => {
           <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} />
         ) : null}
 
-        {section === "read" ? <DailyReadings /> : null}
+        {section === "read" ? <ReadHub tab={readTab} onTabChange={setReadTab} /> : null}
         {section === "learn" ? <LearnHub /> : null}
 
         <AppFooter />
