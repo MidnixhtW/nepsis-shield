@@ -136,7 +136,7 @@ export function DailyReadings() {
                 variant="outline"
                 className="rounded-2xl border-border/60"
               >
-                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noreferrer">
+                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
                   Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>

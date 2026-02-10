@@ -130,8 +130,9 @@ export default function Privacy() {
   const [exportPass, setExportPass] = useState("");
   const [importPass, setImportPass] = useState("");
 
-  // Temporary snapshot for rollback within this session
-  const [rollbackSnapshot, setRollbackSnapshot] = useState<Record<string, string> | null>(null);
+  // Temporary snapshot for rollback within this session.
+  // For every imported key, store its *previous* raw value (or null if it didn't exist).
+  const [rollbackSnapshot, setRollbackSnapshot] = useState<Record<string, string | null> | null>(null);
   const [lastImportMeta, setLastImportMeta] = useState<{ at: number; sourceName?: string } | null>(null);
 
   useEffect(() => {
@@ -276,11 +277,10 @@ export default function Privacy() {
       return;
     }
 
-    // Snapshot current values for rollback
-    const snapshot: Record<string, string> = {};
+    // Snapshot current values for rollback (only for keys that will be imported)
+    const snapshot: Record<string, string | null> = {};
     for (const k of Object.keys(accepted)) {
-      const current = safeGetRaw(k);
-      if (current != null) snapshot[k] = current;
+      snapshot[k] = safeGetRaw(k);
     }
 
     // Apply
@@ -298,22 +298,17 @@ export default function Privacy() {
       showError("No recent import to roll back.");
       return;
     }
-    // Restore snapshot values; if a key wasn't in snapshot, remove it
-    const affectedKeys = new Set<string>([
-      ...Object.keys(rollbackSnapshot),
-      ...safeKeys().filter((k) => isAllowedKey(k)),
-    ]);
 
-    for (const k of affectedKeys) {
-      if (k in rollbackSnapshot) {
-        safeSetRaw(k, rollbackSnapshot[k]);
-      } else if (isAllowedKey(k)) {
-        // If a key was newly created by the import and isn't in the snapshot, remove it
+    // Restore only the keys that were modified/created during the last import.
+    for (const [k, prev] of Object.entries(rollbackSnapshot)) {
+      if (prev == null) {
         try {
           window.localStorage.removeItem(k);
         } catch {
           // ignore
         }
+      } else {
+        safeSetRaw(k, prev);
       }
     }
 
@@ -345,7 +340,8 @@ export default function Privacy() {
             <div>
               <h2 className="text-base font-semibold tracking-tight">What's stored</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Estimated local keys used by the app: <span className="font-semibold text-foreground">{approxKeyCount}</span>
+                Estimated local keys used by the app:{" "}
+                <span className="font-semibold text-foreground">{approxKeyCount}</span>
               </p>
             </div>
             <Shield className="h-5 w-5 text-muted-foreground" />

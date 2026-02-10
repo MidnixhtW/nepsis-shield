@@ -180,7 +180,7 @@ export function OrthodoxDailyGuide() {
                       variant="outline"
                       className="btn-wrap rounded-2xl border-border/60"
                     >
-                      <a href={t.sourceUrl} target="_blank" rel="noreferrer">
+                      <a href={t.sourceUrl} target="_blank" rel="noopener noreferrer">
                         {t.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
@@ -208,7 +208,7 @@ export function OrthodoxDailyGuide() {
                   <a
                     href="https://www.oca.org/cdn/PDFs/2023-0609-EOCB.pdf"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     Open catechism PDF <ExternalLink className="ml-2 h-4 w-4" />
                   </a>

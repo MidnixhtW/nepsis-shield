@@ -340,7 +340,7 @@ export function JesusPrayerCounter() {
             <a
               href="https://www.oca.org/orthodoxy/the-orthodox-faith/spirituality/prayer-fasting-and-almsgiving/the-jesus-prayer"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Open article
             </a>

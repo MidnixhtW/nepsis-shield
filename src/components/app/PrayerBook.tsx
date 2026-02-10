@@ -328,7 +328,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                   <a
                     href="https://www.oca.org/orthodoxy/prayers/morning-prayers"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     Full Morning Prayers (OCA)
                   </a>
@@ -359,7 +359,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                   <a
                     href="https://www.oca.org/orthodoxy/prayers/evening-prayers"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     Full Evening Prayers (OCA)
                   </a>
@@ -436,7 +436,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                   <a
                     href="https://www.oca.org/orthodoxy/prayers/before-and-after-meals"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                   >
                     Source: Before & After Meals (OCA)
                   </a>

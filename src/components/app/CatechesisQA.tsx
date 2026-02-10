@@ -750,7 +750,7 @@ export function CatechesisQA() {
             Showing <span className="font-semibold text-foreground">{filtered.length}</span>.
           </p>
           <Button asChild variant="outline" className="btn-wrap rounded-2xl border-border/60">
-            <a href="https://www.oca.org/questions" target="_blank" rel="noreferrer">
+            <a href="https://www.oca.org/questions" target="_blank" rel="noopener noreferrer">
               Full OCA Q&A index <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>
@@ -796,7 +796,7 @@ export function CatechesisQA() {
                               variant="outline"
                               className="btn-wrap rounded-2xl border-border/60"
                             >
-                              <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                              <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
                                 {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                               </a>
                             </Button>
@@ -846,7 +846,7 @@ export function CatechesisQA() {
                         variant="outline"
                         className="btn-wrap rounded-2xl border-border/60"
                       >
-                        <a href={item.sourceUrl} target="_blank" rel="noreferrer">
+                        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
                           {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                         </a>
                       </Button>

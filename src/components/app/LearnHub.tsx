@@ -68,7 +68,7 @@ export function LearnHub() {
                 <a
                   href="https://www.oca.org/questions"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="min-w-0"
                 >
                   Questions & Answers <ExternalLink className="h-4 w-4" />
@@ -82,7 +82,7 @@ export function LearnHub() {
                 <a
                   href="https://www.oca.org/orthodoxy/prayers"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="min-w-0"
                 >
                   Prayers <ExternalLink className="h-4 w-4" />
@@ -96,7 +96,7 @@ export function LearnHub() {
                 <a
                   href="https://www.oca.org/orthodoxy/the-orthodox-faith"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="min-w-0"
                 >
                   The Orthodox Faith <ExternalLink className="h-4 w-4" />
@@ -110,7 +110,7 @@ export function LearnHub() {
                 <a
                   href="https://www.oca.org/readings"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="min-w-0"
                 >
                   Daily readings <ExternalLink className="h-4 w-4" />

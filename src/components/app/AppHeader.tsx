@@ -74,7 +74,7 @@ export function AppHeader() {
                   variant="outline"
                   className="h-11 justify-start rounded-2xl border-border/60"
                 >
-                  <a href="https://www.oca.org" target="_blank" rel="noreferrer">
+                  <a href="https://www.oca.org" target="_blank" rel="noopener noreferrer">
                     Visit OCA.org <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -114,7 +114,7 @@ export function AppHeader() {
             variant="outline"
             className="rounded-2xl border-border/60 bg-background/60"
           >
-            <a href="https://www.oca.org" target="_blank" rel="noreferrer">
+            <a href="https://www.oca.org" target="_blank" rel="noopener noreferrer">
               OCA <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>

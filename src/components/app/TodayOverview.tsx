@@ -104,7 +104,7 @@ export function TodayOverview({
               <a
                 href="https://www.oca.org"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-xs font-semibold text-primary hover:underline"
               >
                 Orthodox Church in America
@@ -154,7 +154,7 @@ export function TodayOverview({
                     size="sm"
                     className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noreferrer">
+                    <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
                       Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
