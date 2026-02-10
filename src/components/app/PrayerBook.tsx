@@ -1,4 +1,4 @@
-import { Hand, MoonStar, Sun, Utensils, Sparkles } from "lucide-react";
+import { Hand, MoonStar, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -126,6 +126,95 @@ const theotokosShort = [
   "Most Holy Theotokos, save us.",
   "Beneath your compassion we take refuge, O Theotokos. Despise not our petitions in time of trouble, but deliver us from dangers, only Pure One, only Blessed One.",
   "It is truly meet to bless you, O Theotokos, ever-blessed and most pure, and the Mother of our God. More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption you gave birth to God the Word. True Theotokos, we magnify you.",
+];
+
+type SaintPrayer = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  lines: string[];
+  ocaTroparionUrl?: string;
+};
+
+const SAINT_PRAYERS: SaintPrayer[] = [
+  {
+    id: "michael",
+    title: "Archangel Michael",
+    subtitle: "Bodiless powers",
+    lines: ["Holy Archangel Michael, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2021/09/06/102517-commemoration-of-the-miracle-of-the-archangel-michael-at-colossa",
+  },
+  {
+    id: "nicholas",
+    title: "St. Nicholas",
+    subtitle: "Wonderworker of Myra",
+    lines: ["Holy Hierarch Nicholas, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2021/12/06/103484-saint-nicholas-the-wonderworker-archbishop-of-myra-in-lycia",
+  },
+  {
+    id: "george",
+    title: "St. George",
+    subtitle: "Great Martyr",
+    lines: ["Holy Great Martyr George, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2020/07/03/205460-saint-george-the-god-bearer",
+  },
+  {
+    id: "mary_magdalene",
+    title: "St. Mary Magdalene",
+    subtitle: "Equal-to-the-Apostles",
+    lines: ["Holy Myrrhbearer Mary Magdalene, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2023/07/22/102070-myrrhbearer-and-equal-of-the-apostles-mary-magdalene",
+  },
+  {
+    id: "katherine",
+    title: "St. Katherine (Catherine)",
+    subtitle: "Great Martyr of Alexandria",
+    lines: ["Holy Great Martyr Katherine, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2018/11/24/103382-great-martyr-katherine-of-alexandria",
+  },
+  {
+    id: "seraphim",
+    title: "St. Seraphim of Sarov",
+    subtitle: "Venerable Wonderworker",
+    lines: ["Venerable Father Seraphim, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/01/02/100008-repose-of-venerable-seraphim-wonderworker-of-sarov",
+  },
+  {
+    id: "herman",
+    title: "St. Herman of Alaska",
+    subtitle: "Wonderworker of All America",
+    lines: ["Venerable Father Herman, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2016/12/13/103530-repose-of-venerable-herman-of-alaska-wonderworker-of-all-america",
+  },
+  {
+    id: "raphael_brooklyn",
+    title: "St. Raphael of Brooklyn",
+    subtitle: "Bishop and shepherd",
+    lines: ["Holy Hierarch Raphael, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/4465/02/27/100610-repose-of-saint-raphael-bishop-of-brooklyn",
+  },
+  {
+    id: "gregory_theologian",
+    title: "St. Gregory the Theologian",
+    subtitle: "Archbishop of Constantinople",
+    lines: ["Holy Hierarch Gregory, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/20112021/01/25/100298-saint-gregory-the-theologian-archbishop-of-constantinople",
+  },
+  {
+    id: "mary_of_egypt",
+    title: "St. Mary of Egypt",
+    subtitle: "Model of repentance",
+    lines: ["Venerable Mother Mary of Egypt, pray to God for us."],
+  },
 ];
 
 const stMichael = [
@@ -492,19 +581,59 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
               <div className="grid gap-3">
                 <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                    Orthodox short invocations
+                    How to use this
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These are traditional short prayers used widely in Orthodox practice (especially the simple "pray to God for us" invocations). For longer, source-specific texts, use the OCA links in the "OCA: Occasions" section.
+                    These are traditional Orthodox short prayers (invocations). For full hymn texts (troparia/kontakia), use the OCA links.
                   </p>
                 </div>
 
                 <PrayerBlock title="Short prayers to the Theotokos" lines={theotokosShort} />
-                <PrayerBlock title="To St. Michael the Archangel" lines={stMichael} />
-                <PrayerBlock title="To St. Nicholas" lines={stNicholas} />
-                <PrayerBlock title="To St. John the Forerunner" lines={stJohnForerunner} />
-                <PrayerBlock title="To St. George" lines={stGeorge} />
-                <PrayerBlock title="To St. Mary of Egypt" lines={stMaryOfEgypt} />
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {SAINT_PRAYERS.map((p) => (
+                    <div
+                      key={p.id}
+                      className="rounded-2xl border border-border/60 bg-muted/20 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold leading-tight">
+                            {p.title}
+                          </p>
+                          {p.subtitle ? (
+                            <p className="mt-0.5 text-xs text-muted-foreground">
+                              {p.subtitle}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      <div className="mt-3 space-y-2 text-sm leading-relaxed">
+                        {p.lines.map((l, idx) => (
+                          <p key={idx}>{l}</p>
+                        ))}
+                      </div>
+
+                      {p.ocaTroparionUrl ? (
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="mt-3 w-fit rounded-2xl border-border/60"
+                        >
+                          <a
+                            href={p.ocaTroparionUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Troparion & Kontakion (OCA)
+                            <ExternalLink className="ml-2 h-4 w-4" />
+                          </a>
+                        </Button>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
 
                 <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">
