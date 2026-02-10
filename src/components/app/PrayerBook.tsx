@@ -1,4 +1,4 @@
-import { Hand, MoonStar, Sun, Utensils } from "lucide-react";
+import { Hand, MoonStar, Sun, Utensils, Sparkles } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -119,6 +119,38 @@ const eveningTheotokos = [
   "TO THE VIRGIN THEOTOKOS:",
   "Rejoice! O Virgin Theotokos! Mary, full of Grace, the Lord is with you. Blessed are you among women, and blessed is the fruit of your womb, for you have borne the Savior of our souls!",
   "O victorious leader of triumphant host! We, your servants, delivered from evil, sing our grateful thanks to you, O Theotokos! As you possess invincible might set us free from every calamity so that we may sing: Rejoice! O unwedded Bride!",
+];
+
+const theotokosShort = [
+  "MOST HOLY THEOTOKOS:",
+  "Most Holy Theotokos, save us.",
+  "Beneath your compassion we take refuge, O Theotokos. Despise not our petitions in time of trouble, but deliver us from dangers, only Pure One, only Blessed One.",
+  "It is truly meet to bless you, O Theotokos, ever-blessed and most pure, and the Mother of our God. More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption you gave birth to God the Word. True Theotokos, we magnify you.",
+];
+
+const stMichael = [
+  "HOLY ARCHANGEL MICHAEL:",
+  "O holy Archangel Michael, commander of the heavenly hosts, protect us by your prayers. Drive far from us every enemy visible and invisible, and strengthen us to do the will of God in peace and repentance. Amen.",
+];
+
+const stNicholas = [
+  "SAINT NICHOLAS:",
+  "O holy father Nicholas, wonderworker and hierarch, pray to God for us. Help us to live with mercy, humility, and steadfast faith in Christ. Amen.",
+];
+
+const stJohnForerunner = [
+  "SAINT JOHN THE FORERUNNER:",
+  "O holy Prophet and Forerunner John, preacher of repentance, pray to God for us. Teach us to turn our hearts to the Lord and to bear fruits worthy of repentance. Amen.",
+];
+
+const stGeorge = [
+  "SAINT GEORGE:",
+  "O holy Great-Martyr George, victorious sufferer, pray to God for us. Grant us courage to confess Christ with love, patience in trials, and faithfulness in all things. Amen.",
+];
+
+const stMaryOfEgypt = [
+  "SAINT MARY OF EGYPT:",
+  "O venerable mother Mary, model of repentance, pray to God for us. Help us to hate sin, to love Christ, and to begin again with hope. Amen.",
 ];
 
 const jesus = ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."];
@@ -441,6 +473,33 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     Source: Before & After Meals (OCA)
                   </a>
                 </Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="saints" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" /> Saints & intercessions
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <PrayerBlock title="Short prayers to the Theotokos" lines={theotokosShort} />
+                <PrayerBlock title="To St. Michael the Archangel" lines={stMichael} />
+                <PrayerBlock title="To St. Nicholas" lines={stNicholas} />
+                <PrayerBlock title="To St. John the Forerunner" lines={stJohnForerunner} />
+                <PrayerBlock title="To St. George" lines={stGeorge} />
+                <PrayerBlock title="To St. Mary of Egypt" lines={stMaryOfEgypt} />
+
+                <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Tip
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    For your patron saint, you can also use the "To one's Patron Saint" prayer in the Morning section and simply say the saint's name.
+                  </p>
+                </div>
               </div>
             </AccordionContent>
           </AccordionItem>
