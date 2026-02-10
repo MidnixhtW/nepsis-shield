@@ -11,9 +11,7 @@ import {
   Target,
   CalendarPlus,
   Info,
-  Shield,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -258,45 +256,6 @@ export function TodayOverview({
             icon={<GraduationCap className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "learn" })}
           />
-        </div>
-      </Card>
-
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="text-base font-semibold tracking-tight">What's new</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Recent improvements in this build.
-            </p>
-          </div>
-          <Info className="h-5 w-5 text-muted-foreground" />
-        </div>
-
-        <Separator className="my-4" />
-
-        <ul className="grid gap-2 text-sm text-muted-foreground">
-          <li className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
-            Read is split into <span className="font-semibold text-foreground">Lectionary</span> and <span className="font-semibold text-foreground">Bible</span>.
-          </li>
-          <li className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
-            Saints & intercessions added to Prayer Texts.
-          </li>
-          <li className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
-            Privacy: third-party requests use <span className="font-semibold text-foreground">no-referrer</span> and per-session caching.
-          </li>
-        </ul>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/about">
-              <Info className="mr-2 h-4 w-4" /> About
-            </Link>
-          </Button>
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/privacy">
-              <Shield className="mr-2 h-4 w-4" /> Privacy
-            </Link>
-          </Button>
         </div>
       </Card>
     </div>
