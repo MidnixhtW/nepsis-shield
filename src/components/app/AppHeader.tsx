@@ -67,6 +67,16 @@ export function AppHeader() {
                   variant="outline"
                   className="h-11 justify-start rounded-2xl border-border/60"
                 >
+                  <Link to="/about">
+                    About & attribution
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 justify-start rounded-2xl border-border/60"
+                >
                   <Link to="/privacy">
                     <Shield className="mr-2 h-4 w-4" /> Privacy
                   </Link>
@@ -105,6 +115,17 @@ export function AppHeader() {
           </Badge>
 
           <ThemeToggle />
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60"
+          >
+            <Link to="/about">
+              About
+            </Link>
+          </Button>
 
           <Button
             asChild

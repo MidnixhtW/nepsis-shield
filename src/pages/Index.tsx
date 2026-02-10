@@ -8,6 +8,7 @@ import { DailyReadings } from "@/components/app/DailyReadings";
 import { LearnHub } from "@/components/app/LearnHub";
 import { PrayerHub, type PrayerTab } from "@/components/app/PrayerHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
+import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
@@ -116,6 +117,8 @@ const Index = () => {
 
         {section === "read" ? <DailyReadings /> : null}
         {section === "learn" ? <LearnHub /> : null}
+
+        <AppFooter />
       </div>
     </AppShell>
   );

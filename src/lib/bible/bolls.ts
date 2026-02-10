@@ -1,3 +1,5 @@
+import { fetchJsonCached } from "@/lib/privacyFetch";
+
 export type BollsBook = {
   bookid: number;
   chronorder?: number;
@@ -30,8 +32,6 @@ function norm(s: string) {
 }
 
 const booksCache = new Map<string, Promise<BollsBook[]>>();
-
-import { fetchJsonCached } from "@/lib/privacyFetch";
 
 export async function fetchBollsBooks(slug: string): Promise<BollsBook[]> {
   if (!booksCache.has(slug)) {
