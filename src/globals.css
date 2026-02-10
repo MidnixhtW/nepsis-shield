@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    /* Light mode (default variables; app defaults to dark via next-themes) */
-    --background: 34 42% 96%;
+    /* Light mode */
+    --background: 210 40% 98%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -14,80 +14,80 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Vivid red */
-    --primary: 0 78% 52%;
+    /* Electric violet */
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
 
-    /* Warm neutral */
-    --secondary: 30 20% 92%;
+    /* Cool surface */
+    --secondary: 210 34% 94%;
     --secondary-foreground: 222 47% 11%;
 
-    --muted: 30 18% 92%;
-    --muted-foreground: 220 10% 35%;
+    --muted: 210 34% 94%;
+    --muted-foreground: 220 10% 36%;
 
-    /* Warm gold */
-    --accent: 38 92% 55%;
-    --accent-foreground: 222 47% 11%;
+    /* Bright teal accent */
+    --accent: 186 90% 40%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 42%;
+    --destructive: 0 74% 48%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 30 14% 84%;
-    --input: 30 14% 84%;
-    --ring: 0 78% 52%;
+    --border: 214 28% 86%;
+    --input: 214 28% 86%;
+    --ring: 262 83% 58%;
 
-    --radius: 1.1rem;
+    --radius: 1.25rem;
 
-    --sidebar-background: 34 42% 96%;
+    --sidebar-background: 210 40% 98%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 0 78% 52%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 18% 92%;
+    --sidebar-accent: 210 34% 94%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 30 14% 84%;
-    --sidebar-ring: 0 78% 52%;
+    --sidebar-border: 214 28% 86%;
+    --sidebar-ring: 262 83% 58%;
   }
 
   .dark {
-    /* Current palette (dark mode) */
-    --background: 0 0% 6%;
-    --foreground: 0 0% 98%;
+    /* Dark mode: deep indigo (not pure black) */
+    --background: 230 35% 10%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
+    --card: 230 32% 13%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 230 32% 13%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 0 78% 52%;
+    --primary: 262 83% 62%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 230 25% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 72%;
+    --muted: 230 25% 17%;
+    --muted-foreground: 215 18% 75%;
 
-    --accent: 38 92% 55%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 186 90% 45%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 42%;
+    --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 16%;
-    --input: 0 0% 16%;
-    --ring: 0 78% 52%;
+    --border: 230 20% 24%;
+    --input: 230 20% 24%;
+    --ring: 262 83% 62%;
 
-    --radius: 1.1rem;
+    --radius: 1.25rem;
 
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 0 78% 52%;
+    --sidebar-background: 230 35% 10%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 262 83% 62%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 16%;
-    --sidebar-ring: 0 78% 52%;
+    --sidebar-accent: 230 25% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 20% 24%;
+    --sidebar-ring: 262 83% 62%;
   }
 }
 
@@ -116,7 +116,7 @@
     @apply bg-background text-foreground;
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
       Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
   }
 }
 

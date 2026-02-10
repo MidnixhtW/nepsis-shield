@@ -67,9 +67,7 @@ export function AppHeader() {
                   variant="outline"
                   className="h-11 justify-start rounded-2xl border-border/60"
                 >
-                  <Link to="/about">
-                    About & attribution
-                  </Link>
+                  <Link to="/about">About & attribution</Link>
                 </Button>
 
                 <Button
@@ -122,9 +120,7 @@ export function AppHeader() {
             variant="outline"
             className="rounded-2xl border-border/60 bg-background/60"
           >
-            <Link to="/about">
-              About
-            </Link>
+            <Link to="/about">About</Link>
           </Button>
 
           <Button
@@ -151,22 +147,32 @@ export function AppHeader() {
         </div>
       </div>
 
-      <Card className="overflow-hidden rounded-3xl border-border/60 bg-card">
+      <Card className="group overflow-hidden rounded-3xl border-border/60 bg-card">
         <div className="relative aspect-[16/10] sm:aspect-[16/6]">
           <img
             alt="Icon of Christ"
             src="https://commons.wikimedia.org/wiki/Special:FilePath/Christ_Pantocrator_mosaic_from_Hagia_Sophia_2744_x_2900_pixels_3.1_MB.jpg"
-            className="h-full w-full object-cover object-[50%_22%]"
+            className="h-full w-full object-cover object-[50%_22%] transition-transform duration-500 group-hover:scale-[1.02]"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-background/40" />
+          <div className="absolute inset-0 bg-background/35" />
           <div className="absolute inset-0 p-4 sm:p-6">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-              Prayer • Fasting • Scripture
-            </p>
-            <p className="mt-1 max-w-xl text-sm leading-relaxed text-foreground/90">
-              A daily Orthodox companion with direct links to OCA.org. This is an independent project and not an official app of the Orthodox Church in America.
-            </p>
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                Prayer • Fasting • Scripture
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-foreground/90">
+                A daily Orthodox companion with direct links to OCA.org — designed to stay simple and calm.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary ring-1 ring-primary/25">
+                  Quick tabs
+                </Badge>
+                <Badge className="rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent ring-1 ring-accent/25">
+                  Privacy-first
+                </Badge>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
