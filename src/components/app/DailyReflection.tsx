@@ -31,6 +31,7 @@ import {
 import type { EncryptedBlob } from "@/lib/cryptoVault";
 import { decryptString, encryptString } from "@/lib/cryptoVault";
 import { showError, showSuccess } from "@/utils/toast";
+import { PassphraseMeter } from "@/components/app/PassphraseMeter";
 
 function keyForDay(dayKey: string) {
   return `reflection:${dayKey}`;
@@ -275,6 +276,7 @@ export function DailyReflection() {
                             Unlock
                           </Button>
                         </div>
+                        <PassphraseMeter passphrase={passphrase} className="mt-3" />
                         <p className="mt-2 text-xs text-amber-900/70">
                           Your passphrase is never stored. If you forget it, encrypted notes can't be recovered.
                         </p>

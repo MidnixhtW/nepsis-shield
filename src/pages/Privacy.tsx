@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import {
   Download,
@@ -24,6 +25,8 @@ import {
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
 import { downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
+import { PassphraseMeter } from "@/components/app/PassphraseMeter";
+import { passphraseStrength } from "@/lib/passphraseStrength";
 
 // Safe localStorage helpers
 function safeKeys(): string[] {
@@ -173,6 +176,12 @@ export default function Privacy() {
   async function exportEncrypted() {
     if (!exportPass) {
       showError("Enter an export passphrase.");
+      return;
+    }
+
+    const strength = passphraseStrength(exportPass);
+    if (strength.score < 2) {
+      showError("Choose a stronger passphrase (aim for 12+ characters).");
       return;
     }
 
@@ -413,7 +422,7 @@ export default function Privacy() {
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Export</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Choose a passphrase. You'll need it to import later.
+                Choose a strong passphrase. You'll need it to import later.
               </p>
               <div className="mt-3 grid gap-2">
                 <Input
@@ -423,6 +432,7 @@ export default function Privacy() {
                   placeholder="Export passphrase"
                   className="h-11 rounded-2xl"
                 />
+                <PassphraseMeter passphrase={exportPass} />
                 <Button className="h-11 rounded-2xl" onClick={exportEncrypted}>
                   <Download className="mr-2 h-4 w-4" /> Download encrypted backup
                 </Button>
@@ -442,6 +452,7 @@ export default function Privacy() {
                   placeholder="Import passphrase"
                   className="h-11 rounded-2xl"
                 />
+                <PassphraseMeter passphrase={importPass} compact />
                 <div className="flex flex-wrap items-center gap-2">
                   <Button asChild variant="outline" className="h-11 rounded-2xl border-border/60">
                     <label className="cursor-pointer">

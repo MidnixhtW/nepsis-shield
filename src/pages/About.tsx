@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ExternalLink, Shield, Info, BookText, BadgeCheck } from "lucide-react";
+import { ExternalLink, Shield, Info, BookText, BadgeCheck, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -15,7 +15,7 @@ export default function About() {
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            What this app is (and isn’t), plus data sources.
+            What this app is (and isn't), plus data sources.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -26,6 +26,11 @@ export default function About() {
             <Link to="/privacy">
               <Shield className="mr-2 h-4 w-4" /> Privacy
             </Link>
+          </Button>
+          <Button asChild className="rounded-2xl">
+            <a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback">
+              <Mail className="mr-2 h-4 w-4" /> Feedback
+            </a>
           </Button>
         </div>
       </div>
@@ -59,7 +64,7 @@ export default function About() {
             </p>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
-              “Orthodox Church in America” and “OCA” are trademarks of their respective owners. Names and links are used for identification of sources only.
+              "Orthodox Church in America" and "OCA" are trademarks of their respective owners. Names and links are used for identification of sources only.
             </p>
           </div>
         </Card>
@@ -152,7 +157,7 @@ export default function About() {
           </p>
 
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-            Provided “as-is” without warranties. Use at your own discretion.
+            Provided "as-is" without warranties. Use at your own discretion.
           </p>
         </Card>
       </div>

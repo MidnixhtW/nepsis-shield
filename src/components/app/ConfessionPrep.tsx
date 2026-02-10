@@ -23,6 +23,7 @@ import {
 import type { EncryptedBlob } from "@/lib/cryptoVault";
 import { decryptString, encryptString } from "@/lib/cryptoVault";
 import { showError, showSuccess } from "@/utils/toast";
+import { PassphraseMeter } from "@/components/app/PassphraseMeter";
 
 type MapBool = Record<string, boolean>;
 type StoredNote = string | { enc: 1; blob: EncryptedBlob };
@@ -290,6 +291,7 @@ export function ConfessionPrep() {
                       Unlock
                     </Button>
                   </div>
+                  <PassphraseMeter passphrase={pass} />
                   <p className="text-xs text-muted-foreground">
                     Your passphrase is never stored. If forgotten, encrypted notes can't be recovered.
                   </p>

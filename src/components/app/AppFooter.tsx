@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ExternalLink, Info, Shield } from "lucide-react";
+import { ExternalLink, Info, Shield, Mail } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -23,7 +23,7 @@ export function AppFooter() {
             Independent project — not affiliated with the Orthodox Church in America (OCA)
           </p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            This app links to public resources (including OCA.org) for convenience. “Orthodox Church in America” and “OCA” are trademarks of their respective owners and are used here only to identify sources.
+            This app links to public resources (including OCA.org) for convenience. "Orthodox Church in America" and "OCA" are trademarks of their respective owners and are used here only to identify sources.
           </p>
         </div>
 
@@ -37,6 +37,16 @@ export function AppFooter() {
             <Link to="/privacy">
               <Shield className="mr-2 h-4 w-4" /> Privacy
             </Link>
+          </Button>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="rounded-2xl border-border/60"
+          >
+            <a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback">
+              <Mail className="mr-2 h-4 w-4" /> Feedback
+            </a>
           </Button>
           <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
             <a href="https://www.oca.org" target="_blank" rel="noopener noreferrer">

@@ -1,7 +1,9 @@
-import { BookOpen, BookText } from "lucide-react";
+import { BookOpen, BookText, Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DailyReadings } from "@/components/app/DailyReadings";
 import { OrthodoxBible } from "@/components/app/OrthodoxBible";
+import { Button } from "@/components/ui/button";
+import { showError, showSuccess } from "@/utils/toast";
 
 export type ReadTab = "daily" | "bible";
 
@@ -12,8 +14,35 @@ export function ReadHub({
   tab: ReadTab;
   onTabChange: (t: ReadTab) => void;
 }) {
+  async function copyLink() {
+    try {
+      const url = new URL(window.location.href);
+      url.pathname = "/read";
+      url.searchParams.set("read", tab);
+      await navigator.clipboard.writeText(url.toString());
+      showSuccess("Link copied.");
+    } catch {
+      showError("Couldn't copy link.");
+    }
+  }
+
   return (
     <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="text-xs font-semibold tracking-wide text-muted-foreground">
+          Read
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-2xl border-border/60"
+          onClick={copyLink}
+        >
+          <Link2 className="mr-2 h-4 w-4" /> Copy link
+        </Button>
+      </div>
+
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as ReadTab)}>
         <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1">
           <TabsTrigger

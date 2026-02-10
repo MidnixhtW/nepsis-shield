@@ -1,4 +1,4 @@
-import { ScrollText, Sparkles, Target, BookMarked, ClipboardCheck } from "lucide-react";
+import { ScrollText, Sparkles, Target, BookMarked, ClipboardCheck, Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
@@ -7,6 +7,8 @@ import { DailyReflection } from "@/components/app/DailyReflection";
 import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
 import { ConfessionPrep } from "@/components/app/ConfessionPrep";
+import { Button } from "@/components/ui/button";
+import { showError, showSuccess } from "@/utils/toast";
 
 export type PrayerTab = "rule" | "prayers" | "counter" | "prep" | "journal";
 
@@ -17,8 +19,35 @@ export function PrayerHub({
   tab: PrayerTab;
   onTabChange: (t: PrayerTab) => void;
 }) {
+  async function copyLink() {
+    try {
+      const url = new URL(window.location.href);
+      url.pathname = "/pray";
+      url.searchParams.set("tab", tab);
+      await navigator.clipboard.writeText(url.toString());
+      showSuccess("Link copied.");
+    } catch {
+      showError("Couldn't copy link.");
+    }
+  }
+
   return (
     <div className="grid gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="text-xs font-semibold tracking-wide text-muted-foreground">
+          Pray
+        </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-2xl border-border/60"
+          onClick={copyLink}
+        >
+          <Link2 className="mr-2 h-4 w-4" /> Copy link
+        </Button>
+      </div>
+
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as PrayerTab)}>
         <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/30 p-1 sm:grid-cols-5">
           <TabsTrigger
