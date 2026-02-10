@@ -31,14 +31,18 @@ function norm(s: string) {
 
 const booksCache = new Map<string, Promise<BollsBook[]>>();
 
+import { fetchJsonCached } from "@/lib/privacyFetch";
+
 export async function fetchBollsBooks(slug: string): Promise<BollsBook[]> {
   if (!booksCache.has(slug)) {
     booksCache.set(
       slug,
-      fetch(`https://bolls.life/get-books/${encodeURIComponent(slug)}/`).then(
-        async (r) => {
-          if (!r.ok) throw new Error(`Failed to load books (${r.status})`);
-          return (await r.json()) as BollsBook[];
+      fetchJsonCached<BollsBook[]>(
+        `https://bolls.life/get-books/${encodeURIComponent(slug)}/`,
+        undefined,
+        {
+          key: `cache:bolls:books:${slug}`,
+          ttlMs: 1000 * 60 * 60 * 24 * 30, // 30d (stable)
         },
       ),
     );
@@ -77,9 +81,14 @@ export async function fetchBollsChapter(
   chapter: number,
 ): Promise<Array<{ verse: number; text: string }>> {
   const url = `https://bolls.life/get-text/${encodeURIComponent(slug)}/${bookid}/${chapter}/`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to load chapter (${res.status})`);
-  const raw = (await res.json()) as BollsVerse[];
+  const raw = await fetchJsonCached<BollsVerse[]>(
+    url,
+    undefined,
+    {
+      key: `cache:bolls:text:${slug}:${bookid}:${chapter}`,
+      ttlMs: 1000 * 60 * 60 * 24 * 3, // 3d
+    },
+  );
 
   return raw
     .map((v) => ({

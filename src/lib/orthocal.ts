@@ -1,3 +1,5 @@
+import { fetchJsonCached } from "@/lib/privacyFetch";
+
 export type OrthocalPassage = {
   book?: string;
   chapter?: number;
@@ -112,11 +114,14 @@ function extractPrimaryReadings(day: OrthocalDay): {
 
 export async function fetchDailyData(date: Date): Promise<DailyData> {
   const orthocalApiUrl = buildOrthocalApiUrl(date);
-  const res = await fetch(orthocalApiUrl);
-  if (!res.ok) {
-    throw new Error(`Failed to load daily data (${res.status})`);
-  }
-  const day = (await res.json()) as OrthocalDay;
+  const day = await fetchJsonCached<OrthocalDay>(
+    orthocalApiUrl,
+    undefined,
+    {
+      key: `cache:orthocal:${orthocalApiUrl}`,
+      ttlMs: 1000 * 60 * 60 * 12, // 12h
+    },
+  );
 
   const fastingLevel = day.fast_level ?? 0;
   const fastingDesc = day.fast_level_desc?.trim() || "No fast";
