@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  ExternalLink,
-  Hand,
-  MoonStar,
-  Search,
-  Sparkles,
-  Sun,
-  Utensils,
-} from "lucide-react";
+import { Hand, MoonStar, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
 
 import {
   Accordion,
@@ -18,7 +10,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -157,526 +148,261 @@ type SaintPrayer = {
   ocaTroparionUrl?: string;
 };
 
-type SaintPrayerRaw = [
-  id: string,
-  title: string,
-  subtitle: string | undefined,
-  category: SaintPrayer["category"],
-  invocation: string,
-  ocaTroparionUrl?: string,
-];
-
-const SAINT_PRAYERS_RAW: SaintPrayerRaw[] = [
-  // Angels
-  [
-    "michael",
-    "Archangel Michael",
-    "Bodiless powers",
-    "angels",
-    "Holy Archangel Michael, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2021/09/06/102517-commemoration-of-the-miracle-of-the-archangel-michael-at-colossa",
-  ],
-  [
-    "gabriel",
-    "Archangel Gabriel",
-    "Annunciation",
-    "angels",
-    "Holy Archangel Gabriel, pray to God for us.",
-  ],
-  [
-    "raphael_archangel",
-    "Archangel Raphael",
-    "Healer",
-    "angels",
-    "Holy Archangel Raphael, pray to God for us.",
-  ],
-
-  // Major saints / Apostles
-  ["peter", "Holy Apostle Peter", undefined, "other", "Holy Apostle Peter, pray to God for us."],
-  ["paul", "Holy Apostle Paul", undefined, "other", "Holy Apostle Paul, pray to God for us."],
-  [
-    "peter_paul",
-    "Holy Apostles Peter and Paul",
-    "Chief apostles",
-    "other",
-    "Holy Apostles Peter and Paul, pray to God for us.",
-  ],
-  ["john_theologian", "Holy Apostle John", "the Theologian", "other", "Holy Apostle John the Theologian, pray to God for us."],
-  ["andrew", "Holy Apostle Andrew", "First-called", "other", "Holy Apostle Andrew, pray to God for us."],
-  ["james", "Holy Apostle James", "brother of John", "other", "Holy Apostle James, pray to God for us."],
-  ["thomas", "Holy Apostle Thomas", undefined, "other", "Holy Apostle Thomas, pray to God for us."],
-  ["philip", "Holy Apostle Philip", undefined, "other", "Holy Apostle Philip, pray to God for us."],
-  ["bartholomew", "Holy Apostle Bartholomew", undefined, "other", "Holy Apostle Bartholomew, pray to God for us."],
-  ["matthew", "Holy Apostle Matthew", "Evangelist", "other", "Holy Apostle Matthew, pray to God for us."],
-  ["mark", "Holy Apostle Mark", "Evangelist", "other", "Holy Apostle Mark, pray to God for us."],
-  ["luke_evangelist", "Holy Apostle Luke", "Evangelist", "other", "Holy Apostle Luke, pray to God for us.", "https://www.oca.org/saints/troparia/2017/10/18/102993-apostle-and-evangelist-luke"],
-  ["mary_magdalene", "St. Mary Magdalene", "Equal-to-the-Apostles", "women", "Holy Myrrhbearer Mary Magdalene, pray to God for us.", "https://www.oca.org/saints/troparia/2023/07/22/102070-myrrhbearer-and-equal-of-the-apostles-mary-magdalene"],
-
-  // Forerunner
-  [
-    "john_forerunner",
-    "St. John the Forerunner",
-    "Prophet and Baptist",
-    "other",
-    "Holy Prophet and Forerunner John, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2022/01/07/100109-synaxis-of-the-holy-glorious-prophet-forerunner-and-baptist-john",
-  ],
+const SAINT_PRAYERS: SaintPrayer[] = [
+  {
+    id: "michael",
+    title: "Archangel Michael",
+    subtitle: "Bodiless powers",
+    category: "angels",
+    lines: ["Holy Archangel Michael, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2021/09/06/102517-commemoration-of-the-miracle-of-the-archangel-michael-at-colossa",
+  },
+  {
+    id: "john_forerunner",
+    title: "St. John the Forerunner",
+    subtitle: "Prophet and Baptist",
+    category: "other",
+    lines: ["Holy Prophet and Forerunner John, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2022/01/07/100109-synaxis-of-the-holy-glorious-prophet-forerunner-and-baptist-john",
+  },
+  {
+    id: "nicholas",
+    title: "St. Nicholas",
+    subtitle: "Wonderworker of Myra",
+    category: "other",
+    lines: ["Holy Hierarch Nicholas, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2021/12/06/103484-saint-nicholas-the-wonderworker-archbishop-of-myra-in-lycia",
+  },
+  {
+    id: "george",
+    title: "St. George",
+    subtitle: "Great Martyr",
+    category: "martyrs",
+    lines: ["Holy Great Martyr George, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2020/07/03/205460-saint-george-the-god-bearer",
+  },
+  {
+    id: "demetrios_thessaloniki",
+    title: "St. Demetrios",
+    subtitle: "Myrrh-gusher of Thessaloniki",
+    category: "martyrs",
+    lines: ["Holy Great Martyr Demetrios, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2022/10/26/103059-holy-glorious-demetrios-the-myrrh-gusher-of-thessaloniki",
+  },
+  {
+    id: "katherine",
+    title: "St. Katherine (Catherine)",
+    subtitle: "Great Martyr of Alexandria",
+    category: "women",
+    lines: ["Holy Great Martyr Katherine, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2018/11/24/103382-great-martyr-katherine-of-alexandria",
+  },
+  {
+    id: "mary_magdalene",
+    title: "St. Mary Magdalene",
+    subtitle: "Equal-to-the-Apostles",
+    category: "women",
+    lines: ["Holy Myrrhbearer Mary Magdalene, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2023/07/22/102070-myrrhbearer-and-equal-of-the-apostles-mary-magdalene",
+  },
+  {
+    id: "xenia",
+    title: "Blessed Xenia",
+    subtitle: "of St. Petersburg",
+    category: "women",
+    lines: ["Blessed Xenia, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2020/01/24/100297-blessed-xenia-of-st-petersburg",
+  },
+  {
+    id: "elizabeth_new_martyr",
+    title: "New Martyr Elizabeth",
+    subtitle: "Grand Duchess",
+    category: "women",
+    lines: ["Holy New Martyr Elizabeth, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2022/07/18/101915-grand-duchess-elizabeth",
+  },
 
   // Teachers / Hierarchs
-  [
-    "basil",
-    "St. Basil the Great",
-    "Archbishop of Caesarea",
-    "teachers",
-    "Holy Hierarch Basil, pray to God for us.",
-    "https://www.oca.org/saints/troparia/1003/01/01/100003-saint-basil-the-great-archbishop-of-caesarea-in-cappadocia",
-  ],
-  [
-    "gregory_theologian",
-    "St. Gregory the Theologian",
-    "Archbishop of Constantinople",
-    "teachers",
-    "Holy Hierarch Gregory, pray to God for us.",
-    "https://www.oca.org/saints/troparia/20112021/01/25/100298-saint-gregory-the-theologian-archbishop-of-constantinople",
-  ],
-  [
-    "john_chrysostom",
-    "St. John Chrysostom",
-    "Golden-mouthed",
-    "teachers",
-    "Holy Hierarch John Chrysostom, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2019/11/13/103292-saint-john-chrysostom-archbishop-of-constantinople",
-  ],
-  [
-    "three_hierarchs",
-    "Three Holy Hierarchs",
-    "Basil, Gregory, John",
-    "teachers",
-    "Holy Hierarchs Basil, Gregory, and John, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/01/30/100350-synaxis-of-the-ecumenical-teachers-and-hierarchs-basil-the-great",
-  ],
-  [
-    "athanasius",
-    "St. Athanasius",
-    "the Great",
-    "teachers",
-    "Holy Hierarch Athanasius, pray to God for us.",
-  ],
-  [
-    "cyril_alexandria",
-    "St. Cyril",
-    "of Alexandria",
-    "teachers",
-    "Holy Hierarch Cyril of Alexandria, pray to God for us.",
-  ],
-  [
-    "john_damascene",
-    "St. John",
-    "of Damascus",
-    "teachers",
-    "Venerable Father John of Damascus, pray to God for us.",
-  ],
-  [
-    "maximus_confessor",
-    "St. Maximus",
-    "the Confessor",
-    "teachers",
-    "Holy Father Maximus the Confessor, pray to God for us.",
-  ],
-  [
-    "gregory_palamas",
-    "St. Gregory Palamas",
-    "Archbishop of Thessalonica",
-    "teachers",
-    "Holy Hierarch Gregory Palamas, pray to God for us.",
-  ],
-  [
-    "mark_ephesus",
-    "St. Mark",
-    "of Ephesus",
-    "teachers",
-    "Holy Hierarch Mark of Ephesus, pray to God for us.",
-  ],
-  [
-    "photios",
-    "St. Photios",
-    "the Great",
-    "teachers",
-    "Holy Patriarch Photios, pray to God for us.",
-  ],
+  {
+    id: "basil",
+    title: "St. Basil the Great",
+    subtitle: "Archbishop of Caesarea",
+    category: "teachers",
+    lines: ["Holy Hierarch Basil, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/1003/01/01/100003-saint-basil-the-great-archbishop-of-caesarea-in-cappadocia",
+  },
+  {
+    id: "gregory_theologian",
+    title: "St. Gregory the Theologian",
+    subtitle: "Archbishop of Constantinople",
+    category: "teachers",
+    lines: ["Holy Hierarch Gregory, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/20112021/01/25/100298-saint-gregory-the-theologian-archbishop-of-constantinople",
+  },
+  {
+    id: "john_chrysostom",
+    title: "St. John Chrysostom",
+    subtitle: "Golden-mouthed",
+    category: "teachers",
+    lines: ["Holy Hierarch John Chrysostom, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2019/11/13/103292-saint-john-chrysostom-archbishop-of-constantinople",
+  },
+  {
+    id: "three_hierarchs",
+    title: "Three Holy Hierarchs",
+    subtitle: "Basil, Gregory, John",
+    category: "teachers",
+    lines: ["Holy Hierarchs Basil, Gregory, and John, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/01/30/100350-synaxis-of-the-ecumenical-teachers-and-hierarchs-basil-the-great",
+  },
+  {
+    id: "nectarios",
+    title: "St. Nectarios",
+    subtitle: "of Aegina",
+    category: "modern",
+    lines: ["Holy Hierarch Nectarios, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2020/11/09/103251-saint-nectarius-kephalas-metropolitan-of-pentapolis",
+  },
 
-  // Martyrs
-  [
-    "george",
-    "St. George",
-    "Great Martyr",
-    "martyrs",
-    "Holy Great Martyr George, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2020/07/03/205460-saint-george-the-god-bearer",
-  ],
-  [
-    "demetrios_thessaloniki",
-    "St. Demetrios",
-    "Myrrh-gusher of Thessaloniki",
-    "martyrs",
-    "Holy Great Martyr Demetrios, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2022/10/26/103059-holy-glorious-demetrios-the-myrrh-gusher-of-thessaloniki",
-  ],
-  [
-    "panteleimon",
-    "St. Panteleimon",
-    "Great Martyr and Healer",
-    "martyrs",
-    "Holy Great Martyr and Healer Panteleimon, pray to God for us.",
-    "https://www.oca.org/saints/troparia/1950/07/27/102099-greatmartyr-and-healer-panteleimon",
-  ],
-  [
-    "barbara",
-    "St. Barbara",
-    "Great Martyr",
-    "women",
-    "Holy Great Martyr Barbara, pray to God for us.",
-  ],
-  [
-    "marina",
-    "St. Marina",
-    "Great Martyr",
-    "women",
-    "Holy Great Martyr Marina, pray to God for us.",
-  ],
-  [
-    "irene",
-    "St. Irene",
-    "Great Martyr",
-    "women",
-    "Holy Great Martyr Irene, pray to God for us.",
-  ],
-  [
-    "theodore_tiro",
-    "St. Theodore",
-    "the Recruit",
-    "martyrs",
-    "Holy Great Martyr Theodore, pray to God for us.",
-  ],
-  [
-    "theodore_stratelates",
-    "St. Theodore",
-    "the General",
-    "martyrs",
-    "Holy Great Martyr Theodore, pray to God for us.",
-  ],
-  [
-    "haralambos",
-    "St. Haralambos",
-    "Hieromartyr",
-    "martyrs",
-    "Holy Hieromartyr Haralambos, pray to God for us.",
-  ],
-  [
-    "tryphon",
-    "St. Tryphon",
-    "Martyr",
-    "martyrs",
-    "Holy Martyr Tryphon, pray to God for us.",
-  ],
-
-  // Women saints
-  [
-    "katherine",
-    "St. Katherine (Catherine)",
-    "Great Martyr of Alexandria",
-    "women",
-    "Holy Great Martyr Katherine, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2018/11/24/103382-great-martyr-katherine-of-alexandria",
-  ],
-  [
-    "xenia",
-    "Blessed Xenia",
-    "of St. Petersburg",
-    "women",
-    "Blessed Xenia, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2020/01/24/100297-blessed-xenia-of-st-petersburg",
-  ],
-  [
-    "elizabeth_new_martyr",
-    "New Martyr Elizabeth",
-    "Grand Duchess",
-    "women",
-    "Holy New Martyr Elizabeth, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2022/07/18/101915-grand-duchess-elizabeth",
-  ],
-  [
-    "mary_of_egypt",
-    "St. Mary of Egypt",
-    "Model of repentance",
-    "women",
-    "Venerable Mother Mary of Egypt, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/04/01/100963-venerable-mary-of-egypt",
-  ],
-  [
-    "photini",
-    "St. Photini",
-    "the Samaritan Woman",
-    "women",
-    "Holy Martyr Photini, pray to God for us.",
-  ],
-  [
-    "olga",
-    "St. Olga",
-    "Equal-to-the-Apostles",
-    "women",
-    "Holy Equal-to-the-Apostles Olga, pray to God for us.",
-  ],
-  [
-    "nina",
-    "St. Nina",
-    "Enlightener of Georgia",
-    "women",
-    "Holy Equal-to-the-Apostles Nina, pray to God for us.",
-  ],
-  [
-    "thekla",
-    "St. Thekla",
-    "Protomartyr",
-    "women",
-    "Holy Protomartyr Thekla, pray to God for us.",
-  ],
-
-  // Monastics / ascetics
-  [
-    "seraphim",
-    "St. Seraphim of Sarov",
-    "Venerable Wonderworker",
-    "monastics",
-    "Venerable Father Seraphim, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/01/02/100008-repose-of-venerable-seraphim-wonderworker-of-sarov",
-  ],
-  [
-    "silouan",
-    "St. Silouan",
-    "of Mount Athos",
-    "monastics",
-    "Venerable Father Silouan, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/09/24/102722-venerable-silouan-of-mount-athos",
-  ],
-  [
-    "paisios_athos",
-    "St. Paisios",
-    "of the Holy Mountain",
-    "monastics",
-    "Venerable Father Paisios, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2023/07/12/100401-venerable-paisios-of-the-holy-mountain",
-  ],
-  [
-    "anthony_great",
-    "St. Anthony",
-    "the Great",
-    "monastics",
-    "Venerable Father Anthony, pray to God for us.",
-  ],
-  [
-    "pachomius",
-    "St. Pachomius",
-    "the Great",
-    "monastics",
-    "Venerable Father Pachomius, pray to God for us.",
-  ],
-  [
-    "john_climacus",
-    "St. John",
-    "of the Ladder",
-    "monastics",
-    "Venerable Father John Climacus, pray to God for us.",
-  ],
-  [
-    "moses_black",
-    "St. Moses",
-    "the Black",
-    "monastics",
-    "Venerable Father Moses, pray to God for us.",
-  ],
-
-  // Modern saints
-  [
-    "nectarios",
-    "St. Nectarios",
-    "of Aegina",
-    "modern",
-    "Holy Hierarch Nectarios, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2020/11/09/103251-saint-nectarius-kephalas-metropolitan-of-pentapolis",
-  ],
-  [
-    "john_kronstadt",
-    "St. John of Kronstadt",
-    "Righteous pastor",
-    "modern",
-    "Righteous Father John of Kronstadt, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/12/20/103598-repose-of-saint-john-of-kronstadt",
-  ],
-  [
-    "luke_crimea",
-    "St. Luke",
-    "Archbishop of Simferopol",
-    "modern",
-    "Holy Hierarch Luke, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2020/06/11/100476-saint-luke-archbishop-of-simferopol",
-  ],
-  [
-    "john_maximovitch_sf",
-    "St. John Maximovitch",
-    "Shanghai and San Francisco",
-    "modern",
-    "Holy Hierarch John, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2020/07/02/206392-saint-john-maximovitch-archbishop-of-shanghai-and-san-francisco",
-  ],
+  // Monastics / modern saints
+  {
+    id: "seraphim",
+    title: "St. Seraphim of Sarov",
+    subtitle: "Venerable Wonderworker",
+    category: "monastics",
+    lines: ["Venerable Father Seraphim, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/01/02/100008-repose-of-venerable-seraphim-wonderworker-of-sarov",
+  },
+  {
+    id: "silouan",
+    title: "St. Silouan",
+    subtitle: "of Mount Athos",
+    category: "monastics",
+    lines: ["Venerable Father Silouan, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/09/24/102722-venerable-silouan-of-mount-athos",
+  },
+  {
+    id: "paisios_athos",
+    title: "St. Paisios",
+    subtitle: "of the Holy Mountain",
+    category: "modern",
+    lines: ["Venerable Father Paisios, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2023/07/12/100401-venerable-paisios-of-the-holy-mountain",
+  },
+  {
+    id: "ephraim",
+    title: "St. Ephraim",
+    subtitle: "the Syrian",
+    category: "teachers",
+    lines: ["Venerable Father Ephraim, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2026/01/28/100328-venerable-ephraim-the-syrian",
+  },
+  {
+    id: "mary_of_egypt",
+    title: "St. Mary of Egypt",
+    subtitle: "Model of repentance",
+    category: "women",
+    lines: ["Venerable Mother Mary of Egypt, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/04/01/100963-venerable-mary-of-egypt",
+  },
+  {
+    id: "john_kronstadt",
+    title: "St. John of Kronstadt",
+    subtitle: "Righteous pastor",
+    category: "modern",
+    lines: ["Righteous Father John of Kronstadt, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/12/20/103598-repose-of-saint-john-of-kronstadt",
+  },
+  {
+    id: "luke_crimea",
+    title: "St. Luke",
+    subtitle: "Archbishop of Simferopol",
+    category: "modern",
+    lines: ["Holy Hierarch Luke, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2020/06/11/100476-saint-luke-archbishop-of-simferopol",
+  },
 
   // North America
-  [
-    "herman",
-    "St. Herman of Alaska",
-    "Wonderworker of All America",
-    "north_america",
-    "Venerable Father Herman, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2016/12/13/103530-repose-of-venerable-herman-of-alaska-wonderworker-of-all-america",
-  ],
-  [
-    "innocent_alaska",
-    "St. Innocent",
-    "Enlightener of Alaska",
-    "north_america",
-    "Holy Hierarch Innocent, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2016/03/31/100954-repose-of-saint-innocent-metropolitan-of-moscow-enlightener-of-t",
-  ],
-  [
-    "jacob_netsvetov",
-    "St. Jacob Netsvetov",
-    "Enlightener of Alaska",
-    "north_america",
-    "Righteous Father Jacob, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/07/26/102091-repose-of-saint-jacob-netsvetov-enlightener-of-the-peoples-of-al",
-  ],
-  [
-    "olga_alaska",
-    "St. Olga of Alaska",
-    "Righteous mother",
-    "north_america",
-    "Righteous Mother Olga, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/10/27/100561-righteous-mother-olga-of-kwethluktanqilria-arrsamquqwonderworker",
-  ],
-  [
-    "raphael_brooklyn",
-    "St. Raphael of Brooklyn",
-    "Bishop and shepherd",
-    "north_america",
-    "Holy Hierarch Raphael, pray to God for us.",
-    "https://www.oca.org/saints/troparia/4465/02/27/100610-repose-of-saint-raphael-bishop-of-brooklyn",
-  ],
-  [
-    "juvenal",
-    "Martyr Juvenal",
-    "of Alaska",
-    "north_america",
-    "Holy Martyr Juvenal, pray to God for us.",
-    "https://www.oca.org/saints/troparia/2025/09/24/102714-martyr-juvenal-of-alaska",
-  ],
+  {
+    id: "herman",
+    title: "St. Herman of Alaska",
+    subtitle: "Wonderworker of All America",
+    category: "north_america",
+    lines: ["Venerable Father Herman, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2016/12/13/103530-repose-of-venerable-herman-of-alaska-wonderworker-of-all-america",
+  },
+  {
+    id: "innocent_alaska",
+    title: "St. Innocent",
+    subtitle: "Enlightener of Alaska",
+    category: "north_america",
+    lines: ["Holy Hierarch Innocent, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2016/03/31/100954-repose-of-saint-innocent-metropolitan-of-moscow-enlightener-of-t",
+  },
+  {
+    id: "alexis_toth",
+    title: "St. Alexis Toth",
+    subtitle: "Defender of Orthodoxy in America",
+    category: "north_america",
+    lines: ["Righteous Father Alexis, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/05/07/101300-repose-of-saint-alexis-toth-confessor-and-defender-of-orthodoxy",
+  },
+  {
+    id: "raphael_brooklyn",
+    title: "St. Raphael of Brooklyn",
+    subtitle: "Bishop and shepherd",
+    category: "north_america",
+    lines: ["Holy Hierarch Raphael, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/4465/02/27/100610-repose-of-saint-raphael-bishop-of-brooklyn",
+  },
+  {
+    id: "juvenal",
+    title: "Martyr Juvenal",
+    subtitle: "of Alaska",
+    category: "north_america",
+    lines: ["Holy Martyr Juvenal, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/09/24/102714-martyr-juvenal-of-alaska",
+  },
 
-  // Padding out the list with many widely-venerated saints (invocations)
-  ["spyridon", "St. Spyridon", "Wonderworker", "other", "Holy Hierarch Spyridon, pray to God for us."],
-  ["sophrony", "St. Sophrony", "of Jerusalem", "teachers", "Holy Hierarch Sophrony of Jerusalem, pray to God for us."],
-  ["justin_popovich", "St. Justin", "of Ćelije", "modern", "Venerable Father Justin, pray to God for us."],
-  ["nikolai_zhicha", "St. Nikolai", "of Zhicha", "modern", "Holy Hierarch Nikolai, pray to God for us."],
-  ["porphyrios", "St. Porphyrios", "of Kavsokalyvia", "modern", "Venerable Father Porphyrios, pray to God for us."],
-  ["sophrony_athos", "St. Sophrony", "of Essex", "modern", "Venerable Father Sophrony, pray to God for us."],
-  ["ioannicius", "St. Ioannikios", "the Great", "monastics", "Venerable Father Ioannikios, pray to God for us."],
-  ["simeon_new_theologian", "St. Symeon", "the New Theologian", "teachers", "Venerable Father Symeon, pray to God for us."],
-  ["isaac_syria", "St. Isaac", "the Syrian", "teachers", "Venerable Father Isaac the Syrian, pray to God for us."],
-  ["john_shanghai", "St. John", "of Shanghai", "modern", "Holy Hierarch John, pray to God for us."],
-
-  // --- Add many more invocations (batch) ---
-  // Ancient and medieval saints
-  ["elijah", "Holy Prophet Elijah", undefined, "other", "Holy Prophet Elijah, pray to God for us."],
-  ["moses", "Holy Prophet Moses", undefined, "other", "Holy Prophet Moses, pray to God for us."],
-  ["daniel", "Holy Prophet Daniel", undefined, "other", "Holy Prophet Daniel, pray to God for us."],
-  ["david", "Holy Prophet David", undefined, "other", "Holy Prophet David, pray to God for us."],
-  ["joachim_anna", "Righteous Joachim and Anna", "Ancestors of God", "other", "Holy Righteous Joachim and Anna, pray to God for us."],
-  ["joseph_betrothed", "Righteous Joseph", "the Betrothed", "other", "Holy Righteous Joseph, pray to God for us."],
-
-  // Add ~100 more names as invocations (orthodox/common)
-  ["sergius", "St. Sergius", "of Radonezh", "monastics", "Venerable Father Sergius, pray to God for us."],
-  ["seraphim_vyritsa", "St. Seraphim", "of Vyritsa", "modern", "Venerable Father Seraphim, pray to God for us."],
-  ["seraphim_zvezdinsky", "St. Seraphim", "of Vyritsa", "modern", "Venerable Father Seraphim, pray to God for us."],
-  ["tikhon_moscow", "St. Tikhon", "Patriarch of Moscow", "north_america", "Holy Hierarch Tikhon, pray to God for us."],
-  ["innocent_irktusk", "St. Innocent", "of Irkutsk", "teachers", "Holy Hierarch Innocent, pray to God for us."],
-  ["innocent_komel", "St. Innocent", "(various)", "other", "Holy Saint Innocent, pray to God for us."],
-  ["alexander_nevsky", "St. Alexander Nevsky", undefined, "other", "Holy Blessed Prince Alexander, pray to God for us."],
-  ["vladimir", "St. Vladimir", "Equal-to-the-Apostles", "other", "Holy Equal-to-the-Apostles Vladimir, pray to God for us."],
-  ["boris_gleb", "Sts. Boris and Gleb", "Passion-bearers", "martyrs", "Holy Passion-bearers Boris and Gleb, pray to God for us."],
-  ["romanov_martyrs", "Holy Royal Martyrs", "Romanov family", "martyrs", "Holy Royal Martyrs, pray to God for us."],
-  ["maria_paris", "St. Maria", "of Paris", "modern", "Holy Mother Maria, pray to God for us."],
-  ["savas_sanctified", "St. Savvas", "the Sanctified", "monastics", "Venerable Father Savvas, pray to God for us."],
-  ["efrosynus", "St. Euphrosynos", "the Cook", "monastics", "Venerable Father Euphrosynos, pray to God for us."],
-  ["gabriel_georgia", "St. Gabriel", "of Georgia", "modern", "Holy Confessor Gabriel, pray to God for us."],
-  ["joseph_hesychast", "St. Joseph", "the Hesychast", "modern", "Venerable Father Joseph, pray to God for us."],
-  ["kyprianos", "St. Cyprian", "and Justina", "martyrs", "Holy Martyrs Cyprian and Justina, pray to God for us."],
-  ["lucy", "St. Lucy", "Martyr", "women", "Holy Martyr Lucy, pray to God for us."],
-  ["agatha", "St. Agatha", "Martyr", "women", "Holy Martyr Agatha, pray to God for us."],
-  ["anastasia", "St. Anastasia", "Deliverer from Potions", "women", "Holy Great Martyr Anastasia, pray to God for us."],
-  ["euphemia", "St. Euphemia", "Great Martyr", "women", "Holy Great Martyr Euphemia, pray to God for us."],
-  ["paraskeva", "St. Paraskeva", "Martyr", "women", "Holy Martyr Paraskeva, pray to God for us."],
-  ["sophia_faith_hope_love", "Sts. Sophia, Faith, Hope, and Love", undefined, "women", "Holy Martyrs Sophia, Faith, Hope, and Love, pray to God for us."],
-  ["tatiana", "St. Tatiana", "Martyr", "women", "Holy Martyr Tatiana, pray to God for us."],
-  ["juliana", "St. Juliana", "Martyr", "women", "Holy Martyr Juliana, pray to God for us."],
-  ["maria_magdala", "St. Mary", "(Myrrhbearer)", "women", "Holy Myrrhbearer Mary, pray to God for us."],
-  ["mary_martha", "Sts. Mary and Martha", "Sisters of Lazarus", "women", "Holy Righteous Mary and Martha, pray to God for us."],
-  ["lazarus", "Righteous Lazarus", "Friend of Christ", "other", "Holy Righteous Lazarus, pray to God for us."],
-  ["spyridon_trimythous", "St. Spyridon", "of Tremithus", "other", "Holy Hierarch Spyridon, pray to God for us."],
-  ["nikita", "St. Nikita", "Martyr", "martyrs", "Holy Martyr Nikita, pray to God for us."],
-  ["procopius", "St. Procopius", "Great Martyr", "martyrs", "Holy Great Martyr Procopius, pray to God for us."],
-  ["eustathius", "St. Eustathius", "Martyr", "martyrs", "Holy Martyr Eustathius, pray to God for us."],
-  ["mercurius", "St. Mercurius", "Great Martyr", "martyrs", "Holy Great Martyr Mercurius, pray to God for us."],
-  ["minas", "St. Menas", "Martyr", "martyrs", "Holy Martyr Menas, pray to God for us."],
-  ["cyril_methodius", "Sts. Cyril and Methodius", "Apostles to the Slavs", "teachers", "Holy Equal-to-the-Apostles Cyril and Methodius, pray to God for us."],
-  ["paul_the_simple", "St. Paul", "the Simple", "monastics", "Venerable Father Paul, pray to God for us."],
-  ["macarius", "St. Macarius", "of Egypt", "monastics", "Venerable Father Macarius, pray to God for us."],
-  ["barsanuphius", "St. Barsanuphius", "of Gaza", "monastics", "Venerable Father Barsanuphius, pray to God for us."],
-  ["john_gaza", "St. John", "of Gaza", "monastics", "Venerable Father John, pray to God for us."],
-  ["paisios_velichkovsky", "St. Paisios", "Velichkovsky", "monastics", "Venerable Father Paisios, pray to God for us."],
-  ["theophan_recluse", "St. Theophan", "the Recluse", "modern", "Holy Bishop Theophan, pray to God for us."],
-  ["ignatius_brianchaninov", "St. Ignatius", "Brianchaninov", "modern", "Holy Bishop Ignatius, pray to God for us."],
-  ["ambrose_optina", "St. Ambrose", "of Optina", "modern", "Venerable Father Ambrose, pray to God for us."],
-  ["makary_optina", "St. Macarius", "of Optina", "modern", "Venerable Father Macarius, pray to God for us."],
-  ["anatoly_optina", "St. Anatoly", "of Optina", "modern", "Venerable Father Anatoly, pray to God for us."],
-  ["lev_optina", "St. Leo", "of Optina", "modern", "Venerable Father Leo, pray to God for us."],
-  ["silouan_extra", "St. Silouan", "Athonite", "monastics", "Venerable Father Silouan, pray to God for us."],
-  ["sisoes", "St. Sisoes", "the Great", "monastics", "Venerable Father Sisoes, pray to God for us."],
-  ["paul_athos", "St. Paul", "of Athos", "monastics", "Venerable Father Paul, pray to God for us."],
-  ["gabriel_urgebadze", "St. Gabriel", "Urgebadze", "modern", "Holy Confessor Gabriel, pray to God for us."],
-  ["dionysius_areopagite", "St. Dionysius", "the Areopagite", "other", "Holy Hieromartyr Dionysius, pray to God for us."],
-  ["apostle_jude", "Holy Apostle Jude", undefined, "other", "Holy Apostle Jude, pray to God for us."],
-  ["apostle_simon", "Holy Apostle Simon", "the Zealot", "other", "Holy Apostle Simon, pray to God for us."],
-  ["apostle_barnabas", "Holy Apostle Barnabas", undefined, "other", "Holy Apostle Barnabas, pray to God for us."],
-  ["apostle_timothy", "Holy Apostle Timothy", undefined, "other", "Holy Apostle Timothy, pray to God for us."],
-  ["apostle_titus", "Holy Apostle Titus", undefined, "other", "Holy Apostle Titus, pray to God for us."],
-  ["apostle_philemon", "Holy Apostle Philemon", undefined, "other", "Holy Apostle Philemon, pray to God for us."],
-  ["apostle_james_lord", "Holy Apostle James", "the Brother of the Lord", "other", "Holy Apostle James, pray to God for us."],
+  // Other
+  {
+    id: "demetrios_rostov",
+    title: "St. Demetrius",
+    subtitle: "Metropolitan of Rostov",
+    category: "teachers",
+    lines: ["Holy Hierarch Demetrius of Rostov, pray to God for us."],
+    ocaTroparionUrl:
+      "https://www.oca.org/saints/troparia/2025/10/28/103088-saint-demetrius-dimitri-metropolitan-of-rostov",
+  },
 ];
 
-const SAINT_PRAYERS: SaintPrayer[] = SAINT_PRAYERS_RAW.map(
-  ([id, title, subtitle, category, invocation, ocaTroparionUrl]) => ({
-    id,
-    title,
-    subtitle,
-    category,
-    lines: [invocation],
-    ocaTroparionUrl,
-  }),
-);
-
-const SAINT_FILTERS: Array<{
-  id: string;
-  label: string;
-  cats: SaintPrayer["category"][];
-}> = [
+const SAINT_FILTERS: Array<{ id: string; label: string; cats: SaintPrayer["category"][] }> = [
   {
     id: "all",
     label: "All",
@@ -698,7 +424,6 @@ const SAINT_FILTERS: Array<{
   { id: "monastic", label: "Monastics", cats: ["monastics"] },
   { id: "women", label: "Women", cats: ["women"] },
   { id: "angels", label: "Angels", cats: ["angels"] },
-  { id: "other", label: "Other", cats: ["other"] },
 ];
 
 const stMichael = [
@@ -897,19 +622,10 @@ const prayerSources = [
 
 export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
   const [saintFilter, setSaintFilter] = useState<string>("all");
-  const [saintQuery, setSaintQuery] = useState("");
-
   const allowedCats =
     SAINT_FILTERS.find((f) => f.id === saintFilter)?.cats ??
     SAINT_FILTERS[0].cats;
-
-  const filteredSaints = SAINT_PRAYERS.filter((p) => {
-    if (!allowedCats.includes(p.category)) return false;
-    const hay = `${p.title} ${p.subtitle ?? ""}`.toLowerCase();
-    const q = saintQuery.trim().toLowerCase();
-    if (!q) return true;
-    return hay.includes(q);
-  });
+  const filteredSaints = SAINT_PRAYERS.filter((p) => allowedCats.includes(p.category));
 
   return (
     <div className="grid gap-4">
@@ -1113,32 +829,14 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="Short prayers to the Theotokos" lines={theotokosShort} />
 
                 <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                        Browse
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Showing {filteredSaints.length}.
-                      </p>
-                    </div>
-
-                    <div className="relative w-full sm:max-w-xs">
-                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        value={saintQuery}
-                        onChange={(e) => setSaintQuery(e.target.value)}
-                        placeholder="Search saints…"
-                        className="h-10 rounded-2xl pl-9"
-                      />
-                    </div>
-                  </div>
-
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Browse
+                  </p>
                   <ToggleGroup
                     type="single"
                     value={saintFilter}
                     onValueChange={(v) => v && setSaintFilter(v)}
-                    className="mt-3 flex flex-wrap justify-start gap-2"
+                    className="mt-2 flex flex-wrap justify-start gap-2"
                   >
                     {SAINT_FILTERS.map((f) => (
                       <ToggleGroupItem
@@ -1150,6 +848,9 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Showing {filteredSaints.length}.
+                  </p>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
