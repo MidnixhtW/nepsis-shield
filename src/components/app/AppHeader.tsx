@@ -32,6 +32,9 @@ export function AppHeader() {
             <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg">
               Ortho Companion
             </h1>
+            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
+              Independent app — not official / not affiliated with the Orthodox Church in America (OCA).
+            </p>
           </div>
         </div>
 
@@ -52,7 +55,7 @@ export function AppHeader() {
               <SheetHeader className="text-left">
                 <SheetTitle>Ortho Companion</SheetTitle>
                 <SheetDescription>
-                  Daily resources sourced from the Orthodox Church in America.
+                  Daily resources with links to OCA.org. Not an official OCA app.
                 </SheetDescription>
               </SheetHeader>
 
@@ -79,9 +82,12 @@ export function AppHeader() {
                   </a>
                 </Button>
 
-                <div className="pt-2">
+                <div className="pt-2 flex flex-wrap gap-2">
                   <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
                     OCA sources
+                  </Badge>
+                  <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                    Not official
                   </Badge>
                 </div>
               </div>
@@ -93,6 +99,9 @@ export function AppHeader() {
         <div className="hidden items-center gap-2 sm:flex">
           <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
             OCA sources
+          </Badge>
+          <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+            Not official
           </Badge>
 
           <ThemeToggle />
@@ -135,7 +144,7 @@ export function AppHeader() {
               Prayer • Fasting • Scripture
             </p>
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-foreground/90">
-              A daily Orthodox companion with direct links to the Orthodox Church in America.
+              A daily Orthodox companion with direct links to OCA.org. This is an independent project and not an official app of the Orthodox Church in America.
             </p>
           </div>
         </div>
