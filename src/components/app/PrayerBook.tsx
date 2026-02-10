@@ -130,27 +130,27 @@ const theotokosShort = [
 
 const stMichael = [
   "HOLY ARCHANGEL MICHAEL:",
-  "O holy Archangel Michael, commander of the heavenly hosts, protect us by your prayers. Drive far from us every enemy visible and invisible, and strengthen us to do the will of God in peace and repentance. Amen.",
+  "Holy Archangel Michael, pray to God for us.",
 ];
 
 const stNicholas = [
   "SAINT NICHOLAS:",
-  "O holy father Nicholas, wonderworker and hierarch, pray to God for us. Help us to live with mercy, humility, and steadfast faith in Christ. Amen.",
+  "Holy Hierarch Nicholas, pray to God for us.",
 ];
 
 const stJohnForerunner = [
   "SAINT JOHN THE FORERUNNER:",
-  "O holy Prophet and Forerunner John, preacher of repentance, pray to God for us. Teach us to turn our hearts to the Lord and to bear fruits worthy of repentance. Amen.",
+  "Holy Prophet and Forerunner John, pray to God for us.",
 ];
 
 const stGeorge = [
   "SAINT GEORGE:",
-  "O holy Great-Martyr George, victorious sufferer, pray to God for us. Grant us courage to confess Christ with love, patience in trials, and faithfulness in all things. Amen.",
+  "Holy Great Martyr George, pray to God for us.",
 ];
 
 const stMaryOfEgypt = [
   "SAINT MARY OF EGYPT:",
-  "O venerable mother Mary, model of repentance, pray to God for us. Help us to hate sin, to love Christ, and to begin again with hope. Amen.",
+  "Venerable Mother Mary of Egypt, pray to God for us.",
 ];
 
 const jesus = ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."];
@@ -178,6 +178,11 @@ const ocaOccasions = [
     label: "Prayers for Various Occasions (index)",
     href: "https://www.oca.org/orthodoxy/prayers",
     note: "OCA's official prayer collection (daily + special occasions).",
+  },
+  {
+    label: "OCA PDF: Prayers for Morning, Day & Night",
+    href: "https://www.oca.org/files/PDF/Music/Daily/morning-evening-prayers.pdf",
+    note: "Printable OCA PDF of daily prayers.",
   },
   {
     label: "Before & after any Work",
@@ -485,6 +490,15 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
             </AccordionTrigger>
             <AccordionContent className="pt-3">
               <div className="grid gap-3">
+                <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Orthodox short invocations
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    These are traditional short prayers used widely in Orthodox practice (especially the simple "pray to God for us" invocations). For longer, source-specific texts, use the OCA links in the "OCA: Occasions" section.
+                  </p>
+                </div>
+
                 <PrayerBlock title="Short prayers to the Theotokos" lines={theotokosShort} />
                 <PrayerBlock title="To St. Michael the Archangel" lines={stMichael} />
                 <PrayerBlock title="To St. Nicholas" lines={stNicholas} />
