@@ -136,17 +136,13 @@ function normalizeRefForBolls(ref: string): { candidates: string[]; chapter: num
 }
 
 function bollsSlugForBase(base: BaseTranslation) {
+  if (base === "nkjv") return "NKJV";
+  if (base === "lxx") return "LXX";
   return base === "web" ? "WEB" : "KJV";
 }
 
 function bollsSlugForBook(bookName: string, base: BaseTranslation) {
-  // Bolls does not consistently include Orthodox additions. Use KJV/WEB where possible.
-  // For DRA-only books on bible-api, we still try Bolls KJV/WEB and surface errors if unavailable.
-  const book = getBookByName(bookName);
-  if (book?.forceTranslation === "dra") {
-    // Keep it consistent with base; the dataset may or may not have this book.
-    return bollsSlugForBase(base);
-  }
+  // Bolls has NKJV and LXX (Brenton).
   return bollsSlugForBase(base);
 }
 
@@ -158,7 +154,7 @@ function sortBookmarks(items: BookmarkItem[], mode: "recent" | "alpha") {
 
 export function OrthodoxBible() {
   // OSB-aligned mode (book list), public text sources
-  const [base, setBase] = useState<BaseTranslation>("kjv");
+  const [base, setBase] = useState<BaseTranslation>("nkjv");
 
   // Browse mode
   const [bookName, setBookName] = useState("John");
@@ -448,19 +444,31 @@ export function OrthodoxBible() {
                 onValueChange={(v) => {
                   if (v) setBase(v as BaseTranslation);
                 }}
-                className="gap-2"
+                className="flex flex-wrap gap-2"
               >
                 <ToggleGroupItem
-                  value="kjv"
+                  value="nkjv"
                   className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
                 >
-                  KJV
+                  NKJV
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="lxx"
+                  className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
+                >
+                  LXX
                 </ToggleGroupItem>
                 <ToggleGroupItem
                   value="web"
                   className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
                 >
                   WEB
+                </ToggleGroupItem>
+                <ToggleGroupItem
+                  value="kjv"
+                  className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
+                >
+                  KJV
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
