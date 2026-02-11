@@ -43,7 +43,7 @@ export function AppShell({
             {header}
           </div>
         </div>
-        <div className="h-px bg-gradient-to-r from-transparent via-border/70 to-transparent" />
+        <div className="h-px bg-border/60" />
       </div>
 
       <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.9rem+env(safe-area-inset-bottom))] sm:px-4">

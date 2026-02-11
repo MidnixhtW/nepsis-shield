@@ -10,7 +10,6 @@ import {
   GraduationCap,
   Target,
   CalendarPlus,
-  Info,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -123,106 +122,98 @@ export function TodayOverview({
   return (
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
-        <div className="relative">
-          <div className="absolute inset-0 opacity-80 [mask-image:radial-gradient(60%_70%_at_50%_0%,black,transparent)]">
-            <div className="absolute inset-0 bg-primary/8" />
-            <div className="absolute -left-16 -top-24 h-56 w-56 rounded-full bg-accent/10 blur-2xl" />
-            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/12 blur-2xl" />
-          </div>
-
-          <div className="relative p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                  {format(today, "EEEE")}
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight">
-                  {format(today, "MMMM d")}
-                </h2>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Your daily essentials — quick, calm, and focused.
-                </p>
-              </div>
-              <div className="hidden sm:block">
-                <a
-                  href="https://www.oca.org"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-semibold text-primary hover:underline"
-                >
-                  Orthodox Church in America
-                </a>
-              </div>
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                {format(today, "EEEE")}
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+                {format(today, "MMMM d")}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Your daily essentials, kept quiet.
+              </p>
             </div>
 
-            <Separator className="my-4" />
-
-            {q.isLoading ? (
-              <div className="text-sm text-muted-foreground">Loading today…</div>
-            ) : q.isError ? (
-              <div className="text-sm text-destructive">
-                Couldn't load today's details. You can still open the OCA page.
-              </div>
-            ) : q.data ? (
-              <div className="grid gap-4">
-                <div>
-                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                    Fasting
-                  </p>
-                  <div className="mt-2">
-                    <FastingBadge
-                      description={q.data.fasting.description}
-                      exception={q.data.fasting.exception}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                    Commemorations
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground">
-                    {q.data.saints.length
-                      ? q.data.saints.slice(0, 3).join(" • ") +
-                        (q.data.saints.length > 3 ? " • …" : "")
-                      : "See the calendar for today's commemorations."}
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      asChild
-                      size="sm"
-                      className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
-                    >
-                      <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
-                        Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
-                      </a>
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="rounded-2xl border-border/60"
-                      onClick={addFastingReminder}
-                    >
-                      <CalendarPlus className="mr-2 h-4 w-4" /> Add reminder
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : null}
+            {q.data?.sources?.ocaDailyUrl ? (
+              <Button
+                asChild
+                size="sm"
+                className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
+                  Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            ) : (
+              <a
+                href="https://www.oca.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="self-start text-xs font-semibold text-primary hover:underline"
+              >
+                Orthodox Church in America
+              </a>
+            )}
           </div>
+
+          <Separator className="my-4" />
+
+          {q.isLoading ? (
+            <div className="text-sm text-muted-foreground">Loading today…</div>
+          ) : q.isError ? (
+            <div className="text-sm text-destructive">
+              Couldn't load today's details. You can still open the OCA page.
+            </div>
+          ) : q.data ? (
+            <div className="grid gap-4">
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                  Fasting
+                </p>
+                <div className="mt-2">
+                  <FastingBadge
+                    description={q.data.fasting.description}
+                    exception={q.data.fasting.exception}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                  Commemorations
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-foreground">
+                  {q.data.saints.length
+                    ? q.data.saints.slice(0, 3).join(" • ") +
+                      (q.data.saints.length > 3 ? " • …" : "")
+                    : "See the calendar for today's commemorations."}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="rounded-2xl border-border/60"
+                    onClick={addFastingReminder}
+                  >
+                    <CalendarPlus className="mr-2 h-4 w-4" /> Add reminder
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </Card>
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h3 className="text-base font-semibold tracking-tight">Next</h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          One tap to get where you want.
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">A few focused shortcuts.</p>
         <Separator className="my-4" />
 
         <div className="grid gap-2 sm:grid-cols-2">
@@ -237,19 +228,9 @@ export function TodayOverview({
             onClick={() => onNavigate?.({ section: "read", read: "daily" })}
           />
           <QuickAction
-            label="Bible"
-            icon={<BookOpen className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "read", read: "bible" })}
-          />
-          <QuickAction
             label="Jesus Prayer"
             icon={<Target className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
-          />
-          <QuickAction
-            label="Preparation"
-            icon={<Hand className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
           />
           <QuickAction
             label="Learn"

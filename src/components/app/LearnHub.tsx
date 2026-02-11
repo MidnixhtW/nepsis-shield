@@ -1,33 +1,36 @@
-import { ExternalLink, HelpCircle, LibraryBig, ScrollText } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
+import { SectionBar } from "@/components/app/SectionBar";
 
 export function LearnHub() {
   return (
     <div className="grid gap-4">
+      <SectionBar title="Learn" hint="Guide, Q&A, library" />
+
       <Tabs defaultValue="guide" className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-3">
           <TabsTrigger
             value="guide"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
           >
-            <ScrollText className="h-4 w-4 sm:mr-2" /> Guide
+            Guide
           </TabsTrigger>
           <TabsTrigger
             value="qa"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
           >
-            <HelpCircle className="h-4 w-4 sm:mr-2" /> Q&A
+            Q&A
           </TabsTrigger>
           <TabsTrigger
             value="library"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
           >
-            <LibraryBig className="h-4 w-4 sm:mr-2" /> Library
+            Library
           </TabsTrigger>
         </TabsList>
 
@@ -43,7 +46,7 @@ export function LearnHub() {
           <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
             <h2 className="text-xl font-semibold tracking-tight">OCA library</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Browse the full OCA collection (questions, prayers, and The Orthodox Faith).
+              Browse the full OCA collection.
             </p>
 
             <Separator className="my-4" />
