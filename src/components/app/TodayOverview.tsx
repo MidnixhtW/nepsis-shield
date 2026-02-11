@@ -20,6 +20,37 @@ import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 
+function fastingGuidanceLines(description: string, exception?: string) {
+  const raw = `${description} ${exception ?? ""}`.toLowerCase();
+
+  const fastFree = raw.includes("no fast") || raw.includes("fast free");
+  if (fastFree) {
+    return {
+      from: "—",
+      allowed: "All foods",
+    };
+  }
+
+  // Baseline Orthodox guidance is generally abstaining from meat/dairy.
+  // Then the day may explicitly allow fish, wine, and/or oil.
+  const from: string[] = ["meat", "dairy"];
+
+  const allowsFish = raw.includes("fish");
+  const allowsWine = raw.includes("wine");
+  const allowsOil = raw.includes("oil");
+
+  const allowed: string[] = ["plant-based foods"];
+  if (allowsFish) allowed.push("fish");
+  if (allowsWine) allowed.push("wine");
+  if (allowsOil) allowed.push("oil");
+
+  // If nothing explicit is allowed beyond the baseline, keep it simple.
+  return {
+    from: `From: ${from.join(", ")}`,
+    allowed: `Allowed: ${allowed.join(", ")}`,
+  };
+}
+
 function FastingBadge({
   description,
   exception,
@@ -28,27 +59,35 @@ function FastingBadge({
   exception?: string;
 }) {
   const isFast = !description.toLowerCase().includes("no fast");
+  const guidance = fastingGuidanceLines(description, exception);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <Badge
-        className={
-          "rounded-full px-3 py-1 text-xs font-semibold " +
-          (isFast
-            ? "bg-amber-500/15 text-amber-800 dark:text-amber-200"
-            : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-200")
-        }
-      >
-        <span className="inline-flex items-center gap-1">
-          {isFast ? <Leaf className="h-3.5 w-3.5" /> : <Flame className="h-3.5 w-3.5" />}
-          {description}
-        </span>
-      </Badge>
-      {exception ? (
-        <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          {exception}
+    <div className="grid gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge
+          className={
+            "rounded-full px-3 py-1 text-xs font-semibold " +
+            (isFast
+              ? "bg-amber-500/15 text-amber-800 dark:text-amber-200"
+              : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-200")
+          }
+        >
+          <span className="inline-flex items-center gap-1">
+            {isFast ? <Leaf className="h-3.5 w-3.5" /> : <Flame className="h-3.5 w-3.5" />}
+            {description}
+          </span>
         </Badge>
-      ) : null}
+        {exception ? (
+          <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            {exception}
+          </Badge>
+        ) : null}
+      </div>
+
+      <div className="text-xs font-medium text-muted-foreground">
+        <div>{guidance.from}</div>
+        <div>{guidance.allowed}</div>
+      </div>
     </div>
   );
 }
@@ -95,8 +134,12 @@ export function TodayOverview({
       const end = new Date(start);
       end.setMinutes(end.getMinutes() + 10);
 
+      const g = fastingGuidanceLines(q.data.fasting.description, q.data.fasting.exception);
+
       const desc = [
         `Fasting: ${q.data.fasting.description}${q.data.fasting.exception ? ` (${q.data.fasting.exception})` : ""}`,
+        g.from,
+        g.allowed,
         "",
         `Verify: ${q.data.sources.ocaDailyUrl}`,
       ].join("\n");
