@@ -7,7 +7,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Progress } from "@/components/ui/progress";
 import { showSuccess } from "@/utils/toast";
 
-const PRESETS = [1, 3, 5, 8] as const;
+const PRESETS = [1, 3, 5, 10, 15, 20, 30] as const;
 
 export function StillnessTimer() {
   const [minutes, setMinutes] = useState<typeof PRESETS[number]>(3);
@@ -27,7 +27,9 @@ export function StillnessTimer() {
     const startRemaining = remaining;
 
     const id = window.setInterval(() => {
-      const elapsed = Math.floor((performance.now() - (startedAt.current ?? 0)) / 1000);
+      const elapsed = Math.floor(
+        (performance.now() - (startedAt.current ?? 0)) / 1000,
+      );
       const next = Math.max(0, startRemaining - elapsed);
       setRemaining(next);
       if (next === 0) {
@@ -55,7 +57,9 @@ export function StillnessTimer() {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="text-base font-semibold tracking-tight">Stillness timer</h3>
-          <p className="mt-1 text-sm text-muted-foreground">A few quiet minutes for prayer or Scripture.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            A few quiet minutes for prayer or Scripture.
+          </p>
         </div>
         <AlarmClock className="h-5 w-5 text-muted-foreground" />
       </div>
@@ -64,7 +68,9 @@ export function StillnessTimer() {
 
       <div className="grid gap-4">
         <div>
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">Duration</p>
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+            Duration
+          </p>
           <ToggleGroup
             type="single"
             value={String(minutes)}
@@ -72,7 +78,7 @@ export function StillnessTimer() {
               if (!v) return;
               setMinutes(Number(v) as typeof PRESETS[number]);
             }}
-            className="mt-2 gap-2"
+            className="mt-2 flex flex-wrap justify-start gap-2"
           >
             {PRESETS.map((m) => (
               <ToggleGroupItem
@@ -96,7 +102,11 @@ export function StillnessTimer() {
                 className="rounded-2xl"
                 onClick={() => setRunning((r) => !r)}
               >
-                {running ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
+                {running ? (
+                  <Pause className="mr-2 h-4 w-4" />
+                ) : (
+                  <Play className="mr-2 h-4 w-4" />
+                )}
                 {running ? "Pause" : "Start"}
               </Button>
               <Button
