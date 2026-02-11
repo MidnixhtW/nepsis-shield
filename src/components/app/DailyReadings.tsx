@@ -30,14 +30,16 @@ function ReadingCard({
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">
             {label}
           </p>
-          <p className="mt-1 truncate text-sm font-semibold">{display || "—"}</p>
+          <p className="mt-1 text-sm font-semibold leading-snug">{display || "—"}</p>
         </div>
         <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
           Verify on OCA
         </Badge>
       </div>
       {text ? (
-        <p className="mt-3 text-sm leading-relaxed text-foreground/90">{text}</p>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+          {text}
+        </p>
       ) : (
         <p className="mt-3 text-sm text-muted-foreground">
           Open the OCA page for the full reading.
@@ -84,7 +86,7 @@ export function DailyReadings() {
                 q.data.readings.epistle?.display ??
                 q.data.readings.epistle?.short_display
               }
-              text={readingText(q.data.readings.epistle)}
+              text={readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY)}
             />
             <ReadingCard
               label="Gospel"
@@ -92,7 +94,7 @@ export function DailyReadings() {
                 q.data.readings.gospel?.display ??
                 q.data.readings.gospel?.short_display
               }
-              text={readingText(q.data.readings.gospel)}
+              text={readingText(q.data.readings.gospel, Number.POSITIVE_INFINITY)}
             />
 
             {q.data.readings.others.length ? (
@@ -108,17 +110,21 @@ export function DailyReadings() {
                           key={idx}
                           className="rounded-2xl border border-border/60 bg-background p-4"
                         >
-                          <p className="text-sm font-semibold">
+                          <p className="text-sm font-semibold leading-snug">
                             {r.display ??
                               r.short_display ??
                               r.description ??
                               "Reading"}
                           </p>
-                          {readingText(r, 500) ? (
-                            <p className="mt-2 text-sm text-muted-foreground">
-                              {readingText(r, 500)}
+                          {readingText(r, Number.POSITIVE_INFINITY) ? (
+                            <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+                              {readingText(r, Number.POSITIVE_INFINITY)}
                             </p>
-                          ) : null}
+                          ) : (
+                            <p className="mt-2 text-sm text-muted-foreground">
+                              Open the OCA page for the full reading.
+                            </p>
+                          )}
                         </div>
                       ))}
                     </div>

@@ -152,6 +152,7 @@ export function readingText(reading?: OrthocalReading, maxChars = 900) {
     .trim();
 
   if (!raw) return "";
+  if (!Number.isFinite(maxChars)) return raw;
   if (raw.length <= maxChars) return raw;
   return raw.slice(0, maxChars - 1).trimEnd() + "…";
 }

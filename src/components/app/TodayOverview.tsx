@@ -184,12 +184,19 @@ export function TodayOverview({
                 <p className="text-xs font-semibold tracking-wide text-muted-foreground">
                   Commemorations
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground">
-                  {q.data.saints.length
-                    ? q.data.saints.slice(0, 3).join(" • ") +
-                      (q.data.saints.length > 3 ? " • …" : "")
-                    : "See the calendar for today's commemorations."}
-                </p>
+                <div className="mt-2 grid gap-1.5">
+                  {q.data.saints.length ? (
+                    q.data.saints.map((s) => (
+                      <p key={s} className="text-sm leading-relaxed text-foreground">
+                        {s}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      See the calendar for today's commemorations.
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

@@ -7,12 +7,12 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Progress } from "@/components/ui/progress";
 import { showSuccess } from "@/utils/toast";
 
-const PRESETS = [1, 3, 5, 10] as const;
+const PRESETS = [1, 3, 5, 8] as const;
 
 export function StillnessTimer() {
-  const [minutes, setMinutes] = useState<typeof PRESETS[number]>(5);
+  const [minutes, setMinutes] = useState<typeof PRESETS[number]>(3);
   const [running, setRunning] = useState(false);
-  const [remaining, setRemaining] = useState(5 * 60); // seconds
+  const [remaining, setRemaining] = useState(3 * 60); // seconds
   const startedAt = useRef<number | null>(null);
   const duration = minutes * 60;
 
