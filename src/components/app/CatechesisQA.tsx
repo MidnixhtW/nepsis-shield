@@ -50,7 +50,6 @@ const QA_ITEMS: QA[] = [
     a: [
       "The Divine Liturgy is the Church's central act of worship, where the faithful gather to hear the Scriptures, offer thanksgiving, and receive Holy Communion.",
       "In practice, it's not something you 'watch'; it's something you participate in with attention: prayer, singing, listening, offering your life to God, and (when blessed and prepared) receiving the Eucharist.",
-
       "Use this app's Readings tab to follow the lections, then bring that attention into the Liturgy on Sunday (and feast days).",
     ].join("\n\n"),
     sourceLabel: "OCA – The Divine Liturgy (Q&A)",
@@ -61,7 +60,6 @@ const QA_ITEMS: QA[] = [
     q: "Why is it important to participate in the entire Divine Liturgy?",
     a: [
       "The Liturgy is a single, unified act of the Church, not separate 'pieces' to drop into.",
-
       "Arriving early and staying through the dismissal trains attention, keeps the service from becoming a private 'drive-through,' and helps the community pray as one Body.",
       "If you're building consistency: aim for the whole service, even when you can't receive Communion.",
     ].join("\n\n"),
@@ -97,10 +95,8 @@ const QA_ITEMS: QA[] = [
     q: "What are the sacraments in Orthodoxy?",
     a: [
       "Orthodox Christians speak of 'mysteries' (sacraments) as the Church's life in Christ, God's grace working through visible actions.",
-
       "The OCA's Q&A gives an overview that includes Baptism and Chrismation (entry into the Church), Eucharist (center), Confession (healing), Marriage and Priesthood (service), and Holy Unction (healing).",
       "A helpful way to use this app: keep the daily rhythm (prayer and Scripture) so Sunday worship and the sacraments are lived, not just studied.",
-
     ].join("\n\n"),
     sourceLabel: "OCA – The Sacraments (Q&A)",
     sourceUrl: "https://www.oca.org/questions/sevensacraments/the-sacraments",
@@ -110,7 +106,6 @@ const QA_ITEMS: QA[] = [
     q: "What is Chrismation?",
     a: [
       "Chrismation is the sealing of the gift of the Holy Spirit, often described as a person's 'personal Pentecost.'",
-
       "It is normally joined to Baptism (especially for infants), and it completes initiation into the Church's sacramental life.",
     ].join("\n\n"),
     sourceLabel: "OCA – Seven Sacraments (Q&A)",
@@ -143,7 +138,6 @@ const QA_ITEMS: QA[] = [
     a: [
       "There isn't a single number for everyone. The OCA Q&A addresses frequency together with preparation (prayer, fasting, repentance, confession) and the guidance of your priest.",
       "A good 'app rule' is: focus on preparing well and participating fully. Frequency follows with pastoral direction.",
-
     ].join("\n\n"),
     sourceLabel: "OCA – Frequency of Communion (Q&A)",
     sourceUrl: "https://www.oca.org/questions/divineliturgy/frequency-of-communion",
@@ -175,7 +169,6 @@ const QA_ITEMS: QA[] = [
     a: [
       "The OCA Q&A explains the practice of choosing baptismal (Christian) names, commonly connected to saints and the Church's calendar.",
       "A practical approach: choose a name you can pray with, a saint you can actually learn from and ask for intercession.",
-
     ].join("\n\n"),
     sourceLabel: "OCA – Baptismal Names (Q&A)",
     sourceUrl: "https://www.oca.org/questions/sevensacraments/baptismal-names",
@@ -199,7 +192,6 @@ const QA_ITEMS: QA[] = [
       "Because the Word truly became flesh: the Incarnation makes depicting Christ possible and meaningful.",
       "Icons are 'windows' that help us pray and remember the Kingdom. Honor shown to an icon goes to the person depicted (the prototype), not to wood and paint.",
       "Veneration is not worship. Worship belongs to God alone.",
-
     ].join("\n\n"),
     sourceLabel: "OCA – Icons (The Orthodox Faith)",
     sourceUrl:
@@ -211,7 +203,6 @@ const QA_ITEMS: QA[] = [
     a: [
       "The saints are alive in Christ and remain members of His one Body.",
       "Asking for their intercession is like asking a faithful friend to pray, but with the confidence that the saint is already glorified in Christ.",
-
       "This does not replace prayer to God; it supports it.",
     ].join("\n\n"),
     sourceLabel: "OCA – Mary / Prayer / Death (Q&A)",
@@ -256,7 +247,6 @@ const QA_ITEMS: QA[] = [
     a: [
       "Fasting is a spiritual discipline that supports repentance, prayer, and mercy.",
       "It is meant to train freedom from passions and dependency on comfort, not to 'earn' salvation.",
-
       "Fasting without mercy and repentance becomes empty; fasting with humility becomes medicine.",
     ].join("\n\n"),
     sourceLabel: "OCA – Orthodox Fasting (Q&A)",
@@ -297,10 +287,10 @@ const QA_ITEMS: QA[] = [
   // --- Scripture ---
   {
     category: "Scripture",
-    q: "How does Orthodoxy understand the Bible?",
+    q: "How should Orthodox Christians read the Bible?",
     a: [
-      "The OCA describes the Bible as 'the book of the Church'—received, read, and interpreted within the Church's worship and teaching.",
-      "The Gospels are central, and the Old Testament is understood as pointing to and fulfilled in Christ.",
+      "The OCA describes the Bible as 'the book of the Church', received, read, and interpreted within the Church's worship and teaching.",
+      "A good habit is to start with the daily readings and the Gospels, and to ask your priest when you're stuck.",
     ].join("\n\n"),
     sourceLabel: "OCA – Bible (Q&A)",
     sourceUrl: "https://www.oca.org/questions/scripture/bible",
@@ -309,7 +299,8 @@ const QA_ITEMS: QA[] = [
     category: "Scripture",
     q: "Should Orthodox Christians study the Bible outside of church services?",
     a: [
-      "Yes—personal and group study can be deeply helpful when it remains connected to the Church's faith.",
+      "Yes. Personal and group study can be deeply helpful when it remains connected to the Church's faith.",
+
       "The OCA Q&A encourages Scripture study and points readers toward responsible approaches (not speculative interpretations).",
     ].join("\n\n"),
     sourceLabel: "OCA – Study of the Bible (Q&A)",
@@ -333,7 +324,8 @@ const QA_ITEMS: QA[] = [
     a: [
       "The OCA emphasizes that parishes have local customs (how people venerate, when confession is offered, how people line up, etc.).",
       "Don't weaponize internet checklists; learn the local practice with humility.",
-      "When you're confused, ask the priest directly—quietly and respectfully.",
+      "When you're confused, ask the priest directly, quietly and respectfully.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Rules & Customs (Q&A)",
     sourceUrl: "https://www.oca.org/questions/parishlife/rules-customs",
@@ -343,7 +335,8 @@ const QA_ITEMS: QA[] = [
     q: "What does the OCA say about tithing?",
     a: [
       "The OCA Q&A discusses tithing and stewardship in a pastoral way.",
-      "The goal is not guilt—it's offering first-fruits to support the Church's worship, mission, and care for people.",
+      "The goal is not guilt. It's offering first-fruits to support the Church's worship, mission, and care for people.",
+
       "A simple practice: choose a percentage you can keep consistently, then grow in generosity over time.",
     ].join("\n\n"),
     sourceLabel: "OCA – Tithing (Q&A)",
@@ -364,7 +357,8 @@ const QA_ITEMS: QA[] = [
     q: "Why do some parishes use 'thee/thou' language?",
     a: [
       "The OCA Q&A discusses why certain English translations use 'thee/thou' for God and notes that different translations are used across parishes.",
-      "A healthy approach: don't fight a culture war over language—learn to pray with the text your parish uses.",
+      "A healthy approach: don't fight a culture war over language. Learn to pray with the text your parish uses.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Archaic English (Q&A)",
     sourceUrl: "https://www.oca.org/questions/parishlife/archaic-english",
@@ -384,7 +378,8 @@ const QA_ITEMS: QA[] = [
     q: "How do I balance 'service' with prayer?",
     a: [
       "The OCA Q&A addresses the temptation to replace prayer with busyness.",
-      "A rule of thumb: prayer is not 'less productive service'—it's the root of all Christian service.",
+      "A rule of thumb: prayer is not 'less productive service'. It's the root of all Christian service.",
+
       "If your church work makes you resentful or dry, simplify and return to prayer.",
     ].join("\n\n"),
     sourceLabel: "OCA – Balancing Service with Prayer (Q&A)",
@@ -398,7 +393,8 @@ const QA_ITEMS: QA[] = [
     a: [
       "The iconostasis is the screen of icons that both reveals and protects the holy altar, teaching the faith visually.",
       "The Royal Doors (Holy Doors) mark the central entrance; practices about when they are opened/closed can vary by tradition.",
-      "If you're new: don't stress the details—learn the meaning and follow your parish's practice.",
+      "If you're new: don't stress the details. Learn the meaning and follow your parish's practice.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Royal Doors (Q&A)",
     sourceUrl: "https://www.oca.org/questions/liturgicalservices/royal-doors",
@@ -407,7 +403,8 @@ const QA_ITEMS: QA[] = [
     category: "Liturgical arts",
     q: "How does architecture express Orthodox theology?",
     a: [
-      "The OCA Q&A explains how church architecture is not decorative—it's theological.",
+      "The OCA Q&A explains how church architecture is not decorative. It's theological.",
+
       "Items like the sanctuary, iconostasis, and arrangement of icons exist to form prayer and proclaim the Kingdom.",
     ].join("\n\n"),
     sourceLabel: "OCA – Church Architecture & Orthodox Theology (Q&A)",
@@ -505,7 +502,8 @@ const QA_ITEMS: QA[] = [
     q: "What is the 'branch theory' and how does Orthodoxy view it?",
     a: [
       "The OCA Q&A addresses 'branch theory' (the idea that the Church exists as multiple equal branches).",
-      "Orthodoxy typically rejects this as inadequate, because the Church is one and visible—not a federation of separate bodies.",
+      "Orthodoxy typically rejects this as inadequate, because the Church is one and visible, not a federation of separate bodies.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Orthodox Christianity and the Branch Theory (Q&A)",
     sourceUrl:
@@ -515,14 +513,14 @@ const QA_ITEMS: QA[] = [
   // --- Other Christians / other confessions ---
   {
     category: "Other Christians",
-    q: "What about other Christians—can they be saved?",
+    q: "What about other Christians? Can they be saved?",
     a: [
-      "The OCA Q&A addresses this directly and cautions against treating salvation as a scorecard.",
-      "Orthodoxy confesses the Church as the fullness of faith, while leaving judgment to God and calling us to repentance.",
-      "A practical posture: pray for all, love all, and avoid presumption.",
+      "We hold to the truth that the Orthodox Church is the Church of Christ.",
+      "We also trust the mercy of God and avoid pretending we can read hearts or judge the final state of anyone.",
+      "If you're asking this because you have family or friends, talk with your priest. He can help you keep both truth and love.",
     ].join("\n\n"),
     sourceLabel: "OCA – What about other Christians…? (Q&A)",
-    sourceUrl: "https://www.oca.org/questions/otherconfessions/what-about-other-christians",
+    sourceUrl: "https://www.oca.org/questions/teaching/what-about-other-christians",
   },
   {
     category: "Other Christians",
@@ -536,14 +534,14 @@ const QA_ITEMS: QA[] = [
   },
   {
     category: "Other Christians",
-    q: "Orthodox worship vs. contemporary worship—what's the difference?",
+    q: "Orthodox worship vs. contemporary worship. What's the difference?",
     a: [
-      "The OCA Q&A contrasts approaches and emphasizes Orthodox worship as God-centered, sacramental, and Eucharistic.",
-      "The point isn't 'style wars'; the deeper difference is theology and ecclesiology.",
+      "This can be a charged topic. A simple starting point is this: Orthodox worship is received, not invented.",
+      "We pray with the Church across time, centered on Scripture, the sacraments, and the life of the parish.",
+      "If you're visiting for the first time, come in peace. Stand where you can, follow along as you are able, and ask questions after.",
     ].join("\n\n"),
     sourceLabel: "OCA – Orthodox Worship vs. Contemporary Worship (Q&A)",
-    sourceUrl:
-      "https://www.oca.org/questions/otherconfessions/orthodox-worship-vs.-contemporary-worship",
+    sourceUrl: "https://www.oca.org/questions/teaching/orthodox-worship-vs-contemporary-worship",
   },
   {
     category: "Other Christians",

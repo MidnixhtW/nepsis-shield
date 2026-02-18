@@ -203,9 +203,10 @@ export function ConfessionPrep() {
             ? "Not saved (clears on refresh)."
             : encryptEnabled
             ? locked
-              ? "Locked — enter passphrase below to view/edit."
+              ? "Locked. Enter passphrase below to view or edit."
               : "Saved (encrypted) on this device."
             : "Saved (not encrypted) on this device."}
+
         </p>
       </div>
 

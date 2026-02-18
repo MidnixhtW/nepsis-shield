@@ -13,50 +13,69 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { fetchDailyData, readingText } from "@/lib/orthocal";
+import { useNavigate } from "react-router-dom";
 
 function ReadingCard({
   label,
   display,
   text,
+  onReadInApp,
 }: {
   label: string;
   display?: string;
   text: string;
+  onReadInApp?: () => void;
 }) {
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-            {label}
-          </p>
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground">{label}</p>
           <p className="mt-1 text-sm font-semibold leading-snug">{display || ""}</p>
-
         </div>
         <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          Verify on OCA
+          OCA
         </Badge>
       </div>
+
       {text ? (
         <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
           {text}
         </p>
       ) : (
-        <p className="mt-3 text-sm text-muted-foreground">
-          Open the OCA page for the full reading.
-        </p>
+        <div className="mt-3 grid gap-2">
+          <p className="text-sm text-muted-foreground">
+            Text was not included in the calendar feed for this reading.
+          </p>
+          {onReadInApp ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-fit rounded-2xl border-border/60"
+              onClick={onReadInApp}
+            >
+              Read in app
+            </Button>
+          ) : null}
+        </div>
       )}
     </div>
   );
 }
 
 export function DailyReadings() {
+  const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
 
   const q = useQuery({
     queryKey: ["daily", format(today, "yyyy-MM-dd")],
     queryFn: () => fetchDailyData(today),
   });
+
+  function openRef(ref?: string) {
+    if (!ref) return;
+    navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}`);
+  }
 
   return (
     <div className="grid gap-4">
@@ -65,8 +84,9 @@ export function DailyReadings() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Epistle & Gospel</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Read with attention — then keep a single line with you all day.
+              Read with attention. Keep a single line with you through the day.
             </p>
+
           </div>
           <BookOpen className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -76,9 +96,7 @@ export function DailyReadings() {
         {q.isLoading ? (
           <div className="text-sm text-muted-foreground">Loading readings…</div>
         ) : q.isError ? (
-          <div className="text-sm text-destructive">
-            Couldn't load readings right now.
-          </div>
+          <div className="text-sm text-destructive">Couldn't load readings right now.</div>
         ) : q.data ? (
           <div className="grid gap-3">
             <ReadingCard
@@ -88,7 +106,14 @@ export function DailyReadings() {
                 q.data.readings.epistle?.short_display
               }
               text={readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY)}
+              onReadInApp={() =>
+                openRef(
+                  q.data.readings.epistle?.display ??
+                    q.data.readings.epistle?.short_display,
+                )
+              }
             />
+
             <ReadingCard
               label="Gospel"
               display={
@@ -96,6 +121,12 @@ export function DailyReadings() {
                 q.data.readings.gospel?.short_display
               }
               text={readingText(q.data.readings.gospel, Number.POSITIVE_INFINITY)}
+              onReadInApp={() =>
+                openRef(
+                  q.data.readings.gospel?.display ??
+                    q.data.readings.gospel?.short_display,
+                )
+              }
             />
 
             {q.data.readings.others.length ? (
@@ -106,28 +137,39 @@ export function DailyReadings() {
                   </AccordionTrigger>
                   <AccordionContent className="pt-3">
                     <div className="grid gap-3">
-                      {q.data.readings.others.map((r, idx) => (
-                        <div
-                          key={idx}
-                          className="rounded-2xl border border-border/60 bg-background p-4"
-                        >
-                          <p className="text-sm font-semibold leading-snug">
-                            {r.display ??
-                              r.short_display ??
-                              r.description ??
-                              "Reading"}
-                          </p>
-                          {readingText(r, Number.POSITIVE_INFINITY) ? (
-                            <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
-                              {readingText(r, Number.POSITIVE_INFINITY)}
+                      {q.data.readings.others.map((r, idx) => {
+                        const disp = r.display ?? r.short_display ?? r.description;
+                        const t = readingText(r, Number.POSITIVE_INFINITY);
+                        return (
+                          <div
+                            key={idx}
+                            className="rounded-2xl border border-border/60 bg-background p-4"
+                          >
+                            <p className="text-sm font-semibold leading-snug">
+                              {disp ?? "Reading"}
                             </p>
-                          ) : (
-                            <p className="mt-2 text-sm text-muted-foreground">
-                              Open the OCA page for the full reading.
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                            {t ? (
+                              <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+                                {t}
+                              </p>
+                            ) : disp ? (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="mt-2 w-fit rounded-2xl border-border/60"
+                                onClick={() => openRef(disp)}
+                              >
+                                Read in app
+                              </Button>
+                            ) : (
+                              <p className="mt-2 text-sm text-muted-foreground">
+                                Open the OCA page for the full reading.
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
@@ -138,11 +180,7 @@ export function DailyReadings() {
               <div className="text-xs text-muted-foreground">
                 Backed up by the OCA daily readings page.
               </div>
-              <Button
-                asChild
-                variant="outline"
-                className="rounded-2xl border-border/60"
-              >
+              <Button asChild variant="outline" className="rounded-2xl border-border/60">
                 <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
                   Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
