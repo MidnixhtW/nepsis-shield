@@ -244,7 +244,9 @@ export function GuidedSessionPlayer({
       return;
     }
 
-    return new Promise<void>((resolve, reject) => {
+    // Never reject: some browsers fire `onerror` for benign reasons (voice not ready,
+    // interrupted, etc). We handle it gracefully and continue.
+    return new Promise<void>((resolve) => {
       const u = new SpeechSynthesisUtterance(text);
       u.rate = Math.max(0.7, Math.min(1.25, rate));
       u.pitch = Math.max(0.7, Math.min(1.3, pitch));
@@ -257,12 +259,18 @@ export function GuidedSessionPlayer({
       }
 
       u.onend = () => resolve();
-      u.onerror = () => reject(new Error("speech error"));
+      u.onerror = () => {
+        // Avoid noisy unhandled promise rejections.
+        showError("Couldn't play voice. Try a different voice.");
+        resolve();
+      };
+
       try {
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(u);
-      } catch (e) {
-        reject(e as Error);
+      } catch {
+        showError("Couldn't start voice.");
+        resolve();
       }
     });
   }
@@ -611,7 +619,9 @@ export function GuidedSessionPlayer({
                     variant="outline"
                     className="h-9 rounded-2xl"
                     disabled={voiceDisabled}
-                    onClick={() => void speak("Lord Jesus Christ, Son of God, have mercy on me.")}
+                    onClick={() => {
+                      void speak("Lord Jesus Christ, Son of God, have mercy on me.");
+                    }}
                   >
                     Test voice
                   </Button>
