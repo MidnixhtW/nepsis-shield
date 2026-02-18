@@ -19,6 +19,7 @@ import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
+import { YoungAdultToday } from "@/components/app/YoungAdultToday";
 
 function fastingGuidanceLines(description: string, exception?: string) {
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
@@ -120,6 +121,7 @@ export function TodayOverview({
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
 }) {
   const today = useMemo(() => new Date(), []);
+  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
 
   const q = useQuery({
     queryKey: ["daily", format(today, "yyyy-MM-dd")],
@@ -260,6 +262,8 @@ export function TodayOverview({
           ) : null}
         </div>
       </Card>
+
+      {q.data ? <YoungAdultToday dayKey={dayKey} data={q.data} /> : null}
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h3 className="text-base font-semibold tracking-tight">Next</h3>
