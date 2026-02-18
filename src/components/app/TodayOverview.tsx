@@ -10,6 +10,8 @@ import {
   GraduationCap,
   Target,
   CalendarPlus,
+  Sparkles,
+  AudioLines,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,7 +21,6 @@ import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
-import { YoungAdultToday } from "@/components/app/YoungAdultToday";
 
 function fastingGuidanceLines(description: string, exception?: string) {
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
@@ -117,11 +118,12 @@ function QuickAction({
 
 export function TodayOverview({
   onNavigate,
+  onOpenRoute,
 }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
+  onOpenRoute?: (path: string) => void;
 }) {
   const today = useMemo(() => new Date(), []);
-  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
 
   const q = useQuery({
     queryKey: ["daily", format(today, "yyyy-MM-dd")],
@@ -231,7 +233,7 @@ export function TodayOverview({
                 </p>
                 <div className="mt-2 grid gap-1.5">
                   {q.data.saints.length ? (
-                    q.data.saints.map((s) => (
+                    q.data.saints.slice(0, 6).map((s) => (
                       <p key={s} className="text-sm leading-relaxed text-foreground">
                         {s}
                       </p>
@@ -241,6 +243,17 @@ export function TodayOverview({
                       See the calendar for today's commemorations.
                     </p>
                   )}
+                  {q.data.saints.length > 6 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="mt-1 w-fit rounded-2xl border-border/60"
+                      onClick={() => onOpenRoute?.("/saints")}
+                    >
+                      View all saints
+                    </Button>
+                  ) : null}
                 </div>
               </div>
 
@@ -263,8 +276,6 @@ export function TodayOverview({
         </div>
       </Card>
 
-      {q.data ? <YoungAdultToday dayKey={dayKey} data={q.data} /> : null}
-
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h3 className="text-base font-semibold tracking-tight">Next</h3>
         <p className="mt-1 text-sm text-muted-foreground">A few focused shortcuts.</p>
@@ -282,9 +293,19 @@ export function TodayOverview({
             onClick={() => onNavigate?.({ section: "read", read: "daily" })}
           />
           <QuickAction
+            label="Reading plans"
+            icon={<Sparkles className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "read", read: "plans" })}
+          />
+          <QuickAction
             label="Jesus Prayer"
             icon={<Target className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
+          />
+          <QuickAction
+            label="Guided programs"
+            icon={<AudioLines className="h-4 w-4 text-primary" />}
+            onClick={() => onOpenRoute?.("/programs")}
           />
           <QuickAction
             label="Learn"

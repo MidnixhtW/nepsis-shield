@@ -66,6 +66,8 @@ const ALLOWED_PREFIXES = [
   "prayer_rule:",
   "bible:",
   "confess:",
+  "programs:",
+  "plans:",
 ] as const;
 
 const ALLOWED_PRIVACY_KEYS = new Set([

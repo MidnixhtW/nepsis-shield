@@ -203,6 +203,22 @@ export function OrthodoxBible() {
       ref?: string;
     }>(lastReadKey());
 
+    // If a "ref" query param exists, treat it as a deep-link into reference mode.
+    try {
+      const url = new URL(window.location.href);
+      const deepRef = url.searchParams.get("ref");
+      if (deepRef && deepRef.trim()) {
+        setTab("reference");
+        setRefInput(deepRef);
+        setRefSubmitted(deepRef);
+        // Clear the param after consuming it so it doesn't keep overriding.
+        url.searchParams.delete("ref");
+        window.history.replaceState(null, "", url.toString());
+      }
+    } catch {
+      // ignore
+    }
+
     if (last?.base) setBase(last.base);
     if (last?.bookName) setBookName(last.bookName);
     if (typeof last?.chapter === "number") setChapter(Math.max(1, last.chapter));
@@ -1079,3 +1095,5 @@ export function OrthodoxBible() {
     </div>
   );
 }
+
+export default OrthodoxBible;

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionBar } from "@/components/app/SectionBar";
 import { showError, showSuccess } from "@/utils/toast";
+import { ReadingPlans } from "@/components/app/ReadingPlans";
 
-export type ReadTab = "daily" | "bible";
+export type ReadTab = "daily" | "bible" | "plans";
 
 export function ReadHub({
   tab,
@@ -32,7 +33,7 @@ export function ReadHub({
     <div className="grid gap-4">
       <SectionBar
         title="Read"
-        hint="Lectionary & Bible"
+        hint="Lectionary, Bible, plans"
         action={
           <Tooltip>
             <TooltipTrigger asChild>
@@ -53,7 +54,7 @@ export function ReadHub({
       />
 
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as ReadTab)}>
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1">
+        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1">
           <TabsTrigger
             value="daily"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
@@ -66,6 +67,12 @@ export function ReadHub({
           >
             Bible
           </TabsTrigger>
+          <TabsTrigger
+            value="plans"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            Plans
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="daily" className="mt-4">
@@ -74,6 +81,10 @@ export function ReadHub({
 
         <TabsContent value="bible" className="mt-4">
           <OrthodoxBible />
+        </TabsContent>
+
+        <TabsContent value="plans" className="mt-4">
+          <ReadingPlans />
         </TabsContent>
       </Tabs>
     </div>

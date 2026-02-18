@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ExternalLink, Menu, Shield, Info } from "lucide-react";
+import { AudioLines, ExternalLink, Menu, Shield, Info, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,7 +32,10 @@ export function AppHeader() {
               Ortho Companion
             </h1>
             <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-              Independent project. <Link to="/about" className="underline underline-offset-4">About</Link>
+              Independent project.{" "}
+              <Link to="/about" className="underline underline-offset-4">
+                About
+              </Link>
             </p>
           </div>
         </div>
@@ -60,6 +63,26 @@ export function AppHeader() {
 
               <div className="mt-5 grid gap-2">
                 <ThemeToggle variant="row" />
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 justify-start rounded-2xl border-border/60"
+                >
+                  <Link to="/programs">
+                    <AudioLines className="mr-2 h-4 w-4" /> Programs
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 justify-start rounded-2xl border-border/60"
+                >
+                  <Link to="/saints">
+                    <Sparkles className="mr-2 h-4 w-4" /> Saints
+                  </Link>
+                </Button>
 
                 <Button
                   asChild
@@ -98,6 +121,28 @@ export function AppHeader() {
         {/* Desktop: inline actions */}
         <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle />
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60"
+          >
+            <Link to="/programs">
+              <AudioLines className="mr-2 h-4 w-4" /> Programs
+            </Link>
+          </Button>
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60"
+          >
+            <Link to="/saints">
+              <Sparkles className="mr-2 h-4 w-4" /> Saints
+            </Link>
+          </Button>
 
           <Button
             asChild

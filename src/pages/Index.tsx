@@ -36,7 +36,7 @@ function isPrayerTab(x: string | null): x is PrayerTab {
 }
 
 function isReadTab(x: string | null): x is ReadTab {
-  return x === "daily" || x === "bible";
+  return x === "daily" || x === "bible" || x === "plans";
 }
 
 const Index = () => {
@@ -150,6 +150,7 @@ const Index = () => {
                 navigate(`/${to.section}?${next.toString()}`);
                 setSection(to.section);
               }}
+              onOpenRoute={(path) => navigate(path)}
             />
           </div>
         ) : null}

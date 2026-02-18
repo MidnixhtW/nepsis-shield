@@ -8,6 +8,9 @@ import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
+import Programs from "@/pages/Programs";
+import ProgramDetail from "@/pages/ProgramDetail";
+import Saints from "@/pages/Saints";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +25,9 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/about" element={<About />} />
+            <Route path="/programs" element={<Programs />} />
+            <Route path="/programs/:programId" element={<ProgramDetail />} />
+            <Route path="/saints" element={<Saints />} />
             <Route path="/:section" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
