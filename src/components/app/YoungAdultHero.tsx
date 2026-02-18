@@ -28,7 +28,7 @@ export function YoungAdultHero({
         <div className="relative p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-              Built for busy days
+              Built for busy lives
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
               Orthodox • calm • practical
@@ -39,8 +39,8 @@ export function YoungAdultHero({
             One small step toward Christ — today.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Young adult life is loud. This keeps the essentials quiet: daily readings, fasting guidance,
-            simple prayer, and private notes — with official sources.
+            Made with young adults in mind, but for all Orthodox Christians: daily readings, fasting guidance,
+            simple prayer, and private notes — with direct sources.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">

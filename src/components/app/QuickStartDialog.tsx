@@ -79,7 +79,7 @@ export function QuickStartDialog() {
           <DialogHeader>
             <DialogTitle className="text-xl">Welcome</DialogTitle>
             <DialogDescription>
-              Pick one thing for today. Small is better than perfect.
+              Pick one thing for today. Made with young adults in mind — for all Orthodox Christians.
             </DialogDescription>
           </DialogHeader>
 
