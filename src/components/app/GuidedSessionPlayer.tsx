@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
+import { getAudioClip, removeAudioClip, setAudioClip } from "@/lib/audioVault";
 import { showError, showSuccess } from "@/utils/toast";
 import type { SessionSegment } from "@/lib/programs/catalog";
 
@@ -54,10 +55,13 @@ export function GuidedSessionPlayer({
   title,
   segments,
   onComplete,
+  audioKey,
 }: {
   title: string;
   segments: SessionSegment[];
   onComplete?: () => void;
+  /** If provided, chosen audio is saved locally (IndexedDB) and reused for this session next time. */
+  audioKey?: string;
 }) {
   const [state, setState] = useState<PlayerState>("idle");
   const [idx, setIdx] = useState(0);
@@ -141,6 +145,31 @@ export function GuidedSessionPlayer({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [voiceUri]);
+
+  useEffect(() => {
+    // Load saved audio for this session (if enabled)
+    let active = true;
+    if (!audioKey) return;
+
+    (async () => {
+      try {
+        const clip = await getAudioClip(audioKey);
+        if (!active) return;
+        if (!clip) return;
+
+        const url = URL.createObjectURL(clip.blob);
+        setImportedAudioUrl(url);
+        setImportedAudioName(clip.name);
+        setUseImportedAudio(true);
+      } catch {
+        // ignore
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [audioKey]);
 
   useEffect(() => {
     return () => {
@@ -296,12 +325,7 @@ export function GuidedSessionPlayer({
 
       if (seg.kind === "speak") {
         setRemaining(null);
-        try {
-          await speak(seg.text);
-        } catch {
-          // Don't hard-fail the whole session.
-          await sleep(200);
-        }
+        await speak(seg.text);
         continue;
       }
 
@@ -521,8 +545,8 @@ export function GuidedSessionPlayer({
           <p className="mt-2 text-sm leading-relaxed">
             {useImportedAudio
               ? importedAudioName
-                ? `Playing imported audio: ${importedAudioName}`
-                : "Playing imported audio"
+                ? `Playing saved audio: ${importedAudioName}`
+                : "Playing saved audio"
               : current?.kind === "speak"
                 ? current.text
                 : current?.kind === "silence"
@@ -649,7 +673,7 @@ export function GuidedSessionPlayer({
 
             {useImportedAudio ? (
               <p className="mt-2 text-xs text-muted-foreground">
-                Voice is disabled while using imported audio.
+                Voice is disabled while using saved audio.
               </p>
             ) : null}
           </div>
@@ -657,13 +681,14 @@ export function GuidedSessionPlayer({
           <div className="rounded-2xl border border-border/60 bg-background/50 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-semibold">Imported audio</p>
+                <p className="text-sm font-semibold">Session audio (more human)</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Use your own recording (stored only for this session).
+                  Attach a recording to this session (saved on this device).
                 </p>
               </div>
               <Switch
                 checked={useImportedAudio}
+                disabled={!importedAudioUrl}
                 onCheckedChange={(v) => {
                   setUseImportedAudio(v);
                   if (v) {
@@ -689,20 +714,34 @@ export function GuidedSessionPlayer({
                   const file = e.target.files?.[0];
                   if (!file) return;
 
-                  // revoke old
-                  if (importedAudioUrl) {
-                    try {
-                      URL.revokeObjectURL(importedAudioUrl);
-                    } catch {
-                      // ignore
+                  (async () => {
+                    // revoke old
+                    if (importedAudioUrl) {
+                      try {
+                        URL.revokeObjectURL(importedAudioUrl);
+                      } catch {
+                        // ignore
+                      }
                     }
-                  }
 
-                  const url = URL.createObjectURL(file);
-                  setImportedAudioUrl(url);
-                  setImportedAudioName(file.name);
-                  setUseImportedAudio(true);
-                  showSuccess("Audio imported (this session only).");
+                    const url = URL.createObjectURL(file);
+                    setImportedAudioUrl(url);
+                    setImportedAudioName(file.name);
+                    setUseImportedAudio(true);
+
+                    // Persist if we have an audioKey
+                    if (audioKey) {
+                      try {
+                        await setAudioClip(audioKey, file, file.name);
+                        showSuccess("Saved audio for this session.");
+                        return;
+                      } catch {
+                        showError("Couldn't save audio on this device.");
+                      }
+                    }
+
+                    showSuccess("Audio loaded.");
+                  })();
                 }}
               />
 
@@ -721,8 +760,28 @@ export function GuidedSessionPlayer({
                   className="h-9 rounded-2xl"
                   disabled={!importedAudioUrl}
                   onClick={() => {
-                    reset();
-                    setUseImportedAudio(false);
+                    (async () => {
+                      if (audioKey) {
+                        try {
+                          await removeAudioClip(audioKey);
+                        } catch {
+                          // ignore
+                        }
+                      }
+
+                      if (importedAudioUrl) {
+                        try {
+                          URL.revokeObjectURL(importedAudioUrl);
+                        } catch {
+                          // ignore
+                        }
+                      }
+                      setImportedAudioUrl(null);
+                      setImportedAudioName(null);
+                      setUseImportedAudio(false);
+                      reset();
+                      showSuccess("Cleared session audio.");
+                    })();
                   }}
                 >
                   Clear
@@ -730,9 +789,9 @@ export function GuidedSessionPlayer({
               </div>
 
               {importedAudioName ? (
-                <p className="text-xs text-muted-foreground">Selected: {importedAudioName}</p>
+                <p className="text-xs text-muted-foreground">Attached: {importedAudioName}</p>
               ) : (
-                <p className="text-xs text-muted-foreground">No audio selected.</p>
+                <p className="text-xs text-muted-foreground">No audio attached.</p>
               )}
 
               <Separator className="my-2" />

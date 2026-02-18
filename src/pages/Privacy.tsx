@@ -79,6 +79,7 @@ const ALLOWED_PRIVACY_KEYS = new Set([
   "privacy:bible_save",
   "privacy:confess_save",
   "privacy:confess_encrypt",
+  "privacy:audio_save",
 ]);
 
 // Value schema validation
@@ -133,6 +134,7 @@ export default function Privacy() {
   const [counterSave, setCounterSave] = useState(true);
   const [prayerRuleSave, setPrayerRuleSave] = useState(true);
   const [bibleSave, setBibleSave] = useState(true);
+  const [audioSave, setAudioSave] = useState(true);
 
   const [exportPass, setExportPass] = useState("");
   const [importPass, setImportPass] = useState("");
@@ -148,6 +150,7 @@ export default function Privacy() {
     setCounterSave(getStoredItem<boolean>("privacy:counter_save") ?? true);
     setPrayerRuleSave(getStoredItem<boolean>("privacy:prayer_rule_save") ?? true);
     setBibleSave(getStoredItem<boolean>("privacy:bible_save") ?? true);
+    setAudioSave(getStoredItem<boolean>("privacy:audio_save") ?? true);
   }, []);
 
   useEffect(() => {
@@ -166,6 +169,10 @@ export default function Privacy() {
     setStoredItem("privacy:bible_save", bibleSave);
   }, [bibleSave]);
 
+  useEffect(() => {
+    setStoredItem("privacy:audio_save", audioSave);
+  }, [audioSave]);
+
   const approxKeyCount = useMemo(() => {
     const keys = safeKeys();
     return keys.filter((k) => {
@@ -174,7 +181,7 @@ export default function Privacy() {
         ALLOWED_PRIVACY_KEYS.has(k)
       );
     }).length;
-  }, [reflectionSave, reflectionEncrypt, counterSave, prayerRuleSave, bibleSave]);
+  }, [reflectionSave, reflectionEncrypt, counterSave, prayerRuleSave, bibleSave, audioSave]);
 
   async function exportEncrypted() {
     if (!exportPass) {
@@ -415,7 +422,7 @@ export default function Privacy() {
           <Alert className="rounded-2xl border-primary/30 bg-primary/5">
             <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
-              • Journal notes • Confession prep (checks + notes) • Jesus Prayer counter • Prayer Rule progress • Bible bookmarks • Related privacy settings.
+              • Journal notes • Confession prep (checks + notes) • Jesus Prayer counter • Prayer Rule progress • Bible bookmarks • Session audio attachments • Voice settings • Related privacy settings.
               <br />
               Anything outside these sections is excluded. Avoid plaintext/manual backups (like copy/paste or screenshots) for sensitive notes.
             </AlertDescription>

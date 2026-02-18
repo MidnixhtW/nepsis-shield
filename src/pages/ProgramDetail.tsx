@@ -107,6 +107,7 @@ export default function ProgramDetail() {
             <GuidedSessionPlayer
               title={session.title}
               segments={session.segments}
+              audioKey={`program:${program.id}:session:${session.id}`}
               onComplete={() => {
                 markSessionComplete(program.id, session.id);
               }}
