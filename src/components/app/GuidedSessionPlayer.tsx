@@ -8,8 +8,6 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { showError, showSuccess } from "@/utils/toast";
 import type { SessionSegment } from "@/lib/programs/catalog";
-import { buildElevenLabsConfig, getVoiceSettings } from "@/lib/voiceSettings";
-import { elevenLabsTts } from "@/lib/elevenlabs";
 
 type PlayerState = "idle" | "playing" | "paused" | "done";
 
@@ -42,8 +40,6 @@ export function GuidedSessionPlayer({
 
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isonEnabled, setIsonEnabled] = useState(false);
-
-  // Device TTS rate only (ElevenLabs has its own voice settings)
   const [rate, setRate] = useState(1);
 
   const cancelRef = useRef(false);
@@ -53,20 +49,18 @@ export function GuidedSessionPlayer({
   const oscRef = useRef<OscillatorNode | null>(null);
   const gainRef = useRef<GainNode | null>(null);
 
-  // ElevenLabs playback
-  const audioElRef = useRef<HTMLAudioElement | null>(null);
-  const currentAudioUrlRef = useRef<string | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
-
   const totalSilenceSeconds = useMemo(() => {
     return segments.reduce((sum, s) => (s.kind === "silence" ? sum + s.seconds : sum), 0);
   }, [segments]);
 
   useEffect(() => {
     return () => {
-      stopAllSpeech();
+      try {
+        window.speechSynthesis?.cancel();
+      } catch {
+        // ignore
+      }
       stopIson();
-      cleanupAudioUrl();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,45 +70,6 @@ export function GuidedSessionPlayer({
     const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
     audioCtxRef.current = ctx;
     return ctx;
-  }
-
-  function cleanupAudioUrl() {
-    const url = currentAudioUrlRef.current;
-    if (url) {
-      try {
-        URL.revokeObjectURL(url);
-      } catch {
-        // ignore
-      }
-    }
-    currentAudioUrlRef.current = null;
-  }
-
-  function stopAllSpeech() {
-    // Device TTS
-    try {
-      window.speechSynthesis?.cancel();
-    } catch {
-      // ignore
-    }
-
-    // ElevenLabs fetch
-    try {
-      abortRef.current?.abort();
-    } catch {
-      // ignore
-    }
-    abortRef.current = null;
-
-    // ElevenLabs audio element
-    try {
-      audioElRef.current?.pause();
-      if (audioElRef.current) audioElRef.current.currentTime = 0;
-    } catch {
-      // ignore
-    }
-
-    cleanupAudioUrl();
   }
 
   function startIson() {
@@ -179,7 +134,8 @@ export function GuidedSessionPlayer({
     }
   }
 
-  async function speakDevice(text: string) {
+  async function speak(text: string) {
+    if (!voiceEnabled) return;
     if (!hasSpeechSynthesis()) {
       showError("Voice is not supported in this browser.");
       return;
@@ -199,57 +155,6 @@ export function GuidedSessionPlayer({
         reject(e as Error);
       }
     });
-  }
-
-  async function speakElevenLabs(text: string) {
-    const settings = getVoiceSettings();
-    const cfg = buildElevenLabsConfig(settings);
-    if (!cfg) {
-      showError("ElevenLabs is not configured. Set it up in Settings → Voice.");
-      // Fallback to device voice so the session still works.
-      return await speakDevice(text);
-    }
-
-    abortRef.current?.abort();
-    const abort = new AbortController();
-    abortRef.current = abort;
-
-    const blob = await elevenLabsTts(cfg, text, { signal: abort.signal });
-    cleanupAudioUrl();
-    const url = URL.createObjectURL(blob);
-    currentAudioUrlRef.current = url;
-
-    const audio = audioElRef.current ?? new Audio();
-    audioElRef.current = audio;
-    audio.src = url;
-
-    return new Promise<void>((resolve, reject) => {
-      audio.onended = () => resolve();
-      audio.onerror = () => reject(new Error("audio error"));
-
-      // If paused mid-way, we control pause/resume with audio element.
-      void audio.play().catch((e) => reject(e as Error));
-    });
-  }
-
-  async function speak(text: string) {
-    if (!voiceEnabled) return;
-
-    const voice = getVoiceSettings();
-    if (voice.provider === "elevenlabs") {
-      try {
-        await speakElevenLabs(text);
-        return;
-      } catch {
-        // fallback below
-      }
-    }
-
-    try {
-      await speakDevice(text);
-    } catch {
-      // ignore
-    }
   }
 
   async function runFrom(startIndex: number) {
@@ -273,7 +178,12 @@ export function GuidedSessionPlayer({
 
       if (seg.kind === "speak") {
         setRemaining(null);
-        await speak(seg.text);
+        try {
+          await speak(seg.text);
+        } catch {
+          // Don't hard-fail the whole session.
+          await sleep(200);
+        }
         continue;
       }
 
@@ -304,20 +214,11 @@ export function GuidedSessionPlayer({
     if (state === "paused") {
       pausedRef.current = false;
       setState("playing");
-
-      const voice = getVoiceSettings();
-      if (voice.provider === "elevenlabs") {
-        try {
-          void audioElRef.current?.play();
-        } catch {
-          // ignore
-        }
-      } else {
-        try {
-          window.speechSynthesis?.resume();
-        } catch {
-          // ignore
-        }
+      // resume speech synthesis if it was paused
+      try {
+        window.speechSynthesis?.resume();
+      } catch {
+        // ignore
       }
       return;
     }
@@ -331,17 +232,6 @@ export function GuidedSessionPlayer({
     if (state !== "playing") return;
     pausedRef.current = true;
     setState("paused");
-
-    const voice = getVoiceSettings();
-    if (voice.provider === "elevenlabs") {
-      try {
-        audioElRef.current?.pause();
-      } catch {
-        // ignore
-      }
-      return;
-    }
-
     try {
       window.speechSynthesis?.pause();
     } catch {
@@ -352,7 +242,11 @@ export function GuidedSessionPlayer({
   function reset() {
     cancelRef.current = true;
     pausedRef.current = false;
-    stopAllSpeech();
+    try {
+      window.speechSynthesis?.cancel();
+    } catch {
+      // ignore
+    }
     stopIson();
     setIdx(0);
     setRemaining(null);
@@ -369,11 +263,6 @@ export function GuidedSessionPlayer({
           ? "Paused"
           : "Done";
 
-  const providerLabel = useMemo(() => {
-    const voice = getVoiceSettings();
-    return voice.provider === "elevenlabs" ? "Voice: ElevenLabs" : "Voice: Device";
-  }, [state]);
-
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -382,9 +271,6 @@ export function GuidedSessionPlayer({
             <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               {statusLabel}
-            </Badge>
-            <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-              {providerLabel}
             </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -447,7 +333,7 @@ export function GuidedSessionPlayer({
               <div>
                 <p className="text-sm font-semibold">Voice guidance</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Device TTS or ElevenLabs (configured in Settings → Voice).
+                  Uses your device voice.
                 </p>
               </div>
               <Switch checked={voiceEnabled} onCheckedChange={setVoiceEnabled} />
@@ -461,7 +347,7 @@ export function GuidedSessionPlayer({
                   ) : (
                     <VolumeX className="h-4 w-4" />
                   )}
-                  Device rate
+                  Rate
                 </span>
                 <span className="tabular-nums">{rate.toFixed(2)}×</span>
               </div>
@@ -471,12 +357,12 @@ export function GuidedSessionPlayer({
                 max={1.2}
                 step={0.05}
                 onValueChange={(v) => setRate(v[0] ?? 1)}
-                disabled={!voiceEnabled || getVoiceSettings().provider === "elevenlabs"}
+                disabled={!voiceEnabled}
                 className="mt-2"
               />
             </div>
 
-            {getVoiceSettings().provider === "device" && !hasSpeechSynthesis() ? (
+            {!hasSpeechSynthesis() ? (
               <p className="mt-2 text-xs text-destructive">
                 Voice is not supported in this browser.
               </p>
