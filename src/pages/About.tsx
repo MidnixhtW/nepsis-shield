@@ -15,7 +15,7 @@ export default function About() {
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            A simple Orthodox companion (made with young adults in mind).
+            A simple Orthodox companion for all Orthodox Christians.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -60,7 +60,7 @@ export default function About() {
             </div>
 
             <p className="text-sm leading-relaxed text-foreground/90">
-              Ortho Companion is an independent devotional tool for <span className="font-semibold">all Orthodox Christians</span> (made with young adults in mind). It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
+              Ortho Companion is an independent devotional tool for <span className="font-semibold">all Orthodox Christians</span>. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
             </p>
 
             <p className="text-xs leading-relaxed text-muted-foreground">

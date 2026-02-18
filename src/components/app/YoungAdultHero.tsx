@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
-export function YoungAdultHero({
+export function OrthodoxHero({
   onAction,
 }: {
   onAction?: (to: { section: "today" | "pray" | "read" | "learn"; tab?: string; read?: string }) => void;
@@ -39,8 +39,8 @@ export function YoungAdultHero({
             One small step toward Christ today.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Made with young adults in mind, but for all Orthodox Christians. Daily readings, fasting guidance,
-            simple prayer, and private notes, with direct sources.
+            For all Orthodox Christians. Daily readings, fasting guidance, simple prayer, and private notes,
+            with direct sources.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">

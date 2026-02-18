@@ -10,7 +10,8 @@ import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
-import { YoungAdultHero } from "@/components/app/YoungAdultHero";
+import { OrthodoxHero } from "@/components/app/YoungAdultHero";
+
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
@@ -124,7 +125,8 @@ const Index = () => {
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
           <div className="grid gap-4">
-            <YoungAdultHero
+            <OrthodoxHero
+
               onAction={(to) => {
                 const next = new URLSearchParams(searchParams);
                 if (to.section === "pray" && to.tab) next.set("tab", to.tab);
