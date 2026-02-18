@@ -10,6 +10,8 @@ import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
+import { YoungAdultHero } from "@/components/app/YoungAdultHero";
+import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -117,21 +119,39 @@ const Index = () => {
 
   return (
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
+      <QuickStartDialog />
+
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
-          <TodayOverview
-            onNavigate={(to) => {
-              const next = new URLSearchParams(searchParams);
-              if (to.section === "pray" && to.tab) next.set("tab", to.tab);
-              else next.delete("tab");
+          <div className="grid gap-4">
+            <YoungAdultHero
+              onAction={(to) => {
+                const next = new URLSearchParams(searchParams);
+                if (to.section === "pray" && to.tab) next.set("tab", to.tab);
+                else next.delete("tab");
 
-              if (to.section === "read" && to.read) next.set("read", to.read);
-              else next.delete("read");
+                if (to.section === "read" && to.read) next.set("read", to.read);
+                else next.delete("read");
 
-              navigate(`/${to.section}?${next.toString()}`);
-              setSection(to.section);
-            }}
-          />
+                navigate(`/${to.section}?${next.toString()}`);
+                setSection(to.section);
+              }}
+            />
+
+            <TodayOverview
+              onNavigate={(to) => {
+                const next = new URLSearchParams(searchParams);
+                if (to.section === "pray" && to.tab) next.set("tab", to.tab);
+                else next.delete("tab");
+
+                if (to.section === "read" && to.read) next.set("read", to.read);
+                else next.delete("read");
+
+                navigate(`/${to.section}?${next.toString()}`);
+                setSection(to.section);
+              }}
+            />
+          </div>
         ) : null}
 
         {section === "pray" ? (
