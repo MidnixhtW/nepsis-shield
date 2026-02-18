@@ -30,7 +30,8 @@ function ReadingCard({
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">
             {label}
           </p>
-          <p className="mt-1 text-sm font-semibold leading-snug">{display || "—"}</p>
+          <p className="mt-1 text-sm font-semibold leading-snug">{display || ""}</p>
+
         </div>
         <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
           Verify on OCA

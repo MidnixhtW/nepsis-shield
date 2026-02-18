@@ -49,7 +49,8 @@ const QA_ITEMS: QA[] = [
     q: "What is the Divine Liturgy?",
     a: [
       "The Divine Liturgy is the Church's central act of worship, where the faithful gather to hear the Scriptures, offer thanksgiving, and receive Holy Communion.",
-      "In practice, it's not something you 'watch'—it's something you participate in with attention: prayer, singing, listening, offering your life to God, and (when blessed and prepared) receiving the Eucharist.",
+      "In practice, it's not something you 'watch'; it's something you participate in with attention: prayer, singing, listening, offering your life to God, and (when blessed and prepared) receiving the Eucharist.",
+
       "Use this app's Readings tab to follow the lections, then bring that attention into the Liturgy on Sunday (and feast days).",
     ].join("\n\n"),
     sourceLabel: "OCA – The Divine Liturgy (Q&A)",
@@ -59,7 +60,8 @@ const QA_ITEMS: QA[] = [
     category: "Worship",
     q: "Why is it important to participate in the entire Divine Liturgy?",
     a: [
-      "The Liturgy is a single, unified act of the Church—not separate 'pieces' to drop into.",
+      "The Liturgy is a single, unified act of the Church, not separate 'pieces' to drop into.",
+
       "Arriving early and staying through the dismissal trains attention, keeps the service from becoming a private 'drive-through,' and helps the community pray as one Body.",
       "If you're building consistency: aim for the whole service, even when you can't receive Communion.",
     ].join("\n\n"),
@@ -94,9 +96,11 @@ const QA_ITEMS: QA[] = [
     category: "Sacraments",
     q: "What are the sacraments in Orthodoxy?",
     a: [
-      "Orthodox Christians speak of 'mysteries' (sacraments) as the Church's life in Christ—God's grace working through visible actions.",
+      "Orthodox Christians speak of 'mysteries' (sacraments) as the Church's life in Christ, God's grace working through visible actions.",
+
       "The OCA's Q&A gives an overview that includes Baptism and Chrismation (entry into the Church), Eucharist (center), Confession (healing), Marriage and Priesthood (service), and Holy Unction (healing).",
-      "A helpful way to use this app: keep the daily rhythm (prayer and Scripture) so Sunday worship and the sacraments are lived—not just studied.",
+      "A helpful way to use this app: keep the daily rhythm (prayer and Scripture) so Sunday worship and the sacraments are lived, not just studied.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – The Sacraments (Q&A)",
     sourceUrl: "https://www.oca.org/questions/sevensacraments/the-sacraments",
@@ -105,7 +109,8 @@ const QA_ITEMS: QA[] = [
     category: "Sacraments",
     q: "What is Chrismation?",
     a: [
-      "Chrismation is the sealing of the gift of the Holy Spirit—often described as a person's 'personal Pentecost.'",
+      "Chrismation is the sealing of the gift of the Holy Spirit, often described as a person's 'personal Pentecost.'",
+
       "It is normally joined to Baptism (especially for infants), and it completes initiation into the Church's sacramental life.",
     ].join("\n\n"),
     sourceLabel: "OCA – Seven Sacraments (Q&A)",
@@ -137,7 +142,8 @@ const QA_ITEMS: QA[] = [
     q: "How often should I receive Holy Communion?",
     a: [
       "There isn't a single number for everyone. The OCA Q&A addresses frequency together with preparation (prayer, fasting, repentance, confession) and the guidance of your priest.",
-      "A good 'app rule' is: focus on preparing well and participating fully—frequency follows with pastoral direction.",
+      "A good 'app rule' is: focus on preparing well and participating fully. Frequency follows with pastoral direction.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Frequency of Communion (Q&A)",
     sourceUrl: "https://www.oca.org/questions/divineliturgy/frequency-of-communion",
@@ -168,7 +174,8 @@ const QA_ITEMS: QA[] = [
     q: "How are baptismal names chosen?",
     a: [
       "The OCA Q&A explains the practice of choosing baptismal (Christian) names, commonly connected to saints and the Church's calendar.",
-      "A practical approach: choose a name you can pray with—a saint you can actually learn from and ask for intercession.",
+      "A practical approach: choose a name you can pray with, a saint you can actually learn from and ask for intercession.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Baptismal Names (Q&A)",
     sourceUrl: "https://www.oca.org/questions/sevensacraments/baptismal-names",
@@ -191,7 +198,8 @@ const QA_ITEMS: QA[] = [
     a: [
       "Because the Word truly became flesh: the Incarnation makes depicting Christ possible and meaningful.",
       "Icons are 'windows' that help us pray and remember the Kingdom. Honor shown to an icon goes to the person depicted (the prototype), not to wood and paint.",
-      "Veneration is not worship—worship belongs to God alone.",
+      "Veneration is not worship. Worship belongs to God alone.",
+
     ].join("\n\n"),
     sourceLabel: "OCA – Icons (The Orthodox Faith)",
     sourceUrl:
@@ -202,7 +210,8 @@ const QA_ITEMS: QA[] = [
     q: "Why ask saints to pray for us?",
     a: [
       "The saints are alive in Christ and remain members of His one Body.",
-      "Asking for their intercession is like asking a faithful friend to pray—but with the confidence that the saint is already glorified in Christ.",
+      "Asking for their intercession is like asking a faithful friend to pray, but with the confidence that the saint is already glorified in Christ.",
+
       "This does not replace prayer to God; it supports it.",
     ].join("\n\n"),
     sourceLabel: "OCA – Mary / Prayer / Death (Q&A)",
@@ -246,7 +255,8 @@ const QA_ITEMS: QA[] = [
     q: "Why do Orthodox Christians fast?",
     a: [
       "Fasting is a spiritual discipline that supports repentance, prayer, and mercy.",
-      "It is meant to train freedom from passions and dependency on comfort—not to 'earn' salvation.",
+      "It is meant to train freedom from passions and dependency on comfort, not to 'earn' salvation.",
+
       "Fasting without mercy and repentance becomes empty; fasting with humility becomes medicine.",
     ].join("\n\n"),
     sourceLabel: "OCA – Orthodox Fasting (Q&A)",

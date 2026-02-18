@@ -33,7 +33,8 @@ const TOPICS: Topic[] = [
   {
     key: "prayer",
     title: "Prayer (rule)",
-    description: "Short, regular, attentive — then grow with guidance.",
+    description: "Short, regular, and attentive. Then grow with guidance.",
+
     bullets: [
       "Choose a small daily rule you can keep (morning + evening).",
       "Use the Church's words (common prayers).",
@@ -47,7 +48,8 @@ const TOPICS: Topic[] = [
   {
     key: "fasting",
     title: "Fasting",
-    description: "For repentance and love — not pride.",
+    description: "For repentance and love, not pride.",
+
     bullets: [
       "Join fasting to prayer and mercy.",
       "Avoid comparison; ask your priest for guidance if needed.",
@@ -98,7 +100,8 @@ const TOPICS: Topic[] = [
     title: "Confession",
     description: "Sacramental healing: repentance spoken honestly before God.",
     bullets: [
-      "Be concrete, humble, and brief — avoid self-justification.",
+      "Be concrete, humble, and brief. Avoid self-justification.",
+
       "Ask your priest for a small rule between confessions.",
     ],
     sourceLabel: "OCA – Confessing in the Presence of a Priest (Q&A)",

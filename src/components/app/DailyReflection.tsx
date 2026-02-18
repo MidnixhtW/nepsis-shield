@@ -159,7 +159,8 @@ export function DailyReflection() {
     const isFast = !q.data.fasting.description.toLowerCase().includes("no fast");
     const saint = q.data.saints[0];
     if (isFast) {
-      return `How can I practice mercy today — in my words, my attention, and my meals?${saint ? ` (Remembering: ${saint})` : ""}`;
+      return `How can I practice mercy today, in my words, my attention, and my meals?${saint ? ` (Remembering: ${saint})` : ""}`;
+
     }
     return `Where do I need to slow down and pray today?${saint ? ` (Remembering: ${saint})` : ""}`;
   }, [q.data]);
@@ -300,12 +301,13 @@ export function DailyReflection() {
               />
               <p className="mt-2 text-xs text-muted-foreground">
                 {!saveEnabled
-                  ? "Not saved locally — this text will be lost if you refresh."
+                  ? "Not saved locally. This text will be lost if you refresh."
                   : encryptEnabled
                     ? locked
-                      ? "Locked — enter your passphrase to view/edit saved notes."
+                      ? "Locked. Enter your passphrase to view or edit saved notes."
                       : "Saved (encrypted) on this device."
                     : "Saved (not encrypted) on this device."}
+
               </p>
             </div>
 

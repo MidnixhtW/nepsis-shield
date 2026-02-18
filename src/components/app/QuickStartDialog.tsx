@@ -36,8 +36,8 @@ export function QuickStartDialog() {
     () => [
       {
         key: "read",
-        title: "Read today’s Gospel",
-        description: "Start with the lectionary (Epistle & Gospel).",
+        title: "Read today's Gospel",
+        description: "Start with the lectionary (Epistle and Gospel).",
         icon: <BookOpen className="h-4 w-4 text-primary" />,
         go: () => navigate("/read?read=daily"),
       },
@@ -51,13 +51,13 @@ export function QuickStartDialog() {
       {
         key: "practice",
         title: "Pray the Jesus Prayer",
-        description: "A quiet counter + stillness timer.",
+        description: "A quiet counter and stillness timer.",
         icon: <Sparkles className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=counter"),
       },
       {
         key: "journal",
-        title: "Write a 1‑minute reflection",
+        title: "Write a 1-minute reflection",
         description: "One prompt. A few honest lines.",
         icon: <PenLine className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=journal"),
@@ -79,7 +79,7 @@ export function QuickStartDialog() {
           <DialogHeader>
             <DialogTitle className="text-xl">Welcome</DialogTitle>
             <DialogDescription>
-              Pick one thing for today. Made with young adults in mind — for all Orthodox Christians.
+              Pick one thing for today. Made with young adults in mind, for all Orthodox Christians.
             </DialogDescription>
           </DialogHeader>
 

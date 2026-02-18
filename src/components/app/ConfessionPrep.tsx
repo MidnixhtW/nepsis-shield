@@ -184,7 +184,8 @@ export function ConfessionPrep() {
           </label>
         ))}
         <p className="text-xs text-muted-foreground">
-          {doneCount}/{PROMPTS.length} marked — this is only for your preparation.
+          {doneCount}/{PROMPTS.length} marked. This is only for your preparation.
+
         </p>
       </div>
 

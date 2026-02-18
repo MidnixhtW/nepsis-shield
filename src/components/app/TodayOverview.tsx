@@ -27,7 +27,7 @@ function fastingGuidanceLines(description: string, exception?: string) {
   const fastFree = raw.includes("no fast") || raw.includes("fast free");
   if (fastFree) {
     return {
-      from: "—",
+      from: "",
       allowed: "All foods",
     };
   }

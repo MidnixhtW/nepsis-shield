@@ -155,7 +155,8 @@ export function PrayerRule() {
           ))}
           {!saveEnabled ? (
             <p className="text-xs text-muted-foreground">
-              Saving is off — checkmarks won't persist.
+              Saving is off. Checkmarks won't persist.
+
             </p>
           ) : null}
         </div>

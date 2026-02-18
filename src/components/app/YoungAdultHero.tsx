@@ -31,16 +31,16 @@ export function YoungAdultHero({
               Built for busy lives
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-              Orthodox • calm • practical
+              Orthodox, calm, practical
             </Badge>
           </div>
 
           <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-            One small step toward Christ — today.
+            One small step toward Christ today.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Made with young adults in mind, but for all Orthodox Christians: daily readings, fasting guidance,
-            simple prayer, and private notes — with direct sources.
+            Made with young adults in mind, but for all Orthodox Christians. Daily readings, fasting guidance,
+            simple prayer, and private notes, with direct sources.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -79,7 +79,7 @@ export function YoungAdultHero({
               className="h-11 justify-start rounded-2xl border-border/60 bg-background/60"
               onClick={() => onAction?.({ section: "pray", tab: "journal" })}
             >
-              <Timer className="mr-2 h-4 w-4" /> 1‑minute reflection
+              <Timer className="mr-2 h-4 w-4" /> 1-minute reflection
             </Button>
           </div>
         </div>

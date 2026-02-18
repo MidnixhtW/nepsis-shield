@@ -30,7 +30,8 @@ type PlanCard = {
 };
 
 function weeklyPsalterPortion(date: Date) {
-  // Simple 7-day schedule (20 kathismata) — commonly used pattern.
+  // Simple 7-day schedule (20 kathismata). Commonly used pattern.
+
   // 1..20 spread across the week.
   const dow = Number(format(date, "i")); // 1=Mon..7=Sun
   const schedule: Record<number, number[]> = {
@@ -116,8 +117,9 @@ export function ReadingPlans() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Reading plans</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Small, consistent Scripture — built for real life.
+              Small, consistent Scripture, built for real life.
             </p>
+
           </div>
           <BookOpen className="h-5 w-5 text-muted-foreground" />
         </div>
