@@ -6,6 +6,14 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { showError, showSuccess } from "@/utils/toast";
 import type { SessionSegment } from "@/lib/programs/catalog";
 
@@ -25,6 +33,23 @@ function formatTime(seconds: number) {
   return `${m}:${s}`;
 }
 
+function preferredVoiceFor(voices: SpeechSynthesisVoice[], lang: string) {
+  const candidates = voices.filter((v) => (v.lang || "").toLowerCase().startsWith(lang.toLowerCase()));
+  const byName = (needle: string) =>
+    candidates.find((v) => (v.name || "").toLowerCase().includes(needle.toLowerCase()));
+
+  // Heuristics for less "robot-y" voices on common platforms
+  return (
+    byName("google") ||
+    byName("samantha") ||
+    byName("karen") ||
+    byName("daniel") ||
+    byName("microsoft") ||
+    candidates[0] ||
+    voices[0]
+  );
+}
+
 export function GuidedSessionPlayer({
   title,
   segments,
@@ -41,6 +66,14 @@ export function GuidedSessionPlayer({
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [isonEnabled, setIsonEnabled] = useState(false);
   const [rate, setRate] = useState(1);
+  const [pitch, setPitch] = useState(1.05);
+
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceUri, setVoiceUri] = useState<string>("system");
+
+  const [useImportedAudio, setUseImportedAudio] = useState(false);
+  const [importedAudioUrl, setImportedAudioUrl] = useState<string | null>(null);
+  const [importedAudioName, setImportedAudioName] = useState<string | null>(null);
 
   const cancelRef = useRef(false);
   const pausedRef = useRef(false);
@@ -49,9 +82,65 @@ export function GuidedSessionPlayer({
   const oscRef = useRef<OscillatorNode | null>(null);
   const gainRef = useRef<GainNode | null>(null);
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const importedAudioRef = useRef<HTMLAudioElement | null>(null);
+
   const totalSilenceSeconds = useMemo(() => {
     return segments.reduce((sum, s) => (s.kind === "silence" ? sum + s.seconds : sum), 0);
   }, [segments]);
+
+  useEffect(() => {
+    // Restore persisted voice settings
+    const savedRate = getStoredItem<number>("tts:rate");
+    const savedPitch = getStoredItem<number>("tts:pitch");
+    const savedVoice = getStoredItem<string>("tts:voice_uri");
+
+    if (typeof savedRate === "number") setRate(savedRate);
+    if (typeof savedPitch === "number") setPitch(savedPitch);
+    if (typeof savedVoice === "string") setVoiceUri(savedVoice);
+  }, []);
+
+  useEffect(() => {
+    setStoredItem("tts:rate", rate);
+  }, [rate]);
+  useEffect(() => {
+    setStoredItem("tts:pitch", pitch);
+  }, [pitch]);
+  useEffect(() => {
+    setStoredItem("tts:voice_uri", voiceUri);
+  }, [voiceUri]);
+
+  useEffect(() => {
+    if (!hasSpeechSynthesis()) return;
+
+    const load = () => {
+      try {
+        const v = window.speechSynthesis.getVoices();
+        setVoices(v);
+        // If user hasn't selected yet, pick a nicer default.
+        if (voiceUri === "system" && v.length > 0) {
+          const best = preferredVoiceFor(v, "en");
+          if (best?.voiceURI) setVoiceUri(best.voiceURI);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    load();
+    window.speechSynthesis.onvoiceschanged = load;
+    return () => {
+      // don't clobber other listeners; just clear ours
+      try {
+        if (window.speechSynthesis.onvoiceschanged === load) {
+          window.speechSynthesis.onvoiceschanged = null;
+        }
+      } catch {
+        // ignore
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voiceUri]);
 
   useEffect(() => {
     return () => {
@@ -61,9 +150,17 @@ export function GuidedSessionPlayer({
         // ignore
       }
       stopIson();
+
+      if (importedAudioUrl) {
+        try {
+          URL.revokeObjectURL(importedAudioUrl);
+        } catch {
+          // ignore
+        }
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [importedAudioUrl]);
 
   function ensureAudio() {
     if (audioCtxRef.current) return audioCtxRef.current;
@@ -134,6 +231,12 @@ export function GuidedSessionPlayer({
     }
   }
 
+  function resolveSelectedVoice(): SpeechSynthesisVoice | undefined {
+    if (!voices.length) return undefined;
+    if (voiceUri === "system") return undefined;
+    return voices.find((v) => v.voiceURI === voiceUri);
+  }
+
   async function speak(text: string) {
     if (!voiceEnabled) return;
     if (!hasSpeechSynthesis()) {
@@ -144,8 +247,15 @@ export function GuidedSessionPlayer({
     return new Promise<void>((resolve, reject) => {
       const u = new SpeechSynthesisUtterance(text);
       u.rate = Math.max(0.7, Math.min(1.25, rate));
-      u.pitch = 1;
+      u.pitch = Math.max(0.7, Math.min(1.3, pitch));
       u.volume = 1;
+
+      const v = resolveSelectedVoice();
+      if (v) {
+        u.voice = v;
+        if (v.lang) u.lang = v.lang;
+      }
+
       u.onend = () => resolve();
       u.onerror = () => reject(new Error("speech error"));
       try {
@@ -209,8 +319,62 @@ export function GuidedSessionPlayer({
     onComplete?.();
   }
 
+  function startImportedAudio() {
+    if (!importedAudioUrl) {
+      showError("Choose an audio file first.");
+      return;
+    }
+
+    cancelRef.current = false;
+    pausedRef.current = false;
+    setRemaining(null);
+
+    // Avoid mixing
+    stopIson();
+    try {
+      window.speechSynthesis?.cancel();
+    } catch {
+      // ignore
+    }
+
+    const a = importedAudioRef.current;
+    if (!a) return;
+
+    chime();
+    setState("playing");
+
+    try {
+      const p = a.play();
+      if (p && typeof (p as Promise<void>).catch === "function") {
+        (p as Promise<void>).catch(() => {
+          showError("Couldn't play audio. Try tapping Start again.");
+          setState("idle");
+        });
+      }
+    } catch {
+      showError("Couldn't play audio.");
+      setState("idle");
+    }
+  }
+
   function start() {
     if (state === "playing") return;
+
+    if (useImportedAudio) {
+      if (state === "paused") {
+        pausedRef.current = false;
+        setState("playing");
+        try {
+          void importedAudioRef.current?.play();
+        } catch {
+          // ignore
+        }
+        return;
+      }
+      startImportedAudio();
+      return;
+    }
+
     if (state === "paused") {
       pausedRef.current = false;
       setState("playing");
@@ -232,6 +396,16 @@ export function GuidedSessionPlayer({
     if (state !== "playing") return;
     pausedRef.current = true;
     setState("paused");
+
+    if (useImportedAudio) {
+      try {
+        importedAudioRef.current?.pause();
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
     try {
       window.speechSynthesis?.pause();
     } catch {
@@ -242,11 +416,23 @@ export function GuidedSessionPlayer({
   function reset() {
     cancelRef.current = true;
     pausedRef.current = false;
+
     try {
       window.speechSynthesis?.cancel();
     } catch {
       // ignore
     }
+
+    try {
+      const a = importedAudioRef.current;
+      if (a) {
+        a.pause();
+        a.currentTime = 0;
+      }
+    } catch {
+      // ignore
+    }
+
     stopIson();
     setIdx(0);
     setRemaining(null);
@@ -262,6 +448,8 @@ export function GuidedSessionPlayer({
         : state === "paused"
           ? "Paused"
           : "Done";
+
+  const voiceDisabled = useImportedAudio || !voiceEnabled;
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -306,21 +494,36 @@ export function GuidedSessionPlayer({
 
       <Separator className="my-4" />
 
+      {/* Hidden audio element for imported files */}
+      <audio
+        ref={importedAudioRef}
+        src={importedAudioUrl ?? undefined}
+        onEnded={() => {
+          setState("done");
+          chime();
+          if (navigator.vibrate) navigator.vibrate(120);
+          showSuccess("Session complete.");
+          onComplete?.();
+        }}
+      />
+
       <div className="grid gap-4">
         <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-            Now
-          </p>
+          <p className="text-xs font-semibold tracking-wide text-muted-foreground">Now</p>
           <p className="mt-2 text-sm leading-relaxed">
-            {current?.kind === "speak"
-              ? current.text
-              : current?.kind === "silence"
-                ? `${current.label ? `${current.label} — ` : ""}Silence${
-                    typeof remaining === "number" ? ` (${formatTime(remaining)})` : ""
-                  }`
-                : "—"}
+            {useImportedAudio
+              ? importedAudioName
+                ? `Playing imported audio: ${importedAudioName}`
+                : "Playing imported audio"
+              : current?.kind === "speak"
+                ? current.text
+                : current?.kind === "silence"
+                  ? `${current.label ? `${current.label} — ` : ""}Silence${
+                      typeof remaining === "number" ? ` (${formatTime(remaining)})` : ""
+                    }`
+                  : "—"}
           </p>
-          {totalSilenceSeconds > 0 ? (
+          {!useImportedAudio && totalSilenceSeconds > 0 ? (
             <p className="mt-2 text-xs text-muted-foreground">
               Includes {Math.round(totalSilenceSeconds / 60)} min of silence.
             </p>
@@ -333,33 +536,99 @@ export function GuidedSessionPlayer({
               <div>
                 <p className="text-sm font-semibold">Voice guidance</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Uses your device voice.
+                  Uses your device voice (you can choose a better one).
                 </p>
               </div>
-              <Switch checked={voiceEnabled} onCheckedChange={setVoiceEnabled} />
+              <Switch
+                checked={voiceEnabled}
+                onCheckedChange={setVoiceEnabled}
+                disabled={useImportedAudio}
+              />
             </div>
 
-            <div className="mt-3">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span className="inline-flex items-center gap-2">
-                  {voiceEnabled ? (
-                    <Volume2 className="h-4 w-4" />
-                  ) : (
-                    <VolumeX className="h-4 w-4" />
-                  )}
-                  Rate
-                </span>
-                <span className="tabular-nums">{rate.toFixed(2)}×</span>
+            <div className="mt-3 grid gap-3">
+              <div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="inline-flex items-center gap-2">
+                    {voiceEnabled && !useImportedAudio ? (
+                      <Volume2 className="h-4 w-4" />
+                    ) : (
+                      <VolumeX className="h-4 w-4" />
+                    )}
+                    Rate
+                  </span>
+                  <span className="tabular-nums">{rate.toFixed(2)}×</span>
+                </div>
+                <Slider
+                  value={[rate]}
+                  min={0.8}
+                  max={1.2}
+                  step={0.05}
+                  onValueChange={(v) => setRate(v[0] ?? 1)}
+                  disabled={voiceDisabled}
+                  className="mt-2"
+                />
               </div>
-              <Slider
-                value={[rate]}
-                min={0.8}
-                max={1.2}
-                step={0.05}
-                onValueChange={(v) => setRate(v[0] ?? 1)}
-                disabled={!voiceEnabled}
-                className="mt-2"
-              />
+
+              <div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Pitch</span>
+                  <span className="tabular-nums">{pitch.toFixed(2)}</span>
+                </div>
+                <Slider
+                  value={[pitch]}
+                  min={0.85}
+                  max={1.2}
+                  step={0.05}
+                  onValueChange={(v) => setPitch(v[0] ?? 1.05)}
+                  disabled={voiceDisabled}
+                  className="mt-2"
+                />
+              </div>
+
+              <div>
+                <p className="mb-1 text-xs font-medium text-muted-foreground">Voice</p>
+                <Select
+                  value={voiceUri}
+                  onValueChange={setVoiceUri}
+                  disabled={voiceDisabled || !hasSpeechSynthesis()}
+                >
+                  <SelectTrigger className="h-10 rounded-2xl">
+                    <SelectValue placeholder="System default" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="system">System default</SelectItem>
+                    {voices.map((v) => (
+                      <SelectItem key={v.voiceURI} value={v.voiceURI}>
+                        {v.name} {v.lang ? `(${v.lang})` : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-9 rounded-2xl"
+                    disabled={voiceDisabled}
+                    onClick={() => void speak("Lord Jesus Christ, Son of God, have mercy on me.")}
+                  >
+                    Test voice
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="h-9 rounded-2xl"
+                    disabled={voiceDisabled}
+                    onClick={() => {
+                      setRate(0.95);
+                      setPitch(1.05);
+                    }}
+                  >
+                    Softer preset
+                  </Button>
+                </div>
+              </div>
             </div>
 
             {!hasSpeechSynthesis() ? (
@@ -367,27 +636,115 @@ export function GuidedSessionPlayer({
                 Voice is not supported in this browser.
               </p>
             ) : null}
+
+            {useImportedAudio ? (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Voice is disabled while using imported audio.
+              </p>
+            ) : null}
           </div>
 
           <div className="rounded-2xl border border-border/60 bg-background/50 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-semibold">Ison (ambient tone)</p>
+                <p className="text-sm font-semibold">Imported audio</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Optional, very quiet.
+                  Use your own recording (stored only for this session).
                 </p>
               </div>
               <Switch
-                checked={isonEnabled}
+                checked={useImportedAudio}
                 onCheckedChange={(v) => {
-                  setIsonEnabled(v);
-                  if (!v) stopIson();
+                  setUseImportedAudio(v);
+                  if (v) {
+                    // avoid mixing modes mid-play
+                    stopIson();
+                    try {
+                      window.speechSynthesis?.cancel();
+                    } catch {
+                      // ignore
+                    }
+                  }
                 }}
               />
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Tip: on iOS, you may need to tap Start once to allow audio.
-            </p>
+
+            <div className="mt-3 grid gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="audio/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  // revoke old
+                  if (importedAudioUrl) {
+                    try {
+                      URL.revokeObjectURL(importedAudioUrl);
+                    } catch {
+                      // ignore
+                    }
+                  }
+
+                  const url = URL.createObjectURL(file);
+                  setImportedAudioUrl(url);
+                  setImportedAudioName(file.name);
+                  setUseImportedAudio(true);
+                  showSuccess("Audio imported (this session only).");
+                }}
+              />
+
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-9 rounded-2xl"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  Choose audio file
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="h-9 rounded-2xl"
+                  disabled={!importedAudioUrl}
+                  onClick={() => {
+                    reset();
+                    setUseImportedAudio(false);
+                  }}
+                >
+                  Clear
+                </Button>
+              </div>
+
+              {importedAudioName ? (
+                <p className="text-xs text-muted-foreground">Selected: {importedAudioName}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">No audio selected.</p>
+              )}
+
+              <Separator className="my-2" />
+
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold">Ison (ambient tone)</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Optional, very quiet.</p>
+                </div>
+                <Switch
+                  checked={isonEnabled}
+                  disabled={useImportedAudio}
+                  onCheckedChange={(v) => {
+                    setIsonEnabled(v);
+                    if (!v) stopIson();
+                  }}
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Tip: on iOS, you may need to tap Start once to allow audio.
+              </p>
+            </div>
           </div>
         </div>
       </div>

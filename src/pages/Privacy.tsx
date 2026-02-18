@@ -68,6 +68,7 @@ const ALLOWED_PREFIXES = [
   "confess:",
   "programs:",
   "plans:",
+  "tts:",
 ] as const;
 
 const ALLOWED_PRIVACY_KEYS = new Set([
