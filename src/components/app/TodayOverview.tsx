@@ -11,7 +11,6 @@ import {
   Target,
   CalendarPlus,
   Sparkles,
-  AudioLines,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -301,11 +300,6 @@ export function TodayOverview({
             label="Jesus Prayer"
             icon={<Target className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
-          />
-          <QuickAction
-            label="Guided programs"
-            icon={<AudioLines className="h-4 w-4 text-primary" />}
-            onClick={() => onOpenRoute?.("/programs")}
           />
           <QuickAction
             label="Learn"
