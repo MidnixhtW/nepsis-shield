@@ -11,6 +11,12 @@ type Locator = {
 };
 
 function locatorFor(jurisdiction: string): Locator[] {
+  const assembly: Locator = {
+    label: "Assembly of Bishops (US) — Parish Directory",
+    url: "https://www.assemblyofbishops.org/directories/parishes",
+    hint: "Pan-Orthodox directory (US)",
+  };
+
   // Keep this intentionally simple: official directories where we can.
   if (jurisdiction === "goarch") {
     return [
@@ -24,6 +30,39 @@ function locatorFor(jurisdiction: string): Locator[] {
         url: "https://parishdirectory.goarch.org/",
         hint: "Alternate directory",
       },
+      assembly,
+    ];
+  }
+
+  if (jurisdiction === "antiochian") {
+    return [
+      {
+        label: "Antiochian — Diocese Directory",
+        url: "https://www.antiochian.org/parishes/diocesedirectory",
+        hint: "Antiochian Orthodox Christian Archdiocese",
+      },
+      {
+        label: "Antiochian — Parish Map",
+        url: "https://www.antiochian.org/parishes/map",
+        hint: "Interactive map",
+      },
+      {
+        label: "Antiochian Directory",
+        url: "https://antiochiandirectory.org/",
+        hint: "Directory site",
+      },
+      assembly,
+    ];
+  }
+
+  if (jurisdiction === "rocor") {
+    return [
+      {
+        label: "ROCOR — Parish & Clergy Directory",
+        url: "https://directory.stinnocentpress.com/",
+        hint: "Russian Orthodox Church Outside Russia",
+      },
+      assembly,
     ];
   }
 
@@ -34,6 +73,7 @@ function locatorFor(jurisdiction: string): Locator[] {
       url: "https://www.oca.org/parishes",
       hint: "Orthodox Church in America",
     },
+    assembly,
   ];
 }
 
@@ -84,7 +124,7 @@ export function ParishFinder() {
           <div className="flex items-start gap-3">
             <Church className="mt-0.5 h-4 w-4 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
-              Tip: if you’re visiting, check the parish website for service times (they can differ by
+              Tip: if you're visiting, check the parish website for service times (they can differ by
               season).
             </p>
           </div>
