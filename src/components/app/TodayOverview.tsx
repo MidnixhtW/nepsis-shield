@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
@@ -14,11 +14,19 @@ import {
   Music,
   MapPin,
   BookMarked,
+  StretchHorizontal,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
@@ -153,6 +161,20 @@ export function TodayOverview({
     // Ensure query reactivity when settings change in other tabs
   }, [settings.calendarMode]);
 
+  // Local override: sometimes you want to open today's texts from a different jurisdiction
+  // without changing Settings.
+  const [sourceOverride, setSourceOverride] = useState<"preferred" | "oca" | "goarch">(
+    "preferred",
+  );
+
+  function currentPrimaryUrl() {
+    if (!q.data?.sources?.ocaDailyUrl) return "https://www.oca.org";
+    if (sourceOverride === "oca") return q.data.sources.ocaDailyUrl;
+    if (sourceOverride === "goarch") return formatGoarchChapelUrl(today);
+    const preferred = buildPrimaryDailySourceUrl(settings, today);
+    return preferred || q.data.sources.ocaDailyUrl;
+  }
+
   function addFastingReminder() {
     if (!q.data) return;
     try {
@@ -189,8 +211,6 @@ export function TodayOverview({
     }
   }
 
-  const primarySourceUrl = buildPrimaryDailySourceUrl(settings, today);
-
   return (
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
@@ -219,30 +239,43 @@ export function TodayOverview({
               </p>
             </div>
 
-            {q.data?.sources?.ocaDailyUrl ? (
+            <div className="grid gap-2">
+              <div className="grid gap-1">
+                <p className="text-[11px] font-semibold tracking-wide text-muted-foreground">
+                  Source
+                </p>
+                <Select
+                  value={sourceOverride}
+                  onValueChange={(v) =>
+                    setSourceOverride(v as "preferred" | "oca" | "goarch")
+                  }
+                >
+                  <SelectTrigger className="h-9 w-full rounded-2xl sm:w-[200px]">
+                    <SelectValue placeholder="Choose" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="preferred">Preferred (Settings)</SelectItem>
+                    <SelectItem value="oca">OCA</SelectItem>
+                    <SelectItem value="goarch">GOARCH</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <Button
                 asChild
                 size="sm"
                 className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                <a
-                  href={primarySourceUrl || q.data.sources.ocaDailyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
                   Open daily source <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>
-            ) : (
-              <a
-                href="https://www.oca.org"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="self-start text-xs font-semibold text-primary hover:underline"
-              >
-                Orthodox Church in America
-              </a>
-            )}
+
+              <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                <SwitchHorizontal className="h-3.5 w-3.5" />
+                Quick switch (doesn't change Settings)
+              </div>
+            </div>
           </div>
 
           <Separator className="my-4" />
@@ -310,6 +343,15 @@ export function TodayOverview({
                   <Music className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="rounded-2xl border-border/60"
+                    onClick={() => onNavigate?.({ section: "learn", tab: "hymns" })}
+                  >
+                    Open Hymns section
+                  </Button>
                   <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
                     <a
                       href="https://www.oca.org/saints/troparia"
@@ -371,12 +413,12 @@ export function TodayOverview({
           <QuickAction
             label="Hymns & propers"
             icon={<Music className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "learn" })}
+            onClick={() => onNavigate?.({ section: "learn", tab: "hymns" })}
           />
           <QuickAction
             label="Parish finder"
             icon={<MapPin className="h-4 w-4 text-primary" />}
-            onClick={() => onOpenRoute?.("/settings")}
+            onClick={() => onNavigate?.({ section: "learn", tab: "parish" })}
           />
           <QuickAction
             label="Reading plans"

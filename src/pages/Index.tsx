@@ -4,13 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
-import { LearnHub } from "@/components/app/LearnHub";
+import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
 import { PrayerHub, type PrayerTab } from "@/components/app/PrayerHub";
 import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
+import { TodaySaintTile } from "@/components/app/TodaySaintTile";
 
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 
@@ -38,6 +39,10 @@ function isPrayerTab(x: string | null): x is PrayerTab {
 
 function isReadTab(x: string | null): x is ReadTab {
   return x === "daily" || x === "bible" || x === "plans";
+}
+
+function isLearnTab(x: string | null): x is LearnTab {
+  return x === "guide" || x === "qa" || x === "library" || x === "hymns" || x === "parish";
 }
 
 const Index = () => {
@@ -93,8 +98,17 @@ const Index = () => {
     setSection(next);
     const nextParams = new URLSearchParams(searchParams);
 
-    // Keep sub-tab state only where it makes sense.
-    if (next !== "pray") nextParams.delete("tab");
+    const tab = nextParams.get("tab");
+
+    // Keep sub-tab state only where it makes sense (and only if it's a valid tab for that section).
+    if (next === "pray") {
+      if (!isPrayerTab(tab)) nextParams.delete("tab");
+    } else if (next === "learn") {
+      if (!isLearnTab(tab)) nextParams.delete("tab");
+    } else {
+      nextParams.delete("tab");
+    }
+
     if (next !== "read") nextParams.delete("read");
 
     navigate(next === "today" ? "/today" : `/${next}?${nextParams.toString()}`);
@@ -104,6 +118,14 @@ const Index = () => {
   const prayerTab: PrayerTab = isPrayerTab(prayerTabRaw) ? prayerTabRaw : "rule";
 
   function setPrayerTab(t: PrayerTab) {
+    const next = new URLSearchParams(searchParams);
+    next.set("tab", t);
+    setSearchParams(next, { replace: true });
+  }
+
+  const learnTab: LearnTab = isLearnTab(prayerTabRaw) ? prayerTabRaw : "guide";
+
+  function setLearnTab(t: LearnTab) {
     const next = new URLSearchParams(searchParams);
     next.set("tab", t);
     setSearchParams(next, { replace: true });
@@ -126,10 +148,10 @@ const Index = () => {
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero
-
               onAction={(to) => {
                 const next = new URLSearchParams(searchParams);
-                if (to.section === "pray" && to.tab) next.set("tab", to.tab);
+
+                if ((to.section === "pray" || to.section === "learn") && to.tab) next.set("tab", to.tab);
                 else next.delete("tab");
 
                 if (to.section === "read" && to.read) next.set("read", to.read);
@@ -140,10 +162,13 @@ const Index = () => {
               }}
             />
 
+            <TodaySaintTile onOpenSaints={() => navigate("/saints")} />
+
             <TodayOverview
               onNavigate={(to) => {
                 const next = new URLSearchParams(searchParams);
-                if (to.section === "pray" && to.tab) next.set("tab", to.tab);
+
+                if ((to.section === "pray" || to.section === "learn") && to.tab) next.set("tab", to.tab);
                 else next.delete("tab");
 
                 if (to.section === "read" && to.read) next.set("read", to.read);
@@ -162,7 +187,9 @@ const Index = () => {
         ) : null}
 
         {section === "read" ? <ReadHub tab={readTab} onTabChange={setReadTab} /> : null}
-        {section === "learn" ? <LearnHub /> : null}
+        {section === "learn" ? (
+          <LearnHub tab={learnTab} onTabChange={setLearnTab} />
+        ) : null}
 
         <AppFooter />
       </div>
