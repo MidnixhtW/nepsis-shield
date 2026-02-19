@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import { getSettings, setSettings, type AppSettings, DEFAULT_SETTINGS } from "@/lib/settings";
+import {
+  getSettings,
+  setSettings,
+  type AppSettings,
+  DEFAULT_SETTINGS,
+  type ReminderPrefs,
+} from "@/lib/settings";
 
 const EVENT = "app:settings_changed";
 
 export function broadcastSettingsChanged() {
   window.dispatchEvent(new Event(EVENT));
 }
+
+type SettingsPatch = Partial<Omit<AppSettings, "reminders">> & {
+  reminders?: Partial<ReminderPrefs>;
+};
 
 export function useSettings() {
   const [settings, setState] = useState<AppSettings>(() => getSettings());
@@ -18,7 +28,7 @@ export function useSettings() {
     return () => window.removeEventListener(EVENT, onChange);
   }, []);
 
-  function updateSettings(patch: Partial<AppSettings>) {
+  function updateSettings(patch: SettingsPatch) {
     const prev = getSettings();
     const next: AppSettings = {
       ...prev,
