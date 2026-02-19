@@ -8,13 +8,15 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { fetchDailyData } from "@/lib/orthocal";
+import { getSettings } from "@/lib/settings";
 
 export default function Saints() {
   const today = useMemo(() => new Date(), []);
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
+  const settings = useMemo(() => getSettings(), []);
 
   const q = useQuery({
-    queryKey: ["daily", dayKey],
+    queryKey: ["daily", settings.calendarMode, dayKey],
     queryFn: () => fetchDailyData(today),
   });
 
@@ -25,7 +27,7 @@ export default function Saints() {
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">Saints</p>
           <h1 className="text-2xl font-semibold tracking-tight">Commemorations</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Today’s saints from the Orthodox calendar.
+            Today's saints from the Orthodox calendar.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -49,6 +51,9 @@ export default function Saints() {
                   {format(today, "MMMM d")}
                 </Badge>
                 <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
+                </Badge>
+                <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
                   Tap to open OCA lives
                 </Badge>
               </div>
@@ -64,7 +69,7 @@ export default function Saints() {
           {q.isLoading ? (
             <p className="text-sm text-muted-foreground">Loading…</p>
           ) : q.isError ? (
-            <p className="text-sm text-destructive">Couldn’t load saints today.</p>
+            <p className="text-sm text-destructive">Couldn't load saints today.</p>
           ) : (
             <div className="grid gap-2">
               {(q.data?.saints ?? []).length ? (
@@ -94,7 +99,7 @@ export default function Saints() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <h2 className="text-base font-semibold tracking-tight">Tip</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Add one line to your day: “Holy [Name], pray to God for me.”
+            Add one line to your day: "Holy [Name], pray to God for me."
           </p>
         </Card>
       </div>

@@ -32,6 +32,7 @@ import type { EncryptedBlob } from "@/lib/cryptoVault";
 import { decryptString, encryptString } from "@/lib/cryptoVault";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
+import { getSettings } from "@/lib/settings";
 
 function keyForDay(dayKey: string) {
   return `reflection:${dayKey}`;
@@ -51,10 +52,11 @@ type StoredNote = string | { enc: 1; blob: EncryptedBlob };
 
 export function DailyReflection() {
   const today = useMemo(() => new Date(), []);
+  const settings = useMemo(() => getSettings(), []);
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
 
   const q = useQuery({
-    queryKey: ["daily", dayKey],
+    queryKey: ["daily", settings.calendarMode, dayKey],
     queryFn: () => fetchDailyData(today),
   });
 
@@ -160,7 +162,6 @@ export function DailyReflection() {
     const saint = q.data.saints[0];
     if (isFast) {
       return `How can I practice mercy today, in my words, my attention, and my meals?${saint ? ` (Remembering: ${saint})` : ""}`;
-
     }
     return `Where do I need to slow down and pray today?${saint ? ` (Remembering: ${saint})` : ""}`;
   }, [q.data]);
@@ -226,7 +227,7 @@ export function DailyReflection() {
                           onCheckedChange={(checked) => {
                             if (!checked && saveEnabled) {
                               const ok = window.confirm(
-                                "Disabling encryption will store journal notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?"
+                                "Disabling encryption will store journal notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?",
                               );
                               if (!ok) return;
                             }
@@ -307,7 +308,6 @@ export function DailyReflection() {
                       ? "Locked. Enter your passphrase to view or edit saved notes."
                       : "Saved (encrypted) on this device."
                     : "Saved (not encrypted) on this device."}
-
               </p>
             </div>
 

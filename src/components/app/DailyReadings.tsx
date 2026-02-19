@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink, Volume2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -14,6 +14,26 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { fetchDailyData, readingText } from "@/lib/orthocal";
 import { useNavigate } from "react-router-dom";
+import { showError, showSuccess } from "@/utils/toast";
+import { getSettings } from "@/lib/settings";
+
+function speakText(text: string) {
+  try {
+    const synth = window.speechSynthesis;
+    if (!synth) {
+      showError("Text-to-speech not available in this browser.");
+      return;
+    }
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    u.pitch = 1;
+    u.onend = () => showSuccess("Finished.");
+    synth.speak(u);
+  } catch {
+    showError("Couldn't play audio.");
+  }
+}
 
 function ReadingCard({
   label,
@@ -26,6 +46,8 @@ function ReadingCard({
   text: string;
   onReadInApp?: () => void;
 }) {
+  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
+
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
       <div className="flex items-center justify-between gap-3">
@@ -39,9 +61,24 @@ function ReadingCard({
       </div>
 
       {text ? (
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-          {text}
-        </p>
+        <>
+          <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+            {text}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {canSpeak ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-2xl border-border/60"
+                onClick={() => speakText(`${label}. ${display || ""}. ${text}`)}
+              >
+                <Volume2 className="mr-2 h-4 w-4" /> Listen
+              </Button>
+            ) : null}
+          </div>
+        </>
       ) : (
         <div className="mt-3 grid gap-2">
           <p className="text-sm text-muted-foreground">
@@ -66,9 +103,10 @@ function ReadingCard({
 export function DailyReadings() {
   const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
+  const settings = useMemo(() => getSettings(), []);
 
   const q = useQuery({
-    queryKey: ["daily", format(today, "yyyy-MM-dd")],
+    queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
     queryFn: () => fetchDailyData(today),
   });
 
@@ -86,7 +124,6 @@ export function DailyReadings() {
             <p className="mt-1 text-sm text-muted-foreground">
               Read with attention. Keep a single line with you through the day.
             </p>
-
           </div>
           <BookOpen className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -101,31 +138,19 @@ export function DailyReadings() {
           <div className="grid gap-3">
             <ReadingCard
               label="Epistle"
-              display={
-                q.data.readings.epistle?.display ??
-                q.data.readings.epistle?.short_display
-              }
+              display={q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display}
               text={readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY)}
               onReadInApp={() =>
-                openRef(
-                  q.data.readings.epistle?.display ??
-                    q.data.readings.epistle?.short_display,
-                )
+                openRef(q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display)
               }
             />
 
             <ReadingCard
               label="Gospel"
-              display={
-                q.data.readings.gospel?.display ??
-                q.data.readings.gospel?.short_display
-              }
+              display={q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display}
               text={readingText(q.data.readings.gospel, Number.POSITIVE_INFINITY)}
               onReadInApp={() =>
-                openRef(
-                  q.data.readings.gospel?.display ??
-                    q.data.readings.gospel?.short_display,
-                )
+                openRef(q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display)
               }
             />
 
@@ -145,13 +170,24 @@ export function DailyReadings() {
                             key={idx}
                             className="rounded-2xl border border-border/60 bg-background p-4"
                           >
-                            <p className="text-sm font-semibold leading-snug">
-                              {disp ?? "Reading"}
-                            </p>
+                            <p className="text-sm font-semibold leading-snug">{disp ?? "Reading"}</p>
                             {t ? (
-                              <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
-                                {t}
-                              </p>
+                              <>
+                                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+                                  {t}
+                                </p>
+                                {typeof window !== "undefined" && "speechSynthesis" in window ? (
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2 w-fit rounded-2xl border-border/60"
+                                    onClick={() => speakText(`${disp || "Reading"}. ${t}`)}
+                                  >
+                                    <Volume2 className="mr-2 h-4 w-4" /> Listen
+                                  </Button>
+                                ) : null}
+                              </>
                             ) : disp ? (
                               <Button
                                 type="button"

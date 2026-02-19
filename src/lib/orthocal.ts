@@ -1,4 +1,5 @@
 import { fetchJsonCached } from "@/lib/privacyFetch";
+import { getSettings, type CalendarMode } from "@/lib/settings";
 
 export type OrthocalPassage = {
   book?: string;
@@ -23,16 +24,25 @@ export type OrthocalDay = {
   saints?: string[];
   readings?: OrthocalReading[];
   abbreviated_reading_indices?: number[];
+
+  // Some orthocal variants include tone/weekly cycle fields; we keep these optional.
+  tone?: number;
+  tone_desc?: string;
 };
 
 export type DailyData = {
   date: Date;
+  calendarMode: CalendarMode;
   fasting: {
     level: number;
     description: string;
     exception?: string;
   };
   saints: string[];
+  tone?: {
+    value?: number;
+    description?: string;
+  };
   readings: {
     epistle?: OrthocalReading;
     gospel?: OrthocalReading;
@@ -55,16 +65,22 @@ export function buildOcaDailyUrl(date: Date) {
   return `https://www.oca.org/readings/daily/${yyyy}/${mm}/${dd}`;
 }
 
-export function buildOrthocalApiUrl(date: Date) {
+export function buildOrthocalApiUrl(date: Date, mode: CalendarMode) {
   const yyyy = date.getFullYear();
   const m = date.getMonth() + 1;
   const d = date.getDate();
-  return `https://orthocal.info/api/gregorian/${yyyy}/${m}/${d}/`;
+  const base = "https://orthocal.info/api";
+
+  // Orthocal supports multiple calendar endpoints; we use gregorian by default.
+  // If julian is not supported upstream, this will fail and the UI will show an error.
+  const path = mode === "julian" ? "julian" : "gregorian";
+  return `${base}/${path}/${yyyy}/${m}/${d}/`;
 }
 
 function isEpistle(r?: OrthocalReading) {
   const hay = `${r?.description ?? ""} ${r?.display ?? ""}`.toLowerCase();
-  return hay.includes("epistle") ||
+  return (
+    hay.includes("epistle") ||
     hay.includes("corinth") ||
     hay.includes("romans") ||
     hay.includes("galatians") ||
@@ -80,16 +96,19 @@ function isEpistle(r?: OrthocalReading) {
     hay.includes("peter") ||
     hay.includes("james") ||
     hay.includes("john") ||
-    hay.includes("jude");
+    hay.includes("jude")
+  );
 }
 
 function isGospel(r?: OrthocalReading) {
   const hay = `${r?.description ?? ""} ${r?.display ?? ""}`.toLowerCase();
-  return hay.includes("gospel") ||
+  return (
+    hay.includes("gospel") ||
     hay.includes("matthew") ||
     hay.includes("mark") ||
     hay.includes("luke") ||
-    hay.includes("john");
+    hay.includes("john")
+  );
 }
 
 function extractPrimaryReadings(day: OrthocalDay): {
@@ -113,28 +132,32 @@ function extractPrimaryReadings(day: OrthocalDay): {
 }
 
 export async function fetchDailyData(date: Date): Promise<DailyData> {
-  const orthocalApiUrl = buildOrthocalApiUrl(date);
-  const day = await fetchJsonCached<OrthocalDay>(
-    orthocalApiUrl,
-    undefined,
-    {
-      key: `cache:orthocal:${orthocalApiUrl}`,
-      ttlMs: 1000 * 60 * 60 * 12, // 12h
-    },
-  );
+  const settings = getSettings();
+  const mode = settings.calendarMode;
+
+  const orthocalApiUrl = buildOrthocalApiUrl(date, mode);
+  const day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, undefined, {
+    key: `cache:orthocal:${orthocalApiUrl}`,
+    ttlMs: 1000 * 60 * 60 * 12, // 12h
+  });
 
   const fastingLevel = day.fast_level ?? 0;
   const fastingDesc = day.fast_level_desc?.trim() || "No fast";
   const fastingException = day.fast_exception_desc?.trim() || undefined;
 
+  const toneValue = typeof day.tone === "number" ? day.tone : undefined;
+  const toneDesc = day.tone_desc?.trim() || undefined;
+
   return {
     date,
+    calendarMode: mode,
     fasting: {
       level: fastingLevel,
       description: fastingDesc,
       exception: fastingException,
     },
     saints: day.saints ?? [],
+    tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
     readings: extractPrimaryReadings(day),
     sources: {
       ocaDailyUrl: buildOcaDailyUrl(date),

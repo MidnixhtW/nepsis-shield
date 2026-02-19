@@ -11,6 +11,9 @@ import {
   Target,
   CalendarPlus,
   Sparkles,
+  Music,
+  Church,
+  Radio,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +23,7 @@ import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
+import { getSettings } from "@/lib/settings";
 
 function fastingGuidanceLines(description: string, exception?: string) {
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
@@ -115,6 +119,15 @@ function QuickAction({
   );
 }
 
+function tropariaUrlForToday(today: Date) {
+  // OCA provides a daily date-based page; troparia/kontakia are accessible from the saints section.
+  // We link to the daily page as a stable canonical source.
+  const yyyy = format(today, "yyyy");
+  const mm = format(today, "MM");
+  const dd = format(today, "dd");
+  return `https://www.oca.org/readings/troparia/${yyyy}/${mm}/${dd}`;
+}
+
 export function TodayOverview({
   onNavigate,
   onOpenRoute,
@@ -123,9 +136,10 @@ export function TodayOverview({
   onOpenRoute?: (path: string) => void;
 }) {
   const today = useMemo(() => new Date(), []);
+  const settings = useMemo(() => getSettings(), []);
 
   const q = useQuery({
-    queryKey: ["daily", format(today, "yyyy-MM-dd")],
+    queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
     queryFn: () => fetchDailyData(today),
   });
 
@@ -177,7 +191,17 @@ export function TodayOverview({
               <h2 className="mt-1 text-2xl font-semibold tracking-tight">
                 {format(today, "MMMM d")}
               </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
+                </Badge>
+                {q.data?.tone?.value || q.data?.tone?.description ? (
+                  <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                    Tone {q.data.tone.value ?? ""} {q.data.tone.description ? `• ${q.data.tone.description}` : ""}
+                  </Badge>
+                ) : null}
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
                 Your daily essentials, kept quiet.
               </p>
             </div>
@@ -256,8 +280,109 @@ export function TodayOverview({
                 </div>
               </div>
 
+              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Hymns</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Troparia & kontakia for today (official OCA page).
+                    </p>
+                  </div>
+                  <Music className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                    <a href={tropariaUrlForToday(today)} target="_blank" rel="noopener noreferrer">
+                      Open troparia <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Parish</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Find a parish near you (official directories).
+                    </p>
+                  </div>
+                  <Church className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
+                    <a
+                      href="https://www.assemblyofbishops.org/directories/parishes/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Assembly directory <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
+                    <a
+                      href="https://www.oca.org/parishes"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      OCA parishes <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
+                    <a
+                      href="https://www.goarch.org/parishes"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      GOARCH parishes <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
+                    <a
+                      href="https://www.antiochian.org/parishes"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Antiochian parishes <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Audio</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Listen while commuting (official streams).
+                    </p>
+                  </div>
+                  <Radio className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                    <a
+                      href="https://www.ancientfaith.com/podcasts/dailyorthodoxscriptures"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Daily Orthodox Scriptures <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                    <a
+                      href="https://www.ancientfaith.com/radio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ancient Faith Radio <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
+                <div className="text-xs text-muted-foreground">Source: Orthocal + OCA pages.</div>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"

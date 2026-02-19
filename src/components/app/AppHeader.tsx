@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ExternalLink, Menu, Shield, Info, Sparkles } from "lucide-react";
+import { ExternalLink, Menu, Shield, Info, Sparkles, Settings as SettingsIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -69,6 +69,16 @@ export function AppHeader() {
                   variant="outline"
                   className="h-11 justify-start rounded-2xl border-border/60"
                 >
+                  <Link to="/settings">
+                    <SettingsIcon className="mr-2 h-4 w-4" /> Settings
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 justify-start rounded-2xl border-border/60"
+                >
                   <Link to="/saints">
                     <Sparkles className="mr-2 h-4 w-4" /> Saints
                   </Link>
@@ -111,6 +121,17 @@ export function AppHeader() {
         {/* Desktop: inline actions */}
         <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle />
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60"
+          >
+            <Link to="/settings">
+              <SettingsIcon className="mr-2 h-4 w-4" /> Settings
+            </Link>
+          </Button>
 
           <Button
             asChild

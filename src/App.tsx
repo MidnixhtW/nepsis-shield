@@ -9,6 +9,7 @@ import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import Saints from "@/pages/Saints";
+import Settings from "@/pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/about" element={<About />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/saints" element={<Saints />} />
             <Route path="/:section" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
