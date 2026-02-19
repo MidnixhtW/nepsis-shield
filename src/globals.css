@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Light mode */
-    --background: 210 40% 98%;
+    --background: 220 40% 98%;
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -14,80 +14,80 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    /* Electric violet */
-    --primary: 262 83% 58%;
+    /* Vivid violet */
+    --primary: 263 90% 60%;
     --primary-foreground: 0 0% 100%;
 
     /* Cool surface */
-    --secondary: 210 34% 94%;
+    --secondary: 220 28% 94%;
     --secondary-foreground: 222 47% 11%;
 
-    --muted: 210 34% 94%;
+    --muted: 220 28% 94%;
     --muted-foreground: 220 10% 36%;
 
-    /* Bright teal accent */
-    --accent: 186 90% 40%;
+    /* Bright aqua accent */
+    --accent: 188 92% 42%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 74% 48%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 214 28% 86%;
-    --input: 214 28% 86%;
-    --ring: 262 83% 58%;
+    --border: 218 24% 86%;
+    --input: 218 24% 86%;
+    --ring: 263 90% 60%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 210 40% 98%;
+    --sidebar-background: 220 40% 98%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary: 263 90% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 34% 94%;
+    --sidebar-accent: 220 28% 94%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 28% 86%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-border: 218 24% 86%;
+    --sidebar-ring: 263 90% 60%;
   }
 
   .dark {
     /* Dark mode: deep indigo (not pure black) */
-    --background: 230 35% 10%;
+    --background: 232 38% 9%;
     --foreground: 210 40% 98%;
 
-    --card: 230 32% 13%;
+    --card: 232 34% 13%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 230 32% 13%;
+    --popover: 232 34% 13%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 262 83% 62%;
+    --primary: 263 90% 66%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 230 25% 17%;
+    --secondary: 232 26% 17%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 230 25% 17%;
+    --muted: 232 26% 17%;
     --muted-foreground: 215 18% 75%;
 
-    --accent: 186 90% 45%;
+    --accent: 188 92% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 230 20% 24%;
-    --input: 230 20% 24%;
-    --ring: 262 83% 62%;
+    --border: 232 20% 24%;
+    --input: 232 20% 24%;
+    --ring: 263 90% 66%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 230 35% 10%;
+    --sidebar-background: 232 38% 9%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 262 83% 62%;
+    --sidebar-primary: 263 90% 66%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 25% 17%;
+    --sidebar-accent: 232 26% 17%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 230 20% 24%;
-    --sidebar-ring: 262 83% 62%;
+    --sidebar-border: 232 20% 24%;
+    --sidebar-ring: 263 90% 66%;
   }
 }
 
@@ -117,6 +117,13 @@
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
       Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     letter-spacing: -0.012em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
   }
 }
 
@@ -124,5 +131,15 @@
   /* For long labels/URLs inside buttons: prevents any horizontal overflow. */
   .btn-wrap {
     @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
+  }
+
+  /* Soft "glass" surface used on nav + hero overlays. */
+  .glass {
+    @apply border border-border/60 bg-background/60 backdrop-blur;
+  }
+
+  /* Subtle glow for accents (kept gentle in dark mode). */
+  .glow {
+    box-shadow: 0 12px 40px hsl(var(--primary) / 0.14);
   }
 }

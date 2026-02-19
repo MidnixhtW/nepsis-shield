@@ -35,10 +35,18 @@ export function AppShell({
   );
 
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="relative min-h-dvh bg-background">
+      {/* Ambient background */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
+        <div className="absolute -left-32 -top-28 h-[22rem] w-[22rem] rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute -right-28 top-24 h-[18rem] w-[18rem] rounded-full bg-accent/12 blur-3xl" />
+        <div className="absolute left-1/2 top-[34rem] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+      </div>
+
       {/* Top chrome */}
       <div className="sticky top-0 z-30">
-        <div className="bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/55">
           <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4">
             {header}
           </div>
@@ -52,7 +60,7 @@ export function AppShell({
 
       {/* Bottom navigation */}
       <div className="fixed bottom-0 left-0 right-0 z-40">
-        <div className="border-t border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+        <div className="border-t border-border/60 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/55">
           <div className="mx-auto w-full max-w-5xl px-2 pt-3 pb-[calc(0.85rem+env(safe-area-inset-bottom))] sm:px-3">
             <ToggleGroup
               type="single"
@@ -80,10 +88,19 @@ export function AppShell({
                     {active ? (
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute -top-0.5 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-primary/70"
+                        className="pointer-events-none absolute -top-0.5 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-primary/80"
                       />
                     ) : null}
-                    <div className="flex w-full flex-col items-center justify-center gap-1">
+
+                    {/* Soft accent glow on the active item */}
+                    {active ? (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 rounded-2xl bg-primary/5 blur-md"
+                      />
+                    ) : null}
+
+                    <div className="relative flex w-full flex-col items-center justify-center gap-1">
                       <Icon
                         className={cn(
                           "h-[18px] w-[18px]",
