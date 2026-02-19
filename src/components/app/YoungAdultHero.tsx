@@ -21,7 +21,7 @@ export function OrthodoxHero({
   );
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
+    <Card className="card-interactive overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-background to-background" />
 
@@ -60,7 +60,7 @@ export function OrthodoxHero({
           <div className="grid gap-2 sm:grid-cols-3">
             <Button
               type="button"
-              className="h-11 justify-start rounded-2xl"
+              className="tap h-11 justify-start rounded-2xl"
               onClick={() => onAction?.({ section: "read", read: "daily" })}
             >
               <BookOpen className="mr-2 h-4 w-4" /> Read today
@@ -68,7 +68,7 @@ export function OrthodoxHero({
             <Button
               type="button"
               variant="outline"
-              className="h-11 justify-start rounded-2xl border-border/60 bg-background/60"
+              className="tap h-11 justify-start rounded-2xl border-border/60 bg-background/60"
               onClick={() => onAction?.({ section: "pray", tab: "counter" })}
             >
               <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer
@@ -76,7 +76,7 @@ export function OrthodoxHero({
             <Button
               type="button"
               variant="outline"
-              className="h-11 justify-start rounded-2xl border-border/60 bg-background/60"
+              className="tap h-11 justify-start rounded-2xl border-border/60 bg-background/60"
               onClick={() => onAction?.({ section: "pray", tab: "journal" })}
             >
               <Timer className="mr-2 h-4 w-4" /> 1-minute reflection

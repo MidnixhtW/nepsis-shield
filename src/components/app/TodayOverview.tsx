@@ -119,7 +119,7 @@ function QuickAction({
     <Button
       type="button"
       variant="outline"
-      className="h-11 justify-start gap-2 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      className="tap h-11 justify-start gap-2 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
       onClick={onClick}
     >
       {icon}
@@ -213,7 +213,7 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
-      <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
+      <Card className="card-interactive overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
         <div className="p-5 sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -264,7 +264,7 @@ export function TodayOverview({
               <Button
                 asChild
                 size="sm"
-                className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
+                className="tap rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
                   Open daily source <ExternalLink className="ml-2 h-4 w-4" />
@@ -275,7 +275,6 @@ export function TodayOverview({
                 <StretchHorizontal className="h-3.5 w-3.5" />
                 Quick switch (doesn't change Settings)
               </div>
-
             </div>
           </div>
 
@@ -322,7 +321,7 @@ export function TodayOverview({
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="mt-1 w-fit rounded-2xl border-border/60"
+                      className="tap mt-1 w-fit rounded-2xl border-border/60"
                       onClick={() => onOpenRoute?.("/saints")}
                     >
                       View all saints
@@ -348,12 +347,17 @@ export function TodayOverview({
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="rounded-2xl border-border/60"
+                    className="tap rounded-2xl border-border/60"
                     onClick={() => onNavigate?.({ section: "learn", tab: "hymns" })}
                   >
                     Open Hymns section
                   </Button>
-                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="tap rounded-2xl border-border/60"
+                  >
                     <a
                       href="https://www.oca.org/saints/troparia"
                       target="_blank"
@@ -362,7 +366,12 @@ export function TodayOverview({
                       Troparia & Kontakia (OCA) <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
-                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="tap rounded-2xl border-border/60"
+                  >
                     <a
                       href="https://dcs.goarch.org/goa/dcs/dcs.html"
                       target="_blank"
@@ -383,7 +392,7 @@ export function TodayOverview({
                     type="button"
                     size="sm"
                     variant="outline"
-                    className="rounded-2xl border-border/60"
+                    className="tap rounded-2xl border-border/60"
                     onClick={addFastingReminder}
                   >
                     <CalendarPlus className="mr-2 h-4 w-4" /> Add reminder
@@ -395,7 +404,7 @@ export function TodayOverview({
         </div>
       </Card>
 
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+      <Card className="card-interactive rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h3 className="text-base font-semibold tracking-tight">Next</h3>
         <p className="mt-1 text-sm text-muted-foreground">A few focused shortcuts.</p>
         <Separator className="my-4" />

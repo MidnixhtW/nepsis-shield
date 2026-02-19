@@ -142,4 +142,19 @@
   .glow {
     box-shadow: 0 12px 40px hsl(var(--primary) / 0.14);
   }
+
+  /* Micro-interactions */
+  .card-interactive {
+    @apply transition-transform duration-300 ease-out motion-reduce:transition-none;
+    will-change: transform;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px);
+  }
+
+  .tap {
+    @apply transition-transform duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none;
+    will-change: transform;
+  }
 }

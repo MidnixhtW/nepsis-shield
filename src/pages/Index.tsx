@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Wand2, Settings2 } from "lucide-react";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
@@ -12,8 +13,9 @@ import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { TodaySaintTile } from "@/components/app/TodaySaintTile";
-
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+import { HighlightCard } from "@/components/app/HighlightCard";
+import { Button } from "@/components/ui/button";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -160,6 +162,37 @@ const Index = () => {
                 navigate(`/${to.section}?${next.toString()}`);
                 setSection(to.section);
               }}
+            />
+
+            <HighlightCard
+              eyebrow="Quick setup"
+              title="Make the links match your practice"
+              description="Set your preferred calendar and jurisdiction once, then today's links follow it."
+              icon={<Wand2 className="h-5 w-5 text-primary" />}
+              actions={
+                <>
+                  <Button
+                    type="button"
+                    className="tap rounded-2xl"
+                    onClick={() => navigate("/settings")}
+                  >
+                    <Settings2 className="mr-2 h-4 w-4" /> Open settings
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="tap rounded-2xl border-border/60 bg-background/60"
+                    onClick={() => {
+                      const next = new URLSearchParams(searchParams);
+                      next.set("tab", "hymns");
+                      navigate(`/learn?${next.toString()}`);
+                      setSection("learn");
+                    }}
+                  >
+                    Go to Hymns
+                  </Button>
+                </>
+              }
             />
 
             <TodaySaintTile onOpenSaints={() => navigate("/saints")} />

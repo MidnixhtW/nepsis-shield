@@ -27,7 +27,7 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
   const saint = pickSaint(q.data?.saints ?? []);
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
+    <Card className="card-interactive overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/12 via-background to-background" />
         <div className="relative p-5">
@@ -35,11 +35,9 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
             <div className="min-w-0">
               <p className="text-xs font-semibold tracking-wide text-muted-foreground">Saint</p>
               <h3 className="mt-1 truncate text-base font-semibold tracking-tight">{saint}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Ask their prayers today.
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">Ask their prayers today.</p>
             </div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/60 bg-background/60">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/60 bg-background/60 glow">
               <Sparkles className="h-5 w-5 text-primary" />
             </div>
           </div>
@@ -58,7 +56,7 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <Button
               type="button"
-              className="btn-wrap h-11 justify-between rounded-2xl"
+              className="tap btn-wrap h-11 justify-between rounded-2xl"
               onClick={() =>
                 window.open(
                   `https://www.oca.org/saints/lives?search=${encodeURIComponent(saint)}`,
@@ -73,7 +71,7 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
             <Button
               type="button"
               variant="outline"
-              className="h-11 justify-between rounded-2xl border-border/60 bg-background/60"
+              className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60"
               onClick={onOpenSaints}
             >
               View all saints <ExternalLink className="h-4 w-4" />
