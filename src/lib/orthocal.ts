@@ -1,5 +1,5 @@
 import { fetchJsonCached } from "@/lib/privacyFetch";
-import { getSettings, type CalendarMode } from "@/lib/settings";
+import type { CalendarMode } from "@/lib/settings";
 
 export type OrthocalPassage = {
   book?: string;
@@ -25,7 +25,7 @@ export type OrthocalDay = {
   readings?: OrthocalReading[];
   abbreviated_reading_indices?: number[];
 
-  // Some orthocal variants include tone/weekly cycle fields; we keep these optional.
+  // Present in some Orthocal responses; treated as optional.
   tone?: number;
   tone_desc?: string;
 };
@@ -39,14 +39,14 @@ export type DailyData = {
     exception?: string;
   };
   saints: string[];
-  tone?: {
-    value?: number;
-    description?: string;
-  };
   readings: {
     epistle?: OrthocalReading;
     gospel?: OrthocalReading;
     others: OrthocalReading[];
+  };
+  tone?: {
+    value?: number;
+    description?: string;
   };
   sources: {
     ocaDailyUrl: string;
@@ -66,15 +66,11 @@ export function buildOcaDailyUrl(date: Date) {
 }
 
 export function buildOrthocalApiUrl(date: Date, mode: CalendarMode) {
+  // Orthocal offers both /gregorian and /julian endpoints.
   const yyyy = date.getFullYear();
   const m = date.getMonth() + 1;
   const d = date.getDate();
-  const base = "https://orthocal.info/api";
-
-  // Orthocal supports multiple calendar endpoints; we use gregorian by default.
-  // If julian is not supported upstream, this will fail and the UI will show an error.
-  const path = mode === "julian" ? "julian" : "gregorian";
-  return `${base}/${path}/${yyyy}/${m}/${d}/`;
+  return `https://orthocal.info/api/${mode}/${yyyy}/${m}/${d}/`;
 }
 
 function isEpistle(r?: OrthocalReading) {
@@ -131,13 +127,10 @@ function extractPrimaryReadings(day: OrthocalDay): {
   return { epistle, gospel, others };
 }
 
-export async function fetchDailyData(date: Date): Promise<DailyData> {
-  const settings = getSettings();
-  const mode = settings.calendarMode;
-
+export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian"): Promise<DailyData> {
   const orthocalApiUrl = buildOrthocalApiUrl(date, mode);
   const day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, undefined, {
-    key: `cache:orthocal:${orthocalApiUrl}`,
+    key: `cache:orthocal:${mode}:${orthocalApiUrl}`,
     ttlMs: 1000 * 60 * 60 * 12, // 12h
   });
 
@@ -157,8 +150,8 @@ export async function fetchDailyData(date: Date): Promise<DailyData> {
       exception: fastingException,
     },
     saints: day.saints ?? [],
-    tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
     readings: extractPrimaryReadings(day),
+    tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
     sources: {
       ocaDailyUrl: buildOcaDailyUrl(date),
       orthocalApiUrl,

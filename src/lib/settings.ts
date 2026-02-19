@@ -2,37 +2,46 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 export type CalendarMode = "gregorian" | "julian";
 export type Jurisdiction = "oca" | "goarch" | "antiochian" | "rocor";
-export type AppLanguage = "en" | "el" | "ru" | "ar";
+export type LanguagePref = "en" | "el" | "ru" | "ar";
+
+export type ReminderPrefs = {
+  enableNotifications: boolean; // best-effort; may be unsupported
+  morningHour: number; // 0-23
+  eveningHour: number; // 0-23
+};
 
 export type AppSettings = {
   calendarMode: CalendarMode;
   jurisdiction: Jurisdiction;
-  language: AppLanguage;
-  // If enabled, show a simple seasonal callout in Today/Prayer.
-  seasonalHints: boolean;
+  language: LanguagePref;
+  reminders: ReminderPrefs;
 };
 
-const DEFAULT_SETTINGS: AppSettings = {
+const KEY = "app:settings";
+
+export const DEFAULT_SETTINGS: AppSettings = {
   calendarMode: "gregorian",
   jurisdiction: "oca",
   language: "en",
-  seasonalHints: true,
+  reminders: {
+    enableNotifications: false,
+    morningHour: 7,
+    eveningHour: 21,
+  },
 };
 
-function settingsKey() {
-  return "app:settings";
-}
-
 export function getSettings(): AppSettings {
-  const saved = getStoredItem<Partial<AppSettings>>(settingsKey());
-  return { ...DEFAULT_SETTINGS, ...(saved ?? {}) } as AppSettings;
+  const stored = getStoredItem<Partial<AppSettings>>(KEY);
+  return {
+    ...DEFAULT_SETTINGS,
+    ...stored,
+    reminders: {
+      ...DEFAULT_SETTINGS.reminders,
+      ...(stored?.reminders ?? {}),
+    },
+  };
 }
 
 export function setSettings(next: AppSettings) {
-  setStoredItem(settingsKey(), next, { ttlMs: 1000 * 60 * 60 * 24 * 365 * 2 });
-}
-
-export function updateSettings(patch: Partial<AppSettings>) {
-  const cur = getSettings();
-  setSettings({ ...cur, ...patch });
+  setStoredItem(KEY, next);
 }

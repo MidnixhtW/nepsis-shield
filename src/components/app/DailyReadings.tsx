@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { BookOpen, ExternalLink, Volume2 } from "lucide-react";
+import { BookOpen, ExternalLink, Volume2, Square } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -14,40 +14,24 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { fetchDailyData, readingText } from "@/lib/orthocal";
 import { useNavigate } from "react-router-dom";
+import { useSettings } from "@/hooks/useSettings";
 import { showError, showSuccess } from "@/utils/toast";
-import { getSettings } from "@/lib/settings";
-
-function speakText(text: string) {
-  try {
-    const synth = window.speechSynthesis;
-    if (!synth) {
-      showError("Text-to-speech not available in this browser.");
-      return;
-    }
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95;
-    u.pitch = 1;
-    u.onend = () => showSuccess("Finished.");
-    synth.speak(u);
-  } catch {
-    showError("Couldn't play audio.");
-  }
-}
 
 function ReadingCard({
   label,
   display,
   text,
   onReadInApp,
+  onSpeak,
+  onStop,
 }: {
   label: string;
   display?: string;
   text: string;
   onReadInApp?: () => void;
+  onSpeak?: () => void;
+  onStop?: () => void;
 }) {
-  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
-
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
       <div className="flex items-center justify-between gap-3">
@@ -55,30 +39,17 @@ function ReadingCard({
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">{label}</p>
           <p className="mt-1 text-sm font-semibold leading-snug">{display || ""}</p>
         </div>
-        <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-          OCA
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+            OCA
+          </Badge>
+        </div>
       </div>
 
       {text ? (
-        <>
-          <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-            {text}
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {canSpeak ? (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="rounded-2xl border-border/60"
-                onClick={() => speakText(`${label}. ${display || ""}. ${text}`)}
-              >
-                <Volume2 className="mr-2 h-4 w-4" /> Listen
-              </Button>
-            ) : null}
-          </div>
-        </>
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+          {text}
+        </p>
       ) : (
         <div className="mt-3 grid gap-2">
           <p className="text-sm text-muted-foreground">
@@ -96,23 +67,83 @@ function ReadingCard({
           ) : null}
         </div>
       )}
+
+      {text ? (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {onSpeak ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="rounded-2xl border-border/60"
+              onClick={onSpeak}
+            >
+              <Volume2 className="mr-2 h-4 w-4" /> Listen
+            </Button>
+          ) : null}
+          {onStop ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="rounded-2xl"
+              onClick={onStop}
+            >
+              <Square className="mr-2 h-4 w-4" /> Stop
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
+}
+
+function canTts() {
+  return typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+function speak(title: string, text: string) {
+  if (!canTts()) return false;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(`${title}. ${text}`);
+    u.rate = 0.95;
+    u.pitch = 1;
+    window.speechSynthesis.speak(u);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function DailyReadings() {
   const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
-  const settings = useMemo(() => getSettings(), []);
+  const { settings } = useSettings();
 
   const q = useQuery({
     queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
-    queryFn: () => fetchDailyData(today),
+    queryFn: () => fetchDailyData(today, settings.calendarMode),
   });
 
   function openRef(ref?: string) {
     if (!ref) return;
     navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}`);
+  }
+
+  function onSpeak(label: string, display: string | undefined, fullText: string) {
+    if (!fullText.trim()) return;
+    const ok = speak(`${label} ${display ?? ""}`.trim(), fullText);
+    if (!ok) showError("Text-to-speech is not available in this browser.");
+    else showSuccess("Playing audio.");
+  }
+
+  function onStop() {
+    try {
+      window.speechSynthesis?.cancel();
+    } catch {
+      // ignore
+    }
   }
 
   return (
@@ -136,23 +167,41 @@ export function DailyReadings() {
           <div className="text-sm text-destructive">Couldn't load readings right now.</div>
         ) : q.data ? (
           <div className="grid gap-3">
-            <ReadingCard
-              label="Epistle"
-              display={q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display}
-              text={readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY)}
-              onReadInApp={() =>
-                openRef(q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display)
-              }
-            />
+            {(() => {
+              const full = readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY);
+              return (
+                <ReadingCard
+                  label="Epistle"
+                  display={q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display}
+                  text={full}
+                  onReadInApp={() =>
+                    openRef(
+                      q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display,
+                    )
+                  }
+                  onSpeak={canTts() ? () => onSpeak("Epistle", q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display, full) : undefined}
+                  onStop={canTts() ? onStop : undefined}
+                />
+              );
+            })()}
 
-            <ReadingCard
-              label="Gospel"
-              display={q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display}
-              text={readingText(q.data.readings.gospel, Number.POSITIVE_INFINITY)}
-              onReadInApp={() =>
-                openRef(q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display)
-              }
-            />
+            {(() => {
+              const full = readingText(q.data.readings.gospel, Number.POSITIVE_INFINITY);
+              return (
+                <ReadingCard
+                  label="Gospel"
+                  display={q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display}
+                  text={full}
+                  onReadInApp={() =>
+                    openRef(
+                      q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display,
+                    )
+                  }
+                  onSpeak={canTts() ? () => onSpeak("Gospel", q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display, full) : undefined}
+                  onStop={canTts() ? onStop : undefined}
+                />
+              );
+            })()}
 
             {q.data.readings.others.length ? (
               <Accordion type="single" collapsible className="w-full">
@@ -170,24 +219,39 @@ export function DailyReadings() {
                             key={idx}
                             className="rounded-2xl border border-border/60 bg-background p-4"
                           >
-                            <p className="text-sm font-semibold leading-snug">{disp ?? "Reading"}</p>
+                            <p className="text-sm font-semibold leading-snug">
+                              {disp ?? "Reading"}
+                            </p>
                             {t ? (
-                              <>
-                                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
+                              <div className="mt-2">
+                                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                                   {t}
                                 </p>
-                                {typeof window !== "undefined" && "speechSynthesis" in window ? (
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="mt-2 w-fit rounded-2xl border-border/60"
-                                    onClick={() => speakText(`${disp || "Reading"}. ${t}`)}
-                                  >
-                                    <Volume2 className="mr-2 h-4 w-4" /> Listen
-                                  </Button>
-                                ) : null}
-                              </>
+                                <div className="mt-3 flex flex-wrap gap-2">
+                                  {canTts() ? (
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      className="rounded-2xl border-border/60"
+                                      onClick={() => onSpeak("Reading", disp ?? "", t)}
+                                    >
+                                      <Volume2 className="mr-2 h-4 w-4" /> Listen
+                                    </Button>
+                                  ) : null}
+                                  {canTts() ? (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      className="rounded-2xl"
+                                      onClick={onStop}
+                                    >
+                                      <Square className="mr-2 h-4 w-4" /> Stop
+                                    </Button>
+                                  ) : null}
+                                </div>
+                              </div>
                             ) : disp ? (
                               <Button
                                 type="button"

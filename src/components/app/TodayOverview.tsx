@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
@@ -12,8 +12,8 @@ import {
   CalendarPlus,
   Sparkles,
   Music,
-  Church,
-  Radio,
+  MapPin,
+  BookMarked,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import type { AppSection } from "@/components/app/AppShell";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
+import { useSettings } from "@/hooks/useSettings";
 
 function fastingGuidanceLines(description: string, exception?: string) {
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
@@ -119,13 +120,18 @@ function QuickAction({
   );
 }
 
-function tropariaUrlForToday(today: Date) {
-  // OCA provides a daily date-based page; troparia/kontakia are accessible from the saints section.
-  // We link to the daily page as a stable canonical source.
-  const yyyy = format(today, "yyyy");
-  const mm = format(today, "MM");
-  const dd = format(today, "dd");
-  return `https://www.oca.org/readings/troparia/${yyyy}/${mm}/${dd}`;
+function formatGoarchChapelUrl(date: Date) {
+  // GOARCH Online Chapel: /chapel?date=M/D/YYYY
+  const m = date.getMonth() + 1;
+  const d = date.getDate();
+  const y = date.getFullYear();
+  return `https://www.goarch.org/chapel?date=${encodeURIComponent(`${m}/${d}/${y}`)}`;
+}
+
+function buildPrimaryDailySourceUrl(settings: ReturnType<typeof getSettings>, date: Date) {
+  if (settings.jurisdiction === "goarch") return formatGoarchChapelUrl(date);
+  // Default to OCA
+  return ""; // caller can use q.data.sources.ocaDailyUrl
 }
 
 export function TodayOverview({
@@ -136,12 +142,16 @@ export function TodayOverview({
   onOpenRoute?: (path: string) => void;
 }) {
   const today = useMemo(() => new Date(), []);
-  const settings = useMemo(() => getSettings(), []);
+  const { settings } = useSettings();
 
   const q = useQuery({
     queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
-    queryFn: () => fetchDailyData(today),
+    queryFn: () => fetchDailyData(today, settings.calendarMode),
   });
+
+  useEffect(() => {
+    // Ensure query reactivity when settings change in other tabs
+  }, [settings.calendarMode]);
 
   function addFastingReminder() {
     if (!q.data) return;
@@ -179,29 +189,32 @@ export function TodayOverview({
     }
   }
 
+  const primarySourceUrl = buildPrimaryDailySourceUrl(settings, today);
+
   return (
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
         <div className="p-5 sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                {format(today, "EEEE")}
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight">
-                {format(today, "MMMM d")}
-              </h2>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                  {format(today, "EEEE")}
+                </p>
                 <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
                   {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
                 </Badge>
                 {q.data?.tone?.value || q.data?.tone?.description ? (
                   <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    Tone {q.data.tone.value ?? ""} {q.data.tone.description ? `• ${q.data.tone.description}` : ""}
+                    {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
                   </Badge>
                 ) : null}
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
+
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+                {format(today, "MMMM d")}
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
                 Your daily essentials, kept quiet.
               </p>
             </div>
@@ -212,8 +225,12 @@ export function TodayOverview({
                 size="sm"
                 className="rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
-                  Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
+                <a
+                  href={primarySourceUrl || q.data.sources.ocaDailyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open daily source <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>
             ) : (
@@ -234,7 +251,7 @@ export function TodayOverview({
             <div className="text-sm text-muted-foreground">Loading today…</div>
           ) : q.isError ? (
             <div className="text-sm text-destructive">
-              Couldn't load today's details. You can still open the OCA page.
+              Couldn't load today's details. You can still open the daily source.
             </div>
           ) : q.data ? (
             <div className="grid gap-4">
@@ -283,106 +300,41 @@ export function TodayOverview({
               <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Hymns</p>
+                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                      Hymns & propers
+                    </p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Troparia & kontakia for today (official OCA page).
+                      Open troparia/kontakia and other propers from trusted sources.
                     </p>
                   </div>
                   <Music className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
-                    <a href={tropariaUrlForToday(today)} target="_blank" rel="noopener noreferrer">
-                      Open troparia <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Parish</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Find a parish near you (official directories).
-                    </p>
-                  </div>
-                  <Church className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
                     <a
-                      href="https://www.assemblyofbishops.org/directories/parishes/"
+                      href="https://www.oca.org/saints/troparia"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Assembly directory <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
-                    <a
-                      href="https://www.oca.org/parishes"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      OCA parishes <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
-                    <a
-                      href="https://www.goarch.org/parishes"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      GOARCH parishes <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                  <Button asChild variant="outline" className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70">
-                    <a
-                      href="https://www.antiochian.org/parishes"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Antiochian parishes <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold tracking-wide text-muted-foreground">Audio</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Listen while commuting (official streams).
-                    </p>
-                  </div>
-                  <Radio className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
-                    <a
-                      href="https://www.ancientfaith.com/podcasts/dailyorthodoxscriptures"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Daily Orthodox Scriptures <ExternalLink className="ml-2 h-4 w-4" />
+                      Troparia & Kontakia (OCA) <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                   <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
                     <a
-                      href="https://www.ancientfaith.com/radio"
+                      href="https://dcs.goarch.org/goa/dcs/dcs.html"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      Ancient Faith Radio <ExternalLink className="ml-2 h-4 w-4" />
+                      Chant Stand (AGES) <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 </div>
               </div>
 
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div className="text-xs text-muted-foreground">Source: Orthocal + OCA pages.</div>
+                <div className="text-xs text-muted-foreground">
+                  Sources: orthocal.info + official jurisdictions.
+                </div>
                 <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
@@ -417,6 +369,16 @@ export function TodayOverview({
             onClick={() => onNavigate?.({ section: "read", read: "daily" })}
           />
           <QuickAction
+            label="Hymns & propers"
+            icon={<Music className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "learn" })}
+          />
+          <QuickAction
+            label="Parish finder"
+            icon={<MapPin className="h-4 w-4 text-primary" />}
+            onClick={() => onOpenRoute?.("/settings")}
+          />
+          <QuickAction
             label="Reading plans"
             icon={<Sparkles className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "read", read: "plans" })}
@@ -425,6 +387,11 @@ export function TodayOverview({
             label="Jesus Prayer"
             icon={<Target className="h-4 w-4 text-primary" />}
             onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
+          />
+          <QuickAction
+            label="Canon & basics"
+            icon={<BookMarked className="h-4 w-4 text-primary" />}
+            onClick={() => onNavigate?.({ section: "learn" })}
           />
           <QuickAction
             label="Learn"
