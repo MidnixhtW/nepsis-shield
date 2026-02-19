@@ -10,13 +10,61 @@ type Locator = {
   hint?: string;
 };
 
-function locatorFor(jurisdiction: string): Locator[] {
-  const assembly: Locator = {
-    label: "Assembly of Bishops (US) — Parish Directory",
-    url: "https://www.assemblyofbishops.org/directories/parishes",
-    hint: "Pan-Orthodox directory (US)",
-  };
+function uniqueByUrl(items: Locator[]) {
+  const seen = new Set<string>();
+  return items.filter((i) => {
+    if (seen.has(i.url)) return false;
+    seen.add(i.url);
+    return true;
+  });
+}
 
+const ASSEMBLY_US: Locator = {
+  label: "Assembly of Bishops (US) — Parish Directory",
+  url: "https://www.assemblyofbishops.org/directories/parishes",
+  hint: "Pan-Orthodox directory (US)",
+};
+
+const MORE_JURISDICTIONS: Locator[] = [
+  ASSEMBLY_US,
+  {
+    label: "ACROD — Parish Directory",
+    url: "https://www.acrod.org/directories/search/parishes",
+    hint: "American Carpatho-Russian Orthodox Diocese",
+  },
+  {
+    label: "Romanian Metropolia — Parish Directory",
+    url: "https://www.mitropolia.us/index.php/en/structure/parish-directory",
+    hint: "Romanian Orthodox Metropolia of the Americas",
+  },
+  {
+    label: "UOC of USA — Parish Directory",
+    url: "https://www.uocofusa.org/directories_parishes",
+    hint: "Ukrainian Orthodox Church of the USA",
+  },
+  {
+    label: "Albanian Orthodox Diocese — Parishes",
+    url: "https://albaniandiocese-ep.org/who-we-are/parishes",
+    hint: "Albanian Orthodox Diocese of the Americas",
+  },
+  {
+    label: "Bulgarian Diocese — Official Site",
+    url: "https://www.bulgariandiocese.org/",
+    hint: "Bulgarian Eastern Orthodox Diocese (USA/Canada/Australia)",
+  },
+  {
+    label: "Bulgarian Diocese — Parish list (OCA directory)",
+    url: "https://www.oca.org/parishes/diocese/BU",
+    hint: "Useful listing if the diocese site is hard to navigate",
+  },
+  {
+    label: "Georgian parishes (US) — via Assembly",
+    url: "https://www.assemblyofbishops.org/directories/parishes?jur=geo&searchType=jurisdiction",
+    hint: "Jurisdiction filter on Assembly directory",
+  },
+];
+
+function primaryLocatorsFor(jurisdiction: string): Locator[] {
   // Keep this intentionally simple: official directories where we can.
   if (jurisdiction === "goarch") {
     return [
@@ -30,7 +78,7 @@ function locatorFor(jurisdiction: string): Locator[] {
         url: "https://parishdirectory.goarch.org/",
         hint: "Alternate directory",
       },
-      assembly,
+      ASSEMBLY_US,
     ];
   }
 
@@ -51,7 +99,7 @@ function locatorFor(jurisdiction: string): Locator[] {
         url: "https://antiochiandirectory.org/",
         hint: "Directory site",
       },
-      assembly,
+      ASSEMBLY_US,
     ];
   }
 
@@ -62,7 +110,7 @@ function locatorFor(jurisdiction: string): Locator[] {
         url: "https://directory.stinnocentpress.com/",
         hint: "Russian Orthodox Church Outside Russia",
       },
-      assembly,
+      ASSEMBLY_US,
     ];
   }
 
@@ -73,13 +121,39 @@ function locatorFor(jurisdiction: string): Locator[] {
       url: "https://www.oca.org/parishes",
       hint: "Orthodox Church in America",
     },
-    assembly,
+    ASSEMBLY_US,
   ];
+}
+
+function LocatorButtons({ items }: { items: Locator[] }) {
+  return (
+    <div className="grid gap-2">
+      {items.map((l) => (
+        <Button
+          key={l.url}
+          asChild
+          variant="outline"
+          className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+        >
+          <a href={l.url} target="_blank" rel="noopener noreferrer">
+            <span className="min-w-0">
+              <span className="block truncate font-semibold">{l.label}</span>
+              {l.hint ? (
+                <span className="block truncate text-xs text-muted-foreground">{l.hint}</span>
+              ) : null}
+            </span>
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </Button>
+      ))}
+    </div>
+  );
 }
 
 export function ParishFinder() {
   const { settings } = useSettings();
-  const locators = locatorFor(settings.jurisdiction);
+  const primary = primaryLocatorsFor(settings.jurisdiction);
+  const more = uniqueByUrl(MORE_JURISDICTIONS.filter((l) => !primary.some((p) => p.url === l.url)));
 
   return (
     <div className="grid gap-4">
@@ -89,7 +163,7 @@ export function ParishFinder() {
             <p className="text-xs font-semibold tracking-wide text-muted-foreground">Parish</p>
             <h2 className="text-xl font-semibold tracking-tight">Parish finder</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Official directories (based on your preferred jurisdiction in Settings).
+              Official directories (based on your preferred jurisdiction in Settings), plus more.
             </p>
           </div>
           <MapPin className="h-5 w-5 text-muted-foreground" />
@@ -97,27 +171,27 @@ export function ParishFinder() {
 
         <Separator className="my-4" />
 
-        <div className="grid gap-2">
-          {locators.map((l) => (
-            <Button
-              key={l.url}
-              asChild
-              variant="outline"
-              className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-            >
-              <a href={l.url} target="_blank" rel="noopener noreferrer">
-                <span className="min-w-0">
-                  <span className="block truncate font-semibold">{l.label}</span>
-                  {l.hint ? (
-                    <span className="block truncate text-xs text-muted-foreground">
-                      {l.hint}
-                    </span>
-                  ) : null}
-                </span>
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
-          ))}
+        <div className="grid gap-4">
+          <div>
+            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+              Recommended
+            </p>
+            <div className="mt-2">
+              <LocatorButtons items={primary} />
+            </div>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+              More jurisdictions
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              If your parish isn't in the list above, the Assembly directory is usually the fastest.
+            </p>
+            <div className="mt-2">
+              <LocatorButtons items={more} />
+            </div>
+          </div>
         </div>
 
         <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-4">
