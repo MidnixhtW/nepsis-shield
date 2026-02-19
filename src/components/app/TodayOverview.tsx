@@ -272,9 +272,10 @@ export function TodayOverview({
               </Button>
 
               <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
-                <SwitchHorizontal className="h-3.5 w-3.5" />
+                <StretchHorizontal className="h-3.5 w-3.5" />
                 Quick switch (doesn't change Settings)
               </div>
+
             </div>
           </div>
 
