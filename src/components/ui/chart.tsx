@@ -32,6 +32,22 @@ function useChart() {
   return context;
 }
 
+// Sanitize CSS color values to prevent injection
+function sanitizeColor(color: string | undefined): string | undefined {
+  if (!color) return undefined;
+  
+  // Allow only safe color formats: hex, rgb(a), hsl(a), named colors
+  // Reject anything with dangerous characters
+  const dangerousChars = /[;{}()\\<>'"]/;
+  if (dangerousChars.test(color)) return undefined;
+  
+  // Basic validation for common formats
+  const safeColorPattern = /^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|hsla?\([^)]+\)|[a-z]+)$/;
+  if (!safeColorPattern.test(color)) return undefined;
+  
+  return color;
+}
+
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
@@ -44,6 +60,32 @@ const ChartContainer = React.forwardRef<
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
 
+  // Build CSS variables object for inline styles (safe from injection)
+  const cssVars = React.useMemo(() => {
+    const vars: Record<string, string> = {};
+    
+    for (const [key, itemConfig] of Object.entries(config)) {
+      if (!itemConfig.theme && !itemConfig.color) continue;
+      
+      // For light theme
+      const lightColor = itemConfig.theme?.light || itemConfig.color;
+      const sanitizedLight = sanitizeColor(lightColor);
+      if (sanitizedLight) {
+        vars[`--color-${key}`] = sanitizedLight;
+      }
+      
+      // For dark theme (if different from light)
+      if (itemConfig.theme?.dark) {
+        const sanitizedDark = sanitizeColor(itemConfig.theme.dark);
+        if (sanitizedDark) {
+          vars[`--color-${key}-dark`] = sanitizedDark;
+        }
+      }
+    }
+    
+    return vars;
+  }, [config]);
+
   return (
     <ChartContext.Provider value={{ config }}>
       <div
@@ -53,9 +95,9 @@ const ChartContainer = React.forwardRef<
           "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className,
         )}
+        style={cssVars as React.CSSProperties}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>
           {children}
         </RechartsPrimitive.ResponsiveContainer>
@@ -64,39 +106,6 @@ const ChartContainer = React.forwardRef<
   );
 });
 ChartContainer.displayName = "Chart";
-
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color,
-  );
-
-  if (!colorConfig.length) {
-    return null;
-  }
-
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
-}
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
-};
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -299,12 +308,16 @@ const ChartLegendContent = React.forwardRef<
               ) : (
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
+                  style={
+                    {
+                      backgroundColor: item.color,
+                    } as React.CSSProperties
+                  }
                 />
               )}
-              {itemConfig?.label}
+              <span className="text-muted-foreground">
+                {itemConfig?.label || item.value}
+              </span>
             </div>
           );
         })}
@@ -359,5 +372,5 @@ export {
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-  ChartStyle,
+  ChartStyle: () => null, // Deprecated, kept for compatibility
 };

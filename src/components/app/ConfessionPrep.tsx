@@ -7,8 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import {
+
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -68,7 +68,8 @@ export function ConfessionPrep() {
   const [checks, setChecks] = useState<MapBool>({});
   const [note, setNote] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(false);
-  const [encryptEnabled, setEncryptEnabled] = useState(true);
+  // Encryption is now mandatory for sensitive confession notes
+  const encryptEnabled = true;
   const [locked, setLocked] = useState(false);
   const [pass, setPass] = useState("");
 
@@ -77,9 +78,6 @@ export function ConfessionPrep() {
 
     const s = getStoredItem<boolean>(saveEnabledKey());
     setSaveEnabled(s ?? false);
-
-    const e = getStoredItem<boolean>(encryptEnabledKey());
-    setEncryptEnabled(e ?? true);
   }, []);
 
   useEffect(() => {
@@ -107,10 +105,10 @@ export function ConfessionPrep() {
     }
   }, [saveEnabled]);
 
+  // Encryption is mandatory; no toggle persisted.
   useEffect(() => {
-    setStoredItem(encryptEnabledKey(), encryptEnabled);
-    if (encryptEnabled) setLocked(true);
-  }, [encryptEnabled]);
+    if (saveEnabled) setLocked(true);
+  }, [saveEnabled]);
 
   useEffect(() => {
     if (!saveEnabled) return;
@@ -120,10 +118,6 @@ export function ConfessionPrep() {
   useEffect(() => {
     if (!saveEnabled) return;
     (async () => {
-      if (!encryptEnabled) {
-        setStoredItem(noteKey(wk), note, { ttlMs: NOTE_TTL_MS });
-        return;
-      }
       if (locked) return;
       if (!pass) return;
       const blob = await encryptString(note, pass);
@@ -131,7 +125,7 @@ export function ConfessionPrep() {
         ttlMs: NOTE_TTL_MS,
       });
     })();
-  }, [note, wk, saveEnabled, encryptEnabled, pass, locked]);
+  }, [note, wk, saveEnabled, pass, locked]);
 
   async function unlock() {
     if (!saveEnabled) return;
@@ -196,18 +190,17 @@ export function ConfessionPrep() {
           onChange={(e) => setNote(e.target.value)}
           placeholder="Keep notes short and concrete (names/details aren't required)."
           className="mt-2 min-h-28 rounded-2xl"
-          disabled={saveEnabled && encryptEnabled && locked}
+          disabled={saveEnabled && locked}
         />
         <p className="mt-2 text-xs text-muted-foreground">
           {!saveEnabled
             ? "Not saved (clears on refresh)."
-            : encryptEnabled
-            ? locked
+            : locked
               ? "Locked. Enter passphrase below to view or edit."
-              : "Saved (encrypted) on this device."
-            : "Saved (not encrypted) on this device."}
+              : "Saved (encrypted) on this device."}
 
         </p>
+
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -256,24 +249,13 @@ export function ConfessionPrep() {
               </div>
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium">Encrypt saved notes</p>
-                  <p className="text-xs text-muted-foreground">Recommended</p>
+                  <p className="text-sm font-medium">Save on this device (encrypted)</p>
+                  <p className="text-xs text-muted-foreground">Off by default. Always encrypted when enabled.</p>
                 </div>
-                <Switch
-                  checked={encryptEnabled}
-                  onCheckedChange={(checked) => {
-                    if (!checked && saveEnabled) {
-                      const ok = window.confirm(
-                        "Disabling encryption will store confession notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?"
-                      );
-                      if (!ok) return;
-                    }
-                    setEncryptEnabled(checked);
-                  }}
-                  disabled={!saveEnabled}
-                />
+                <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
               </div>
-              {saveEnabled && encryptEnabled ? (
+              {saveEnabled ? (
+
                 <div className="grid gap-2">
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">Passphrase (session-only)</p>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">

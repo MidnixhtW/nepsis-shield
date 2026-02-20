@@ -62,7 +62,8 @@ export function DailyReflection() {
 
   const [note, setNote] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(false);
-  const [encryptEnabled, setEncryptEnabled] = useState(true);
+  // Encryption is now mandatory for sensitive journal notes
+  const encryptEnabled = true;
 
   // passphrase is never persisted; it's session-only.
   const [passphrase, setPassphrase] = useState("");
@@ -73,20 +74,13 @@ export function DailyReflection() {
 
     const saved = getStoredItem<boolean>(saveEnabledKey());
     setSaveEnabled(saved ?? false);
-
-    const encEnabled = getStoredItem<boolean>(encryptEnabledKey());
-    setEncryptEnabled(encEnabled ?? true);
   }, []);
 
   useEffect(() => {
     setStoredItem(saveEnabledKey(), saveEnabled);
+    // When saving is enabled, lock until passphrase is provided
+    if (saveEnabled) setLocked(true);
   }, [saveEnabled]);
-
-  useEffect(() => {
-    setStoredItem(encryptEnabledKey(), encryptEnabled);
-    // If turning encryption on, lock until the user provides a passphrase.
-    if (encryptEnabled) setLocked(true);
-  }, [encryptEnabled]);
 
   useEffect(() => {
     // Load saved note when enabled.
@@ -130,16 +124,11 @@ export function DailyReflection() {
   }
 
   useEffect(() => {
-    // Persist note (if enabled). When encrypted, persist only ciphertext.
+    // Persist note (if enabled). Always encrypted for security.
     if (!saveEnabled) return;
 
     (async () => {
       try {
-        if (!encryptEnabled) {
-          setStoredItem(keyForDay(dayKey), note, { ttlMs: NOTE_TTL_MS });
-          return;
-        }
-
         if (locked) return; // don't overwrite ciphertext while locked
         if (!passphrase) return; // need passphrase to encrypt
 
@@ -153,7 +142,7 @@ export function DailyReflection() {
         showError("Couldn't save securely.");
       }
     })();
-  }, [note, dayKey, saveEnabled, encryptEnabled, passphrase, locked]);
+  }, [note, dayKey, saveEnabled, passphrase, locked]);
 
   const prompt = useMemo(() => {
     if (!q.data) return "";
@@ -205,36 +194,16 @@ export function DailyReflection() {
                 <AccordionContent className="pt-3">
                   <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
                     <p className="text-xs leading-relaxed text-amber-900/80">
-                      Journal notes can be sensitive. If you enable saving, notes are stored on this device. Encryption helps protect notes at rest, but your passphrase is required to read them.
+                      Journal notes are highly sensitive. If you enable saving, notes are always encrypted and stored on this device. Your passphrase is required to read them and is never stored.
                     </p>
 
                     <div className="mt-3 grid gap-2">
                       <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
                         <div>
-                          <p className="text-sm font-medium">Save on this device</p>
-                          <p className="text-xs text-amber-900/70">Off by default</p>
+                          <p className="text-sm font-medium">Save on this device (encrypted)</p>
+                          <p className="text-xs text-amber-900/70">Off by default. Always encrypted when enabled.</p>
                         </div>
                         <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
-                      </div>
-
-                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
-                        <div>
-                          <p className="text-sm font-medium">Encrypt saved notes</p>
-                          <p className="text-xs text-amber-900/70">Recommended</p>
-                        </div>
-                        <Switch
-                          checked={encryptEnabled}
-                          onCheckedChange={(checked) => {
-                            if (!checked && saveEnabled) {
-                              const ok = window.confirm(
-                                "Disabling encryption will store journal notes in plaintext on this device. This makes them readable by any script with access to this page (e.g., a malicious extension). Are you sure you want to turn off encryption?",
-                              );
-                              if (!ok) return;
-                            }
-                            setEncryptEnabled(checked);
-                          }}
-                          disabled={!saveEnabled}
-                        />
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2">
@@ -253,7 +222,7 @@ export function DailyReflection() {
                       </div>
                     </div>
 
-                    {saveEnabled && encryptEnabled ? (
+                    {saveEnabled ? (
                       <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
                         <p className="text-xs font-semibold tracking-wide text-amber-900/80">
                           Passphrase (session-only)
@@ -298,16 +267,14 @@ export function DailyReflection() {
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Two or three honest sentences is enough."
                 className="mt-2 min-h-32 rounded-2xl"
-                disabled={saveEnabled && encryptEnabled && locked}
+                disabled={saveEnabled && locked}
               />
               <p className="mt-2 text-xs text-muted-foreground">
                 {!saveEnabled
                   ? "Not saved locally. This text will be lost if you refresh."
-                  : encryptEnabled
-                    ? locked
-                      ? "Locked. Enter your passphrase to view or edit saved notes."
-                      : "Saved (encrypted) on this device."
-                    : "Saved (not encrypted) on this device."}
+                  : locked
+                    ? "Locked. Enter your passphrase to view or edit saved notes."
+                    : "Saved (encrypted) on this device."}
               </p>
             </div>
 
@@ -323,7 +290,7 @@ export function DailyReflection() {
                   className="rounded-2xl"
                   onClick={() => {
                     setNote((n) => (n ? n : `${prompt}\n\n` + "• "));
-                    if (encryptEnabled && saveEnabled) setLocked(false);
+                    if (saveEnabled) setLocked(false);
                   }}
                 >
                   <PenLine className="mr-2 h-4 w-4" /> Start writing
