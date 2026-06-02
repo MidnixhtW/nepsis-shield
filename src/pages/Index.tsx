@@ -15,6 +15,7 @@ import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { TodaySaintTile } from "@/components/app/TodaySaintTile";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { HighlightCard } from "@/components/app/HighlightCard";
+import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
 import { Button } from "@/components/ui/button";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
@@ -44,7 +45,7 @@ function isReadTab(x: string | null): x is ReadTab {
 }
 
 function isLearnTab(x: string | null): x is LearnTab {
-  return x === "guide" || x === "qa" || x === "library" || x === "hymns" || x === "parish";
+  return x === "welcome" || x === "guide" || x === "qa" || x === "library" || x === "hymns" || x === "parish";
 }
 
 const Index = () => {
@@ -125,7 +126,7 @@ const Index = () => {
     setSearchParams(next, { replace: true });
   }
 
-  const learnTab: LearnTab = isLearnTab(prayerTabRaw) ? prayerTabRaw : "guide";
+  const learnTab: LearnTab = isLearnTab(prayerTabRaw) ? prayerTabRaw : "welcome";
 
   function setLearnTab(t: LearnTab) {
     const next = new URLSearchParams(searchParams);
@@ -151,6 +152,22 @@ const Index = () => {
           <div className="grid gap-4">
             <OrthodoxHero
               onAction={(to) => {
+                const next = new URLSearchParams(searchParams);
+
+                if ((to.section === "pray" || to.section === "learn") && to.tab) next.set("tab", to.tab);
+                else next.delete("tab");
+
+                if (to.section === "read" && to.read) next.set("read", to.read);
+                else next.delete("read");
+
+                navigate(`/${to.section}?${next.toString()}`);
+                setSection(to.section);
+              }}
+            />
+
+            <InclusiveChristianPath
+              compact
+              onNavigate={(to) => {
                 const next = new URLSearchParams(searchParams);
 
                 if ((to.section === "pray" || to.section === "learn") && to.tab) next.set("tab", to.tab);

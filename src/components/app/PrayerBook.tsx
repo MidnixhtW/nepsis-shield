@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Hand, MoonStar, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
+import { BookOpen, Hand, MoonStar, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
 
 import {
   Accordion,
@@ -453,6 +453,31 @@ const stMaryOfEgypt = [
 
 const jesus = ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."];
 
+const sharedPrayerBasics = [
+  "THE LORD'S PRAYER:",
+  "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
+  "JESUS PRAYER:",
+  jesus[0],
+  "SCRIPTURE PRAYER:",
+  "Lord Jesus Christ, open my heart to Your Gospel. Teach me to hear Your word, keep Your commandments, and love You above all things. Amen.",
+];
+
+const repentancePrayer = [
+  "Lord Jesus Christ, Son of the living God, I have sinned in thought, word, deed, and neglect. Do not let shame drive me from You. Give me true repentance, courage to confess what must be confessed, and a humble heart that seeks mercy rather than excuses. Amen.",
+];
+
+const griefPrayer = [
+  "O Christ our God, Who wept at the tomb of Lazarus, be near to me in sorrow. Receive my tears, strengthen my hope in Your Resurrection, and grant rest, comfort, and peace to all who suffer and all who have departed this life in faith and hope. Amen.",
+];
+
+const thanksgivingPrayer = [
+  "Glory to You, O God, for every mercy seen and unseen: for breath, daily bread, forgiveness, friends, family, the Church, and the hope of the Resurrection. Teach me to receive every gift with gratitude and to share it with love. Amen.",
+];
+
+const mercyPrayer = [
+  "Lord, make me attentive today. Show me the person I am tempted to ignore, the apology I am tempted to delay, and the act of mercy I am tempted to postpone. Help me love not in words only, but in deed and truth. Amen.",
+];
+
 // From: https://www.oca.org/orthodoxy/prayers/before-and-after-meals
 const beforeMeals = [
   "In the name of the Father, and of the Son, and of the Holy Spirit. Amen.",
@@ -647,7 +672,32 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
         <Separator className="my-4" />
 
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="morning" className="border-none">
+          <AccordionItem value="shared" className="border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" /> Shared Christian basics
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <div className="rounded-2xl border border-border/60 bg-background/40 p-4">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    How to use this section
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    These prayers are intentionally simple and Christ-centered so any Christian can begin. The surrounding prayer book remains rooted in Orthodox language and practice.
+                  </p>
+                </div>
+                <PrayerBlock title="Common starting prayers" lines={sharedPrayerBasics} />
+                <PrayerBlock title="Repentance" lines={repentancePrayer} />
+                <PrayerBlock title="Grief and hope" lines={griefPrayer} />
+                <PrayerBlock title="Thanksgiving" lines={thanksgivingPrayer} />
+                <PrayerBlock title="Mercy today" lines={mercyPrayer} />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="morning" className="mt-3 border-none">
             <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
               <span className="inline-flex items-center gap-2">
                 <Sun className="h-4 w-4 text-primary" /> Morning

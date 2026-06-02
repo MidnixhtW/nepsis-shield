@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
+import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
 import { SectionBar } from "@/components/app/SectionBar";
 import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
 
-export type LearnTab = "guide" | "qa" | "library" | "hymns" | "parish";
+export type LearnTab = "welcome" | "guide" | "qa" | "library" | "hymns" | "parish";
 
 export function LearnHub({
   tab,
@@ -20,14 +21,20 @@ export function LearnHub({
 }) {
   return (
     <div className="grid gap-4">
-      <SectionBar title="Learn" hint="Guide, Q&A, hymns, parish" />
+      <SectionBar title="Learn" hint="Welcome, guide, Q&A, hymns, parish" />
 
       <Tabs
-        value={tab ?? "guide"}
+        value={tab ?? "welcome"}
         onValueChange={(v) => onTabChange?.(v as LearnTab)}
         className="w-full"
       >
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-5">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
+          <TabsTrigger
+            value="welcome"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            Welcome
+          </TabsTrigger>
           <TabsTrigger
             value="guide"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
@@ -59,6 +66,10 @@ export function LearnHub({
             Parish
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="welcome" className="mt-4">
+          <InclusiveChristianPath />
+        </TabsContent>
 
         <TabsContent value="guide" className="mt-4">
           <OrthodoxDailyGuide />
