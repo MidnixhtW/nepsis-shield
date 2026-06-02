@@ -1,14 +1,11 @@
 import * as React from "react";
 
 /**
- * Simple Orthodox cross (three-bar cross) icon.
- * - Top bar: INRI board
- * - Middle bar: main crossbeam
- * - Bottom bar: slanted footrest
+ * Orthodox cross icon: three bars with the lower footrest slanting upward to the right.
  */
 export function OrthodoxCrossIcon({
   className,
-  strokeWidth = 2.2,
+  strokeWidth = 1.9,
 }: {
   className?: string;
   strokeWidth?: number;
@@ -21,36 +18,29 @@ export function OrthodoxCrossIcon({
       className={className}
       aria-hidden="true"
     >
-      {/* vertical */}
       <path
         d="M12 2.5V21.5"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeLinecap="square"
       />
-
-      {/* top bar */}
       <path
-        d="M8.4 6.4H15.6"
+        d="M8.25 6.25H15.75"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeLinecap="square"
       />
-
-      {/* main bar */}
       <path
-        d="M5.7 10.4H18.3"
+        d="M5.25 10.75H18.75"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeLinecap="square"
       />
-
-      {/* footrest (slanted) */}
       <path
-        d="M7.4 16.6L16.8 14.8"
+        d="M7.25 17.75L16.75 15.25"
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        strokeLinecap="round"
+        strokeLinecap="square"
       />
     </svg>
   );
