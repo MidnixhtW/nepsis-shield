@@ -163,7 +163,7 @@
   }
 
   .icon-medallion {
-    @apply grid shrink-0 place-items-center rounded-2xl border border-primary/25 bg-primary/12 text-primary shadow-[0_14px_40px_hsl(var(--primary)/0.16)];
+    @apply grid shrink-0 place-items-center rounded-2xl border border-primary/25 bg-primary/10 text-primary shadow-[0_14px_40px_hsl(var(--primary)/0.16)];
   }
 
   .gold-hairline {

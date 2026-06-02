@@ -23,8 +23,8 @@ export function OrthodoxHero({
   return (
     <Card className="ornate-card card-interactive">
       <div className="relative overflow-hidden sacred-surface field-grid">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/18 via-background/30 to-accent/14" />
-        <div className="absolute -left-20 -top-24 h-72 w-72 rounded-full bg-primary/12 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/30 to-accent/15" />
+        <div className="absolute -left-20 -top-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full border border-accent/25" />
         <div className="absolute -bottom-36 -right-32 h-96 w-96 rounded-full border border-primary/15" />
         <OrthodoxCrossIcon className="absolute -right-7 bottom-3 h-44 w-44 text-primary/10" />
@@ -32,7 +32,7 @@ export function OrthodoxHero({
         <div className="relative grid gap-6 p-5 sm:p-7 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/12 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary shadow-sm">
+              <Badge className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-primary shadow-sm">
                 <OrthodoxCrossIcon className="h-3.5 w-3.5" /> Orthodox-rooted
               </Badge>
               <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">

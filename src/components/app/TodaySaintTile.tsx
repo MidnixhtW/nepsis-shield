@@ -29,7 +29,7 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
   return (
     <Card className="card-interactive overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/12 via-background to-background" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-background" />
         <div className="relative p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">

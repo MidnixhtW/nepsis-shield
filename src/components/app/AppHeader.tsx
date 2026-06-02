@@ -220,7 +220,7 @@ export function AppHeader() {
 
       <Card className="ornate-card group hidden sm:block">
         <div className="relative min-h-[11rem] overflow-hidden sacred-surface field-grid">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/16 via-transparent to-accent/12" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-accent/10" />
           <div className="absolute -right-14 -top-20 h-60 w-60 rounded-full border border-primary/25" />
           <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full border border-accent/20" />
           <OrthodoxCrossIcon className="absolute -right-4 bottom-0 h-36 w-36 text-primary/10 transition-transform duration-500 group-hover:scale-105" />

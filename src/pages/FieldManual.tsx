@@ -198,7 +198,7 @@ export default function FieldManual() {
       <div className="mt-5 grid gap-4">
         <Card className="ornate-card">
           <div className="relative overflow-hidden sacred-surface field-grid">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/18 via-background/30 to-accent/14" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/30 to-accent/15" />
             <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-primary/20" />
             <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full border border-accent/20" />
             <OrthodoxCrossIcon className="absolute -right-8 bottom-2 h-44 w-44 text-primary/10" />

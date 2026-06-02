@@ -68,7 +68,7 @@ export default function Download() {
       <div className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
           <div className="relative field-grid">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/18 via-background/65 to-accent/12" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/65 to-accent/10" />
             <div className="relative p-5 sm:p-6">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">

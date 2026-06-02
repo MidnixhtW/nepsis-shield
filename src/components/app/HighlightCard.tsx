@@ -34,11 +34,11 @@ export function HighlightCard({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-primary/12 blur-3xl"
+        className="pointer-events-none absolute -left-16 -top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 -bottom-16 h-56 w-56 rounded-full bg-accent/12 blur-3xl"
+        className="pointer-events-none absolute -right-16 -bottom-16 h-56 w-56 rounded-full bg-accent/10 blur-3xl"
       />
       <div aria-hidden className="pointer-events-none absolute left-5 right-5 top-0 h-px gold-hairline opacity-70" />
 
@@ -46,7 +46,7 @@ export function HighlightCard({
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             {eyebrow ? (
-              <Badge className="rounded-full border border-primary/20 bg-primary/12 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
+              <Badge className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
                 {eyebrow}
               </Badge>
             ) : null}
