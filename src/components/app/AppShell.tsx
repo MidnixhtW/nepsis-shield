@@ -36,6 +36,13 @@ export function AppShell({
 
   return (
     <div className="relative min-h-dvh bg-background">
+      <a
+        href="#main-content"
+        className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
+      >
+        Skip to content
+      </a>
+
       {/* Ambient background */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
@@ -56,7 +63,11 @@ export function AppShell({
 
       </div>
 
-      <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.9rem+env(safe-area-inset-bottom))] sm:px-4">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.9rem+env(safe-area-inset-bottom))] sm:px-4"
+      >
         {children}
       </main>
 

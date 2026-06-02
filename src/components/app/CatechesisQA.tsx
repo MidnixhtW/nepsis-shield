@@ -1,14 +1,16 @@
 import { useMemo, useState } from "react";
-import { ExternalLink, Filter, HelpCircle, Search } from "lucide-react";
+import { ExternalLink, Filter, HelpCircle, Search, SearchX } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { EmptyState } from "@/components/app/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   Select,
@@ -685,6 +687,17 @@ export function CatechesisQA() {
     return map;
   }, [filtered, categories]);
 
+  function selectCategory(value: string) {
+    if (value === "All") {
+      setCategory("All");
+      return;
+    }
+
+    if (categories.includes(value as Exclude<Category, "All">)) {
+      setCategory(value as Exclude<Category, "All">);
+    }
+  }
+
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -702,12 +715,13 @@ export function CatechesisQA() {
 
         <div className="grid gap-3 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div className="grid gap-2">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+            <Label htmlFor="qa-search" className="text-xs font-semibold tracking-wide text-muted-foreground">
               Search
-            </p>
+            </Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
+                id="qa-search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Try: confession, icons, fasting, Bible…"
@@ -717,12 +731,12 @@ export function CatechesisQA() {
           </div>
 
           <div className="grid gap-2">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+            <Label htmlFor="qa-category" className="text-xs font-semibold tracking-wide text-muted-foreground">
               Category
-            </p>
-            <div className="flex items-center gap-2">
-              <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
-                <SelectTrigger className="h-11 rounded-2xl">
+            </Label>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Select value={category} onValueChange={selectCategory}>
+                <SelectTrigger id="qa-category" className="h-11 rounded-2xl">
                   <Filter className="mr-2 h-4 w-4 text-muted-foreground" />
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
@@ -754,7 +768,7 @@ export function CatechesisQA() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground" aria-live="polite">
             Showing <span className="font-semibold text-foreground">{filtered.length}</span>.
           </p>
           <Button asChild variant="outline" className="btn-wrap rounded-2xl border-border/60">
@@ -765,7 +779,26 @@ export function CatechesisQA() {
         </div>
       </Card>
 
-      {category === "All" ? (
+      {!filtered.length ? (
+        <EmptyState
+          icon={<SearchX className="h-5 w-5" />}
+          title="No matching questions"
+          description="Try a broader search term, choose All categories, or open the full OCA Q&A index."
+          action={
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-2xl border-border/60"
+              onClick={() => {
+                setQuery("");
+                setCategory("All");
+              }}
+            >
+              Clear filters
+            </Button>
+          }
+        />
+      ) : category === "All" ? (
         <div className="grid gap-4">
           {categories.map((c) => {
             const items = grouped.get(c) ?? [];
