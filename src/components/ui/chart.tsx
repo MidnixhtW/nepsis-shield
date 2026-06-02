@@ -366,11 +366,13 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config];
 }
 
+const ChartStyle = () => null;
+
 export {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-  ChartStyle: () => null, // Deprecated, kept for compatibility
+  ChartStyle,
 };
