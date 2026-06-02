@@ -39,9 +39,10 @@ export function AppShell({
       {/* Ambient background */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
-        <div className="absolute -left-32 -top-28 h-[22rem] w-[22rem] rounded-full bg-primary/15 blur-3xl" />
-        <div className="absolute -right-28 top-24 h-[18rem] w-[18rem] rounded-full bg-accent/12 blur-3xl" />
-        <div className="absolute left-1/2 top-[34rem] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute inset-0 field-grid opacity-25" />
+        <div className="absolute -left-32 -top-28 h-[22rem] w-[22rem] rounded-full bg-primary/12 blur-3xl" />
+        <div className="absolute -right-28 top-24 h-[18rem] w-[18rem] rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute left-1/2 top-[34rem] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
       </div>
 
       {/* Top chrome */}
@@ -52,6 +53,7 @@ export function AppShell({
           </div>
         </div>
         <div className="h-px bg-border/60" />
+
       </div>
 
       <main className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.9rem+env(safe-area-inset-bottom))] sm:px-4">

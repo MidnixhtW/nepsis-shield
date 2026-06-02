@@ -36,29 +36,29 @@ export function QuickStartDialog() {
     () => [
       {
         key: "read",
-        title: "Read today's Gospel",
-        description: "Start with the lectionary (Epistle and Gospel).",
+        title: "Open today's field brief",
+        description: "Start with the lectionary wherever you are posted.",
         icon: <BookOpen className="h-4 w-4 text-primary" />,
         go: () => navigate("/read?read=daily"),
       },
       {
         key: "pray",
-        title: "Keep a small prayer rule",
-        description: "A simple checklist you can actually keep.",
+        title: "Keep a compact prayer rule",
+        description: "A short checklist that fits shifting watches and call times.",
         icon: <Hand className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=rule"),
       },
       {
         key: "practice",
-        title: "Pray the Jesus Prayer",
-        description: "A quiet counter and stillness timer.",
+        title: "Pray under low signal",
+        description: "A quiet Jesus Prayer counter and stillness timer.",
         icon: <Sparkles className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=counter"),
       },
       {
         key: "journal",
-        title: "Write a 1-minute reflection",
-        description: "One prompt. A few honest lines.",
+        title: "Write a 1-minute debrief",
+        description: "One prompt for attention, repentance, and gratitude.",
         icon: <PenLine className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=journal"),
       },
@@ -77,10 +77,9 @@ export function QuickStartDialog() {
       <DialogContent className="rounded-3xl p-0 sm:max-w-[36rem]">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background p-5 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-xl">Welcome</DialogTitle>
+            <DialogTitle className="text-xl">Welcome to Forward Faith</DialogTitle>
             <DialogDescription>
-              Pick one thing for today, for all Orthodox Christians.
-
+              Pick one small, steady practice for today while deployed.
             </DialogDescription>
           </DialogHeader>
 

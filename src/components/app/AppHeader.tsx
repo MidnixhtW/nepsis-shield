@@ -1,11 +1,13 @@
 import { format } from "date-fns";
 import {
+  Crosshair,
   ExternalLink,
-  Menu,
-  Shield,
   Info,
-  Sparkles,
+  Menu,
+  Radio,
   Settings as SettingsIcon,
+  Shield,
+  Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -18,7 +20,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 export function AppHeader() {
@@ -28,18 +29,18 @@ export function AppHeader() {
     <div className="grid gap-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/25 glow">
-            <OrthodoxCrossIcon className="h-5 w-5" />
+          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
+            <Shield className="h-5 w-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-              {format(today, "MMM d, yyyy")}
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              {format(today, "MMM d, yyyy")} • Deployed mode
             </p>
             <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg">
-              Ortho Companion
+              Forward Faith
             </h1>
             <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-              Independent project.{" "}
+              Orthodox support for military personnel downrange.{" "}
               <Link to="/about" className="underline underline-offset-4">
                 About
               </Link>
@@ -47,7 +48,6 @@ export function AppHeader() {
           </div>
         </div>
 
-        {/* Mobile: compact menu */}
         <div className="flex items-center gap-2 sm:hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -62,9 +62,9 @@ export function AppHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
               <SheetHeader className="text-left">
-                <SheetTitle>Ortho Companion</SheetTitle>
+                <SheetTitle>Forward Faith</SheetTitle>
                 <SheetDescription>
-                  Simple daily resources with direct sources.
+                  Daily Orthodox resources adapted for deployment rhythm.
                 </SheetDescription>
               </SheetHeader>
 
@@ -125,7 +125,6 @@ export function AppHeader() {
           </Sheet>
         </div>
 
-        {/* Desktop: inline actions */}
         <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle />
 
@@ -184,24 +183,37 @@ export function AppHeader() {
         </div>
       </div>
 
-      <Card className="group overflow-hidden rounded-3xl border-border/60 bg-card/70 shadow-sm backdrop-blur">
-        <div className="relative aspect-[16/8] sm:aspect-[16/5]">
-          <img
-            alt="Icon of Christ"
-            src="https://commons.wikimedia.org/wiki/Special:FilePath/Christ_Pantocrator_mosaic_from_Hagia_Sophia_2744_x_2900_pixels_3.1_MB.jpg"
-            className="h-full w-full object-cover object-[50%_22%] transition-transform duration-500 group-hover:scale-[1.02]"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-background/20" />
-          <div className="absolute inset-0 bg-primary/10 mix-blend-soft-light" />
-          <div className="absolute inset-0 p-4 sm:p-6">
+      <Card className="group overflow-hidden rounded-3xl border-border/60 bg-card/80 shadow-sm backdrop-blur">
+        <div className="relative min-h-[10.5rem] overflow-hidden field-grid">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/55 to-accent/15" />
+          <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border border-primary/25" />
+          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full border border-primary/15" />
+          <div className="absolute bottom-4 right-5 hidden items-center gap-2 rounded-full border border-border/60 bg-background/55 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground backdrop-blur sm:flex">
+            <Radio className="h-3.5 w-3.5 text-primary" /> Signal steady
+          </div>
+
+          <div className="relative p-4 sm:p-6">
             <div className="max-w-xl">
-              <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                Prayer • Fasting • Scripture
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                Prayer • Scripture • Resilience
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-foreground/90">
-                Calm daily essentials, with direct sources.
+              <p className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Keep your rule when the mission tempo changes.
               </p>
+              <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
+                A quiet, low-distraction Orthodox companion for deployed service members: daily readings, fast guidance, prayer, and private reflection.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
+                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                  Dark tactical UI
+                </span>
+                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                  Field-ready routine
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                  <Crosshair className="h-3.5 w-3.5 text-accent" /> Focused essentials
+                </span>
+              </div>
             </div>
           </div>
         </div>
