@@ -1,0 +1,23 @@
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { APK_DOWNLOAD_URL } from "@/lib/apkDownload";
+
+export function ApkDownloadButton({
+  size = "default",
+  variant = "default",
+  className = "",
+  label = "Download APK",
+}: {
+  size?: "default" | "sm";
+  variant?: "default" | "outline";
+  className?: string;
+  label?: string;
+}) {
+  return (
+    <Button asChild size={size} variant={variant} className={className}>
+      <a href={APK_DOWNLOAD_URL}>
+        <Download className="mr-2 h-4 w-4" /> {label}
+      </a>
+    </Button>
+  );
+}

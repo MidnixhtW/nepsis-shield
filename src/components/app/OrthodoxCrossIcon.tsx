@@ -1,11 +1,11 @@
 import * as React from "react";
 
 /**
- * Orthodox cross icon: three bars with the lower footrest slanting upward to the right.
+ * Military Orthodox cross: an Orthodox cross set into a field-shield silhouette.
  */
 export function OrthodoxCrossIcon({
   className,
-  strokeWidth = 1.9,
+  strokeWidth = 1.65,
 }: {
   className?: string;
   strokeWidth?: number;
@@ -19,28 +19,46 @@ export function OrthodoxCrossIcon({
       aria-hidden="true"
     >
       <path
-        d="M12 2.5V21.5"
+        d="M12 2.25L19.25 5.15V10.55C19.25 15.35 16.45 19.75 12 21.75C7.55 19.75 4.75 15.35 4.75 10.55V5.15L12 2.25Z"
+        fill="currentColor"
+        opacity="0.13"
+      />
+      <path
+        d="M12 2.25L19.25 5.15V10.55C19.25 15.35 16.45 19.75 12 21.75C7.55 19.75 4.75 15.35 4.75 10.55V5.15L12 2.25Z"
         stroke="currentColor"
         strokeWidth={strokeWidth}
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 5.05V18.7"
+        stroke="currentColor"
+        strokeWidth={strokeWidth + 0.25}
         strokeLinecap="square"
       />
       <path
-        d="M8.25 6.25H15.75"
+        d="M9.35 7.55H14.65"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
+        strokeWidth={strokeWidth + 0.15}
         strokeLinecap="square"
       />
       <path
-        d="M5.25 10.75H18.75"
+        d="M7.15 10.8H16.85"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
+        strokeWidth={strokeWidth + 0.15}
         strokeLinecap="square"
       />
       <path
-        d="M7.25 17.75L16.75 15.25"
+        d="M8.7 16.15L15.55 14.35"
         stroke="currentColor"
-        strokeWidth={strokeWidth}
+        strokeWidth={strokeWidth + 0.15}
         strokeLinecap="square"
+      />
+      <path
+        d="M7.3 6.1L5.9 6.75M16.7 6.1L18.1 6.75M7.6 18.05L6.55 19.05M16.4 18.05L17.45 19.05"
+        stroke="currentColor"
+        strokeWidth="0.95"
+        strokeLinecap="square"
+        opacity="0.55"
       />
     </svg>
   );

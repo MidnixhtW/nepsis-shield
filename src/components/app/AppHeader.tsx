@@ -19,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
@@ -72,6 +73,11 @@ export function AppHeader() {
 
               <div className="mt-5 grid gap-2">
                 <ThemeToggle variant="row" />
+
+                <ApkDownloadButton
+                  variant="default"
+                  className="h-11 justify-start rounded-2xl"
+                />
 
                 <Button
                   asChild
@@ -129,6 +135,11 @@ export function AppHeader() {
 
         <div className="hidden items-center gap-2 sm:flex">
           <ThemeToggle />
+
+          <ApkDownloadButton
+            size="sm"
+            className="rounded-2xl bg-primary text-primary-foreground"
+          />
 
           <Button
             asChild

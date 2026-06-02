@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { ExternalLink, Shield, Info, BookText, BadgeCheck, Mail } from "lucide-react";
+import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { APK_ARTIFACTS_URL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
 
 export default function About() {
   return (
@@ -27,6 +29,7 @@ export default function About() {
               <Shield className="mr-2 h-4 w-4" /> Privacy
             </Link>
           </Button>
+          <ApkDownloadButton className="rounded-2xl" />
           <Button asChild className="rounded-2xl">
             <a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback">
               <Mail className="mr-2 h-4 w-4" /> Feedback
@@ -36,6 +39,52 @@ export default function About() {
       </div>
 
       <div className="mt-5 grid gap-4">
+        <Card id="apk-download" className="rounded-3xl border-border/60 bg-card p-5 shadow-sm scroll-mt-24">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold tracking-tight">Android APK download</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Install the Android testing build directly when an APK has been published.
+              </p>
+            </div>
+            <BadgeCheck className="h-5 w-5 text-muted-foreground" />
+          </div>
+
+          <Separator className="my-4" />
+
+          <div className="grid gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+                Android
+              </Badge>
+              <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                Debug APK
+              </Badge>
+            </div>
+
+            <p className="text-sm leading-relaxed text-foreground/90">
+              {APK_DOWNLOAD_IS_DIRECT
+                ? "Tap the button below to download the latest configured APK."
+                : "The APK button is ready. Once the automated Android build publishes an APK URL, it can be connected as the direct download target."}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              <ApkDownloadButton className="rounded-2xl" />
+              {APK_ARTIFACTS_URL ? (
+                <Button asChild variant="outline" className="rounded-2xl border-border/60">
+                  <a href={APK_ARTIFACTS_URL} target="_blank" rel="noopener noreferrer">
+                    Open build artifacts <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Android may ask you to allow installation from your browser or file manager. Only install APKs from builds you trust.
+            </p>
+          </div>
+        </Card>
+
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
