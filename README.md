@@ -2,6 +2,10 @@
 
 A React/Vite app configured for Android packaging with Capacitor.
 
+## Field Manual
+
+The app includes a dedicated `/field-manual` page with military Orthodox cross branding, short field prayers, practical battle-rhythm prompts, and pastoral/safety notes for duty, stress, travel, grief, courage, the wounded/sick, the departed, and thanksgiving after danger.
+
 ## Android APK download
 
 This project now includes an automated GitHub Actions workflow that builds a downloadable Android debug APK.

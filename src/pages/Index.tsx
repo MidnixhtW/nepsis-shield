@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Wand2, Settings2 } from "lucide-react";
+import { Crosshair, Wand2, Settings2 } from "lucide-react";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
@@ -179,6 +179,22 @@ const Index = () => {
                 navigate(`/${to.section}?${next.toString()}`);
                 setSection(to.section);
               }}
+            />
+
+            <HighlightCard
+              eyebrow="Field manual"
+              title="Prayers for duty, stress, travel, grief, and courage"
+              description="Open a military Orthodox field rhythm with short prayers, practical steps, and pastoral safety notes for demanding environments."
+              icon={<Crosshair className="h-5 w-5 text-primary" />}
+              actions={
+                <Button
+                  type="button"
+                  className="tap rounded-2xl"
+                  onClick={() => navigate("/field-manual")}
+                >
+                  Open Field Manual
+                </Button>
+              }
             />
 
             <HighlightCard

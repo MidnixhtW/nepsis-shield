@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import {
+  Crosshair,
   ExternalLink,
   Info,
   Menu,
@@ -104,6 +105,16 @@ export function AppHeader() {
                   variant="outline"
                   className="h-11 justify-start rounded-2xl border-border/60"
                 >
+                  <Link to="/field-manual">
+                    <Crosshair className="mr-2 h-4 w-4" /> Field Manual
+                  </Link>
+                </Button>
+
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-11 justify-start rounded-2xl border-border/60"
+                >
                   <Link to="/about">
                     <Info className="mr-2 h-4 w-4" /> About & attribution
                   </Link>
@@ -160,6 +171,17 @@ export function AppHeader() {
           >
             <Link to="/saints">
               <Sparkles className="mr-2 h-4 w-4" /> Saints
+            </Link>
+          </Button>
+
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="rounded-2xl border-border/60 bg-background/60 backdrop-blur"
+          >
+            <Link to="/field-manual">
+              <Crosshair className="mr-2 h-4 w-4" /> Field
             </Link>
           </Button>
 

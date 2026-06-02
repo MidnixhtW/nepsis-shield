@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ExternalLink, Info, Shield } from "lucide-react";
+import { Crosshair, ExternalLink, Info, Shield } from "lucide-react";
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -23,6 +23,11 @@ export function AppFooter() {
 
         <div className="flex flex-wrap gap-2">
           <ApkDownloadButton size="sm" className="rounded-2xl" />
+          <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+            <Link to="/field-manual">
+              <Crosshair className="mr-2 h-4 w-4" /> Field Manual
+            </Link>
+          </Button>
           <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
             <Link to="/about">
               <Info className="mr-2 h-4 w-4" /> About
