@@ -35,7 +35,7 @@ export function AppShell({
   );
 
   return (
-    <div className="relative min-h-dvh bg-background">
+    <div className="relative min-h-dvh bg-background/55">
       <a
         href="#main-content"
         className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
@@ -44,37 +44,37 @@ export function AppShell({
       </a>
 
       {/* Ambient background */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
-        <div className="absolute inset-0 field-grid opacity-25" />
-        <div className="absolute -left-32 -top-28 h-[22rem] w-[22rem] rounded-full bg-primary/12 blur-3xl" />
-        <div className="absolute -right-28 top-24 h-[18rem] w-[18rem] rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute left-1/2 top-[34rem] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/45 to-background" />
+        <div className="absolute inset-0 field-grid opacity-[0.18]" />
+        <div className="absolute -left-36 -top-32 h-[28rem] w-[28rem] rounded-full bg-primary/16 blur-3xl" />
+        <div className="absolute -right-32 top-16 h-[24rem] w-[24rem] rounded-full bg-accent/14 blur-3xl" />
+        <div className="absolute left-1/2 top-[38rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary/9 blur-3xl" />
+        <div className="absolute left-10 top-1/3 h-px w-72 rotate-45 gold-hairline opacity-50" />
+        <div className="absolute right-10 top-2/3 h-px w-80 -rotate-45 gold-hairline opacity-40" />
       </div>
 
       {/* Top chrome */}
       <div className="sticky top-0 z-30">
-        <div className="bg-background/65 backdrop-blur supports-[backdrop-filter]:bg-background/55">
-          <div className="mx-auto w-full max-w-5xl px-3 py-3 sm:px-4">
+        <div className="border-b border-border/50 bg-background/72 shadow-sm shadow-foreground/5 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/58">
+          <div className="mx-auto w-full max-w-6xl px-3 py-3 sm:px-5">
             {header}
           </div>
         </div>
-        <div className="h-px bg-border/60" />
-
       </div>
 
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-5xl px-3 pt-4 pb-[calc(6.9rem+env(safe-area-inset-bottom))] sm:px-4"
+        className="mx-auto w-full max-w-6xl px-3 pt-5 pb-[calc(7.2rem+env(safe-area-inset-bottom))] sm:px-5"
       >
         {children}
       </main>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-40">
-        <div className="border-t border-border/60 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/55">
-          <div className="mx-auto w-full max-w-5xl px-2 pt-3 pb-[calc(0.85rem+env(safe-area-inset-bottom))] sm:px-3">
+      <div className="fixed bottom-0 left-0 right-0 z-40 px-2 pb-2 sm:px-3">
+        <div className="mx-auto max-w-3xl rounded-[2rem] border border-border/60 bg-background/74 shadow-[0_-18px_60px_hsl(var(--foreground)/0.12)] backdrop-blur-2xl supports-[backdrop-filter]:bg-background/58">
+          <div className="px-2 pt-2.5 pb-[calc(0.65rem+env(safe-area-inset-bottom))] sm:px-3">
             <ToggleGroup
               type="single"
               value={section}
@@ -92,16 +92,16 @@ export function AppShell({
                     value={key}
                     aria-label={meta.aria}
                     className={cn(
-                      "relative h-14 rounded-2xl border border-border/60 px-1",
-                      "bg-card/40 hover:bg-card/60",
-                      "data-[state=on]:border-primary/30 data-[state=on]:bg-primary/12 data-[state=on]:text-primary",
-                      "transition-colors",
+                      "relative h-14 rounded-2xl border border-border/55 px-1",
+                      "bg-card/45 hover:border-primary/20 hover:bg-card/75",
+                      "data-[state=on]:border-primary/35 data-[state=on]:bg-primary/13 data-[state=on]:text-primary",
+                      "transition-all duration-200",
                     )}
                   >
                     {active ? (
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute -top-0.5 left-1/2 h-1 w-10 -translate-x-1/2 rounded-full bg-primary/80"
+                        className="pointer-events-none absolute -top-px left-1/2 h-1 w-11 -translate-x-1/2 rounded-full bg-gradient-to-r from-primary/50 via-accent to-primary/50 shadow-[0_0_18px_hsl(var(--accent)/0.45)]"
                       />
                     ) : null}
 
@@ -109,15 +109,15 @@ export function AppShell({
                     {active ? (
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute inset-0 rounded-2xl bg-primary/5 blur-md"
+                        className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/8 blur-md"
                       />
                     ) : null}
 
                     <div className="relative flex w-full flex-col items-center justify-center gap-1">
                       <Icon
                         className={cn(
-                          "h-[18px] w-[18px]",
-                          active ? "text-primary" : "text-muted-foreground",
+                          "h-[18px] w-[18px] transition-transform duration-200",
+                          active ? "scale-110 text-primary" : "text-muted-foreground",
                         )}
                       />
                       <span

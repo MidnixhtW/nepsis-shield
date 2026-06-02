@@ -31,19 +31,19 @@ export function AppHeader() {
     <div className="grid gap-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
-            <OrthodoxCrossIcon className="h-6 w-6" />
+          <div className="icon-medallion h-11 w-11">
+            <OrthodoxCrossIcon className="h-7 w-7" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
               {format(today, "MMM d, yyyy")} • Daily companion
             </p>
-            <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg">
+            <h1 className="truncate bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-base font-bold tracking-tight text-transparent sm:text-xl">
               Ortho Companion: Field Guide
             </h1>
             <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-              A field guide for prayer, Scripture, and Orthodox Christian rhythm.{" "}
-              <Link to="/about" className="underline underline-offset-4">
+              Prayer, Scripture, and Orthodox Christian rhythm.{" "}
+              <Link to="/about" className="font-semibold text-primary underline underline-offset-4">
                 About
               </Link>
             </p>
@@ -218,43 +218,44 @@ export function AppHeader() {
         </div>
       </div>
 
-      <Card className="group overflow-hidden rounded-3xl border-border/60 bg-card/80 shadow-sm backdrop-blur">
-        <div className="relative min-h-[10.5rem] overflow-hidden field-grid">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/55 to-accent/15" />
-          <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full border border-primary/25" />
-          <div className="absolute -right-24 -top-28 h-72 w-72 rounded-full border border-primary/15" />
-          <div className="absolute bottom-4 right-5 hidden items-center gap-2 rounded-full border border-border/60 bg-background/55 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground backdrop-blur sm:flex">
+      <Card className="ornate-card group hidden sm:block">
+        <div className="relative min-h-[11rem] overflow-hidden sacred-surface field-grid">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/16 via-transparent to-accent/12" />
+          <div className="absolute -right-14 -top-20 h-60 w-60 rounded-full border border-primary/25" />
+          <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full border border-accent/20" />
+          <OrthodoxCrossIcon className="absolute -right-4 bottom-0 h-36 w-36 text-primary/10 transition-transform duration-500 group-hover:scale-105" />
+          <div className="absolute bottom-4 right-5 hidden items-center gap-2 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground shadow-sm backdrop-blur sm:flex">
             <Radio className="h-3.5 w-3.5 text-primary" /> Signal steady
           </div>
 
-          <div className="relative p-4 sm:p-6">
-            <div className="max-w-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+          <div className="relative p-5 sm:p-6">
+            <div className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">
                 Prayer • Scripture • Field Manual • Orthodox tradition
               </p>
-              <p className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+              <div className="mt-3 h-px w-52 gold-hairline" />
+              <p className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 Keep the watch with Christ through a steady daily rhythm.
               </p>
-              <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                A quiet, low-distraction Christian field companion rooted in Orthodox faith: daily readings, fasting guidance, prayer, private reflection, and pastoral reminders to seek a priest, pastor, or chaplain when needed.
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                A quiet, low-distraction Christian field companion rooted in Orthodox faith: daily readings, fasting guidance, prayer, private reflection, and pastoral reminders.
               </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
-                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+              <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
+                <span className="rounded-full border border-border/60 bg-background/60 px-3 py-1.5 shadow-sm backdrop-blur">
                   Welcoming to all Christians
                 </span>
-                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                <span className="rounded-full border border-border/60 bg-background/60 px-3 py-1.5 shadow-sm backdrop-blur">
                   Orthodox-rooted rhythm
                 </span>
-                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                <span className="rounded-full border border-border/60 bg-background/60 px-3 py-1.5 shadow-sm backdrop-blur">
                   Priest • pastor • chaplain guidance
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 shadow-sm backdrop-blur">
                   <OrthodoxCrossIcon className="h-3.5 w-3.5 text-accent" /> Prayerful essentials
                 </span>
               </div>
             </div>
           </div>
-
         </div>
       </Card>
     </div>
