@@ -7,7 +7,6 @@ import {
   Leaf,
   BookOpen,
   Hand,
-  GraduationCap,
   Target,
   CalendarPlus,
   Sparkles,
@@ -108,23 +107,49 @@ function FastingBadge({
 
 function QuickAction({
   label,
+  description,
   icon,
   onClick,
 }: {
   label: string;
+  description: string;
   icon: React.ReactNode;
   onClick?: () => void;
 }) {
   return (
-    <Button
+    <button
       type="button"
-      variant="outline"
-      className="tap h-11 justify-start gap-2 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      className="tap group flex min-h-16 items-start gap-3 rounded-2xl border border-border/60 bg-background/50 p-3 text-left transition-colors hover:bg-background/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={onClick}
     >
-      {icon}
-      <span className="text-sm font-semibold">{label}</span>
-    </Button>
+      <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+        {icon}
+      </span>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold leading-tight">{label}</span>
+        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{description}</span>
+      </span>
+    </button>
+  );
+}
+
+function ActionGroup({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-3xl border border-border/60 bg-muted/10 p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        {eyebrow}
+      </p>
+      <h4 className="mt-1 text-base font-semibold tracking-tight">{title}</h4>
+      <div className="mt-3 grid gap-2">{children}</div>
+    </div>
   );
 }
 
@@ -405,51 +430,70 @@ export function TodayOverview({
       </Card>
 
       <Card className="card-interactive rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <h3 className="text-base font-semibold tracking-tight">Next</h3>
-        <p className="mt-1 text-sm text-muted-foreground">A few focused shortcuts.</p>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Mission control
+            </p>
+            <h3 className="mt-1 text-xl font-semibold tracking-tight">Choose your next step</h3>
+          </div>
+          <p className="max-w-md text-sm text-muted-foreground">
+            Shortcuts are grouped by rhythm so the home screen feels less crowded.
+          </p>
+        </div>
         <Separator className="my-4" />
 
-        <div className="grid gap-2 sm:grid-cols-2">
-          <QuickAction
-            label="Prayer texts"
-            icon={<Hand className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}
-          />
-          <QuickAction
-            label="Daily readings"
-            icon={<BookOpen className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "read", read: "daily" })}
-          />
-          <QuickAction
-            label="Hymns & propers"
-            icon={<Music className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "learn", tab: "hymns" })}
-          />
-          <QuickAction
-            label="Parish finder"
-            icon={<MapPin className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "learn", tab: "parish" })}
-          />
-          <QuickAction
-            label="Reading plans"
-            icon={<Sparkles className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "read", read: "plans" })}
-          />
-          <QuickAction
-            label="Jesus Prayer"
-            icon={<Target className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
-          />
-          <QuickAction
-            label="Canon & basics"
-            icon={<BookMarked className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "learn" })}
-          />
-          <QuickAction
-            label="Learn"
-            icon={<GraduationCap className="h-4 w-4 text-primary" />}
-            onClick={() => onNavigate?.({ section: "learn" })}
-          />
+        <div className="grid gap-3 lg:grid-cols-3">
+          <ActionGroup eyebrow="Start here" title="Daily rhythm">
+            <QuickAction
+              label="Daily readings"
+              description="Open today’s lectionary and source links."
+              icon={<BookOpen className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+            />
+            <QuickAction
+              label="Reading plans"
+              description="Follow a slower Scripture routine."
+              icon={<Sparkles className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "plans" })}
+            />
+          </ActionGroup>
+
+          <ActionGroup eyebrow="Interior work" title="Prayer & reflection">
+            <QuickAction
+              label="Prayer texts"
+              description="Use fixed Orthodox prayers in the field."
+              icon={<Hand className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}
+            />
+            <QuickAction
+              label="Jesus Prayer"
+              description="Open the counter and stillness timer."
+              icon={<Target className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
+            />
+          </ActionGroup>
+
+          <ActionGroup eyebrow="Orientation" title="Learn & connect">
+            <QuickAction
+              label="Hymns & propers"
+              description="Find troparia, kontakia, and chant links."
+              icon={<Music className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "hymns" })}
+            />
+            <QuickAction
+              label="Parish finder"
+              description="Locate official parish directories."
+              icon={<MapPin className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "parish" })}
+            />
+            <QuickAction
+              label="Canon & basics"
+              description="Review guidance, Q&A, and reference links."
+              icon={<BookMarked className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn" })}
+            />
+          </ActionGroup>
         </div>
       </Card>
     </div>
