@@ -22,6 +22,7 @@ import {
   APK_RELEASE_DATE,
   APK_VERSION,
 } from "@/lib/apkDownload";
+import { RELEASE_NOTES } from "@/lib/releaseInfo";
 
 function Step({ title, description }: { title: string; description: string }) {
   return (
@@ -212,7 +213,7 @@ export default function Download() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-base font-semibold tracking-tight">Release notes</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Initial Android package focus.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Latest Android package focus.</p>
           </div>
           <BadgeCheck className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -220,11 +221,12 @@ export default function Download() {
         <Separator className="my-4" />
 
         <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
-          <li>Dedicated Android APK download page added.</li>
-          <li>Military Orthodox cross branding added for the app icon and in-app cross mark.</li>
-          <li>Download button now appears in the header, mobile menu, footer, About page, and this page.</li>
-          <li>APK workflow exists for producing a debug APK artifact for testing.</li>
+          {RELEASE_NOTES[0]?.changes.map((change) => <li key={change}>{change}</li>)}
         </ul>
+
+        <Button asChild variant="outline" className="mt-4 rounded-2xl border-border/60">
+          <Link to="/release-notes">View full release notes</Link>
+        </Button>
       </Card>
     </div>
   );

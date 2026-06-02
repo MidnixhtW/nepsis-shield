@@ -39,10 +39,10 @@ export function AppHeader() {
               {format(today, "MMM d, yyyy")} • Daily companion
             </p>
             <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg">
-              Ortho Companion
+              Ortho Companion: Field Guide
             </h1>
             <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-              For all Christians, rooted in Orthodox faith.{" "}
+              A field guide for prayer, Scripture, and Orthodox Christian rhythm.{" "}
               <Link to="/about" className="underline underline-offset-4">
                 About
               </Link>
@@ -65,10 +65,10 @@ export function AppHeader() {
             <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
               <SheetHeader className="text-left">
                 <SheetTitle className="flex items-center gap-2">
-                  <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Ortho Companion
+                  <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Ortho Field Guide
                 </SheetTitle>
                 <SheetDescription>
-                  Daily Christian resources shaped by Orthodox prayer and tradition.
+                  Prayer, Scripture, field manual resources, and Orthodox-rooted guidance for daily watchfulness.
                 </SheetDescription>
               </SheetHeader>
 
@@ -230,13 +230,13 @@ export function AppHeader() {
           <div className="relative p-4 sm:p-6">
             <div className="max-w-xl">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                Prayer • Scripture • Orthodox tradition
+                Prayer • Scripture • Field Manual • Orthodox tradition
               </p>
               <p className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Walk with Christ through a steady daily rhythm.
+                Keep the watch with Christ through a steady daily rhythm.
               </p>
               <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                A quiet, low-distraction Christian companion rooted in Orthodox faith: daily readings, fasting guidance, prayer, and private reflection.
+                A quiet, low-distraction Christian field companion rooted in Orthodox faith: daily readings, fasting guidance, prayer, private reflection, and pastoral reminders to seek a priest, pastor, or chaplain when needed.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
                 <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
@@ -244,6 +244,9 @@ export function AppHeader() {
                 </span>
                 <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
                   Orthodox-rooted rhythm
+                </span>
+                <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
+                  Priest • pastor • chaplain guidance
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
                   <OrthodoxCrossIcon className="h-3.5 w-3.5 text-accent" /> Prayerful essentials

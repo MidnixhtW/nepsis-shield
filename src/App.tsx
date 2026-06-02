@@ -9,6 +9,7 @@ import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import Download from "./pages/Download";
 import FieldManual from "./pages/FieldManual";
+import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/download" element={<Download />} />
             <Route path="/field-manual" element={<FieldManual />} />
+            <Route path="/release-notes" element={<ReleaseNotes />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/saints" element={<Saints />} />
             <Route path="/:section" element={<Index />} />

@@ -17,7 +17,7 @@ export default function About() {
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            A simple Christian companion rooted in Orthodox faith.
+            A Christian field guide for prayer, Scripture, and Orthodox-rooted daily rhythm.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -202,11 +202,11 @@ export default function About() {
           <Separator className="my-4" />
 
           <p className="text-sm leading-relaxed text-foreground/90">
-            This app is a devotional aid (prayer, Scripture reading, and personal notes). It is not a substitute for pastoral care. For spiritual guidance, confession preparation, and questions of doctrine or practice, please consult your priest/spiritual father.
+            This app is a devotional aid (prayer, Scripture reading, field manual prompts, and personal notes). It is not a substitute for pastoral care, emergency care, mental health care, or sacramental life. For spiritual guidance, confession preparation, and questions of doctrine or practice, please consult your priest/spiritual father. If you are not Orthodox, speak with your pastor or chaplain.
           </p>
 
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-            Provided "as-is" without warranties. Use at your own discretion.
+            If you may harm yourself or someone else, seek immediate help from emergency services, a trusted leader, chaplain, clinician, or crisis line. Provided "as-is" without warranties. Use at your own discretion.
           </p>
         </Card>
       </div>

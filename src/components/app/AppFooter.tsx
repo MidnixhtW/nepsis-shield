@@ -15,9 +15,9 @@ export function AppFooter() {
     <Card className="mt-6 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <p className="text-sm font-semibold tracking-tight">Independent Christian companion • not affiliated with OCA</p>
+          <p className="text-sm font-semibold tracking-tight">Independent Christian field companion • not affiliated with OCA</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Built for all Christians with public Orthodox links and resources for convenience.
+            Built for all Christians with Orthodox-rooted public resources. For sacramental, crisis, or pastoral needs, seek a priest, pastor, chaplain, or qualified professional.
           </p>
         </div>
 

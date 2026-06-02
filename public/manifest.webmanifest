@@ -1,0 +1,35 @@
+{
+  "name": "Ortho Companion: Field Guide",
+  "short_name": "Ortho Field",
+  "description": "A Christian field companion rooted in Orthodox prayer, Scripture, and daily battle rhythm.",
+  "start_url": "/today",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#2f3a1f",
+  "theme_color": "#2f3a1f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/military-orthodox-cross.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Field Manual",
+      "short_name": "Field",
+      "description": "Open short field prayers and battle-rhythm prompts.",
+      "url": "/field-manual",
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Prayer",
+      "short_name": "Pray",
+      "description": "Open the prayer section.",
+      "url": "/pray?tab=prayers",
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}
