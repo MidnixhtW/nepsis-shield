@@ -165,9 +165,9 @@ const Index = () => {
             />
 
             <HighlightCard
-              eyebrow="Pre-mission setup"
+              eyebrow="Personal setup"
               title="Tune the app to your calendar and jurisdiction"
-              description="Set your preferred calendar once so daily readings, fast guidance, and source links stay aligned while you are away from your parish."
+              description="Set your preferred calendar once so daily readings, fasting guidance, and source links stay aligned with your parish or learning path."
               icon={<Wand2 className="h-5 w-5 text-primary" />}
               actions={
                 <>
@@ -189,7 +189,7 @@ const Index = () => {
                       setSection("learn");
                     }}
                   >
-                    Field hymns
+                    Hymns & propers
                   </Button>
                 </>
               }

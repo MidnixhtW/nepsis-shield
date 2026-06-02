@@ -14,9 +14,9 @@ export function AppFooter() {
     <Card className="mt-6 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <p className="text-sm font-semibold tracking-tight">Independent field companion • not affiliated with OCA</p>
+          <p className="text-sm font-semibold tracking-tight">Independent Christian companion • not affiliated with OCA</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Built for deployed military personnel using public Orthodox links for convenience.
+            Built for all Christians with public Orthodox links and resources for convenience.
           </p>
         </div>
 
@@ -34,7 +34,6 @@ export function AppFooter() {
           <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
             <a href="https://www.oca.org" target="_blank" rel="noopener noreferrer">
               OCA.org <ExternalLink className="ml-2 h-4 w-4" />
-
             </a>
           </Button>
         </div>
@@ -50,7 +49,7 @@ export function AppFooter() {
               <span className="font-semibold text-foreground">Sources used:</span> OCA.org links, orthocal.info (calendar data), bible-api.com and bolls.life (public Bible text sources).
             </p>
             <p className="mt-2">
-              <span className="font-semibold text-foreground">Pastoral note:</span> This is a devotional aid for the field and not a substitute for a chaplain, priest, or pastoral guidance.
+              <span className="font-semibold text-foreground">Pastoral note:</span> This is a devotional aid and not a substitute for a chaplain, priest, or pastoral guidance.
             </p>
           </AccordionContent>
         </AccordionItem>

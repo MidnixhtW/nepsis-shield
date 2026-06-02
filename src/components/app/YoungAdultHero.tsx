@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 
 export function OrthodoxHero({
   onAction,
@@ -12,8 +13,8 @@ export function OrthodoxHero({
 }) {
   const chips = useMemo(
     () => [
-      { icon: <Hand className="h-3.5 w-3.5" />, label: "Pray on watch" },
-      { icon: <BookOpen className="h-3.5 w-3.5" />, label: "Read daily" },
+      { icon: <Hand className="h-3.5 w-3.5" />, label: "Pray daily" },
+      { icon: <BookOpen className="h-3.5 w-3.5" />, label: "Read Scripture" },
       { icon: <Compass className="h-3.5 w-3.5" />, label: "Stay oriented" },
       { icon: <Shield className="h-3.5 w-3.5" />, label: "Guard the heart" },
     ],
@@ -29,19 +30,19 @@ export function OrthodoxHero({
 
         <div className="relative p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-              Built for deployment
+            <Badge className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              <OrthodoxCrossIcon className="h-3.5 w-3.5" /> Orthodox-rooted
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-              Quiet, durable, Orthodox
+              For all Christians
             </Badge>
           </div>
 
           <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-            One faithful checkpoint for today.
+            One faithful companion for today.
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            For deployed Orthodox service members and military families. Keep a steady rule with daily readings, brief prayer, fasting guidance, and private notes.
+            For Christians seeking a steady rule shaped by Orthodox prayer: daily readings, brief prayer, fasting guidance, and private notes.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -64,7 +65,7 @@ export function OrthodoxHero({
               className="tap h-11 justify-start rounded-2xl"
               onClick={() => onAction?.({ section: "read", read: "daily" })}
             >
-              <BookOpen className="mr-2 h-4 w-4" /> Daily brief
+              <BookOpen className="mr-2 h-4 w-4" /> Daily readings
             </Button>
             <Button
               type="button"
@@ -80,7 +81,7 @@ export function OrthodoxHero({
               className="tap h-11 justify-start rounded-2xl border-border/60 bg-background/60"
               onClick={() => onAction?.({ section: "pray", tab: "journal" })}
             >
-              <Timer className="mr-2 h-4 w-4" /> 1-minute debrief
+              <Timer className="mr-2 h-4 w-4" /> 1-minute reflection
             </Button>
           </div>
         </div>

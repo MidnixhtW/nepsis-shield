@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import {
-  Crosshair,
   ExternalLink,
   Info,
   Menu,
@@ -20,6 +19,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 export function AppHeader() {
@@ -30,17 +30,17 @@ export function AppHeader() {
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
-            <Shield className="h-5 w-5" />
+            <OrthodoxCrossIcon className="h-6 w-6" />
           </div>
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              {format(today, "MMM d, yyyy")} • Deployed mode
+              {format(today, "MMM d, yyyy")} • Daily companion
             </p>
             <h1 className="truncate text-base font-semibold tracking-tight sm:text-lg">
-              Forward Faith
+              Ortho Companion
             </h1>
             <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-              Orthodox support for military personnel downrange.{" "}
+              For all Christians, rooted in Orthodox faith.{" "}
               <Link to="/about" className="underline underline-offset-4">
                 About
               </Link>
@@ -62,9 +62,11 @@ export function AppHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
               <SheetHeader className="text-left">
-                <SheetTitle>Forward Faith</SheetTitle>
+                <SheetTitle className="flex items-center gap-2">
+                  <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Ortho Companion
+                </SheetTitle>
                 <SheetDescription>
-                  Daily Orthodox resources adapted for deployment rhythm.
+                  Daily Christian resources shaped by Orthodox prayer and tradition.
                 </SheetDescription>
               </SheetHeader>
 
@@ -195,27 +197,28 @@ export function AppHeader() {
           <div className="relative p-4 sm:p-6">
             <div className="max-w-xl">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">
-                Prayer • Scripture • Resilience
+                Prayer • Scripture • Orthodox tradition
               </p>
               <p className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Keep your rule when the mission tempo changes.
+                Walk with Christ through a steady daily rhythm.
               </p>
               <p className="mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-                A quiet, low-distraction Orthodox companion for deployed service members: daily readings, fast guidance, prayer, and private reflection.
+                A quiet, low-distraction Christian companion rooted in Orthodox faith: daily readings, fasting guidance, prayer, and private reflection.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-muted-foreground">
                 <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
-                  Dark tactical UI
+                  Welcoming to all Christians
                 </span>
                 <span className="rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
-                  Field-ready routine
+                  Orthodox-rooted rhythm
                 </span>
                 <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/55 px-3 py-1.5">
-                  <Crosshair className="h-3.5 w-3.5 text-accent" /> Focused essentials
+                  <OrthodoxCrossIcon className="h-3.5 w-3.5 text-accent" /> Prayerful essentials
                 </span>
               </div>
             </div>
           </div>
+
         </div>
       </Card>
     </div>

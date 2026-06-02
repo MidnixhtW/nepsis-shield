@@ -36,28 +36,28 @@ export function QuickStartDialog() {
     () => [
       {
         key: "read",
-        title: "Open today's field brief",
-        description: "Start with the lectionary wherever you are posted.",
+        title: "Open today's readings",
+        description: "Start with Scripture and the Church's daily lectionary.",
         icon: <BookOpen className="h-4 w-4 text-primary" />,
         go: () => navigate("/read?read=daily"),
       },
       {
         key: "pray",
-        title: "Keep a compact prayer rule",
-        description: "A short checklist that fits shifting watches and call times.",
+        title: "Keep a simple prayer rule",
+        description: "A short checklist for a steady Christian rhythm.",
         icon: <Hand className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=rule"),
       },
       {
         key: "practice",
-        title: "Pray under low signal",
+        title: "Pray with stillness",
         description: "A quiet Jesus Prayer counter and stillness timer.",
         icon: <Sparkles className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=counter"),
       },
       {
         key: "journal",
-        title: "Write a 1-minute debrief",
+        title: "Write a 1-minute reflection",
         description: "One prompt for attention, repentance, and gratitude.",
         icon: <PenLine className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=journal"),
@@ -77,9 +77,9 @@ export function QuickStartDialog() {
       <DialogContent className="rounded-3xl p-0 sm:max-w-[36rem]">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background p-5 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-xl">Welcome to Forward Faith</DialogTitle>
+            <DialogTitle className="text-xl">Welcome to Ortho Companion</DialogTitle>
             <DialogDescription>
-              Pick one small, steady practice for today while deployed.
+              Pick one small, steady Christian practice for today, guided by Orthodox tradition.
             </DialogDescription>
           </DialogHeader>
 
