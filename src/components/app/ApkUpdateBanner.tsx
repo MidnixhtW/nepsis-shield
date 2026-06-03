@@ -15,7 +15,9 @@ type ApkUpdateBannerProps = {
 function formatVersion(version: string) {
   const trimmed = version.trim();
   const vNumber = trimmed.match(/^v(\d+)$/i);
-  return vNumber ? `V${vNumber[1]}` : trimmed;
+  if (vNumber) return `V${vNumber[1]}`;
+  if (/^\d+\.\d+\.\d+(?:[-+].*)?$/.test(trimmed)) return `V${trimmed}`;
+  return trimmed;
 }
 
 function getDownloadedVersion() {

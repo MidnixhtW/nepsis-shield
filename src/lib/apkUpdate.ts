@@ -44,11 +44,23 @@ function parseVNumber(value: string) {
   return match ? Number(match[1]) : null;
 }
 
+function getVersionScheme(value: string) {
+  if (parseVNumber(value) !== null) return "v-number";
+  if (parseSemver(value)) return "semver";
+  return "unsupported";
+}
+
 function isSupportedReleaseVersion(value: string) {
-  return Boolean(parseSemver(value) || parseVNumber(value));
+  return getVersionScheme(value) !== "unsupported";
 }
 
 export function isRemoteVersionNewer(currentVersion: string, remoteTag: string) {
+  const currentScheme = getVersionScheme(currentVersion);
+  const remoteScheme = getVersionScheme(remoteTag);
+
+  if (currentScheme === "unsupported" || remoteScheme === "unsupported") return false;
+  if (currentScheme !== remoteScheme) return false;
+
   const current = parseSemver(currentVersion);
   const remote = parseSemver(remoteTag);
 
@@ -64,7 +76,7 @@ export function isRemoteVersionNewer(currentVersion: string, remoteTag: string) 
   const remoteV = parseVNumber(remoteTag);
   if (currentV !== null && remoteV !== null) return remoteV > currentV;
 
-  return normalizeVersion(remoteTag) !== normalizeVersion(currentVersion);
+  return false;
 }
 
 function chooseApkAsset(assets: GitHubReleaseAsset[] | undefined) {
@@ -95,10 +107,11 @@ export async function fetchLatestApkUpdate(repository = APK_GITHUB_REPOSITORY) {
 
   if (!response.ok) return null;
 
+  const currentScheme = getVersionScheme(APK_VERSION);
   const releases = (await response.json()) as GitHubRelease[];
   const release = releases.find((item) => {
     if (item.draft || !item.tag_name || !item.html_url) return false;
-    if (!isSupportedReleaseVersion(item.tag_name)) return false;
+    if (getVersionScheme(item.tag_name) !== currentScheme) return false;
     return Boolean(chooseApkAsset(item.assets));
   });
   if (!release?.tag_name || !release.html_url) return null;
