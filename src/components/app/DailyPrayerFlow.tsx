@@ -95,7 +95,7 @@ const commonOpening: PrayerStep[] = [
     body: [
       "Holy God, Holy Mighty, Holy Immortal, have mercy on us. (3x)",
       "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
-      "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Your Name's sake.",
+      "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Thy Name's sake.",
       "Lord, have mercy. (3x)",
       "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
       "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
@@ -177,14 +177,16 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
       title: "Prayer to the Holy Trinity",
       body: [
         "Having arisen from sleep, we fall down before Thee, O Blessed One, and sing to Thee, O Mighty One, the angelic hymn: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
+        "Glory to the Father, and to the Son, and to the Holy Spirit.",
         "Do Thou, O Lord, Who hast raised me from my bed and from sleep, enlighten my mind and heart, and open my lips that I may praise Thee, O Holy Trinity: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
+        "Now and ever and unto ages of ages. Amen.",
+        "The Judge will come suddenly and the acts of every man will be revealed; but with fear we cry in the middle of the night: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
       ],
     },
     {
       title: "Guardian angel",
       body: [
-        "O Holy Angel, keeping guard over my soul and body, do not forsake me, a sinner. Protect me during this day, and guard me from every temptation of the enemy, that I may not anger God by any sin.",
-        "Pray to the Lord for me, that He may confirm me in His fear and prove me a worthy servant of His goodness. Amen.",
+        "O Holy Angel, keeping guard over my wretched soul and my passionate life, do not forsake me, a sinner, nor depart from me because of my incontinence. Do not give the evil enemy room to overcome me by force of this mortal body. Strengthen my weak and feeble hand, and set me on the way of salvation. Yea, O Holy Angel of God, guardian and protector of my wretched soul and body, forgive me everything by which I have offended you all the days of my life, and even what I have done this past night; protect me during this day, and guard me from every temptation of the enemy, that I may not anger God by any sin. Pray to the Lord for me, that He may confirm me in His fear and prove me a worthy servant of His goodness. Amen.",
       ],
     },
     {
@@ -201,15 +203,16 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
       title: "Have mercy on us",
       body: [
         "Have mercy on us, O Lord, have mercy on us; for laying aside all excuse, we sinners offer to Thee, as to our Master, this supplication: Have mercy on us.",
-        "O Lord, have mercy on us, for in Thee have we put our trust. Do not be angry with us, nor remember our iniquities, but look down on us even now, since Thou art compassionate, and deliver us from our enemies.",
+        "Glory to the Father, and to the Son, and to the Holy Spirit.",
+        "O Lord, have mercy on us, for in Thee have we put our trust. Do not be angry with us, nor remember our iniquities, but look down on us even now, since Thou art compassionate, and deliver us from our enemies. For Thou art our God, and we are Thy people; we are all the work of Thy hands, and we call on Thy name.",
+        "Now and ever and unto ages of ages. Amen.",
         "O blessed Theotokos, open the doors of compassion to us whose hope is in you, that we may not perish but be delivered from adversity through you, who are the salvation of the Christian people.",
       ],
     },
     {
       title: "To the Father",
       body: [
-        "O Eternal God, King of every creature, Who hast enabled me to attain to this hour, forgive me the sins which I have committed this day by thought, word, and deed.",
-        "Cleanse my humble soul, O Lord, from every defilement of flesh and spirit. Grant me to pass through the sleep of this night in peace, that I may rise from my bed and please Thy most holy Name all the days of my life. Amen.",
+        "O Eternal God, King of every creature, Who hast enabled me to attain to this hour, forgive me the sins which I have committed this day by thought, word and deed. Cleanse my humble soul, O Lord, from every defilement of flesh and spirit. Grant me, O Lord, to pass through the sleep of this night in peace, that I may rise from my humble bed and please Thy most Holy Name all the days of my life, vanquishing the enemies both fleshly and bodiless that contend against me. Deliver me from vain thoughts that defile me, O Lord, and from evil desires. For Thine is the Kingdom, and the power, and the glory: of the Father, and of the Son, and of the Holy Spirit, now and ever and unto ages of ages. Amen.",
       ],
     },
   ],
@@ -219,8 +222,7 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
     {
       title: "Prayer to Christ before sleep",
       body: [
-        "O Almighty Word of the Father, Jesus Christ, Who art Thyself perfect: because of Thy great mercy, do not ever depart from me, Thy servant, but always abide in me.",
-        "O Jesus, Good Shepherd of Thy sheep, guard me while I sleep with the unfading light of Thy Holy Spirit. Enlighten my mind with the light of Thy Gospel, my soul with love of Thy Cross, and my heart with the purity of Thy word. Amen.",
+        "O Almighty Word of the Father, Jesus Christ, Who art Thyself perfect: Because of Thy great mercy, do not ever depart from me, Thy servant, but always abide in me. O Jesus, Good Shepherd of Thy sheep, let me not fall into the disobedience of the serpent, nor leave me to the will of Satan, for the seeds of corruption are in me. O Lord God adorable, O Holy King Jesus, guard me while I sleep with the unfading light, Thy Holy Spirit, through Whom Thou didst sanctify Thy disciples. Grant even to me, Thy unworthy servant, O Lord, Thy salvation upon my bed. Enlighten my mind with the light of the understanding of Thy Gospel; my soul with love of Thy Cross; my heart with the purity of Thy word; my body with Thy passionless passion; preserve my thought in Thy humility, and raise me at the time proper for Thy glorification. For Thou art most glorified with Thy Father, Who is without beginning, and Thy Most Holy Spirit, unto the ages. Amen.",
       ],
     },
     {
@@ -235,7 +237,7 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
 const longExtras: Record<PrayerTime, PrayerStep[]> = {
   morning: [
     {
-      title: "Psalm 50",
+      title: "Psalm 50 excerpts",
       body: [
         "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
         "Wash me thoroughly from mine iniquity, and cleanse me from my sin. For I know mine iniquity, and my sin is ever before me.",

@@ -216,7 +216,7 @@ export default function FieldManual() {
                 Keep the watch. Guard the heart. Serve in Christ.
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                This field manual is a devotional aid for Christians, especially those who serve in demanding environments. It is rooted in Orthodox prayer but written so any Christian can begin with reverence and clarity.
+                This field manual is a devotional aid for Christians, especially those who serve in demanding environments. These are original short prayers rooted in Orthodox language and checked for theological clarity, not official liturgical texts.
               </p>
 
               <div className="my-6 h-px gold-hairline" />

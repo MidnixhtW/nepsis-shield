@@ -60,8 +60,9 @@ function LinkRow({
 const trisagion = [
   "Holy God, Holy Mighty, Holy Immortal, have mercy on us. (3x)",
   "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
-  "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Your Name's sake.",
+  "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Thy Name's sake.",
   "Lord, have mercy. (3x)",
+  "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
   "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
 ];
 
@@ -465,8 +466,8 @@ const sharedPrayerBasics = [
   "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
   "JESUS PRAYER: Lord Jesus Christ, Son of God, have mercy on me, a sinner",
   jesus[0],
-  "SCRIPTURE PRAYER:",
-  "Lord Jesus Christ, open my heart to Your Gospel. Teach me to hear Your word, keep Your commandments, and love You above all things. Amen.",
+  "BEFORE READING THE HOLY SCRIPTURE:",
+  "Illumine our hearts, O Master Who lovest mankind, with the pure light of Thy divine knowledge. Open the eyes of our mind to the understanding of Thy gospel teachings. Implant also in us the fear of Thy blessed commandments, that trampling down all carnal desires, we may enter upon a spiritual manner of living, both thinking and doing such things as are well-pleasing unto Thee. For Thou art the illumination of our souls and bodies, O Christ our God, and unto Thee we ascribe glory, together with Thy Father, Who is from everlasting, and Thine all-holy, good, and life-creating Spirit, now and ever and unto ages of ages. Amen.",
 ];
 
 const repentancePrayer = [
@@ -692,7 +693,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     How to use this section
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These prayers are intentionally simple and Christ-centered so any Christian can begin. The surrounding prayer book remains rooted in Orthodox language and practice.
+                    The Lord's Prayer, Jesus Prayer, and Scripture prayer here use standard Orthodox wording. The short repentance, grief, thanksgiving, and mercy prayers below are original devotional aids, not replacements for parish prayer books or services.
                   </p>
                 </div>
                 <PrayerBlock title="Common starting prayers" lines={sharedPrayerBasics} />
