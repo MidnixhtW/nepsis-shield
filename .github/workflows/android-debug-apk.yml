@@ -72,31 +72,36 @@ jobs:
           path: release-files/*.apk
           if-no-files-found: error
 
-      - name: Remove old rolling release APK assets
+      - name: Publish rolling GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete-asset android-debug-latest ortho-companion-latest-debug.apk --yes || true
-          gh release delete-asset android-debug-latest ortho-companion-debug-${{ github.run_number }}.apk --yes || true
+          cat > release-notes.md <<'EOF'
+          ## Latest debug APK
 
-      - name: Publish rolling GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: android-debug-latest
-          name: Ortho Companion Latest Debug APK
-          prerelease: true
-          files: release-files/*.apk
-          body: |
-            ## Latest debug APK
+          This release is updated automatically from the latest successful Android debug build.
 
-            This release is updated automatically from the latest successful Android debug build.
+          Direct APK URL:
+          https://github.com/${{ github.repository }}/releases/download/android-debug-latest/ortho-companion-latest-debug.apk
 
-            Direct APK URL:
-            https://github.com/${{ github.repository }}/releases/download/android-debug-latest/ortho-companion-latest-debug.apk
+          Build metadata:
+          - Commit: ${{ github.sha }}
+          - Run: ${{ github.run_number }}
+          - Built at: ${{ github.run_started_at }}
 
-            Build metadata:
-            - Commit: ${{ github.sha }}
-            - Run: ${{ github.run_number }}
-            - Built at: ${{ github.run_started_at }}
+          This is a debug APK intended for testing and sideload installation.
+          EOF
 
-            This is a debug APK intended for testing and sideload installation.
+          if gh release view android-debug-latest >/dev/null 2>&1; then
+            gh release edit android-debug-latest \
+              --title "Ortho Companion Latest Debug APK" \
+              --notes-file release-notes.md \
+              --prerelease
+          else
+            gh release create android-debug-latest \
+              --title "Ortho Companion Latest Debug APK" \
+              --notes-file release-notes.md \
+              --prerelease
+          fi
+
+          gh release upload android-debug-latest release-files/*.apk --clobber
