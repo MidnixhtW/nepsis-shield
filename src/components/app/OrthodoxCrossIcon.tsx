@@ -48,7 +48,7 @@ export function OrthodoxCrossIcon({
         strokeLinecap="square"
       />
       <path
-        d="M8.7 16.15L15.55 14.35"
+        d="M8.45 14.35L15.3 16.15"
         stroke="currentColor"
         strokeWidth={strokeWidth + 0.15}
         strokeLinecap="square"
