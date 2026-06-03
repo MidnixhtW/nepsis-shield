@@ -37,7 +37,7 @@ const legacyMap: Record<
 };
 
 function isPrayerTab(x: string | null): x is PrayerTab {
-  return x === "rule" || x === "prayers" || x === "counter" || x === "prep" || x === "journal";
+  return x === "daily" || x === "rule" || x === "prayers" || x === "counter" || x === "prep" || x === "journal";
 }
 
 function isReadTab(x: string | null): x is ReadTab {
@@ -118,7 +118,7 @@ const Index = () => {
   }
 
   const prayerTabRaw = searchParams.get("tab");
-  const prayerTab: PrayerTab = isPrayerTab(prayerTabRaw) ? prayerTabRaw : "rule";
+  const prayerTab: PrayerTab = isPrayerTab(prayerTabRaw) ? prayerTabRaw : "daily";
 
   function setPrayerTab(t: PrayerTab) {
     const next = new URLSearchParams(searchParams);

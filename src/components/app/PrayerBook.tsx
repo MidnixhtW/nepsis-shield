@@ -124,6 +124,13 @@ const eveningTheotokos = [
   "O victorious leader of triumphant host! We, your servants, delivered from evil, sing our grateful thanks to you, O Theotokos! As you possess invincible might set us free from every calamity so that we may sing: Rejoice! O unwedded Bride!",
 ];
 
+const nightPrayer = [
+  "BEFORE SLEEP:",
+  "O Lord Jesus Christ our God, as Thou art good and lovest mankind, forgive me all the sins I have committed today in word, deed, and thought.",
+  "Grant me peaceful and undisturbed sleep. Send Thy guardian angel to protect and keep me from all evil. Into Thy hands I commend my soul and body. Amen.",
+  "Beneath your compassion we take refuge, O Theotokos. Despise not our petitions in time of trouble, but deliver us from dangers, only Pure One, only Blessed One.",
+];
+
 const theotokosShort = [
   "MOST HOLY THEOTOKOS:",
   "Most Holy Theotokos, save us.",
@@ -753,6 +760,32 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     rel="noopener noreferrer"
                   >
                     Full Evening Prayers (OCA)
+                  </a>
+                </Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="night" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <MoonStar className="h-4 w-4 text-primary" /> Night / before sleep
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <PrayerBlock title="Before sleep" lines={nightPrayer} />
+                <Button
+                  asChild
+                  variant="outline"
+                  className="btn-wrap rounded-2xl border-border/60"
+                >
+                  <a
+                    href="https://www.goarch.org/-/prayers-before-sleep"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    More prayers before sleep (GOARCH)
                   </a>
                 </Button>
               </div>

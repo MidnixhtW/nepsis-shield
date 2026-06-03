@@ -6,7 +6,6 @@ import {
   Flame,
   Leaf,
   BookOpen,
-  Hand,
   Target,
   CalendarPlus,
   Sparkles,
@@ -14,6 +13,8 @@ import {
   MapPin,
   BookMarked,
   StretchHorizontal,
+  Sun,
+  MoonStar,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -461,10 +462,16 @@ export function TodayOverview({
 
           <ActionGroup eyebrow="Interior work" title="Prayer & reflection">
             <QuickAction
-              label="Prayer texts"
-              description="Use fixed Orthodox prayers in the field."
-              icon={<Hand className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}
+              label="Daily prayer flow"
+              description="Choose morning, evening, or night with a focused reader."
+              icon={<Sun className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
+            />
+            <QuickAction
+              label="Evening or night prayer"
+              description="Close the day with repentance, peace, and reminders."
+              icon={<MoonStar className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
             />
             <QuickAction
               label="Jesus Prayer"

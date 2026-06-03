@@ -21,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   cleanupStoredByPrefix,
   getStoredItem,
@@ -29,7 +30,10 @@ import {
 } from "@/lib/deviceStorage";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 
+type RuleMode = "short" | "standard" | "long";
+
 type RulePrefs = {
+  mode: RuleMode;
   includeMeals: boolean;
   includeCreed: boolean;
   includePsalm50: boolean;
@@ -38,6 +42,7 @@ type RulePrefs = {
 type RuleProgress = Record<string, boolean>;
 
 const DEFAULT_PREFS: RulePrefs = {
+  mode: "short",
   includeMeals: true,
   includeCreed: false,
   includePsalm50: false,
@@ -104,6 +109,16 @@ export function PrayerRule() {
       { id: "evening", label: "Evening prayer" },
     ];
 
+    const modeExtras: Array<{ id: string; label: string }> = [];
+    if (prefs.mode === "standard" || prefs.mode === "long") {
+      modeExtras.push({ id: "night", label: "Night prayer / before sleep" });
+      modeExtras.push({ id: "mercy", label: "One act of mercy or reconciliation" });
+    }
+    if (prefs.mode === "long") {
+      modeExtras.push({ id: "intercessions", label: "Intercessions for family, parish, and enemies" });
+      modeExtras.push({ id: "silence", label: "Stillness or Jesus Prayer timer" });
+    }
+
     const extras = [] as Array<{ id: string; label: string }>;
 
     if (prefs.includePsalm50) extras.push({ id: "psalm50", label: "Psalm 50" });
@@ -113,7 +128,7 @@ export function PrayerRule() {
       extras.push({ id: "after_meals", label: "After meals" });
     }
 
-    return [...base.slice(0, 1), ...extras, ...base.slice(1)];
+    return [...base.slice(0, 1), ...extras, ...base.slice(1), ...modeExtras];
   }, [prefs]);
 
   const doneCount = steps.filter((s) => progress[s.id]).length;
@@ -138,6 +153,29 @@ export function PrayerRule() {
       <Separator className="my-4" />
 
       <div className="grid gap-4">
+        <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
+          <p className="text-sm font-semibold">Rule mode</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Pick a realistic rule for today. A short rule kept faithfully is better than a large rule abandoned.
+          </p>
+          <ToggleGroup
+            type="single"
+            value={prefs.mode}
+            onValueChange={(value) => value && setPrefs((p) => ({ ...p, mode: value as RuleMode }))}
+            className="mt-3 flex flex-wrap justify-start gap-2"
+          >
+            <ToggleGroupItem value="short" className="rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/40 data-[state=on]:bg-primary/10">
+              Short
+            </ToggleGroupItem>
+            <ToggleGroupItem value="standard" className="rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/40 data-[state=on]:bg-primary/10">
+              Standard
+            </ToggleGroupItem>
+            <ToggleGroupItem value="long" className="rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/40 data-[state=on]:bg-primary/10">
+              Longer
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
         <div className="grid gap-2">
           {steps.map((s) => (
             <label

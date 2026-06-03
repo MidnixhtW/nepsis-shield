@@ -1,5 +1,6 @@
 import { Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
 import { JesusPrayerCounter } from "@/components/app/JesusPrayerCounter";
@@ -12,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { SectionBar } from "@/components/app/SectionBar";
 import { showError, showSuccess } from "@/utils/toast";
 
-export type PrayerTab = "rule" | "prayers" | "counter" | "prep" | "journal";
+export type PrayerTab = "daily" | "rule" | "prayers" | "counter" | "prep" | "journal";
 
 export function PrayerHub({
   tab,
@@ -58,7 +59,13 @@ export function PrayerHub({
       />
 
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as PrayerTab)}>
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-5">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
+          <TabsTrigger
+            value="daily"
+            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+          >
+            Daily
+          </TabsTrigger>
           <TabsTrigger
             value="rule"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
@@ -91,6 +98,10 @@ export function PrayerHub({
             Journal
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="daily" className="mt-4">
+          <DailyPrayerFlow />
+        </TabsContent>
 
         <TabsContent value="rule" className="mt-4">
           <PrayerRule />
