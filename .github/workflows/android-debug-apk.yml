@@ -8,12 +8,14 @@ on:
       - master
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-android-debug-apk:
-    name: Build and publish downloadable debug APK
+    name: Build debug APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       VITE_GITHUB_REPOSITORY: ${{ github.repository }}
       VITE_APK_VERSION: debug-${{ github.run_number }}
@@ -22,17 +24,25 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           check-latest: true
+          cache: pnpm
 
-      - name: Verify Node.js version
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.15.9 --activate
+
+      - name: Verify tool versions
         run: |
           node --version
-          npm --version
+          pnpm --version
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -40,23 +50,25 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Verify Android SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+      - name: Install dependencies from lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build web app
-        run: npm run build
+        run: pnpm run build
 
       - name: Generate Android project
-        run: npx capacitor add android
+        run: pnpm exec capacitor add android
 
       - name: Sync Capacitor Android assets
-        run: npx capacitor sync android
+        run: pnpm exec capacitor sync android
 
       - name: Apply OCP Orthodox launcher icon
-        run: npm run android:apply-icon
+        run: pnpm run android:apply-icon
 
       - name: Build debug APK
         working-directory: android
@@ -74,6 +86,21 @@ jobs:
           name: ortho-companion-debug-apk
           path: release-files/*.apk
           if-no-files-found: error
+
+  publish-debug-release:
+    name: Publish rolling debug release
+    needs: build-android-debug-apk
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ortho-companion-debug-apk
+          path: release-files
 
       - name: Publish rolling GitHub release
         env:
@@ -95,16 +122,18 @@ jobs:
           This is a debug APK intended for testing and sideload installation.
           EOF
 
-          if gh release view android-debug-latest >/dev/null 2>&1; then
+          if gh release view android-debug-latest --repo "${{ github.repository }}" >/dev/null 2>&1; then
             gh release edit android-debug-latest \
+              --repo "${{ github.repository }}" \
               --title "Ortho Companion Latest Debug APK" \
               --notes-file release-notes.md \
               --prerelease
           else
             gh release create android-debug-latest \
+              --repo "${{ github.repository }}" \
               --title "Ortho Companion Latest Debug APK" \
               --notes-file release-notes.md \
               --prerelease
           fi
 
-          gh release upload android-debug-latest release-files/*.apk --clobber
+          gh release upload android-debug-latest release-files/*.apk --repo "${{ github.repository }}" --clobber

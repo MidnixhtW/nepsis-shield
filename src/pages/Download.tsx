@@ -134,7 +134,7 @@ export default function Download() {
                     <div>
                       <p className="text-sm font-semibold">No repository or direct APK URL is configured yet.</p>
                       <p className="mt-1 text-xs leading-relaxed opacity-85">
-                        The workflow now publishes ortho-companion-latest-debug.apk to GitHub Releases. Set VITE_GITHUB_REPOSITORY to owner/repo, or set VITE_APK_DOWNLOAD_URL directly.
+                        The workflow now publishes ortho-companion-latest-debug.apk to GitHub Releases. Set VITE_GITHUB_REPOSITORY to owner/repo, or set VITE_APK_DOWNLOAD_URL to a trusted https://github.com APK URL.
                       </p>
                     </div>
                   </div>
@@ -292,7 +292,7 @@ export default function Download() {
             <div className="flex items-start gap-3">
               <Info className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <p className="text-sm leading-relaxed text-muted-foreground">
-                The debug workflow publishes a stable asset named ortho-companion-latest-debug.apk. Configure VITE_GITHUB_REPOSITORY as owner/repo, or use VITE_APK_DOWNLOAD_URL for a custom hosted APK.
+                The debug workflow publishes a stable asset named ortho-companion-latest-debug.apk. Configure VITE_GITHUB_REPOSITORY as owner/repo, or use VITE_APK_DOWNLOAD_URL only for a trusted https://github.com APK URL.
               </p>
             </div>
           </div>

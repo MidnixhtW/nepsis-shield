@@ -17,9 +17,9 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
-  clearStoredByPrefix,
   getStoredItem,
-  removeStoredItem,
+  hasAnyLegacyPlaintextSensitiveNotes,
+  hasLegacyPlaintextSensitiveNote,
   setStoredItem,
 } from "@/lib/deviceStorage";
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
@@ -111,6 +111,20 @@ function isAllowedKey(key: string): boolean {
   return ALLOWED_PREFIXES.some((p) => key.startsWith(p));
 }
 
+function isSensitiveNoteKey(key: string) {
+  return key.startsWith("reflection:") || key.startsWith("confess:note:");
+}
+
+function isEncryptedNoteValue(value: unknown) {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (value as { enc?: unknown }).enc === 1 &&
+    typeof (value as { blob?: unknown }).blob === "object" &&
+    (value as { blob?: unknown }).blob !== null
+  );
+}
+
 function isValidValueForKey(key: string, raw: string): boolean {
   // All imported values must be wrapped objects produced by setStoredItem
   const parsed = parseJsonSafe(raw);
@@ -120,6 +134,9 @@ function isValidValueForKey(key: string, raw: string): boolean {
   if (ALLOWED_PRIVACY_KEYS.has(key)) {
     return typeof parsed.v === "boolean";
   }
+
+  // Sensitive note imports must already be encrypted.
+  if (isSensitiveNoteKey(key)) return isEncryptedNoteValue(parsed.v);
 
   // Other allow-listed prefixes can be any wrapped value
   return true;
@@ -131,6 +148,7 @@ export default function Privacy() {
   const [counterSave, setCounterSave] = useState(true);
   const [prayerRuleSave, setPrayerRuleSave] = useState(true);
   const [bibleSave, setBibleSave] = useState(true);
+  const [legacyPlaintextDetected, setLegacyPlaintextDetected] = useState(false);
 
   const [exportPass, setExportPass] = useState("");
   const [importPass, setImportPass] = useState("");
@@ -146,6 +164,7 @@ export default function Privacy() {
     setCounterSave(getStoredItem<boolean>("privacy:counter_save") ?? true);
     setPrayerRuleSave(getStoredItem<boolean>("privacy:prayer_rule_save") ?? true);
     setBibleSave(getStoredItem<boolean>("privacy:bible_save") ?? true);
+    setLegacyPlaintextDetected(hasAnyLegacyPlaintextSensitiveNotes());
   }, []);
 
   useEffect(() => {
@@ -189,6 +208,7 @@ export default function Privacy() {
     const items: Record<string, string> = {};
     for (const k of safeKeys()) {
       if (!(ALLOWED_PREFIXES.some((p) => k.startsWith(p)) || ALLOWED_PRIVACY_KEYS.has(k))) continue;
+      if (hasLegacyPlaintextSensitiveNote(k)) continue;
       const v = safeGetRaw(k);
       if (v != null) items[k] = v;
     }
@@ -409,6 +429,16 @@ export default function Privacy() {
           </div>
 
           <Separator className="my-4" />
+
+          {legacyPlaintextDetected ? (
+            <Alert className="mb-4 rounded-2xl border-destructive/30 bg-destructive/10">
+              <Shield className="h-4 w-4" />
+              <AlertTitle className="text-sm font-semibold">Legacy plaintext notes detected</AlertTitle>
+              <AlertDescription className="mt-1 text-xs text-muted-foreground">
+                Old journal or confession notes are still stored as plaintext on this device. They are excluded from exports and hidden in the app until you open the relevant section and encrypt them with a passphrase, or delete saved notes.
+              </AlertDescription>
+            </Alert>
+          ) : null}
 
           <Alert className="rounded-2xl border-primary/30 bg-primary/5">
             <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>

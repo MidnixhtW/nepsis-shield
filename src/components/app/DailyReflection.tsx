@@ -25,6 +25,7 @@ import { fetchDailyData } from "@/lib/orthocal";
 import {
   cleanupStoredByPrefix,
   clearStoredByPrefix,
+  getLegacyPlaintextSensitiveNote,
   getStoredItem,
   setStoredItem,
 } from "@/lib/deviceStorage";
@@ -68,6 +69,7 @@ export function DailyReflection() {
   // passphrase is never persisted; it's session-only.
   const [passphrase, setPassphrase] = useState("");
   const [locked, setLocked] = useState(false);
+  const [legacyPlaintextNote, setLegacyPlaintextNote] = useState<string | null>(null);
 
   useEffect(() => {
     cleanupStoredByPrefix("reflection:", NOTE_TTL_MS);
@@ -86,21 +88,53 @@ export function DailyReflection() {
     // Load saved note when enabled.
     if (!saveEnabled) return;
 
-    const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
-    if (!stored) return;
-
-    if (typeof stored === "string") {
-      setNote(stored);
-      setLocked(false);
+    const legacy = getLegacyPlaintextSensitiveNote(keyForDay(dayKey));
+    if (legacy !== null) {
+      setLegacyPlaintextNote(legacy);
+      setNote("");
+      setLocked(true);
       return;
     }
+
+    setLegacyPlaintextNote(null);
+    const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
+    if (!stored) return;
 
     // Encrypted note
     setLocked(true);
   }, [dayKey, saveEnabled]);
 
+  async function migrateLegacyPlaintextNote() {
+    if (!saveEnabled || legacyPlaintextNote === null) return;
+
+    if (passphrase.length < 8) {
+      showError("Use a longer passphrase (8+ characters).");
+      return;
+    }
+
+    try {
+      const blob = await encryptString(legacyPlaintextNote, passphrase);
+      setStoredItem(
+        keyForDay(dayKey),
+        { enc: 1, blob } satisfies StoredNote,
+        { ttlMs: NOTE_TTL_MS },
+      );
+      setNote(legacyPlaintextNote);
+      setLegacyPlaintextNote(null);
+      setLocked(false);
+      showSuccess("Legacy plaintext journal note encrypted.");
+    } catch {
+      showError("Couldn't migrate legacy note.");
+    }
+  }
+
   async function unlockAndLoad() {
     if (!saveEnabled) return;
+
+    if (legacyPlaintextNote !== null) {
+      await migrateLegacyPlaintextNote();
+      return;
+    }
 
     if (passphrase.length < 8) {
       showError("Use a longer passphrase (8+ characters).");
@@ -213,6 +247,9 @@ export function DailyReflection() {
                           className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
                           onClick={() => {
                             clearStoredByPrefix("reflection:");
+                            setNote("");
+                            setLegacyPlaintextNote(null);
+                            setLocked(false);
                             showSuccess("Saved reflections deleted.");
                           }}
                         >
@@ -224,6 +261,11 @@ export function DailyReflection() {
 
                     {saveEnabled ? (
                       <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
+                        {legacyPlaintextNote !== null ? (
+                          <div className="mb-3 rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-xs leading-relaxed text-destructive">
+                            A legacy plaintext journal note was found. It will stay hidden until you enter a passphrase and encrypt it.
+                          </div>
+                        ) : null}
                         <p className="text-xs font-semibold tracking-wide text-amber-900/80">
                           Passphrase (session-only)
                         </p>
@@ -244,7 +286,7 @@ export function DailyReflection() {
                             onClick={unlockAndLoad}
                             disabled={!passphrase}
                           >
-                            Unlock
+                            {legacyPlaintextNote !== null ? "Encrypt legacy note" : "Unlock"}
                           </Button>
                         </div>
                         <PassphraseMeter passphrase={passphrase} className="mt-3" />
@@ -289,6 +331,10 @@ export function DailyReflection() {
                 <Button
                   className="rounded-2xl"
                   onClick={() => {
+                    if (legacyPlaintextNote !== null) {
+                      showError("Encrypt the legacy plaintext note before editing.");
+                      return;
+                    }
                     setNote((n) => (n ? n : `${prompt}\n\n` + "• "));
                     if (saveEnabled) setLocked(false);
                   }}

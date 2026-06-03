@@ -59,6 +59,49 @@ function isWrappedValue(x: unknown): x is WrappedValue<unknown> {
   );
 }
 
+function unwrapStoredValue(raw: string | null): unknown {
+  if (raw == null) return null;
+
+  const parsed = safeJsonParse(raw);
+  if (isWrappedValue(parsed)) {
+    if (typeof parsed.exp === "number" && parsed.exp <= now()) return null;
+    return parsed.v;
+  }
+
+  if (parsed !== null) return parsed;
+  return raw;
+}
+
+function isSensitiveNoteKey(key: string) {
+  return key.startsWith("reflection:") || key.startsWith("confess:note:");
+}
+
+function isEncryptedNoteValue(value: unknown) {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (value as { enc?: unknown }).enc === 1 &&
+    typeof (value as { blob?: unknown }).blob === "object" &&
+    (value as { blob?: unknown }).blob !== null
+  );
+}
+
+export function getLegacyPlaintextSensitiveNote(key: string): string | null {
+  if (!isSensitiveNoteKey(key)) return null;
+
+  const value = unwrapStoredValue(safeGetItem(key));
+  if (typeof value === "string") return value;
+  return null;
+}
+
+export function hasLegacyPlaintextSensitiveNote(key: string): boolean {
+  return getLegacyPlaintextSensitiveNote(key) !== null;
+}
+
+export function hasAnyLegacyPlaintextSensitiveNotes(): boolean {
+  return safeKeys().some((key) => hasLegacyPlaintextSensitiveNote(key));
+}
+
 export function getStoredItem<T>(key: string): T | null {
   const raw = safeGetItem(key);
   if (raw == null) return null;
@@ -69,8 +112,13 @@ export function getStoredItem<T>(key: string): T | null {
       safeRemoveItem(key);
       return null;
     }
+    if (isSensitiveNoteKey(key) && !isEncryptedNoteValue(parsed.v)) return null;
     return parsed.v as T;
   }
+
+  // Legacy plaintext sensitive notes must be explicitly migrated before use.
+  const value = unwrapStoredValue(raw);
+  if (isSensitiveNoteKey(key) && !isEncryptedNoteValue(value)) return null;
 
   // Legacy JSON (arrays/objects) or plain strings.
   if (parsed !== null) return parsed as T;

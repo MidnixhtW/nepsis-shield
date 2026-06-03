@@ -59,15 +59,30 @@ export const APK_GITHUB_REPOSITORY = normalizeGitHubRepository(
 
 const latestDebugApkUrl = buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);
 
-export const APK_DOWNLOAD_URL =
-  import.meta.env.VITE_APK_DOWNLOAD_URL || latestDebugApkUrl || "/download";
+function trustedHttpsUrl(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
 
-export const APK_DOWNLOAD_IS_DIRECT = Boolean(
-  import.meta.env.VITE_APK_DOWNLOAD_URL || latestDebugApkUrl,
-);
+  try {
+    const url = new URL(trimmed);
+    const trustedHosts = new Set(["github.com"]);
+    return url.protocol === "https:" && trustedHosts.has(url.hostname.toLowerCase())
+      ? url.toString()
+      : "";
+  } catch {
+    return "";
+  }
+}
+
+const customApkDownloadUrl = trustedHttpsUrl(import.meta.env.VITE_APK_DOWNLOAD_URL || "");
+const customApkArtifactsUrl = trustedHttpsUrl(import.meta.env.VITE_APK_ARTIFACTS_URL || "");
+
+export const APK_DOWNLOAD_URL = customApkDownloadUrl || latestDebugApkUrl || "/download";
+
+export const APK_DOWNLOAD_IS_DIRECT = Boolean(customApkDownloadUrl || latestDebugApkUrl);
 
 export const APK_ARTIFACTS_URL =
-  import.meta.env.VITE_APK_ARTIFACTS_URL || buildApkArtifactsUrl(APK_GITHUB_REPOSITORY);
+  customApkArtifactsUrl || buildApkArtifactsUrl(APK_GITHUB_REPOSITORY);
 
 export const APK_VERSION = import.meta.env.VITE_APK_VERSION || "1.0.0";
 
@@ -75,8 +90,12 @@ export const APK_RELEASE_DATE =
   import.meta.env.VITE_APK_RELEASE_DATE ||
   (APK_DOWNLOAD_IS_DIRECT ? "Latest GitHub APK release" : "Pending repository configuration");
 
-export const APK_DOWNLOAD_SOURCE = import.meta.env.VITE_APK_DOWNLOAD_URL
+export const APK_DOWNLOAD_SOURCE = customApkDownloadUrl
   ? "custom-url"
   : APK_GITHUB_REPOSITORY
     ? "github-release"
     : "missing-config";
+
+export const APK_DOWNLOAD_HOST = APK_DOWNLOAD_URL.startsWith("https://")
+  ? new URL(APK_DOWNLOAD_URL).hostname
+  : "this site";

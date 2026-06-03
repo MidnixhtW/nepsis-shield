@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/accordion";
 import {
   cleanupStoredByPrefix,
+  getLegacyPlaintextSensitiveNote,
   getStoredItem,
-  removeStoredItem,
   setStoredItem,
 } from "@/lib/deviceStorage";
 import type { EncryptedBlob } from "@/lib/cryptoVault";
@@ -72,6 +72,7 @@ export function ConfessionPrep() {
   const encryptEnabled = true;
   const [locked, setLocked] = useState(false);
   const [pass, setPass] = useState("");
+  const [legacyPlaintextNote, setLegacyPlaintextNote] = useState<string | null>(null);
 
   useEffect(() => {
     cleanupStoredByPrefix("confess:", NOTE_TTL_MS);
@@ -86,11 +87,17 @@ export function ConfessionPrep() {
     const savedChecks = getStoredItem<MapBool>(selectsKey(wk));
     if (savedChecks) setChecks(savedChecks);
 
+    const legacy = getLegacyPlaintextSensitiveNote(noteKey(wk));
+    if (legacy !== null) {
+      setLegacyPlaintextNote(legacy);
+      setNote("");
+      setLocked(true);
+      return;
+    }
+
+    setLegacyPlaintextNote(null);
     const savedNote = getStoredItem<StoredNote>(noteKey(wk));
-    if (typeof savedNote === "string") {
-      setNote(savedNote);
-      setLocked(false);
-    } else if (savedNote && savedNote.enc === 1) {
+    if (savedNote && typeof savedNote !== "string" && savedNote.enc === 1) {
       setLocked(true);
     }
   }, [wk, saveEnabled]);
@@ -101,6 +108,7 @@ export function ConfessionPrep() {
       cleanupStoredByPrefix("confess:", 0);
       setChecks({});
       setNote("");
+      setLegacyPlaintextNote(null);
       setLocked(false);
     }
   }, [saveEnabled]);
@@ -127,8 +135,35 @@ export function ConfessionPrep() {
     })();
   }, [note, wk, saveEnabled, pass, locked]);
 
+  async function migrateLegacyPlaintextNote() {
+    if (!saveEnabled || legacyPlaintextNote === null) return;
+
+    if (pass.length < 8) {
+      showError("Use a longer passphrase (8+ characters).");
+      return;
+    }
+
+    try {
+      const blob = await encryptString(legacyPlaintextNote, pass);
+      setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredNote, {
+        ttlMs: NOTE_TTL_MS,
+      });
+      setNote(legacyPlaintextNote);
+      setLegacyPlaintextNote(null);
+      setLocked(false);
+      showSuccess("Legacy plaintext confession note encrypted.");
+    } catch {
+      showError("Couldn't migrate legacy note.");
+    }
+  }
+
   async function unlock() {
     if (!saveEnabled) return;
+
+    if (legacyPlaintextNote !== null) {
+      await migrateLegacyPlaintextNote();
+      return;
+    }
 
     if (pass.length < 8) {
       showError("Use a longer passphrase (8+ characters).");
@@ -223,6 +258,7 @@ export function ConfessionPrep() {
             cleanupStoredByPrefix("confess:", 0);
             setChecks({});
             setNote("");
+            setLegacyPlaintextNote(null);
             setLocked(false);
             showSuccess("Cleared saved confession prep.");
           }}
@@ -257,6 +293,11 @@ export function ConfessionPrep() {
               {saveEnabled ? (
 
                 <div className="grid gap-2">
+                  {legacyPlaintextNote !== null ? (
+                    <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-xs leading-relaxed text-destructive">
+                      A legacy plaintext confession note was found. It will stay hidden until you enter a passphrase and encrypt it.
+                    </div>
+                  ) : null}
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">Passphrase (session-only)</p>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <Input
@@ -272,7 +313,7 @@ export function ConfessionPrep() {
                       onClick={unlock}
                       disabled={!pass}
                     >
-                      Unlock
+                      {legacyPlaintextNote !== null ? "Encrypt legacy note" : "Unlock"}
                     </Button>
                   </div>
                   <PassphraseMeter passphrase={pass} />

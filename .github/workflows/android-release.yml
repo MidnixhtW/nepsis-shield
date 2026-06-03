@@ -14,12 +14,14 @@ on:
         type: boolean
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  publish-android-apk:
-    name: Build and publish APK release
+  build-android-apk:
+    name: Build APK release files
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       VITE_APK_VERSION: ${{ inputs.version }}
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
@@ -28,17 +30,25 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           check-latest: true
+          cache: pnpm
 
-      - name: Verify Node.js version
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.15.9 --activate
+
+      - name: Verify tool versions
         run: |
           node --version
-          npm --version
+          pnpm --version
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -46,23 +56,25 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Verify Android SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null
+          sdkmanager --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
 
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
+      - name: Install dependencies from lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build web app
-        run: npm run build
+        run: pnpm run build
 
       - name: Generate Android project
-        run: npx capacitor add android
+        run: pnpm exec capacitor add android
 
       - name: Sync Capacitor Android assets
-        run: npx capacitor sync android
+        run: pnpm exec capacitor sync android
 
       - name: Apply OCP Orthodox launcher icon
-        run: npm run android:apply-icon
+        run: pnpm run android:apply-icon
 
       - name: Build debug APK
         working-directory: android
@@ -72,23 +84,40 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease
 
-      - name: Sign release APK
+      - name: Sign release APK with Android SDK tools
         if: env.SIGNING_READY == 'true'
-        id: sign_app
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p signing
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > signing/release.keystore
+
+          unsigned_apk="android/app/build/outputs/apk/release/app-release-unsigned.apk"
+          aligned_apk="android/app/build/outputs/apk/release/app-release-aligned.apk"
+          signed_apk="android/app/build/outputs/apk/release/app-release-signed.apk"
+
+          build_tools_dir="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort | tail -n 1)"
+          "$build_tools_dir/zipalign" -p -f 4 "$unsigned_apk" "$aligned_apk"
+          "$build_tools_dir/apksigner" sign \
+            --ks signing/release.keystore \
+            --ks-key-alias "$ANDROID_KEY_ALIAS" \
+            --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD" \
+            --key-pass "pass:$ANDROID_KEY_PASSWORD" \
+            --out "$signed_apk" \
+            "$aligned_apk"
+          "$build_tools_dir/apksigner" verify "$signed_apk"
+          rm -f signing/release.keystore
 
       - name: Collect APK files
         run: |
           mkdir -p release-files
           cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-${{ inputs.version }}-debug.apk
-          if [ -n "${{ steps.sign_app.outputs.signedReleaseFile }}" ]; then
-            cp "${{ steps.sign_app.outputs.signedReleaseFile }}" release-files/ortho-companion-${{ inputs.version }}-signed-release.apk
+          if [ -f android/app/build/outputs/apk/release/app-release-signed.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release-signed.apk release-files/ortho-companion-${{ inputs.version }}-signed-release.apk
           else
             cp android/app/build/outputs/apk/release/app-release-unsigned.apk release-files/ortho-companion-${{ inputs.version }}-unsigned-release.apk
           fi
@@ -100,24 +129,50 @@ jobs:
           path: release-files/*.apk
           if-no-files-found: error
 
-      - name: Publish GitHub release
-        uses: softprops/action-gh-release@v2
+  publish-github-release:
+    name: Publish GitHub release
+    needs: build-android-apk
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download release build artifact
+        uses: actions/download-artifact@v4
         with:
-          tag_name: v${{ inputs.version }}
-          name: Ortho Companion v${{ inputs.version }}
-          prerelease: ${{ inputs.prerelease }}
-          files: release-files/*.apk
-          body: |
-            ## Ortho Companion v${{ inputs.version }}
+          name: ortho-companion-${{ inputs.version }}-apk-files
+          path: release-files
 
-            Android APK release for testing and distribution.
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IS_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+          cat > release-notes.md <<'EOF'
+          ## Ortho Companion v${{ inputs.version }}
 
-            - Debug APK is for testing.
-            - Signed release APK is included when signing secrets are configured.
-            - Unsigned release APK is included only when signing secrets are missing.
+          Android APK release for testing and distribution.
 
-            Configure the deployed app with:
-            - VITE_APK_VERSION=${{ inputs.version }}
-            - VITE_APK_RELEASE_DATE=${{ github.run_started_at }}
-            - VITE_APK_DOWNLOAD_URL=(direct APK asset URL after release publish)
-            - VITE_APK_ARTIFACTS_URL=(this release page URL)
+          - Debug APK is for testing.
+          - Signed release APK is included when signing secrets are configured.
+          - Unsigned release APK is included only when signing secrets are missing.
+
+          Configure the deployed app with:
+          - VITE_APK_VERSION=${{ inputs.version }}
+          - VITE_APK_RELEASE_DATE=${{ github.run_started_at }}
+          - VITE_APK_DOWNLOAD_URL=(direct APK asset URL after release publish)
+          - VITE_APK_ARTIFACTS_URL=(this release page URL)
+          EOF
+
+          release_args=(
+            "v${{ inputs.version }}"
+            release-files/*.apk
+            --repo "${{ github.repository }}"
+            --title "Ortho Companion v${{ inputs.version }}"
+            --notes-file release-notes.md
+          )
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            release_args+=(--prerelease)
+          fi
+          gh release create "${release_args[@]}"
