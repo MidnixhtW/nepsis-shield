@@ -12,6 +12,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
+import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -86,6 +87,10 @@ export default function Download() {
             <Link to="/about">About</Link>
           </Button>
         </div>
+      </div>
+
+      <div className="mt-5">
+        <ApkUpdateBanner showUpToDate />
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">

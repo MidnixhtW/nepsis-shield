@@ -59,7 +59,7 @@ export const APK_GITHUB_REPOSITORY = normalizeGitHubRepository(
 
 const latestDebugApkUrl = buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);
 
-function trustedHttpsUrl(value: string) {
+export function trustedGitHubHttpsUrl(value: string) {
   const trimmed = value.trim();
   if (!trimmed) return "";
 
@@ -74,8 +74,8 @@ function trustedHttpsUrl(value: string) {
   }
 }
 
-const customApkDownloadUrl = trustedHttpsUrl(import.meta.env.VITE_APK_DOWNLOAD_URL || "");
-const customApkArtifactsUrl = trustedHttpsUrl(import.meta.env.VITE_APK_ARTIFACTS_URL || "");
+const customApkDownloadUrl = trustedGitHubHttpsUrl(import.meta.env.VITE_APK_DOWNLOAD_URL || "");
+const customApkArtifactsUrl = trustedGitHubHttpsUrl(import.meta.env.VITE_APK_ARTIFACTS_URL || "");
 
 export const APK_DOWNLOAD_URL = customApkDownloadUrl || latestDebugApkUrl || "/download";
 

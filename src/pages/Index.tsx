@@ -16,6 +16,7 @@ import { TodaySaintTile } from "@/components/app/TodaySaintTile";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { HighlightCard } from "@/components/app/HighlightCard";
 import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
+import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
 import { Button } from "@/components/ui/button";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
@@ -147,7 +148,9 @@ const Index = () => {
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       <QuickStartDialog />
 
-      <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <ApkUpdateBanner />
+
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero

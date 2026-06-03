@@ -9,7 +9,7 @@ Required headers:
 - `X-Frame-Options: DENY`
 - `Cross-Origin-Opener-Policy: same-origin`
 - `Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()`
-- `Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https://commons.wikimedia.org https://upload.wikimedia.org; connect-src 'self' https://orthocal.info https://bible-api.com https://bolls.life; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; upgrade-insecure-requests`
+- `Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data: https://commons.wikimedia.org https://upload.wikimedia.org; connect-src 'self' https://orthocal.info https://bible-api.com https://bolls.life https://api.github.com; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; upgrade-insecure-requests`
 
 GitHub Pages does not support custom response headers. If deploying there, place it behind a provider/CDN that can add these headers, or accept that CSP/frame protection will be weaker on that host.
 
