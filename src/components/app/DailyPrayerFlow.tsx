@@ -77,10 +77,17 @@ const prayerMeta: Record<PrayerTime, { label: string; icon: ReactNode; hint: str
 
 const commonOpening: PrayerStep[] = [
   {
-    title: "Settle",
+    title: "Begin",
     body: [
       "Stand or sit quietly. Make the sign of the Cross.",
       "In the name of the Father, and of the Son, and of the Holy Spirit. Amen.",
+      "Glory to Thee, our God, glory to Thee.",
+    ],
+  },
+  {
+    title: "O Heavenly King",
+    body: [
+      "O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.",
     ],
   },
   {
@@ -90,102 +97,136 @@ const commonOpening: PrayerStep[] = [
       "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
       "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Your Name's sake.",
       "Lord, have mercy. (3x)",
+      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
       "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
     ],
   },
 ];
 
+const closingPrayers: PrayerStep = {
+  title: "Close",
+  body: [
+    "It is truly meet to bless you, O Theotokos, ever-blessed and most pure, and the Mother of our God. More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption you gave birth to God the Word. True Theotokos, we magnify you.",
+    "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
+    "Lord, have mercy. (3x)",
+    "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us. Amen.",
+  ],
+};
+
 const shortFlows: Record<PrayerTime, PrayerStep[]> = {
   morning: [
     commonOpening[0],
     {
-      title: "Morning offering",
+      title: "Morning prayer",
       body: [
-        "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
-        "Guide my thoughts, words, and actions today. Keep me watchful, humble, and ready to love the person before me. Amen.",
+        "O Lord, grant me to greet the coming day in peace. Help me in all things to rely upon Thy holy will. In every hour of the day reveal Thy will to me.",
+        "Bless my dealings with all who surround me. Teach me to treat all that comes to me throughout the day with peace of soul and with firm conviction that Thy will governs all.",
+        "Guide my thoughts, words, and deeds. In unforeseen events, let me not forget that all are sent by Thee. Teach me to act firmly and wisely, without embittering or embarrassing others. Amen.",
       ],
     },
     {
-      title: "Close",
-      body: ["Most Holy Theotokos, save us.", "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us. Amen."],
+      title: "Jesus Prayer",
+      body: [
+        "Lord Jesus Christ, Son of God, have mercy on me, a sinner. (Repeat slowly 3, 12, or 33 times.)",
+      ],
     },
+    closingPrayers,
   ],
   evening: [
     commonOpening[0],
     {
-      title: "Evening review",
+      title: "Evening thanksgiving",
       body: [
-        "Glory to You, O God, for the mercy of this day.",
-        "Forgive what I did in thought, word, deed, and neglect. Heal what I damaged, strengthen what is weak, and teach me repentance. Amen.",
+        "Glory to Thee, O Lord, glory to Thee. I thank Thee for every mercy shown to me this day: for life, breath, protection, correction, forgiveness, and every good thing seen and unseen.",
+        "Forgive me, O Lord, for every sin I have committed today in thought, word, deed, and neglect. Heal what I have wounded, strengthen what is weak, and grant me repentance without despair. Amen.",
       ],
     },
     {
-      title: "Close",
-      body: ["Lord, have mercy. (3x)", "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us. Amen."],
+      title: "For peace",
+      body: [
+        "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
+        "Grant peace to my home, my family, my parish, and all who suffer. Teach me to forgive, to ask forgiveness, and to rest in Thy mercy. Amen.",
+      ],
     },
+    closingPrayers,
   ],
   night: [
     commonOpening[0],
     {
       title: "Before sleep",
       body: [
-        "Into Your hands, O Lord Jesus Christ, I commend my soul and body.",
-        "Bless me, have mercy on me, and grant me peaceful sleep, free from every disturbance. Amen.",
-      ],
-    },
-    {
-      title: "Close",
-      body: ["My hope is the Father, my refuge is the Son, my protection is the Holy Spirit: Holy Trinity, glory to You.", "Amen."],
-    },
-  ],
-};
-
-const standardExtras: Record<PrayerTime, PrayerStep[]> = {
-  morning: [
-    commonOpening[1],
-    {
-      title: "To the Holy Trinity",
-      body: [
-        "Having arisen from sleep, we fall down before Thee, O Blessed One, and sing to Thee, O Mighty One, the angelic hymn: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
-        "Do Thou, O Lord, Who hast raised me from my bed and from sleep, enlighten my mind and heart, and open my lips that I may praise Thee, O Holy Trinity.",
-      ],
-    },
-    {
-      title: "Guardian angel",
-      body: [
-        "O Holy Angel of God, guardian and protector of my soul and body, forgive me everything by which I have offended you; protect me during this day, and guard me from every temptation of the enemy. Amen.",
-      ],
-    },
-  ],
-  evening: [
-    commonOpening[1],
-    {
-      title: "Have mercy on us",
-      body: [
-        "Have mercy on us, O Lord, have mercy on us; for laying aside all excuse, we sinners offer to Thee, as to our Master, this supplication: Have mercy on us.",
-        "O blessed Theotokos, open the doors of compassion to us whose hope is in you, that we may not perish but be delivered from adversity through you.",
-      ],
-    },
-    {
-      title: "Forgiveness",
-      body: [
-        "O Eternal God, King of every creature, Who hast enabled me to attain to this hour, forgive me the sins which I have committed this day by thought, word and deed. Grant me to pass through the sleep of this night in peace. Amen.",
-      ],
-    },
-  ],
-  night: [
-    commonOpening[1],
-    {
-      title: "Prayer to Christ",
-      body: [
-        "O Lord Jesus Christ our God, as Thou art good and lovest mankind, forgive me all the sins I have committed today in word, deed, and thought.",
-        "Grant me peaceful and undisturbed sleep. Send Thy guardian angel to protect and keep me from all evil. Amen.",
+        "Into Thy hands, O Lord Jesus Christ my God, I commend my soul and body. Bless me, have mercy on me, and grant me eternal life. Amen.",
+        "O Lord our God, as Thou art good and lovest mankind, forgive me all the sins I have committed this day in word, deed, and thought. Grant me peaceful and undisturbed sleep. Send Thy guardian angel to protect and keep me from every evil. Amen.",
       ],
     },
     {
       title: "Theotokos",
       body: [
         "Beneath your compassion we take refuge, O Theotokos. Despise not our petitions in time of trouble, but deliver us from dangers, only Pure One, only Blessed One.",
+      ],
+    },
+    closingPrayers,
+  ],
+};
+
+const standardExtras: Record<PrayerTime, PrayerStep[]> = {
+  morning: [
+    commonOpening[1],
+    commonOpening[2],
+    {
+      title: "Prayer to the Holy Trinity",
+      body: [
+        "Having arisen from sleep, we fall down before Thee, O Blessed One, and sing to Thee, O Mighty One, the angelic hymn: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
+        "Do Thou, O Lord, Who hast raised me from my bed and from sleep, enlighten my mind and heart, and open my lips that I may praise Thee, O Holy Trinity: Holy! Holy! Holy! art Thou, O God; through the Theotokos, have mercy on us.",
+      ],
+    },
+    {
+      title: "Guardian angel",
+      body: [
+        "O Holy Angel, keeping guard over my soul and body, do not forsake me, a sinner. Protect me during this day, and guard me from every temptation of the enemy, that I may not anger God by any sin.",
+        "Pray to the Lord for me, that He may confirm me in His fear and prove me a worthy servant of His goodness. Amen.",
+      ],
+    },
+    {
+      title: "Patron saint",
+      body: [
+        "Pray to God for me, O Saint _____________ well-pleasing to God. I fervently entreat you, who are the sure help and intercessor for my soul.",
+      ],
+    },
+  ],
+  evening: [
+    commonOpening[1],
+    commonOpening[2],
+    {
+      title: "Have mercy on us",
+      body: [
+        "Have mercy on us, O Lord, have mercy on us; for laying aside all excuse, we sinners offer to Thee, as to our Master, this supplication: Have mercy on us.",
+        "O Lord, have mercy on us, for in Thee have we put our trust. Do not be angry with us, nor remember our iniquities, but look down on us even now, since Thou art compassionate, and deliver us from our enemies.",
+        "O blessed Theotokos, open the doors of compassion to us whose hope is in you, that we may not perish but be delivered from adversity through you, who are the salvation of the Christian people.",
+      ],
+    },
+    {
+      title: "To the Father",
+      body: [
+        "O Eternal God, King of every creature, Who hast enabled me to attain to this hour, forgive me the sins which I have committed this day by thought, word, and deed.",
+        "Cleanse my humble soul, O Lord, from every defilement of flesh and spirit. Grant me to pass through the sleep of this night in peace, that I may rise from my bed and please Thy most holy Name all the days of my life. Amen.",
+      ],
+    },
+  ],
+  night: [
+    commonOpening[1],
+    commonOpening[2],
+    {
+      title: "Prayer to Christ before sleep",
+      body: [
+        "O Almighty Word of the Father, Jesus Christ, Who art Thyself perfect: because of Thy great mercy, do not ever depart from me, Thy servant, but always abide in me.",
+        "O Jesus, Good Shepherd of Thy sheep, guard me while I sleep with the unfading light of Thy Holy Spirit. Enlighten my mind with the light of Thy Gospel, my soul with love of Thy Cross, and my heart with the purity of Thy word. Amen.",
+      ],
+    },
+    {
+      title: "Into Thy hands",
+      body: [
+        "Into Thy hands, O Lord Jesus Christ my God, I commend my spirit. Bless me, have mercy on me, and grant me eternal life. Amen.",
       ],
     },
   ],
@@ -196,45 +237,60 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
     {
       title: "Psalm 50",
       body: [
-        "Have mercy on me, O God, according to Thy great mercy; according to the multitude of Thy compassions blot out my transgression.",
-        "Create in me a clean heart, O God, and renew a right spirit within me.",
+        "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
+        "Wash me thoroughly from mine iniquity, and cleanse me from my sin. For I know mine iniquity, and my sin is ever before me.",
+        "Against Thee only have I sinned and done this evil before Thee, that Thou mightest be justified in Thy words and prevail when Thou art judged.",
+        "Create in me a clean heart, O God, and renew a right spirit within me. Cast me not away from Thy presence, and take not Thy Holy Spirit from me.",
+        "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
       ],
     },
     {
       title: "The Creed",
       body: [
-        "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible; and in one Lord Jesus Christ, the Son of God...",
-        "Use this as a prompt to pray the full Creed from your prayer book when time allows.",
+        "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible.",
+        "And in one Lord Jesus Christ, the Son of God, the Only-begotten, begotten of the Father before all ages: Light of Light, true God of true God; begotten, not made; of one essence with the Father, by Whom all things were made.",
+        "Who for us men and for our salvation came down from heaven, and was incarnate of the Holy Spirit and the Virgin Mary, and became man. And He was crucified for us under Pontius Pilate, and suffered, and was buried.",
+        "And the third day He rose again, according to the Scriptures, and ascended into heaven, and sits at the right hand of the Father. And He shall come again with glory to judge the living and the dead; Whose kingdom shall have no end.",
+        "And in the Holy Spirit, the Lord, the Giver of Life, Who proceeds from the Father; Who with the Father and the Son together is worshiped and glorified; Who spoke by the prophets.",
+        "In one, holy, catholic, and apostolic Church. I acknowledge one baptism for the remission of sins. I look for the resurrection of the dead, and the life of the age to come. Amen.",
       ],
     },
   ],
   evening: [
     {
-      title: "Longer examination",
+      title: "Examination of conscience",
       body: [
-        "Where did I receive mercy today? Where did I refuse mercy? Whom did I wound, neglect, or judge?",
-        "Lord, give me repentance without despair, truth without excuses, and courage to make peace. Amen.",
+        "O Lord, reveal to me where I sinned today by thought, word, deed, or neglect. Show me where I was proud, angry, impure, lazy, fearful, unmerciful, or inattentive to prayer.",
+        "Do not let shame drive me away from Thee. Give me true repentance, courage to confess what must be confessed, and a humble heart that seeks mercy rather than excuses. Amen.",
       ],
     },
     {
       title: "Intercessions",
       body: [
-        "Remember, O Lord, my family, parish, clergy, friends, enemies, the sick, the suffering, travelers, captives, and all who have asked for prayer.",
+        "Remember, O Lord, my family, my parish, my clergy, my friends, my enemies, the sick, the suffering, travelers, captives, those in danger, those who have no one to pray for them, and all who have asked for my prayers.",
+        "Grant rest, O Lord, to Thy departed servants, and make their memory to be eternal. Amen.",
       ],
     },
   ],
   night: [
     {
-      title: "Quiet Jesus Prayer",
+      title: "Jesus Prayer",
       body: [
         "Pray slowly for one to three minutes:",
         "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
       ],
     },
     {
-      title: "Protection",
+      title: "Protection by the Cross",
       body: [
-        "Surround me, O Lord, with the power of Thy precious and life-giving Cross. Preserve me from every evil imagination, fear, and disturbance. Amen.",
+        "Let God arise, let His enemies be scattered; let those who hate Him flee from before His face.",
+        "Surround me, O Lord, with the power of Thy precious and life-giving Cross. Preserve me from every evil imagination, fear, disturbance, and assault of the enemy. Amen.",
+      ],
+    },
+    {
+      title: "Prayer to the Theotokos",
+      body: [
+        "O most holy Theotokos, save and protect me. Cover me with your holy protection through this night, and deliver me from all evil by your prayers to Christ our God. Amen.",
       ],
     },
   ],
