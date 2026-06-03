@@ -5,4 +5,6 @@ These SVG files are source assets for Android launcher/adaptive icons:
 - `android/icon-foreground.svg`
 - `android/icon-background.svg`
 
-When preparing a signed Android release, use these as the source artwork for Android Studio's Image Asset tool or an icon-generation pipeline. The web/PWA icon is `public/military-orthodox-cross.svg`.
+The artwork uses an OCP-inspired tactical background and an Orthodox cross whose lower footrest slopes downward on the right side.
+
+The APK workflows run `npm run android:apply-icon`, which writes matching adaptive icon XML into the generated Android project before Gradle builds the APK. The web/PWA icon is `public/military-orthodox-cross.svg`.

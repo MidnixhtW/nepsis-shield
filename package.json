@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "android:apply-icon": "node scripts/apply-android-ocp-icon.mjs",
     "cap:add:android": "capacitor add android",
     "cap:sync": "capacitor sync android",
     "cap:open": "capacitor open android"

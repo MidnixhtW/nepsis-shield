@@ -61,6 +61,9 @@ jobs:
       - name: Sync Capacitor Android assets
         run: npx capacitor sync android
 
+      - name: Apply OCP Orthodox launcher icon
+        run: npm run android:apply-icon
+
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug

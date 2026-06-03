@@ -1,7 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 432 432">
-  <rect width="432" height="432" fill="#2f3a1f"/>
-  <path d="M0 0h432v432H0z" fill="#2f3a1f"/>
-  <path d="M0 0h432v432H0z" fill="url(#grid)" opacity=".18"/>
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#817a56"/>
+      <stop offset=".48" stop-color="#5f6843"/>
+      <stop offset="1" stop-color="#303a27"/>
+    </linearGradient>
+    <pattern id="ocp" width="156" height="156" patternUnits="userSpaceOnUse">
+      <rect width="156" height="156" fill="#6d704f"/>
+      <path d="M-18 36c33-29 64-26 88-8 25 19 55 13 91-15v48c-32 23-65 25-94 9-30-17-55-10-85 18Z" fill="#8a805d" opacity=".78"/>
+      <path d="M18 118c28-31 57-39 83-20 23 16 47 10 78-18v54c-25 20-52 22-77 8-30-16-54-7-84 24Z" fill="#4f5b39" opacity=".84"/>
+      <path d="M94-14c20 14 31 33 26 52-7 27-31 35-65 27 17-29 20-53 39-79Z" fill="#2f3826" opacity=".62"/>
+      <path d="M125 58c29 12 39 36 17 59-18-10-43-7-63 9 8-32 20-56 46-68Z" fill="#c0aa78" opacity=".48"/>
+    </pattern>
+  </defs>
+  <rect width="432" height="432" fill="url(#base)"/>
+  <rect width="432" height="432" fill="url(#ocp)" opacity=".92"/>
+  <path d="M0 0h432v432H0z" fill="url(#grid)" opacity=".12"/>
   <defs>
     <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
       <path d="M36 0H0v36" fill="none" stroke="#d0b063" stroke-width="2"/>
