@@ -20,6 +20,10 @@ jobs:
       VITE_GITHUB_REPOSITORY: ${{ github.repository }}
       VITE_APK_VERSION: debug-${{ github.run_number }}
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
+      ANDROID_VERSION_CODE: ${{ github.run_number }}
+      ANDROID_VERSION_NAME: debug-${{ github.run_number }}
+      ANDROID_APPLICATION_ID: com.orthocompanion.app.debug${{ github.run_number }}
+      ANDROID_APP_NAME: Ortho Companion Debug ${{ github.run_number }}
 
     steps:
       - name: Check out repository
@@ -38,6 +42,9 @@ jobs:
         run: |
           node --version
           npm --version
+
+      - name: Set build timestamp
+        run: echo "VITE_APK_RELEASE_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
 
       - name: Set up Java
         uses: actions/setup-java@v5
@@ -68,6 +75,9 @@ jobs:
 
       - name: Sync Capacitor Android assets
         run: npx capacitor sync android
+
+      - name: Patch Android package metadata
+        run: npm run android:patch-build
 
       - name: Apply OCP Orthodox launcher icon
         run: npm run android:apply-icon

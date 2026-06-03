@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "android:apply-icon": "node scripts/apply-android-ocp-icon.mjs",
+    "android:patch-build": "node scripts/patch-android-build.mjs",
     "cap:add:android": "capacitor add android",
     "cap:sync": "capacitor sync android",
     "cap:open": "capacitor open android"

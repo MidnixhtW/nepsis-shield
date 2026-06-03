@@ -163,7 +163,8 @@ export default function Download() {
           <div className="grid gap-3 text-sm">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Package</p>
-              <p className="mt-1 font-semibold">com.orthocompanion.app</p>
+              <p className="mt-1 font-semibold">Release: com.orthocompanion.app</p>
+              <p className="mt-1 text-xs text-muted-foreground">Debug APKs use a build-specific package so they do not collide with older test installs.</p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Release date</p>
@@ -268,8 +269,12 @@ export default function Download() {
               description="If Android blocks the install, allow your browser or file manager to install unknown apps, then try again."
             />
             <Step
-              title="Open the app"
-              description="After installation, launch Ortho Companion from your app drawer and verify the military Orthodox cross icon."
+              title="Open the newest build"
+              description="Debug APKs are labeled with their build number so you can tell the newest install from an older copy already on the phone."
+            />
+            <Step
+              title="If Android says app not installed"
+              description="Uninstall any older Ortho Companion debug APK, then install the newest downloaded APK. Signed release APKs can update normally when built with the same signing key."
             />
           </div>
         </Card>
