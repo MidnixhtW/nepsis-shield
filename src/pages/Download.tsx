@@ -88,7 +88,7 @@ export default function Download() {
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 {APK_DOWNLOAD_IS_DIRECT
                   ? "Tap the button below to download the latest configured Android APK. This direct build is intended for testing and sideload installation."
-                  : "The app is wired for APK downloads. Once the Android workflow produces and hosts an APK, connect its URL with VITE_APK_DOWNLOAD_URL and this page will become a direct download page."}
+                  : "The app is ready to download the rolling GitHub Release APK. Publish the repository workflow once, or set VITE_GITHUB_REPOSITORY / VITE_APK_DOWNLOAD_URL for this deployment."}
               </p>
 
               <Separator className="my-5" />
@@ -109,9 +109,9 @@ export default function Download() {
                   <div className="flex gap-3">
                     <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold">No direct APK URL is configured yet.</p>
+                      <p className="text-sm font-semibold">No repository or direct APK URL is configured yet.</p>
                       <p className="mt-1 text-xs leading-relaxed opacity-85">
-                        Run the Android build workflow, publish or attach the APK, then set VITE_APK_DOWNLOAD_URL to the APK file URL.
+                        The workflow now publishes ortho-companion-latest-debug.apk to GitHub Releases. Set VITE_GITHUB_REPOSITORY to owner/repo, or set VITE_APK_DOWNLOAD_URL directly.
                       </p>
                     </div>
                   </div>
@@ -202,7 +202,7 @@ export default function Download() {
             <div className="flex items-start gap-3">
               <Info className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <p className="text-sm leading-relaxed text-muted-foreground">
-                If you publish through GitHub Releases, use the final APK asset URL as VITE_APK_DOWNLOAD_URL and the release page as VITE_APK_ARTIFACTS_URL.
+                The debug workflow publishes a stable asset named ortho-companion-latest-debug.apk. Configure VITE_GITHUB_REPOSITORY as owner/repo, or use VITE_APK_DOWNLOAD_URL for a custom hosted APK.
               </p>
             </div>
           </div>

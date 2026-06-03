@@ -7,10 +7,17 @@ on:
       - main
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build-android-debug-apk:
-    name: Build downloadable debug APK
+    name: Build and publish downloadable debug APK
     runs-on: ubuntu-latest
+    env:
+      VITE_GITHUB_REPOSITORY: ${{ github.repository }}
+      VITE_APK_VERSION: debug-${{ github.run_number }}
+      VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
 
     steps:
       - name: Check out repository
@@ -46,9 +53,37 @@ jobs:
         working-directory: android
         run: ./gradlew assembleDebug
 
+      - name: Prepare APK files
+        run: |
+          mkdir -p release-files
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-latest-debug.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-debug-${{ github.run_number }}.apk
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: ortho-companion-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: release-files/*.apk
           if-no-files-found: error
+
+      - name: Publish rolling GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-debug-latest
+          name: Ortho Companion Latest Debug APK
+          prerelease: true
+          files: release-files/*.apk
+          body: |
+            ## Latest debug APK
+
+            This release is updated automatically from the latest successful Android debug build.
+
+            Direct APK URL:
+            https://github.com/${{ github.repository }}/releases/download/android-debug-latest/ortho-companion-latest-debug.apk
+
+            Build metadata:
+            - Commit: ${{ github.sha }}
+            - Run: ${{ github.run_number }}
+            - Built at: ${{ github.run_started_at }}
+
+            This is a debug APK intended for testing and sideload installation.

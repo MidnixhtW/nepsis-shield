@@ -22,16 +22,21 @@ This project now includes GitHub Actions workflows for Android APK builds and re
 
 Workflow files:
 
-- `.github/workflows/android-debug-apk.yml` builds a downloadable debug APK artifact.
-- `.github/workflows/android-release.yml` publishes APK files to GitHub Releases and supports optional signed release APKs.
+- `.github/workflows/android-debug-apk.yml` builds a debug APK and publishes a rolling GitHub prerelease tagged `android-debug-latest`.
+- `.github/workflows/android-release.yml` publishes versioned APK files to GitHub Releases and supports optional signed release APKs.
 
 The debug workflow uploads an artifact named:
 
 - `ortho-companion-debug-apk`
 
-Inside that artifact is the installable debug APK:
+It also publishes these release assets:
 
-- `app-debug.apk`
+- `ortho-companion-latest-debug.apk` — stable direct-download filename used by the app.
+- `ortho-companion-debug-<run-number>.apk` — run-specific debug APK copy.
+
+Stable debug APK URL format:
+
+- `https://github.com/<owner>/<repo>/releases/download/android-debug-latest/ortho-companion-latest-debug.apk`
 
 The release workflow accepts a version number and can publish:
 
@@ -46,14 +51,15 @@ Signing secrets for release builds:
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. Configure these optional deployment variables when you have a hosted APK/artifact URL:
+The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. Configure these optional deployment variables:
 
-- `VITE_APK_DOWNLOAD_URL` — direct link to the APK file.
-- `VITE_APK_ARTIFACTS_URL` — optional link to the build artifacts page.
+- `VITE_GITHUB_REPOSITORY` — GitHub repository in `owner/repo` format. This lets the app build the stable GitHub Release APK URL automatically.
+- `VITE_APK_DOWNLOAD_URL` — optional direct link to a custom APK file. Overrides the GitHub Release URL.
+- `VITE_APK_ARTIFACTS_URL` — optional link to the build artifacts or release page.
 - `VITE_APK_VERSION` — displayed APK version, defaults to `1.0.0`.
 - `VITE_APK_RELEASE_DATE` — displayed release date/status.
 
-If `VITE_APK_DOWNLOAD_URL` is not set, the button opens `/download` instead of pretending a direct APK exists.
+If the app is hosted on GitHub Pages, it can infer `VITE_GITHUB_REPOSITORY` automatically from the page URL. Otherwise, set `VITE_GITHUB_REPOSITORY` or `VITE_APK_DOWNLOAD_URL` in your deployment environment.
 
 ## Android APK packaging
 
