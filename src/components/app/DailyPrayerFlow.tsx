@@ -24,6 +24,11 @@ import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
+import {
+  cancelSystemPrayerReminder,
+  isNativeReminderUnavailable,
+  scheduleSystemPrayerReminder,
+} from "@/lib/systemPrayerReminders";
 import { showError, showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
@@ -365,23 +370,54 @@ export function DailyPrayerFlow() {
 
   function updateReminder(nextTime: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
     setReminders((prev) => ({ ...prev, [nextTime]: { ...prev[nextTime], ...patch } }));
+
+    if (patch.enabled === false) {
+      void cancelSystemPrayerReminder(nextTime);
+    }
   }
 
-  function addReminderToCalendar(nextTime: PrayerTime) {
+  function downloadCalendarReminder(nextTime: PrayerTime) {
+    const reminder = reminders[nextTime];
+    const { start, end } = makeReminderDate(reminder.time);
+    const label = prayerMeta[nextTime].label;
+    const ics = createSimpleIcs({
+      title: `${label} Prayer (Ortho Companion)`,
+      description: `Open Ortho Companion and pray the ${label.toLowerCase()} rule. This calendar item is created locally from your reminder preference.`,
+      start,
+      end,
+    });
+    downloadTextFile(`${nextTime}-prayer-reminder.ics`, ics, "text/calendar");
+  }
+
+  async function syncReminderToSystem(nextTime: PrayerTime) {
     try {
       const reminder = reminders[nextTime];
-      const { start, end } = makeReminderDate(reminder.time);
       const label = prayerMeta[nextTime].label;
-      const ics = createSimpleIcs({
-        title: `${label} Prayer (Ortho Companion)`,
-        description: `Open Ortho Companion and pray the ${label.toLowerCase()} rule. This calendar item is created locally from your reminder preference.`,
-        start,
-        end,
+      const result = await scheduleSystemPrayerReminder({
+        key: nextTime,
+        label,
+        time: reminder.time,
       });
-      downloadTextFile(`${nextTime}-prayer-reminder.ics`, ics, "text/calendar");
-      showSuccess(`${label} reminder downloaded.`);
+
+      if (result.ok) {
+        showSuccess(`${label} prayer reminder added to system notifications.`);
+        return;
+      }
+
+      if ("reason" in result && result.reason === "permission-denied") {
+        showError("Notification permission was denied. Enable notifications for Ortho Companion in system settings.");
+        return;
+      }
+
+      if (isNativeReminderUnavailable(result)) {
+        downloadCalendarReminder(nextTime);
+        showSuccess(`${label} calendar reminder downloaded for your system calendar.`);
+        return;
+      }
+
+      showError("Couldn't add the system reminder.");
     } catch {
-      showError("Couldn't create reminder file.");
+      showError("Couldn't add the system reminder.");
     }
   }
 
@@ -593,7 +629,7 @@ export function DailyPrayerFlow() {
           <div>
             <h3 className="text-lg font-semibold tracking-tight">Prayer reminders</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Save your preferred times and download calendar reminders for your device.
+              Save your preferred times and connect them to native system notifications in the app. In a browser, this falls back to a calendar reminder file.
             </p>
           </div>
           <Bell className="h-5 w-5 text-muted-foreground" />
@@ -610,7 +646,7 @@ export function DailyPrayerFlow() {
                 <div>
                   <p className="text-sm font-semibold">{prayerMeta[key].label} prayer</p>
                   <p className="text-xs text-muted-foreground">
-                    {reminders[key].enabled ? `Reminder set for ${reminders[key].time}` : "Reminder off"}
+                    {reminders[key].enabled ? `System reminder time: ${reminders[key].time}` : "System reminder off"}
                   </p>
                 </div>
               </div>
@@ -626,10 +662,10 @@ export function DailyPrayerFlow() {
                   type="button"
                   variant="outline"
                   className="rounded-2xl border-border/60"
-                  onClick={() => addReminderToCalendar(key)}
+                  onClick={() => void syncReminderToSystem(key)}
                   disabled={!reminders[key].enabled}
                 >
-                  <CalendarPlus className="mr-2 h-4 w-4" /> Add
+                  <CalendarPlus className="mr-2 h-4 w-4" /> Sync
                 </Button>
               </div>
             </div>
