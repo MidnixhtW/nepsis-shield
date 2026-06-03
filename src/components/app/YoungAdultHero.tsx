@@ -44,7 +44,7 @@ export function OrthodoxHero({
               A calmer way to keep faith close throughout the day.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Begin with Orthodox prayer, daily Scripture, fasting guidance, and brief reflection—presented in a focused field-guide layout that stays quiet and practical.
+              Begin with Orthodox prayer, daily Scripture, fasting guidance, and brief reflection, presented in a focused field-guide layout that stays quiet and practical.
             </p>
 
             <div className="mt-5 flex flex-wrap gap-2">
@@ -98,7 +98,7 @@ export function OrthodoxHero({
             </div>
             <div className="my-4 h-px gold-hairline" />
             <p className="text-sm leading-relaxed text-muted-foreground">
-              “One clear prayer, one faithful next step.” Use the app as a quiet anchor—not a distraction.
+              “One clear prayer, one faithful next step.” Use the app as a quiet anchor, not a distraction.
             </p>
           </div>
         </div>

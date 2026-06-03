@@ -31,8 +31,8 @@ The debug workflow uploads an artifact named:
 
 It also publishes these release assets:
 
-- `ortho-companion-latest-debug.apk` — stable direct-download filename used by the app.
-- `ortho-companion-debug-<run-number>.apk` — run-specific debug APK copy.
+- `ortho-companion-latest-debug.apk` - stable direct-download filename used by the app.
+- `ortho-companion-debug-<run-number>.apk` - run-specific debug APK copy.
 
 Stable debug APK URL format:
 
@@ -57,11 +57,11 @@ The app has a dedicated `/download` page and a visible **Download APK** button i
 
 Configure these optional deployment variables only when overriding the default APK source:
 
-- `VITE_GITHUB_REPOSITORY` — GitHub repository in `owner/repo` format. This lets the app build a different stable GitHub Release APK URL.
-- `VITE_APK_DOWNLOAD_URL` — optional direct link to a custom APK file. Overrides the GitHub Release URL.
-- `VITE_APK_ARTIFACTS_URL` — optional link to the build artifacts or release page.
-- `VITE_APK_VERSION` — displayed APK version, defaults to `1.0.0`.
-- `VITE_APK_RELEASE_DATE` — displayed release date/status.
+- `VITE_GITHUB_REPOSITORY` - GitHub repository in `owner/repo` format. This lets the app build a different stable GitHub Release APK URL.
+- `VITE_APK_DOWNLOAD_URL` - optional direct link to a custom APK file. Overrides the GitHub Release URL.
+- `VITE_APK_ARTIFACTS_URL` - optional link to the build artifacts or release page.
+- `VITE_APK_VERSION` - displayed APK version, defaults to `1.0.0`.
+- `VITE_APK_RELEASE_DATE` - displayed release date/status.
 
 ## Android APK packaging
 

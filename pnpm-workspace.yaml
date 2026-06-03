@@ -1,6 +1,5 @@
 allowBuilds:
   "@airbnb/node-memwatch": true
-  "@anthropic-ai/claude-code": true
   "@apollo/protobufjs": true
   "@apollo/rover": true
   "@appsignal/nodejs": true
@@ -269,7 +268,6 @@ allowBuilds:
   nx: true
   odiff-bin: true
   oniguruma: true
-  opencode-ai: true
   optipng-bin: true
   oracledb: true
   os-dns-native: true

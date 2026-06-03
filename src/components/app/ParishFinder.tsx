@@ -20,7 +20,7 @@ function uniqueByUrl(items: Locator[]) {
 }
 
 const ASSEMBLY_US: Locator = {
-  label: "Assembly of Bishops (US) — Parish Directory",
+  label: "Assembly of Bishops (US) - Parish Directory",
   url: "https://www.assemblyofbishops.org/directories/parishes",
   hint: "Pan-Orthodox directory (US)",
 };
@@ -28,37 +28,37 @@ const ASSEMBLY_US: Locator = {
 const MORE_JURISDICTIONS: Locator[] = [
   ASSEMBLY_US,
   {
-    label: "ACROD — Parish Directory",
+    label: "ACROD - Parish Directory",
     url: "https://www.acrod.org/directories/search/parishes",
     hint: "American Carpatho-Russian Orthodox Diocese",
   },
   {
-    label: "Romanian Metropolia — Parish Directory",
+    label: "Romanian Metropolia - Parish Directory",
     url: "https://www.mitropolia.us/index.php/en/structure/parish-directory",
     hint: "Romanian Orthodox Metropolia of the Americas",
   },
   {
-    label: "UOC of USA — Parish Directory",
+    label: "UOC of USA - Parish Directory",
     url: "https://www.uocofusa.org/directories_parishes",
     hint: "Ukrainian Orthodox Church of the USA",
   },
   {
-    label: "Albanian Orthodox Diocese — Parishes",
+    label: "Albanian Orthodox Diocese - Parishes",
     url: "https://albaniandiocese-ep.org/who-we-are/parishes",
     hint: "Albanian Orthodox Diocese of the Americas",
   },
   {
-    label: "Bulgarian Diocese — Official Site",
+    label: "Bulgarian Diocese - Official Site",
     url: "https://www.bulgariandiocese.org/",
     hint: "Bulgarian Eastern Orthodox Diocese (USA/Canada/Australia)",
   },
   {
-    label: "Bulgarian Diocese — Parish list (OCA directory)",
+    label: "Bulgarian Diocese - Parish list (OCA directory)",
     url: "https://www.oca.org/parishes/diocese/BU",
     hint: "Useful listing if the diocese site is hard to navigate",
   },
   {
-    label: "Georgian parishes (US) — via Assembly",
+    label: "Georgian parishes (US) - via Assembly",
     url: "https://www.assemblyofbishops.org/directories/parishes?jur=geo&searchType=jurisdiction",
     hint: "Jurisdiction filter on Assembly directory",
   },
@@ -85,12 +85,12 @@ function primaryLocatorsFor(jurisdiction: string): Locator[] {
   if (jurisdiction === "antiochian") {
     return [
       {
-        label: "Antiochian — Diocese Directory",
+        label: "Antiochian - Diocese Directory",
         url: "https://www.antiochian.org/parishes/diocesedirectory",
         hint: "Antiochian Orthodox Christian Archdiocese",
       },
       {
-        label: "Antiochian — Parish Map",
+        label: "Antiochian - Parish Map",
         url: "https://www.antiochian.org/parishes/map",
         hint: "Interactive map",
       },
@@ -106,7 +106,7 @@ function primaryLocatorsFor(jurisdiction: string): Locator[] {
   if (jurisdiction === "rocor") {
     return [
       {
-        label: "ROCOR — Parish & Clergy Directory",
+        label: "ROCOR - Parish & Clergy Directory",
         url: "https://directory.stinnocentpress.com/",
         hint: "Russian Orthodox Church Outside Russia",
       },
