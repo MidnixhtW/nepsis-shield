@@ -39,15 +39,10 @@ jobs:
           node-version: 22.x
           check-latest: true
 
-      - name: Enable pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@9.15.9 --activate
-
-      - name: Verify tool versions
+      - name: Verify Node.js tool versions
         run: |
           node --version
-          pnpm --version
+          npm --version
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -57,23 +52,28 @@ jobs:
 
       - name: Verify Android SDK
         run: |
-          yes | sdkmanager --licenses >/dev/null
-          sdkmanager --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
+          set -euo pipefail
+          SDKMANAGER="${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER="$(command -v sdkmanager)"
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null
+          "$SDKMANAGER" --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: npm install
 
       - name: Build web app
-        run: pnpm run build
+        run: npm run build
 
       - name: Generate Android project
-        run: pnpm exec capacitor add android
+        run: npx capacitor add android
 
       - name: Sync Capacitor Android assets
-        run: pnpm exec capacitor sync android
+        run: npx capacitor sync android
 
       - name: Apply OCP Orthodox launcher icon
-        run: pnpm run android:apply-icon
+        run: npm run android:apply-icon
 
       - name: Build debug APK
         working-directory: android
