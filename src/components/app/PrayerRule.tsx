@@ -105,7 +105,7 @@ export function PrayerRule() {
     const base = [
       { id: "morning", label: "Morning prayer" },
       { id: "readings", label: "Read Epistle & Gospel" },
-      { id: "rope", label: "Jesus Prayer (a few minutes)" },
+      { id: "rope", label: "Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner" },
       { id: "evening", label: "Evening prayer" },
     ];
 
@@ -116,7 +116,7 @@ export function PrayerRule() {
     }
     if (prefs.mode === "long") {
       modeExtras.push({ id: "intercessions", label: "Intercessions for family, parish, and enemies" });
-      modeExtras.push({ id: "silence", label: "Stillness or Jesus Prayer timer" });
+      modeExtras.push({ id: "silence", label: "Stillness or Jesus Prayer timer: Lord Jesus Christ, Son of God, have mercy on me, a sinner" });
     }
 
     const extras = [] as Array<{ id: string; label: string }>;

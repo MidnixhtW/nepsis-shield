@@ -166,7 +166,7 @@ export function InclusiveChristianPath({
               description="Rooted in the Church's prayer without becoming combative."
               icon={<Church className="h-5 w-5" />}
               items={[
-                "Morning/evening prayers, the Jesus Prayer, prayer rope practice, icons, feasts, fasting, saints, hymns, and propers.",
+                "Morning/evening prayers, the Jesus Prayer — \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" — prayer rope practice, icons, feasts, fasting, saints, hymns, and propers.",
                 "Beginner explanations for Theotokos, icons, Divine Liturgy, sacraments/mysteries, and Holy Tradition.",
                 "Official Orthodox source links when a topic needs more than a short summary.",
               ]}
@@ -191,7 +191,7 @@ export function InclusiveChristianPath({
                   description="Small habits that help real people continue."
                   icon={<ListChecks className="h-5 w-5" />}
                   items={[
-                    "Prayer rule, Jesus Prayer counter, stillness timer, private encrypted reflection, confession prep, and reading plans.",
+                    "Prayer rule, Jesus Prayer (\"Lord Jesus Christ, Son of God, have mercy on me, a sinner\") counter, stillness timer, private encrypted reflection, confession prep, and reading plans.",
                     "Gratitude, repentance, mercy, and attention prompts for everyday discipleship.",
                     "Pastoral reminders: this app supports church life; it does not replace a priest, pastor, parish, or spiritual father.",
                   ]}
@@ -266,7 +266,7 @@ export function InclusiveChristianPath({
                   <BookOpen className="mr-2 h-4 w-4" /> Gospel & Psalms plans
                 </PathButton>
                 <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}>
-                  <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer practice
+                  <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner
                 </PathButton>
                 <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}>
                   <Heart className="mr-2 h-4 w-4" /> Reflection journal

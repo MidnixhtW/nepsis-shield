@@ -51,7 +51,7 @@ export function QuickStartDialog() {
       {
         key: "practice",
         title: "Pray with stillness",
-        description: "A quiet Jesus Prayer counter and stillness timer.",
+        description: "A quiet counter for \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" and stillness timer.",
         icon: <Sparkles className="h-4 w-4 text-primary" />,
         go: () => navigate("/pray?tab=counter"),
       },

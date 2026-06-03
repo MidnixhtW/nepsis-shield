@@ -280,7 +280,7 @@ const QA_ITEMS: QA[] = [
     q: "What does the OCA say about the Rosary?",
     a: [
       "The OCA Q&A notes that the Roman Catholic Rosary is not an Orthodox devotion in its present form.",
-      "Orthodox Christians commonly use the Jesus Prayer and a prayer rope as a simple practice of repeating prayer with attention.",
+      "Orthodox Christians commonly use the Jesus Prayer — \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" — and a prayer rope as a simple practice of repeating prayer with attention.",
     ].join("\n\n"),
     sourceLabel: "OCA – The Rosary (Q&A)",
     sourceUrl: "https://www.oca.org/questions/romancatholicism/the-rosary",

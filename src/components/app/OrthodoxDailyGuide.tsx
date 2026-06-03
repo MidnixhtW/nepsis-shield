@@ -134,7 +134,7 @@ export function OrthodoxDailyGuide() {
           </div>
           <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
             <p className="text-xs font-semibold tracking-wide text-muted-foreground">Day</p>
-            <p className="mt-1 text-sm">Keep attention: a short Jesus Prayer, small mercy.</p>
+            <p className="mt-1 text-sm">Keep attention: "Lord Jesus Christ, Son of God, have mercy on me, a sinner," small mercy.</p>
           </div>
           <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
             <p className="text-xs font-semibold tracking-wide text-muted-foreground">Meals</p>

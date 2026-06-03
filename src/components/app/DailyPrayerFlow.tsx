@@ -125,7 +125,7 @@ const shortFlows: Record<PrayerTime, PrayerStep[]> = {
       ],
     },
     {
-      title: "Jesus Prayer",
+      title: "Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner",
       body: [
         "Lord Jesus Christ, Son of God, have mercy on me, a sinner. (Repeat slowly 3, 12, or 33 times.)",
       ],
@@ -274,7 +274,7 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
   night: [
     {
-      title: "Jesus Prayer",
+      title: "Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner",
       body: [
         "Pray slowly for one to three minutes:",
         "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",

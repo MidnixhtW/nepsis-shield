@@ -463,7 +463,7 @@ const jesus = ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."];
 const sharedPrayerBasics = [
   "THE LORD'S PRAYER:",
   "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
-  "JESUS PRAYER:",
+  "JESUS PRAYER: Lord Jesus Christ, Son of God, have mercy on me, a sinner",
   jesus[0],
   "SCRIPTURE PRAYER:",
   "Lord Jesus Christ, open my heart to Your Gospel. Teach me to hear Your word, keep Your commandments, and love You above all things. Amen.",

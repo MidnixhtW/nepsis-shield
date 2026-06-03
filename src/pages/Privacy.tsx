@@ -443,7 +443,7 @@ export default function Privacy() {
           <Alert className="rounded-2xl border-primary/30 bg-primary/5">
             <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
-              • Journal notes • Confession prep (checks + notes) • Jesus Prayer counter • Prayer Rule progress • Bible bookmarks • Reading plans • Related privacy settings.
+              • Journal notes • Confession prep (checks + notes) • "Lord Jesus Christ, Son of God, have mercy on me, a sinner" counter • Prayer Rule progress • Bible bookmarks • Reading plans • Related privacy settings.
               <br />
               Anything outside these sections is excluded. Avoid plaintext/manual backups (like copy/paste or screenshots) for sensitive notes.
             </AlertDescription>

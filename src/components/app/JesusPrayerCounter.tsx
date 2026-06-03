@@ -160,7 +160,7 @@ export function JesusPrayerCounter() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">Jesus Prayer rope</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               "Lord Jesus Christ, Son of God, have mercy on me, a sinner."
             </p>
@@ -333,7 +333,7 @@ export function JesusPrayerCounter() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h3 className="text-base font-semibold tracking-tight">OCA reference</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          Read: "The Jesus Prayer" (OCA)
+          Read: "Lord Jesus Christ, Son of God, have mercy on me, a sinner" (OCA)
         </p>
         <div className="mt-4">
           <Button asChild variant="outline" className="rounded-2xl border-border/60">

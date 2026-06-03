@@ -43,7 +43,7 @@ const entries: ManualEntry[] = [
       "Lord Jesus Christ, Son of God, guard my mind, steady my hands, and make my heart attentive today. Let my words be truthful, my courage humble, and my strength used for mercy. Amen.",
     practice: [
       "Make the sign of the Cross slowly.",
-      "Pray the Lord's Prayer or the Jesus Prayer three times.",
+      "Pray the Lord's Prayer or \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" three times.",
       "Name one concrete act of mercy for the day.",
     ],
   },
@@ -79,9 +79,9 @@ const entries: ManualEntry[] = [
     subtitle: "When pressure, fear, or anger spikes.",
     icon: <AlertTriangle className="h-4 w-4 text-primary" />,
     prayer:
-      "Lord Jesus Christ, have mercy on me. Quiet what is disordered in me. Give me one clear breath, one honest word, and one faithful next step. Amen.",
+      "Lord Jesus Christ, Son of God, have mercy on me, a sinner. Quiet what is disordered in me. Give me one clear breath, one honest word, and one faithful next step. Amen.",
     practice: [
-      "Breathe slowly and pray the Jesus Prayer once with attention.",
+      "Breathe slowly and pray \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" once with attention.",
       "Do the next right thing; do not solve the whole future at once.",
       "If you are in immediate danger, seek safety and help first.",
     ],

@@ -474,7 +474,7 @@ export function TodayOverview({
               onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
             />
             <QuickAction
-              label="Jesus Prayer"
+              label="Lord Jesus Christ, Son of God, have mercy on me, a sinner"
               description="Open the counter and stillness timer."
               icon={<Target className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}

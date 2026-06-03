@@ -39,12 +39,12 @@ const MICROS: Micro[] = [
   {
     id: "stillness",
     label: "2 minutes of stillness",
-    detail: "Sit quietly, breathe slowly, and say the Jesus Prayer a few times.",
+    detail: "Sit quietly, breathe slowly, and say \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" a few times.",
     icon: Timer,
   },
   {
     id: "rope",
-    label: "10 Jesus Prayers",
+    label: "10× Lord Jesus Christ, Son of God, have mercy on me, a sinner",
     detail: "Slow, attentive, without rushing.",
     icon: Sparkles,
   },
