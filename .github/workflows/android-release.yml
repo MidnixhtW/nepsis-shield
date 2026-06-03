@@ -86,6 +86,22 @@ jobs:
           ./gradlew --version
           ./gradlew assembleDebug --stacktrace --warning-mode all
 
+      - name: Print Gradle diagnostics on failure
+        if: failure()
+        run: |
+          echo "Gradle failed. Printing useful diagnostics..."
+          find android -maxdepth 8 -path "*/build/reports/*" -type f -print || true
+          find android -maxdepth 8 -path "*/build/reports/*" -type f \( -name "*.txt" -o -name "*.xml" -o -name "*.html" \) -print0 | while IFS= read -r -d '' file; do
+            echo "::group::$file"
+            sed -n '1,220p' "$file" || true
+            echo "::endgroup::"
+          done
+          find android -path "*/build/outputs/logs/*" -type f -print0 | while IFS= read -r -d '' file; do
+            echo "::group::$file"
+            sed -n '1,220p' "$file" || true
+            echo "::endgroup::"
+          done
+
       - name: Build unsigned release APK
         working-directory: android
         run: ./gradlew assembleRelease --stacktrace --warning-mode all
