@@ -3,10 +3,6 @@ name: Publish Android APK Release
 on:
   workflow_dispatch:
     inputs:
-      version:
-        description: Release version, for example 1.0.0
-        required: true
-        default: 1.0.0
       prerelease:
         description: Mark GitHub release as prerelease
         required: true
@@ -23,10 +19,11 @@ jobs:
     permissions:
       contents: read
     env:
-      VITE_APK_VERSION: ${{ inputs.version }}
+      VITE_APK_VERSION: V${{ github.run_number }}
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
       ANDROID_VERSION_CODE: ${{ github.run_number }}
-      ANDROID_VERSION_NAME: ${{ inputs.version }}
+      ANDROID_VERSION_NAME: V${{ github.run_number }}
+      ANDROID_APP_NAME: Ortho Companion
       SIGNING_READY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.ANDROID_KEYSTORE_PASSWORD != '' && secrets.ANDROID_KEY_ALIAS != '' && secrets.ANDROID_KEY_PASSWORD != '' }}
 
     steps:
@@ -145,17 +142,17 @@ jobs:
       - name: Collect APK files
         run: |
           mkdir -p release-files
-          cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-${{ inputs.version }}-debug.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-V${{ github.run_number }}-debug.apk
           if [ -f android/app/build/outputs/apk/release/app-release-signed.apk ]; then
-            cp android/app/build/outputs/apk/release/app-release-signed.apk release-files/ortho-companion-${{ inputs.version }}-signed-release.apk
+            cp android/app/build/outputs/apk/release/app-release-signed.apk release-files/ortho-companion-V${{ github.run_number }}-signed-release.apk
           else
-            cp android/app/build/outputs/apk/release/app-release-unsigned.apk release-files/ortho-companion-${{ inputs.version }}-unsigned-release.apk
+            cp android/app/build/outputs/apk/release/app-release-unsigned.apk release-files/ortho-companion-V${{ github.run_number }}-unsigned-release.apk
           fi
 
       - name: Upload release build artifact
         uses: actions/upload-artifact@v6
         with:
-          name: ortho-companion-${{ inputs.version }}-apk-files
+          name: ortho-companion-V${{ github.run_number }}-apk-files
           path: release-files/*.apk
           if-no-files-found: error
 
@@ -170,7 +167,7 @@ jobs:
       - name: Download release build artifact
         uses: actions/download-artifact@v7
         with:
-          name: ortho-companion-${{ inputs.version }}-apk-files
+          name: ortho-companion-V${{ github.run_number }}-apk-files
           path: release-files
 
       - name: Publish GitHub release
@@ -180,7 +177,7 @@ jobs:
         run: |
           set -euo pipefail
           cat > release-notes.md <<'EOF'
-          ## Ortho Companion v${{ inputs.version }}
+          ## Ortho Companion V${{ github.run_number }}
 
           Android APK release for testing and distribution.
 
@@ -189,17 +186,17 @@ jobs:
           - Unsigned release APK is included only when signing secrets are missing.
 
           Configure the deployed app with:
-          - VITE_APK_VERSION=${{ inputs.version }}
+          - VITE_APK_VERSION=V${{ github.run_number }}
           - VITE_APK_RELEASE_DATE=${{ github.run_started_at }}
           - VITE_APK_DOWNLOAD_URL=(direct APK asset URL after release publish)
           - VITE_APK_ARTIFACTS_URL=(this release page URL)
           EOF
 
           release_args=(
-            "v${{ inputs.version }}"
+            "V${{ github.run_number }}"
             release-files/*.apk
             --repo "${{ github.repository }}"
-            --title "Ortho Companion v${{ inputs.version }}"
+            --title "Ortho Companion V${{ github.run_number }}"
             --notes-file release-notes.md
           )
           if [ "$IS_PRERELEASE" = "true" ]; then

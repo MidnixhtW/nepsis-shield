@@ -18,12 +18,11 @@ jobs:
       contents: read
     env:
       VITE_GITHUB_REPOSITORY: ${{ github.repository }}
-      VITE_APK_VERSION: debug-${{ github.run_number }}
+      VITE_APK_VERSION: V${{ github.run_number }}
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
       ANDROID_VERSION_CODE: ${{ github.run_number }}
-      ANDROID_VERSION_NAME: debug-${{ github.run_number }}
-      ANDROID_APPLICATION_ID: com.orthocompanion.app.debug${{ github.run_number }}
-      ANDROID_APP_NAME: Ortho Companion Debug ${{ github.run_number }}
+      ANDROID_VERSION_NAME: V${{ github.run_number }}
+      ANDROID_APP_NAME: Ortho Companion
 
     steps:
       - name: Check out repository

@@ -39,6 +39,15 @@ function parseSemver(value: string): [number, number, number] | null {
   return [Number(match[1]), Number(match[2]), Number(match[3])];
 }
 
+function parseVNumber(value: string) {
+  const match = value.trim().match(/^v(\d+)$/i);
+  return match ? Number(match[1]) : null;
+}
+
+function isSupportedReleaseVersion(value: string) {
+  return Boolean(parseSemver(value) || parseVNumber(value));
+}
+
 export function isRemoteVersionNewer(currentVersion: string, remoteTag: string) {
   const current = parseSemver(currentVersion);
   const remote = parseSemver(remoteTag);
@@ -50,6 +59,10 @@ export function isRemoteVersionNewer(currentVersion: string, remoteTag: string) 
     }
     return false;
   }
+
+  const currentV = parseVNumber(currentVersion);
+  const remoteV = parseVNumber(remoteTag);
+  if (currentV !== null && remoteV !== null) return remoteV > currentV;
 
   return normalizeVersion(remoteTag) !== normalizeVersion(currentVersion);
 }
@@ -71,9 +84,9 @@ export async function fetchLatestApkUpdate(repository = APK_GITHUB_REPOSITORY) {
   const normalized = normalizeGitHubRepository(repository);
   if (!normalized) return null;
 
-  // Only compare semver release tags against real semver APK builds. Debug builds
-  // like "debug-22" and web previews should not show a stale v1.0.0 update prompt.
-  if (!APK_VERSION_IS_CONFIGURED || !parseSemver(APK_VERSION)) return null;
+  // Only compare supported release tags against real APK builds. Web previews
+  // should not show a stale update prompt.
+  if (!APK_VERSION_IS_CONFIGURED || !isSupportedReleaseVersion(APK_VERSION)) return null;
 
   const response = await fetch(`https://api.github.com/repos/${normalized}/releases?per_page=10`, {
     headers: { Accept: "application/vnd.github+json" },
@@ -85,7 +98,7 @@ export async function fetchLatestApkUpdate(repository = APK_GITHUB_REPOSITORY) {
   const releases = (await response.json()) as GitHubRelease[];
   const release = releases.find((item) => {
     if (item.draft || !item.tag_name || !item.html_url) return false;
-    if (!parseSemver(item.tag_name)) return false;
+    if (!isSupportedReleaseVersion(item.tag_name)) return false;
     return Boolean(chooseApkAsset(item.assets));
   });
   if (!release?.tag_name || !release.html_url) return null;
