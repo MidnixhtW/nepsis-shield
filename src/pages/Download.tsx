@@ -110,8 +110,8 @@ export default function Download() {
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 {APK_DOWNLOAD_IS_DIRECT
-                  ? "Tap the button below to download the latest configured Android APK. This direct build is intended for testing and sideload installation."
-                  : "The app is ready to download the rolling GitHub Release APK. Publish the repository workflow once, or set VITE_GITHUB_REPOSITORY / VITE_APK_DOWNLOAD_URL for this deployment."}
+                  ? "Tap the button below to download the latest Android APK from the configured GitHub release. This direct build is intended for testing and sideload installation."
+                  : "The app is ready to download the rolling GitHub Release APK once a repository or direct APK URL is configured."}
               </p>
 
               <Separator className="my-5" />
@@ -187,7 +187,7 @@ export default function Download() {
           <div>
             <h2 className="text-base font-semibold tracking-tight">APK link diagnostic</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              If the button loops back here or 404s, set the repository and confirm the workflow release exists.
+              The app now uses MidnixhtW/swift-zebra-sprint by default. Use this only if you need to override the APK source.
             </p>
           </div>
           <Info className="h-5 w-5 text-muted-foreground" />
@@ -233,7 +233,7 @@ export default function Download() {
             <p className="text-xs leading-relaxed text-muted-foreground">
               {previewApkUrl
                 ? `This will use: ${previewApkUrl}`
-                : "Enter a repository in owner/repo format to create the direct GitHub Release APK URL."}
+                : "Enter a repository in owner/repo format only if you need to override the default APK source."}
             </p>
           </div>
         </div>

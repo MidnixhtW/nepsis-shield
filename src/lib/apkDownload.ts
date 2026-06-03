@@ -1,4 +1,5 @@
 export const APK_REPOSITORY_STORAGE_KEY = "ortho-companion:apk-github-repository";
+export const DEFAULT_APK_GITHUB_REPOSITORY = "MidnixhtW/swift-zebra-sprint";
 
 export function normalizeGitHubRepository(value: string) {
   const trimmed = value.trim();
@@ -50,7 +51,10 @@ export function buildApkArtifactsUrl(repository: string) {
 }
 
 export const APK_GITHUB_REPOSITORY = normalizeGitHubRepository(
-  import.meta.env.VITE_GITHUB_REPOSITORY || inferGitHubPagesRepository() || getStoredGitHubRepository(),
+  import.meta.env.VITE_GITHUB_REPOSITORY ||
+    inferGitHubPagesRepository() ||
+    getStoredGitHubRepository() ||
+    DEFAULT_APK_GITHUB_REPOSITORY,
 );
 
 const latestDebugApkUrl = buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);

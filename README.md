@@ -51,15 +51,17 @@ Signing secrets for release builds:
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
-The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. Configure these optional deployment variables:
+The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. By default, the app points to this repository's rolling APK release:
 
-- `VITE_GITHUB_REPOSITORY` — GitHub repository in `owner/repo` format. This lets the app build the stable GitHub Release APK URL automatically.
+- `MidnixhtW/swift-zebra-sprint`
+
+Configure these optional deployment variables only when overriding the default APK source:
+
+- `VITE_GITHUB_REPOSITORY` — GitHub repository in `owner/repo` format. This lets the app build a different stable GitHub Release APK URL.
 - `VITE_APK_DOWNLOAD_URL` — optional direct link to a custom APK file. Overrides the GitHub Release URL.
 - `VITE_APK_ARTIFACTS_URL` — optional link to the build artifacts or release page.
 - `VITE_APK_VERSION` — displayed APK version, defaults to `1.0.0`.
 - `VITE_APK_RELEASE_DATE` — displayed release date/status.
-
-If the app is hosted on GitHub Pages, it can infer `VITE_GITHUB_REPOSITORY` automatically from the page URL. Otherwise, set `VITE_GITHUB_REPOSITORY` or `VITE_APK_DOWNLOAD_URL` in your deployment environment.
 
 ## Android APK packaging
 
