@@ -32,7 +32,6 @@ jobs:
         with:
           node-version: 22.x
           check-latest: true
-          cache: pnpm
 
       - name: Enable pnpm
         run: |
@@ -55,8 +54,8 @@ jobs:
           yes | sdkmanager --licenses >/dev/null
           sdkmanager --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
 
-      - name: Install dependencies from lockfile
-        run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build web app
         run: pnpm run build
