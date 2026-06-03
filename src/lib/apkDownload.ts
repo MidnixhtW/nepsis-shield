@@ -84,7 +84,9 @@ export const APK_DOWNLOAD_IS_DIRECT = Boolean(customApkDownloadUrl || latestDebu
 export const APK_ARTIFACTS_URL =
   customApkArtifactsUrl || buildApkArtifactsUrl(APK_GITHUB_REPOSITORY);
 
-export const APK_VERSION = import.meta.env.VITE_APK_VERSION || "1.0.0";
+export const APK_VERSION_IS_CONFIGURED = Boolean(import.meta.env.VITE_APK_VERSION);
+
+export const APK_VERSION = import.meta.env.VITE_APK_VERSION || "web-preview";
 
 export const APK_RELEASE_DATE =
   import.meta.env.VITE_APK_RELEASE_DATE ||

@@ -5,7 +5,7 @@ export type ReleaseNote = {
   changes: string[];
 };
 
-export const CURRENT_VERSION = import.meta.env.VITE_APK_VERSION || "1.0.0";
+export const CURRENT_VERSION = import.meta.env.VITE_APK_VERSION || "web-preview";
 
 export const RELEASE_NOTES: ReleaseNote[] = [
   {

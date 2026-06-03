@@ -1,6 +1,7 @@
 import {
   APK_GITHUB_REPOSITORY,
   APK_VERSION,
+  APK_VERSION_IS_CONFIGURED,
   normalizeGitHubRepository,
   trustedGitHubHttpsUrl,
 } from "@/lib/apkDownload";
@@ -69,6 +70,10 @@ function chooseApkAsset(assets: GitHubReleaseAsset[] | undefined) {
 export async function fetchLatestApkUpdate(repository = APK_GITHUB_REPOSITORY) {
   const normalized = normalizeGitHubRepository(repository);
   if (!normalized) return null;
+
+  // Only compare semver release tags against real semver APK builds. Debug builds
+  // like "debug-22" and web previews should not show a stale v1.0.0 update prompt.
+  if (!APK_VERSION_IS_CONFIGURED || !parseSemver(APK_VERSION)) return null;
 
   const response = await fetch(`https://api.github.com/repos/${normalized}/releases?per_page=10`, {
     headers: { Accept: "application/vnd.github+json" },
