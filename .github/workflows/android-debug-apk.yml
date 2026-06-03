@@ -38,7 +38,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build web app
         run: npm run build
@@ -66,13 +66,19 @@ jobs:
           path: release-files/*.apk
           if-no-files-found: error
 
+      - name: Remove old rolling release APK assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete-asset android-debug-latest ortho-companion-latest-debug.apk --yes || true
+          gh release delete-asset android-debug-latest ortho-companion-debug-${{ github.run_number }}.apk --yes || true
+
       - name: Publish rolling GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-debug-latest
           name: Ortho Companion Latest Debug APK
           prerelease: true
-          overwrite_files: true
           files: release-files/*.apk
           body: |
             ## Latest debug APK
