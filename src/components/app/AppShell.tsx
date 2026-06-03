@@ -35,7 +35,7 @@ export function AppShell({
   );
 
   return (
-    <div className="relative min-h-dvh bg-background/55">
+    <div className="relative min-h-dvh bg-background/20">
       <a
         href="#main-content"
         className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
@@ -45,8 +45,9 @@ export function AppShell({
 
       {/* Ambient background */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/45 to-background" />
-        <div className="absolute inset-0 field-grid opacity-[0.18]" />
+        <div className="absolute inset-0 ocp-camo opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/35 via-background/15 to-background/55" />
+        <div className="absolute inset-0 field-grid opacity-[0.28]" />
         <div className="absolute -left-36 -top-32 h-[28rem] w-[28rem] rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute -right-32 top-16 h-[24rem] w-[24rem] rounded-full bg-accent/15 blur-3xl" />
         <div className="absolute left-1/2 top-[38rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
