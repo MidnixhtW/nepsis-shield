@@ -45,14 +45,12 @@ export function AppShell({
 
       {/* Ambient background */}
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 ocp-camo opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/35 via-background/15 to-background/55" />
-        <div className="absolute inset-0 field-grid opacity-[0.28]" />
-        <div className="absolute -left-36 -top-32 h-[28rem] w-[28rem] rounded-full bg-primary/15 blur-3xl" />
-        <div className="absolute -right-32 top-16 h-[24rem] w-[24rem] rounded-full bg-accent/15 blur-3xl" />
-        <div className="absolute left-1/2 top-[38rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute left-10 top-1/3 h-px w-72 rotate-45 gold-hairline opacity-50" />
-        <div className="absolute right-10 top-2/3 h-px w-80 -rotate-45 gold-hairline opacity-40" />
+        <div className="absolute inset-0 ocp-camo opacity-45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/38 to-background/72" />
+        <div className="absolute inset-0 field-grid opacity-[0.12]" />
+        <div className="absolute -left-36 -top-32 h-[28rem] w-[28rem] rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -right-32 top-16 h-[24rem] w-[24rem] rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute left-1/2 top-[38rem] h-[34rem] w-[34rem] -translate-x-1/2 rounded-full bg-primary/7 blur-3xl" />
       </div>
 
       {/* Top chrome */}
