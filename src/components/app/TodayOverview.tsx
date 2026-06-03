@@ -127,7 +127,7 @@ function QuickAction({
         {icon}
       </span>
       <span className="min-w-0">
-        <span className="block text-sm font-semibold leading-tight">{label}</span>
+        <span className="block break-words text-sm font-semibold leading-tight">{label}</span>
         <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{description}</span>
       </span>
     </button>

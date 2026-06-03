@@ -182,7 +182,7 @@ export function PrayerRule() {
               key={s.id}
               className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3"
             >
-              <span className="text-sm font-medium">{s.label}</span>
+              <span className="min-w-0 break-words text-sm font-medium leading-snug">{s.label}</span>
               <Checkbox
                 checked={!!progress[s.id]}
                 onCheckedChange={(v) =>

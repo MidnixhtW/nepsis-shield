@@ -44,8 +44,8 @@ const MICROS: Micro[] = [
   },
   {
     id: "rope",
-    label: "10× Lord Jesus Christ, Son of God, have mercy on me, a sinner",
-    detail: "Slow, attentive, without rushing.",
+    label: "10× Jesus Prayer",
+    detail: "Slowly pray: \"Lord Jesus Christ, Son of God, have mercy on me, a sinner.\"",
     icon: Sparkles,
   },
   {

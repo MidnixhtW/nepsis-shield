@@ -70,10 +70,16 @@ export function OrthodoxHero({
               <Button
                 type="button"
                 variant="outline"
-                className="tap h-12 justify-start rounded-2xl border-border/60 bg-background/65 shadow-sm backdrop-blur"
+                className="tap h-auto min-h-12 justify-start whitespace-normal rounded-2xl border-border/60 bg-background/65 py-2 text-left leading-snug shadow-sm backdrop-blur"
                 onClick={() => onAction?.({ section: "pray", tab: "counter" })}
               >
-                <Radio className="mr-2 h-4 w-4" /> Lord Jesus Christ, Son of God, have mercy on me, a sinner
+                <Radio className="mr-2 h-4 w-4 shrink-0" />
+                <span className="min-w-0">
+                  <span className="block font-semibold">Jesus Prayer</span>
+                  <span className="block text-xs font-medium text-muted-foreground">
+                    Lord Jesus Christ, Son of God, have mercy on me, a sinner
+                  </span>
+                </span>
               </Button>
               <Button
                 type="button"

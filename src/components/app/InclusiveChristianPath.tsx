@@ -69,10 +69,10 @@ function PathButton({
     <Button
       type="button"
       variant={variant}
-      className="tap h-auto min-h-11 justify-start rounded-2xl border-border/60 px-4 py-3 text-left"
+      className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/60 px-4 py-3 text-left leading-snug"
       onClick={onClick}
     >
-      {children}
+      <span className="min-w-0 break-words">{children}</span>
     </Button>
   );
 }
