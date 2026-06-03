@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AlertTriangle,
@@ -15,12 +16,19 @@ import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   APK_ARTIFACTS_URL,
   APK_DOWNLOAD_IS_DIRECT,
+  APK_DOWNLOAD_SOURCE,
+  APK_DOWNLOAD_URL,
+  APK_GITHUB_REPOSITORY,
   APK_RELEASE_DATE,
+  APK_REPOSITORY_STORAGE_KEY,
   APK_VERSION,
+  buildLatestDebugApkUrl,
+  normalizeGitHubRepository,
 } from "@/lib/apkDownload";
 import { RELEASE_NOTES } from "@/lib/releaseInfo";
 
@@ -37,6 +45,21 @@ function Step({ title, description }: { title: string; description: string }) {
 }
 
 export default function Download() {
+  const [repoInput, setRepoInput] = useState(APK_GITHUB_REPOSITORY);
+  const normalizedRepo = normalizeGitHubRepository(repoInput);
+  const previewApkUrl = normalizedRepo ? buildLatestDebugApkUrl(normalizedRepo) : "";
+
+  function saveRepository() {
+    if (!normalizedRepo) return;
+    window.localStorage.setItem(APK_REPOSITORY_STORAGE_KEY, normalizedRepo);
+    window.location.reload();
+  }
+
+  function clearRepository() {
+    window.localStorage.removeItem(APK_REPOSITORY_STORAGE_KEY);
+    window.location.reload();
+  }
+
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -145,9 +168,76 @@ export default function Download() {
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Build type</p>
               <p className="mt-1 font-semibold">Debug APK for testing</p>
             </div>
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Download source</p>
+              <p className="mt-1 font-semibold">
+                {APK_DOWNLOAD_SOURCE === "github-release"
+                  ? "GitHub Release"
+                  : APK_DOWNLOAD_SOURCE === "custom-url"
+                    ? "Custom APK URL"
+                    : "Not configured"}
+              </p>
+            </div>
           </div>
         </Card>
       </div>
+
+      <Card className="mt-4 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-base font-semibold tracking-tight">APK link diagnostic</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              If the button loops back here or 404s, set the repository and confirm the workflow release exists.
+            </p>
+          </div>
+          <Info className="h-5 w-5 text-muted-foreground" />
+        </div>
+
+        <Separator className="my-4" />
+
+        <div className="grid gap-3">
+          <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Current APK link</p>
+            <p className="mt-1 break-all text-sm font-medium">{APK_DOWNLOAD_URL}</p>
+          </div>
+
+          <div className="grid gap-2 rounded-2xl border border-border/60 bg-background/45 p-4">
+            <label htmlFor="github-repo" className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              GitHub repository
+            </label>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <Input
+                id="github-repo"
+                value={repoInput}
+                onChange={(event) => setRepoInput(event.target.value)}
+                placeholder="owner/repo or https://github.com/owner/repo"
+                className="rounded-2xl border-border/60 bg-background/70"
+              />
+              <Button
+                type="button"
+                className="rounded-2xl"
+                disabled={!normalizedRepo}
+                onClick={saveRepository}
+              >
+                Save repo
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-2xl border-border/60"
+                onClick={clearRepository}
+              >
+                Clear
+              </Button>
+            </div>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              {previewApkUrl
+                ? `This will use: ${previewApkUrl}`
+                : "Enter a repository in owner/repo format to create the direct GitHub Release APK URL."}
+            </p>
+          </div>
+        </div>
+      </Card>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">

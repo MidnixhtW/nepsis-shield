@@ -72,6 +72,7 @@ jobs:
           tag_name: android-debug-latest
           name: Ortho Companion Latest Debug APK
           prerelease: true
+          overwrite_files: true
           files: release-files/*.apk
           body: |
             ## Latest debug APK
