@@ -13,7 +13,6 @@ import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { TodaySaintTile } from "@/components/app/TodaySaintTile";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { HighlightCard } from "@/components/app/HighlightCard";
-import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
 import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
 import { Button } from "@/components/ui/button";
 
@@ -51,37 +50,6 @@ function isReadTab(x: string | null): x is ReadTab {
 
 function isLearnTab(x: string | null): x is LearnTab {
   return x === "welcome" || x === "guide" || x === "qa" || x === "library" || x === "hymns" || x === "parish";
-}
-
-function HomeSection({
-  eyebrow,
-  title,
-  description,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="grid gap-3" aria-label={title}>
-      <div className="flex flex-col gap-1 px-1 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
-            {eyebrow}
-          </p>
-          <h2 className="text-xl font-bold tracking-tight sm:text-2xl">{title}</h2>
-        </div>
-        {description ? (
-          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
-            {description}
-          </p>
-        ) : null}
-      </div>
-      {children}
-    </section>
-  );
 }
 
 const Index = () => {
@@ -205,78 +173,59 @@ const Index = () => {
         <ApkUpdateBanner />
 
         {section === "today" ? (
-          <div className="grid gap-6">
-            <HomeSection
-              eyebrow="Start"
-              title="Today at a glance"
-              description="Open the most-used actions first, then move into readings, saints, setup, or the field manual only when needed."
-            >
-              <div className="grid gap-4">
-                <OrthodoxHero onAction={navigateTo} />
-                <InclusiveChristianPath compact onNavigate={navigateTo} />
-              </div>
-            </HomeSection>
+          <div className="grid gap-4">
+            <OrthodoxHero onAction={navigateTo} />
 
-            <HomeSection
-              eyebrow="Essentials"
-              title="Daily rhythm"
-              description="Readings, fasting, hymns, reminders, and saints are kept together so the home screen has one clear center."
-            >
-              <div className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.55fr)] xl:items-start">
-                <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-                <TodaySaintTile onOpenSaints={() => navigate("/saints")} />
-              </div>
-            </HomeSection>
+            <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.5fr)] xl:items-start">
+              <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+              <TodaySaintTile onOpenSaints={() => navigate("/saints")} />
+            </div>
 
-            <HomeSection
-              eyebrow="Tools"
-              title="Useful extras"
-              description="Less frequent tools live below the daily rhythm so they stay accessible without crowding the first screen."
-            >
-              <div className="grid gap-4 lg:grid-cols-2">
-                <HighlightCard
-                  eyebrow="Field manual"
-                  title="Prayers for duty, stress, travel, grief, and courage"
-                  description="Open a military Orthodox field rhythm with short prayers, practical steps, and pastoral safety notes for demanding environments."
-                  icon={<Crosshair className="h-5 w-5 text-primary" />}
-                  actions={
+            <div className="grid gap-4 lg:grid-cols-2">
+              <HighlightCard
+                eyebrow="Field manual"
+                title="Duty, stress, travel, grief, and courage"
+                description="Open short prayers, practical steps, and pastoral safety notes for demanding environments."
+                icon={<Crosshair className="h-5 w-5 text-primary" />}
+                actions={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="tap rounded-2xl border-border/60 bg-background/60"
+                    onClick={() => navigate("/field-manual")}
+                  >
+                    Open Field Manual
+                  </Button>
+                }
+              />
+
+              <HighlightCard
+                eyebrow="Setup"
+                title="Calendar, jurisdiction, hymns"
+                description="Adjust daily readings, fasting guidance, source links, and hymns when you need to."
+                icon={<Wand2 className="h-5 w-5 text-primary" />}
+                actions={
+                  <>
                     <Button
                       type="button"
-                      className="tap rounded-2xl"
-                      onClick={() => navigate("/field-manual")}
+                      variant="outline"
+                      className="tap rounded-2xl border-border/60 bg-background/60"
+                      onClick={() => navigate("/settings")}
                     >
-                      Open Field Manual
+                      <Settings2 className="mr-2 h-4 w-4" /> Settings
                     </Button>
-                  }
-                />
-
-                <HighlightCard
-                  eyebrow="Personal setup"
-                  title="Tune the app to your calendar and jurisdiction"
-                  description="Set your preferred calendar once so daily readings, fasting guidance, and source links stay aligned with your parish or learning path."
-                  icon={<Wand2 className="h-5 w-5 text-primary" />}
-                  actions={
-                    <>
-                      <Button
-                        type="button"
-                        className="tap rounded-2xl"
-                        onClick={() => navigate("/settings")}
-                      >
-                        <Settings2 className="mr-2 h-4 w-4" /> Open settings
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="tap rounded-2xl border-border/60 bg-background/60"
-                        onClick={() => navigateTo({ section: "learn", tab: "hymns" })}
-                      >
-                        Hymns & propers
-                      </Button>
-                    </>
-                  }
-                />
-              </div>
-            </HomeSection>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="tap rounded-2xl border-border/60 bg-background/60"
+                      onClick={() => navigateTo({ section: "learn", tab: "hymns" })}
+                    >
+                      Hymns
+                    </Button>
+                  </>
+                }
+              />
+            </div>
           </div>
         ) : null}
 

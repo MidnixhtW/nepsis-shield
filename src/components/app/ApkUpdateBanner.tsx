@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Download, ExternalLink, RefreshCw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { APK_VERSION } from "@/lib/apkDownload";
+import { APK_VERSION, APK_VERSION_IS_CONFIGURED } from "@/lib/apkDownload";
 import { fetchLatestApkUpdate, type ApkUpdateInfo } from "@/lib/apkUpdate";
 
 type ApkUpdateBannerProps = {
@@ -33,7 +33,7 @@ export function ApkUpdateBanner({ compact = false, showUpToDate = false }: ApkUp
     };
   }, []);
 
-  if (!update && (!showUpToDate || !checked)) return null;
+  if (!update && (!showUpToDate || !checked || !APK_VERSION_IS_CONFIGURED)) return null;
 
   if (!update) {
     return (
