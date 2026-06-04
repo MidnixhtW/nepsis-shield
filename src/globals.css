@@ -46,34 +46,34 @@
   }
 
   .dark {
-    /* Dark mode: tactical olive, charcoal, and muted brass */
-    --background: 82 22% 8%;
-    --foreground: 46 28% 88%;
+    /* Dark mode: high-tech tactical command center — black olive, night-vision green, and amber. */
+    --background: 96 24% 5%;
+    --foreground: 92 30% 88%;
 
-    --card: 82 18% 11%;
-    --card-foreground: 46 28% 88%;
+    --card: 96 22% 8%;
+    --card-foreground: 92 30% 88%;
 
-    --popover: 82 18% 11%;
-    --popover-foreground: 46 28% 88%;
+    --popover: 96 22% 8%;
+    --popover-foreground: 92 30% 88%;
 
-    --primary: 88 36% 52%;
-    --primary-foreground: 84 24% 8%;
+    --primary: 101 82% 58%;
+    --primary-foreground: 102 34% 5%;
 
-    --secondary: 82 15% 16%;
-    --secondary-foreground: 46 28% 88%;
+    --secondary: 94 18% 13%;
+    --secondary-foreground: 92 30% 88%;
 
-    --muted: 82 15% 16%;
-    --muted-foreground: 55 12% 67%;
+    --muted: 94 18% 13%;
+    --muted-foreground: 96 14% 65%;
 
-    --accent: 39 55% 48%;
-    --accent-foreground: 84 24% 8%;
+    --accent: 43 92% 56%;
+    --accent-foreground: 102 34% 5%;
 
-    --destructive: 6 65% 43%;
+    --destructive: 6 76% 52%;
     --destructive-foreground: 46 28% 92%;
 
-    --border: 77 13% 25%;
-    --input: 77 13% 25%;
-    --ring: 88 36% 52%;
+    --border: 101 36% 23%;
+    --input: 101 36% 23%;
+    --ring: 101 82% 58%;
 
     --radius: 1.25rem;
 
@@ -114,14 +114,13 @@
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(circle at 14% 8%, hsl(var(--primary) / 0.13), transparent 26rem),
-      radial-gradient(circle at 86% 14%, hsl(var(--accent) / 0.10), transparent 24rem),
-      radial-gradient(ellipse at 12% 22%, hsl(45 18% 52% / 0.22) 0 13%, transparent 14%),
-      radial-gradient(ellipse at 70% 18%, hsl(82 18% 36% / 0.20) 0 12%, transparent 13%),
-      radial-gradient(ellipse at 28% 76%, hsl(88 18% 25% / 0.18) 0 15%, transparent 16%),
-      radial-gradient(ellipse at 88% 74%, hsl(43 20% 48% / 0.18) 0 14%, transparent 15%);
-    background-position: center, center, 0 0, 120px 28px, 52px 170px, 190px 144px;
-    background-size: auto, auto, 340px 280px, 360px 300px, 380px 320px, 350px 300px;
+      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.18), transparent 25rem),
+      radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.12), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(104 30% 5%), hsl(91 26% 7%) 45%, hsl(82 18% 10%));
+    background-position: center, center, 0 0, 0 0, center;
+    background-size: auto, auto, 44px 44px, 44px 44px, auto;
     background-attachment: fixed;
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
       Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -166,7 +165,110 @@
     background-size: 360px 300px, 380px 320px, 32px 32px, 32px 32px;
   }
 
+  .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.11), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.08), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.07) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(102 34% 4% / 0.98), hsl(92 26% 7% / 0.96));
+    background-size: auto, auto, 42px 42px, 42px 42px, auto;
+  }
+
+  .tactical-radar-field::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(var(--primary) / 0.11) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(var(--primary) / 0.08) 55%, transparent 56% 100%);
+    opacity: 0.58;
+    animation: tactical-map-drift 18s linear infinite;
+  }
+
+  .tactical-radar-field::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 32%, hsl(var(--primary) / 0.9) 0 1px, transparent 2px),
+      radial-gradient(circle at 72% 48%, hsl(var(--primary) / 0.68) 0 1px, transparent 2px),
+      radial-gradient(circle at 58% 78%, hsl(var(--accent) / 0.72) 0 1px, transparent 2px),
+      radial-gradient(circle at 86% 22%, hsl(var(--primary) / 0.52) 0 1px, transparent 2px);
+    background-size: 460px 460px, 520px 520px, 580px 580px, 620px 620px;
+    animation: tactical-blips 5.5s ease-in-out infinite;
+  }
+
+  .radar-scope {
+    position: absolute;
+    width: min(82vw, 560px);
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--primary) / 0.22);
+    background:
+      repeating-radial-gradient(circle, transparent 0 62px, hsl(var(--primary) / 0.18) 63px 64px),
+      linear-gradient(hsl(var(--primary) / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.12) 1px, transparent 1px),
+      radial-gradient(circle, hsl(var(--primary) / 0.05), transparent 67%);
+    background-size: auto, 50% 50%, 50% 50%, auto;
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.08),
+      0 0 48px hsl(var(--primary) / 0.13),
+      inset 0 0 48px hsl(var(--primary) / 0.08);
+    opacity: 0.55;
+  }
+
+  .radar-scope::before {
+    content: "";
+    position: absolute;
+    inset: 50% 50% 0 50%;
+    width: 50%;
+    height: 50%;
+    transform-origin: 0 0;
+    border-top: 2px solid hsl(var(--primary) / 0.72);
+    background: conic-gradient(from -12deg at 0 0, hsl(var(--primary) / 0.42), hsl(var(--primary) / 0.15) 22deg, transparent 48deg);
+    clip-path: polygon(0 0, 100% 0, 100% 72%, 0 0);
+    animation: radar-sweep 4.6s linear infinite;
+    filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.48));
+  }
+
+  .radar-scope::after {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: hsl(var(--primary));
+    box-shadow: 0 0 18px hsl(var(--primary) / 0.95);
+    transform: translate(-50%, -50%);
+  }
+
+  .radar-scope-primary {
+    right: -8rem;
+    top: 5.5rem;
+  }
+
+  .radar-scope-secondary {
+    bottom: -13rem;
+    left: -10rem;
+    width: min(76vw, 460px);
+    opacity: 0.32;
+  }
+
+  .radar-scope-secondary::before {
+    animation-duration: 6.8s;
+    animation-direction: reverse;
+  }
+
+  .tactical-scanlines {
+    background: repeating-linear-gradient(0deg, transparent 0 7px, hsl(var(--primary) / 0.035) 8px 9px);
+    mix-blend-mode: screen;
+    opacity: 0.64;
+  }
+
   .sacred-surface {
+
     background:
       radial-gradient(circle at top left, hsl(var(--primary) / 0.12), transparent 18rem),
       radial-gradient(circle at bottom right, hsl(var(--accent) / 0.10), transparent 20rem),
@@ -223,5 +325,42 @@
   .tap {
     @apply transition-transform duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none;
     will-change: transform;
+  }
+
+  @keyframes radar-sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes tactical-map-drift {
+    from {
+      transform: translate3d(-2%, -1%, 0) rotate(0deg);
+    }
+    to {
+      transform: translate3d(2%, 1%, 0) rotate(360deg);
+    }
+  }
+
+  @keyframes tactical-blips {
+    0%, 100% {
+      opacity: 0.18;
+      filter: drop-shadow(0 0 2px hsl(var(--primary) / 0.45));
+    }
+    45% {
+      opacity: 0.62;
+      filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.8));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tactical-radar-field::before,
+    .tactical-radar-field::after,
+    .radar-scope::before {
+      animation: none;
+    }
   }
 }

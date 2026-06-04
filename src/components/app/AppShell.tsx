@@ -35,7 +35,7 @@ export function AppShell({
   );
 
   return (
-    <div className="relative min-h-dvh bg-background text-foreground">
+    <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
       <a
         href="#main-content"
         className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
@@ -43,12 +43,15 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.055),transparent_34rem)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-border/70" />
+      <div aria-hidden className="tactical-radar-field pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.14),transparent_34rem)]" />
+        <div className="radar-scope radar-scope-primary" />
+        <div className="radar-scope radar-scope-secondary" />
+        <div className="absolute inset-0 tactical-scanlines" />
+        <div className="absolute inset-x-0 top-0 h-px bg-primary/40" />
       </div>
 
-      <div className="sticky top-0 z-30 border-b border-border/50 bg-background/88 backdrop-blur-xl supports-[backdrop-filter]:bg-background/78">
+      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/82 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
         <div className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-5">
           {header}
         </div>
@@ -57,12 +60,13 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-5xl px-4 pt-4 pb-[calc(5.8rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-4 pb-[calc(5.8rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/50 bg-background/88 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/78">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-primary/25 bg-background/82 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
+
         <ToggleGroup
           type="single"
           value={section}
