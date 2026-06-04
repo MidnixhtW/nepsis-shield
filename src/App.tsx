@@ -12,6 +12,7 @@ import FieldManual from "./pages/FieldManual";
 import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { ScrollToTop } from "@/components/app/ScrollToTop";
+import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
 
@@ -24,6 +25,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SaintMichaelIntro />
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
