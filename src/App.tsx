@@ -11,6 +11,7 @@ import Download from "./pages/Download";
 import FieldManual from "./pages/FieldManual";
 import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
+import { ScrollToTop } from "@/components/app/ScrollToTop";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
 
@@ -23,9 +24,11 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/privacy" element={<Privacy />} />
+
             <Route path="/about" element={<About />} />
             <Route path="/download" element={<Download />} />
             <Route path="/field-manual" element={<FieldManual />} />
