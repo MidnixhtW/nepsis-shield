@@ -115,14 +115,15 @@ export function TodayRhythmDashboard({
             };
 
   function addCurrentIntention() {
-    addIntention(intentionText);
+    if (!addIntention(intentionText)) return;
     setIntentionText("");
     showSuccess("Intention saved locally.");
   }
 
-  function markHabit(label: string, habit: "reading" | "reflection" | "mercy") {
-    markHabitComplete(habit, true);
-    showSuccess(`${label} marked for today.`);
+  function toggleHabit(label: string, habit: "reading" | "reflection" | "mercy") {
+    const nextValue = !rhythm.today.habits[habit];
+    markHabitComplete(habit, nextValue);
+    showSuccess(nextValue ? `${label} marked for today.` : `${label} reopened for today.`);
   }
 
   return (
@@ -135,6 +136,7 @@ export function TodayRhythmDashboard({
             Your progress stays on this device. Missed days are not punished; the app simply helps you return.
           </p>
         </div>
+
         <div className="grid grid-cols-3 gap-2 text-center sm:min-w-[330px]">
           <div className="rounded-2xl border border-border/60 bg-muted/20 p-3">
             <p className="text-2xl font-semibold">{rhythm.streak}</p>
@@ -175,7 +177,7 @@ export function TodayRhythmDashboard({
               type="button"
               variant={rhythm.today.habits.reading ? "default" : "outline"}
               className="h-auto min-h-11 justify-start rounded-2xl border-border/60"
-              onClick={() => markHabit("Reading", "reading")}
+              onClick={() => toggleHabit("Reading", "reading")}
             >
               <BookOpen className="mr-2 h-4 w-4" /> Reading
             </Button>
@@ -183,7 +185,7 @@ export function TodayRhythmDashboard({
               type="button"
               variant={rhythm.today.habits.reflection ? "default" : "outline"}
               className="h-auto min-h-11 justify-start rounded-2xl border-border/60"
-              onClick={() => markHabit("Reflection", "reflection")}
+              onClick={() => toggleHabit("Reflection", "reflection")}
             >
               <Check className="mr-2 h-4 w-4" /> Reflection
             </Button>
@@ -191,7 +193,7 @@ export function TodayRhythmDashboard({
               type="button"
               variant={rhythm.today.habits.mercy ? "default" : "outline"}
               className="h-auto min-h-11 justify-start rounded-2xl border-border/60"
-              onClick={() => markHabit("Mercy", "mercy")}
+              onClick={() => toggleHabit("Mercy", "mercy")}
             >
               <HeartHandshake className="mr-2 h-4 w-4" /> Mercy
             </Button>
@@ -201,6 +203,7 @@ export function TodayRhythmDashboard({
             {stateActions.map((item) => {
               const Icon = item.icon;
               const selected = rhythm.today.quickState === item.key;
+
               return (
                 <button
                   key={item.key}

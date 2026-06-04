@@ -23,7 +23,7 @@ export type Intention = {
   answered: boolean;
 };
 
-type DailyRecord = {
+export type DailyRecord = {
   date: string;
   habits: Record<DailyHabitKey, boolean>;
   prayers: Partial<Record<PrayerTimeKey, boolean>>;
@@ -31,7 +31,7 @@ type DailyRecord = {
   updatedAt: number;
 };
 
-type HabitStore = {
+export type HabitStore = {
   records: Record<string, DailyRecord>;
   intentions: Intention[];
   prayerResume?: PrayerResume;
@@ -57,6 +57,10 @@ const EMPTY_HABITS: Record<DailyHabitKey, boolean> = {
   mercy: false,
 };
 
+function canUseBrowserStorage() {
+  return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+}
+
 function dayKey(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -80,6 +84,8 @@ function emptyRecord(date = dayKey()): DailyRecord {
 }
 
 function getStore(): HabitStore {
+  if (!canUseBrowserStorage()) return { records: {}, intentions: [] };
+
   const saved = getStoredItem<Partial<HabitStore>>(STORE_KEY);
   return {
     records: saved?.records ?? {},
@@ -89,6 +95,8 @@ function getStore(): HabitStore {
 }
 
 function saveStore(store: HabitStore) {
+  if (!canUseBrowserStorage()) return;
+
   setStoredItem(STORE_KEY, store);
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
@@ -142,6 +150,8 @@ export function useDailyRhythm() {
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
+    if (!canUseBrowserStorage()) return;
+
     const update = () => setVersion((v) => v + 1);
     window.addEventListener(CHANGE_EVENT, update);
     window.addEventListener("storage", update);
@@ -209,7 +219,7 @@ export function setQuickState(state: QuickStateKey) {
 
 export function addIntention(text: string) {
   const trimmed = text.trim();
-  if (!trimmed) return;
+  if (!trimmed) return false;
 
   mutateStore((store) => {
     store.intentions = [
@@ -222,6 +232,8 @@ export function addIntention(text: string) {
       ...store.intentions,
     ].slice(0, 12);
   });
+
+  return true;
 }
 
 export function toggleIntention(id: string) {
