@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { ExternalLink, KeyRound, ShieldAlert } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -237,6 +239,12 @@ export function ConfessionPrep() {
 
   const doneCount = PROMPTS.filter((p) => checks[p.id]).length;
   const isSavedLocked = saveEnabled && locked;
+  const saveStatus = !saveEnabled ? "Not saved" : locked ? "Locked" : "Encrypted";
+  const saveStatusClass = !saveEnabled
+    ? "bg-muted text-muted-foreground"
+    : locked
+      ? "bg-amber-500/12 text-amber-800 dark:text-amber-200"
+      : "bg-emerald-500/12 text-emerald-800 dark:text-emerald-200";
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -245,7 +253,12 @@ export function ConfessionPrep() {
           <h3 className="text-base font-semibold tracking-tight">Confession preparation</h3>
           <p className="mt-1 text-sm text-muted-foreground">A quiet weekly check + private notes.</p>
         </div>
-        <KeyRound className="h-5 w-5 text-muted-foreground" />
+        <div className="flex shrink-0 items-center gap-2">
+          <Badge variant="secondary" className={`rounded-full px-3 py-1 text-xs font-medium ${saveStatusClass}`}>
+            {saveStatus}
+          </Badge>
+          <KeyRound className="h-5 w-5 text-muted-foreground" />
+        </div>
       </div>
 
       <Separator className="my-4" />

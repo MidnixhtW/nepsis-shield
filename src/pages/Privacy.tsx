@@ -1,27 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   Download,
-  ExternalLink,
   Info,
   Lock,
   Shield,
-  Trash2,
   Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+
 import {
-  getStoredItem,
   hasAnyLegacyPlaintextSensitiveNotes,
   hasLegacyPlaintextSensitiveData,
-  setStoredItem,
 } from "@/lib/deviceStorage";
+
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
 import { downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
@@ -71,15 +68,14 @@ const ALLOWED_PREFIXES = [
 
 const ALLOWED_PRIVACY_KEYS = new Set([
   "privacy:reflection_save",
-  "privacy:reflection_encrypt",
   "privacy:counter_save",
   "privacy:prayer_rule_save",
   "privacy:bible_save",
   "privacy:confess_save",
-  "privacy:confess_encrypt",
 ]);
 
 // Value schema validation
+
 function parseJsonSafe(raw: string | null): unknown {
   if (!raw) return null;
   try {
@@ -128,7 +124,6 @@ function isEncryptedNoteValue(value: unknown) {
     typeof value === "object" &&
     value !== null &&
     (value as { enc?: unknown }).enc === 1 &&
-
     typeof (value as { blob?: unknown }).blob === "object" &&
     (value as { blob?: unknown }).blob !== null
   );
@@ -152,13 +147,7 @@ function isValidValueForKey(key: string, raw: string): boolean {
 }
 
 export default function Privacy() {
-  const [reflectionSave, setReflectionSave] = useState(false);
-  const [reflectionEncrypt, setReflectionEncrypt] = useState(true);
-  const [counterSave, setCounterSave] = useState(true);
-  const [prayerRuleSave, setPrayerRuleSave] = useState(true);
-  const [bibleSave, setBibleSave] = useState(true);
   const [legacyPlaintextDetected, setLegacyPlaintextDetected] = useState(false);
-
   const [exportPass, setExportPass] = useState("");
   const [importPass, setImportPass] = useState("");
 
@@ -168,39 +157,8 @@ export default function Privacy() {
   const [lastImportMeta, setLastImportMeta] = useState<{ at: number; sourceName?: string } | null>(null);
 
   useEffect(() => {
-    setReflectionSave(getStoredItem<boolean>("privacy:reflection_save") ?? false);
-    setReflectionEncrypt(getStoredItem<boolean>("privacy:reflection_encrypt") ?? true);
-    setCounterSave(getStoredItem<boolean>("privacy:counter_save") ?? true);
-    setPrayerRuleSave(getStoredItem<boolean>("privacy:prayer_rule_save") ?? true);
-    setBibleSave(getStoredItem<boolean>("privacy:bible_save") ?? true);
     setLegacyPlaintextDetected(hasAnyLegacyPlaintextSensitiveNotes());
   }, []);
-
-  useEffect(() => {
-    setStoredItem("privacy:reflection_save", reflectionSave);
-  }, [reflectionSave]);
-  useEffect(() => {
-    setStoredItem("privacy:reflection_encrypt", reflectionEncrypt);
-  }, [reflectionEncrypt]);
-  useEffect(() => {
-    setStoredItem("privacy:counter_save", counterSave);
-  }, [counterSave]);
-  useEffect(() => {
-    setStoredItem("privacy:prayer_rule_save", prayerRuleSave);
-  }, [prayerRuleSave]);
-  useEffect(() => {
-    setStoredItem("privacy:bible_save", bibleSave);
-  }, [bibleSave]);
-
-  const approxKeyCount = useMemo(() => {
-    const keys = safeKeys();
-    return keys.filter((k) => {
-      return (
-        ALLOWED_PREFIXES.some((p) => k.startsWith(p)) ||
-        ALLOWED_PRIVACY_KEYS.has(k)
-      );
-    }).length;
-  }, [reflectionSave, reflectionEncrypt, counterSave, prayerRuleSave, bibleSave]);
 
   async function exportEncrypted() {
     if (!exportPass) {
@@ -450,12 +408,19 @@ export default function Privacy() {
           ) : null}
 
           <Alert className="rounded-2xl border-primary/30 bg-primary/5">
-
             <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
-              • Journal notes • Confession prep (checks + notes) • "Lord Jesus Christ, Son of God, have mercy on me, a sinner" counter • Prayer Rule progress • Bible bookmarks • Reading plans • Related privacy settings.
+              • Journal notes • Confession prep (checks + notes) • "Lord Jesus Christ, Son of God, have mercy on me, a sinner" counter • Prayer Rule progress • Bible bookmarks • Reading plans • Save settings.
               <br />
               Anything outside these sections is excluded. Avoid plaintext/manual backups (like copy/paste or screenshots) for sensitive notes.
+            </AlertDescription>
+          </Alert>
+
+          <Alert className="mt-3 rounded-2xl border-amber-300/50 bg-amber-50/70 dark:bg-amber-950/20">
+            <Shield className="h-4 w-4" />
+            <AlertTitle className="text-sm font-semibold">Backup reminder</AlertTitle>
+            <AlertDescription className="mt-1 text-xs text-muted-foreground">
+              If you save encrypted journal or confession prep, download a fresh encrypted backup after meaningful updates and keep the passphrase somewhere safe. The app cannot recover forgotten passphrases.
             </AlertDescription>
           </Alert>
 
@@ -467,8 +432,8 @@ export default function Privacy() {
               </p>
               <div className="mt-3 grid gap-2">
                 <Input
-
                   type="password"
+
                   value={exportPass}
                   onChange={(e) => setExportPass(e.target.value)}
                   placeholder="Export passphrase"

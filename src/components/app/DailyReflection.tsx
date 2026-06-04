@@ -15,10 +15,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { fetchDailyData } from "@/lib/orthocal";
@@ -179,7 +181,15 @@ export function DailyReflection() {
     })();
   }, [note, dayKey, saveEnabled, passphrase, locked]);
 
+  const saveStatus = !saveEnabled ? "Not saved" : locked ? "Locked" : "Encrypted";
+  const saveStatusClass = !saveEnabled
+    ? "bg-muted text-muted-foreground"
+    : locked
+      ? "bg-amber-500/12 text-amber-800 dark:text-amber-200"
+      : "bg-emerald-500/12 text-emerald-800 dark:text-emerald-200";
+
   const prompt = useMemo(() => {
+
     if (!q.data) return "";
 
     const isFast = !q.data.fasting.description.toLowerCase().includes("no fast");
@@ -200,7 +210,12 @@ export function DailyReflection() {
               One prompt + a few honest sentences.
             </p>
           </div>
-          <Sparkles className="h-5 w-5 text-muted-foreground" />
+          <div className="flex shrink-0 items-center gap-2">
+            <Badge variant="secondary" className={`rounded-full px-3 py-1 text-xs font-medium ${saveStatusClass}`}>
+              {saveStatus}
+            </Badge>
+            <Sparkles className="h-5 w-5 text-muted-foreground" />
+          </div>
         </div>
 
         <Separator className="my-4" />

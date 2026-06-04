@@ -12,7 +12,7 @@ const sectionMeta: Record<
   today: { label: "Today", icon: Home, aria: "Go to Today" },
   pray: { label: "Prayer", icon: Hand, aria: "Go to Prayer" },
   read: { label: "Read", icon: BookOpen, aria: "Go to Readings" },
-  learn: { label: "More", icon: MoreHorizontal, aria: "Open More tools" },
+  learn: { label: "Tools", icon: MoreHorizontal, aria: "Open tools and learning" },
 };
 
 export function AppShell({

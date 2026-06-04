@@ -10,9 +10,12 @@ import {
   Hand,
   Leaf,
   MoonStar,
+  PenLine,
+  ShieldCheck,
   Sparkles,
   Target,
 } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -202,9 +205,51 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
+      <Card className="rounded-3xl border-primary/15 bg-primary/5 p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              Start here
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">A simple path for today</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Pray, read, reflect, and prepare without hunting through menus.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[520px]">
+            <EssentialButton
+              label="Pray"
+              description="Begin the daily prayer flow."
+              icon={<Hand className="h-4 w-4" />}
+              variant="default"
+              onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
+            />
+            <EssentialButton
+              label="Read"
+              description="Open today’s Scripture readings."
+              icon={<BookOpen className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+            />
+            <EssentialButton
+              label="Reflect"
+              description="Write a short encrypted journal note."
+              icon={<PenLine className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+            />
+            <EssentialButton
+              label="Prepare"
+              description="Open confession and preparation tools."
+              icon={<ShieldCheck className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
+            />
+          </div>
+        </div>
+      </Card>
+
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
+
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               {format(today, "EEEE")}
             </p>
