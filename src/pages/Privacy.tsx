@@ -19,14 +19,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   getStoredItem,
   hasAnyLegacyPlaintextSensitiveNotes,
-  hasLegacyPlaintextSensitiveNote,
+  hasLegacyPlaintextSensitiveData,
   setStoredItem,
 } from "@/lib/deviceStorage";
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
 import { downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
-import { passphraseStrength } from "@/lib/passphraseStrength";
+import { isStrongPassphrase, strongPassphraseMessage } from "@/lib/passphraseStrength";
 
 // Safe localStorage helpers
 function safeKeys(): string[] {
@@ -115,11 +115,20 @@ function isSensitiveNoteKey(key: string) {
   return key.startsWith("reflection:") || key.startsWith("confess:note:");
 }
 
+function isSensitiveConfessionSelectsKey(key: string) {
+  return key.startsWith("confess:selects:");
+}
+
+function isSensitiveStoredKey(key: string) {
+  return isSensitiveNoteKey(key) || isSensitiveConfessionSelectsKey(key);
+}
+
 function isEncryptedNoteValue(value: unknown) {
   return (
     typeof value === "object" &&
     value !== null &&
     (value as { enc?: unknown }).enc === 1 &&
+
     typeof (value as { blob?: unknown }).blob === "object" &&
     (value as { blob?: unknown }).blob !== null
   );
@@ -135,8 +144,8 @@ function isValidValueForKey(key: string, raw: string): boolean {
     return typeof parsed.v === "boolean";
   }
 
-  // Sensitive note imports must already be encrypted.
-  if (isSensitiveNoteKey(key)) return isEncryptedNoteValue(parsed.v);
+  // Sensitive imports must already be encrypted. Legacy confess:selects plaintext is rejected.
+  if (isSensitiveStoredKey(key)) return isEncryptedNoteValue(parsed.v);
 
   // Other allow-listed prefixes can be any wrapped value
   return true;
@@ -199,17 +208,17 @@ export default function Privacy() {
       return;
     }
 
-    const strength = passphraseStrength(exportPass);
-    if (strength.score < 2) {
-      showError("Choose a stronger passphrase (aim for 12+ characters).");
+    if (!isStrongPassphrase(exportPass)) {
+      showError(strongPassphraseMessage);
       return;
     }
 
     const items: Record<string, string> = {};
     for (const k of safeKeys()) {
       if (!(ALLOWED_PREFIXES.some((p) => k.startsWith(p)) || ALLOWED_PRIVACY_KEYS.has(k))) continue;
-      if (hasLegacyPlaintextSensitiveNote(k)) continue;
+      if (hasLegacyPlaintextSensitiveData(k)) continue;
       const v = safeGetRaw(k);
+
       if (v != null) items[k] = v;
     }
 
@@ -433,14 +442,15 @@ export default function Privacy() {
           {legacyPlaintextDetected ? (
             <Alert className="mb-4 rounded-2xl border-destructive/30 bg-destructive/10">
               <Shield className="h-4 w-4" />
-              <AlertTitle className="text-sm font-semibold">Legacy plaintext notes detected</AlertTitle>
+              <AlertTitle className="text-sm font-semibold">Legacy plaintext sensitive data detected</AlertTitle>
               <AlertDescription className="mt-1 text-xs text-muted-foreground">
-                Old journal or confession notes are still stored as plaintext on this device. They are excluded from exports and hidden in the app until you open the relevant section and encrypt them with a passphrase, or delete saved notes.
+                Old journal notes, confession notes, or confession checklist selections are still stored as plaintext on this device. They are excluded from exports and hidden in the app until you open the relevant section and encrypt them with a strong passphrase, or delete saved data.
               </AlertDescription>
             </Alert>
           ) : null}
 
           <Alert className="rounded-2xl border-primary/30 bg-primary/5">
+
             <AlertTitle className="text-sm font-semibold">What's included in the encrypted backup</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
               • Journal notes • Confession prep (checks + notes) • "Lord Jesus Christ, Son of God, have mercy on me, a sinner" counter • Prayer Rule progress • Bible bookmarks • Reading plans • Related privacy settings.
@@ -453,10 +463,11 @@ export default function Privacy() {
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Export</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Choose a strong passphrase. You'll need it to import later.
+                Choose a strong 12+ character passphrase. You'll need it to import later.
               </p>
               <div className="mt-3 grid gap-2">
                 <Input
+
                   type="password"
                   value={exportPass}
                   onChange={(e) => setExportPass(e.target.value)}
@@ -521,8 +532,9 @@ export default function Privacy() {
           </div>
 
           <p className="mt-4 text-xs text-muted-foreground">
-            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). If you forget the passphrase, the backup can't be recovered.
+            Note: encryption is passphrase-based (PBKDF2 + AES-GCM). Short or common passphrases can be guessed offline if someone obtains browser storage or a backup file, so strong passphrases are required. If you forget the passphrase, the backup can't be recovered.
           </p>
+
         </Card>
       </div>
     </div>

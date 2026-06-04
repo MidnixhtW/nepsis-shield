@@ -76,6 +76,14 @@ function isSensitiveNoteKey(key: string) {
   return key.startsWith("reflection:") || key.startsWith("confess:note:");
 }
 
+function isSensitiveConfessionSelectsKey(key: string) {
+  return key.startsWith("confess:selects:");
+}
+
+function isSensitiveStoredKey(key: string) {
+  return isSensitiveNoteKey(key) || isSensitiveConfessionSelectsKey(key);
+}
+
 function isEncryptedNoteValue(value: unknown) {
   return (
     typeof value === "object" &&
@@ -86,24 +94,33 @@ function isEncryptedNoteValue(value: unknown) {
   );
 }
 
-export function getLegacyPlaintextSensitiveNote(key: string): string | null {
-  if (!isSensitiveNoteKey(key)) return null;
+export function getLegacyPlaintextSensitiveValue(key: string): unknown | null {
+  if (!isSensitiveStoredKey(key)) return null;
 
   const value = unwrapStoredValue(safeGetItem(key));
-  if (typeof value === "string") return value;
-  return null;
+  return isEncryptedNoteValue(value) ? null : value;
+}
+
+export function getLegacyPlaintextSensitiveNote(key: string): string | null {
+  const value = getLegacyPlaintextSensitiveValue(key);
+  return typeof value === "string" ? value : null;
 }
 
 export function hasLegacyPlaintextSensitiveNote(key: string): boolean {
   return getLegacyPlaintextSensitiveNote(key) !== null;
 }
 
+export function hasLegacyPlaintextSensitiveData(key: string): boolean {
+  return getLegacyPlaintextSensitiveValue(key) !== null;
+}
+
 export function hasAnyLegacyPlaintextSensitiveNotes(): boolean {
-  return safeKeys().some((key) => hasLegacyPlaintextSensitiveNote(key));
+  return safeKeys().some((key) => hasLegacyPlaintextSensitiveData(key));
 }
 
 export function getStoredItem<T>(key: string): T | null {
   const raw = safeGetItem(key);
+
   if (raw == null) return null;
 
   const parsed = safeJsonParse(raw);
@@ -112,16 +129,17 @@ export function getStoredItem<T>(key: string): T | null {
       safeRemoveItem(key);
       return null;
     }
-    if (isSensitiveNoteKey(key) && !isEncryptedNoteValue(parsed.v)) return null;
+    if (isSensitiveStoredKey(key) && !isEncryptedNoteValue(parsed.v)) return null;
     return parsed.v as T;
   }
 
-  // Legacy plaintext sensitive notes must be explicitly migrated before use.
+  // Legacy plaintext sensitive data must be explicitly migrated before use.
   const value = unwrapStoredValue(raw);
-  if (isSensitiveNoteKey(key) && !isEncryptedNoteValue(value)) return null;
+  if (isSensitiveStoredKey(key) && !isEncryptedNoteValue(value)) return null;
 
   // Legacy JSON (arrays/objects) or plain strings.
   if (parsed !== null) return parsed as T;
+
   return raw as unknown as T;
 }
 

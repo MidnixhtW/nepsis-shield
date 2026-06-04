@@ -29,6 +29,9 @@ const COMMON = [
   "000000",
 ];
 
+export const strongPassphraseMessage =
+  "Use a stronger passphrase: at least 12 characters, not common, with a mix of letters and numbers or symbols.";
+
 function looksCommon(s: string) {
   const t = s.toLowerCase().replace(/\s+/g, "").trim();
   if (!t) return false;
@@ -48,11 +51,14 @@ export function passphraseStrength(passphrase: string): PassphraseStrength {
 
   let score = 0;
 
-  if (len >= 8) score += 1;
-  else hints.push("Use at least 8 characters.");
+  if (len >= 10) score += 1;
+  else hints.push("Use at least 12 characters.");
 
   if (len >= 12) score += 1;
-  else hints.push("12+ characters is noticeably stronger.");
+  else hints.push("12+ characters is required for sensitive notes.");
+
+  if (len >= 16) score += 1;
+  else hints.push("16+ characters is stronger against offline guessing.");
 
   if (kinds >= 2) score += 1;
   else hints.push("Mix letters with numbers or symbols.");
@@ -74,7 +80,6 @@ export function passphraseStrength(passphrase: string): PassphraseStrength {
     "Strong",
   ];
 
-  // Keep the hints short; show only the most useful.
   const topHints = Array.from(new Set(hints)).slice(0, 2);
 
   return {
@@ -82,4 +87,9 @@ export function passphraseStrength(passphrase: string): PassphraseStrength {
     label: labelByScore[normalized],
     hints: topHints,
   };
+}
+
+export function isStrongPassphrase(passphrase: string) {
+  const strength = passphraseStrength(passphrase);
+  return passphrase.length >= 12 && strength.score >= 3;
 }

@@ -8,7 +8,7 @@ export type EncryptedBlob = {
   ctB64: string;
 };
 
-const ITERATIONS = 210_000;
+const ITERATIONS = 600_000;
 
 function enc() {
   return new TextEncoder();
@@ -31,7 +31,7 @@ function b64ToBytes(b64: string) {
   return out;
 }
 
-async function deriveKey(passphrase: string, salt: Uint8Array) {
+async function deriveKey(passphrase: string, salt: Uint8Array, iterations: number) {
   const baseKey = await crypto.subtle.importKey(
     "raw",
     enc().encode(passphrase),
@@ -44,7 +44,7 @@ async function deriveKey(passphrase: string, salt: Uint8Array) {
     {
       name: "PBKDF2",
       salt,
-      iterations: ITERATIONS,
+      iterations,
       hash: "SHA-256",
     },
     baseKey,
@@ -60,7 +60,7 @@ export async function encryptString(
 ): Promise<EncryptedBlob> {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await deriveKey(passphrase, salt);
+  const key = await deriveKey(passphrase, salt, ITERATIONS);
 
   const ct = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
@@ -86,7 +86,7 @@ export async function decryptString(
   const salt = b64ToBytes(blob.saltB64);
   const iv = b64ToBytes(blob.ivB64);
   const ct = b64ToBytes(blob.ctB64);
-  const key = await deriveKey(passphrase, salt);
+  const key = await deriveKey(passphrase, salt, blob.iter || ITERATIONS);
 
   const pt = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv },

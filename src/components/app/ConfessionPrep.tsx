@@ -17,16 +17,20 @@ import {
 import {
   cleanupStoredByPrefix,
   getLegacyPlaintextSensitiveNote,
+  getLegacyPlaintextSensitiveValue,
   getStoredItem,
+  removeStoredItem,
   setStoredItem,
 } from "@/lib/deviceStorage";
 import type { EncryptedBlob } from "@/lib/cryptoVault";
-import { decryptString, encryptString } from "@/lib/cryptoVault";
+import { decryptJson, decryptString, encryptJson } from "@/lib/cryptoVault";
+import { isStrongPassphrase, strongPassphraseMessage } from "@/lib/passphraseStrength";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
 
 type MapBool = Record<string, boolean>;
-type StoredNote = string | { enc: 1; blob: EncryptedBlob };
+type StoredPrep = { enc: 1; blob: EncryptedBlob };
+type ConfessionPrepPayload = { v: 1; checks: MapBool; note: string };
 
 const PROMPTS: Array<{ id: string; label: string }> = [
   { id: "pride", label: "Pride / vanity / self-justification" },
@@ -56,11 +60,31 @@ function noteKey(wk: string) {
 function saveEnabledKey() {
   return "privacy:confess_save";
 }
-function encryptEnabledKey() {
-  return "privacy:confess_encrypt";
-}
 
 const NOTE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
+
+function isMapBool(value: unknown): value is MapBool {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.values(value).every((v) => typeof v === "boolean")
+  );
+}
+
+function isPrepPayload(value: unknown): value is ConfessionPrepPayload {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    (value as { v?: unknown }).v === 1 &&
+    isMapBool((value as { checks?: unknown }).checks) &&
+    typeof (value as { note?: unknown }).note === "string"
+  );
+}
+
+function legacyChecksForWeek(wk: string): MapBool {
+  const legacy = getLegacyPlaintextSensitiveValue(selectsKey(wk));
+  return isMapBool(legacy) ? legacy : {};
+}
 
 export function ConfessionPrep() {
   const wk = useMemo(() => weekKey(), []);
@@ -68,11 +92,10 @@ export function ConfessionPrep() {
   const [checks, setChecks] = useState<MapBool>({});
   const [note, setNote] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(false);
-  // Encryption is now mandatory for sensitive confession notes
-  const encryptEnabled = true;
   const [locked, setLocked] = useState(false);
   const [pass, setPass] = useState("");
   const [legacyPlaintextNote, setLegacyPlaintextNote] = useState<string | null>(null);
+  const [legacyPlaintextChecks, setLegacyPlaintextChecks] = useState<MapBool | null>(null);
 
   useEffect(() => {
     cleanupStoredByPrefix("confess:", NOTE_TTL_MS);
@@ -84,22 +107,23 @@ export function ConfessionPrep() {
   useEffect(() => {
     if (!saveEnabled) return;
 
-    const savedChecks = getStoredItem<MapBool>(selectsKey(wk));
-    if (savedChecks) setChecks(savedChecks);
+    const legacyNote = getLegacyPlaintextSensitiveNote(noteKey(wk));
+    const legacyChecks = legacyChecksForWeek(wk);
+    const hasLegacyChecks = Object.keys(legacyChecks).length > 0;
 
-    const legacy = getLegacyPlaintextSensitiveNote(noteKey(wk));
-    if (legacy !== null) {
-      setLegacyPlaintextNote(legacy);
+    if (legacyNote !== null || hasLegacyChecks) {
+      setLegacyPlaintextNote(legacyNote ?? "");
+      setLegacyPlaintextChecks(hasLegacyChecks ? legacyChecks : {});
+      setChecks({});
       setNote("");
       setLocked(true);
       return;
     }
 
     setLegacyPlaintextNote(null);
-    const savedNote = getStoredItem<StoredNote>(noteKey(wk));
-    if (savedNote && typeof savedNote !== "string" && savedNote.enc === 1) {
-      setLocked(true);
-    }
+    setLegacyPlaintextChecks(null);
+    const savedPrep = getStoredItem<StoredPrep>(noteKey(wk));
+    if (savedPrep?.enc === 1) setLocked(true);
   }, [wk, saveEnabled]);
 
   useEffect(() => {
@@ -109,75 +133,101 @@ export function ConfessionPrep() {
       setChecks({});
       setNote("");
       setLegacyPlaintextNote(null);
+      setLegacyPlaintextChecks(null);
       setLocked(false);
+    } else {
+      setLocked(true);
     }
   }, [saveEnabled]);
-
-  // Encryption is mandatory; no toggle persisted.
-  useEffect(() => {
-    if (saveEnabled) setLocked(true);
-  }, [saveEnabled]);
-
-  useEffect(() => {
-    if (!saveEnabled) return;
-    setStoredItem(selectsKey(wk), checks, { ttlMs: NOTE_TTL_MS });
-  }, [checks, wk, saveEnabled]);
 
   useEffect(() => {
     if (!saveEnabled) return;
     (async () => {
       if (locked) return;
       if (!pass) return;
-      const blob = await encryptString(note, pass);
-      setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredNote, {
+      if (!isStrongPassphrase(pass)) return;
+
+      const blob = await encryptJson(
+        { v: 1, checks, note } satisfies ConfessionPrepPayload,
+        pass,
+      );
+      setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredPrep, {
         ttlMs: NOTE_TTL_MS,
       });
-    })();
-  }, [note, wk, saveEnabled, pass, locked]);
+      removeStoredItem(selectsKey(wk));
+    })().catch(() => showError("Couldn't save securely."));
+  }, [checks, note, wk, saveEnabled, pass, locked]);
 
-  async function migrateLegacyPlaintextNote() {
-    if (!saveEnabled || legacyPlaintextNote === null) return;
+  async function migrateLegacyPlaintextPrep() {
+    if (!saveEnabled || legacyPlaintextNote === null || legacyPlaintextChecks === null) return;
 
-    if (pass.length < 8) {
-      showError("Use a longer passphrase (8+ characters).");
+    if (!isStrongPassphrase(pass)) {
+      showError(strongPassphraseMessage);
       return;
     }
 
     try {
-      const blob = await encryptString(legacyPlaintextNote, pass);
-      setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredNote, {
+      const payload = {
+        v: 1,
+        checks: legacyPlaintextChecks,
+        note: legacyPlaintextNote,
+      } satisfies ConfessionPrepPayload;
+      const blob = await encryptJson(payload, pass);
+      setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredPrep, {
         ttlMs: NOTE_TTL_MS,
       });
-      setNote(legacyPlaintextNote);
+      removeStoredItem(selectsKey(wk));
+      setChecks(payload.checks);
+      setNote(payload.note);
       setLegacyPlaintextNote(null);
+      setLegacyPlaintextChecks(null);
       setLocked(false);
-      showSuccess("Legacy plaintext confession note encrypted.");
+      showSuccess("Legacy plaintext confession prep encrypted.");
     } catch {
-      showError("Couldn't migrate legacy note.");
+      showError("Couldn't migrate legacy confession prep.");
     }
   }
 
   async function unlock() {
     if (!saveEnabled) return;
 
-    if (legacyPlaintextNote !== null) {
-      await migrateLegacyPlaintextNote();
+    if (!isStrongPassphrase(pass)) {
+      showError(strongPassphraseMessage);
       return;
     }
 
-    if (pass.length < 8) {
-      showError("Use a longer passphrase (8+ characters).");
+    if (legacyPlaintextNote !== null && legacyPlaintextChecks !== null) {
+      await migrateLegacyPlaintextPrep();
       return;
     }
 
-    const savedNote = getStoredItem<StoredNote>(noteKey(wk));
-    if (!savedNote || typeof savedNote === "string") {
+    const savedPrep = getStoredItem<StoredPrep>(noteKey(wk));
+    if (!savedPrep?.enc) {
       setLocked(false);
       return;
     }
+
     try {
-      const raw = await decryptString(savedNote.blob, pass);
-      setNote(raw);
+      try {
+        const payload = await decryptJson<ConfessionPrepPayload>(savedPrep.blob, pass);
+        if (!isPrepPayload(payload)) throw new Error("bad payload");
+        setChecks(payload.checks);
+        setNote(payload.note);
+      } catch {
+        const legacyNote = await decryptString(savedPrep.blob, pass);
+        const migratedPayload = {
+          v: 1,
+          checks: legacyChecksForWeek(wk),
+          note: legacyNote,
+        } satisfies ConfessionPrepPayload;
+        const blob = await encryptJson(migratedPayload, pass);
+        setStoredItem(noteKey(wk), { enc: 1, blob } satisfies StoredPrep, {
+          ttlMs: NOTE_TTL_MS,
+        });
+        removeStoredItem(selectsKey(wk));
+        setChecks(migratedPayload.checks);
+        setNote(migratedPayload.note);
+      }
       setLocked(false);
       showSuccess("Confession prep unlocked for this session.");
     } catch {
@@ -186,6 +236,7 @@ export function ConfessionPrep() {
   }
 
   const doneCount = PROMPTS.filter((p) => checks[p.id]).length;
+  const isSavedLocked = saveEnabled && locked;
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -208,13 +259,13 @@ export function ConfessionPrep() {
             <span className="text-sm">{p.label}</span>
             <Checkbox
               checked={!!checks[p.id]}
+              disabled={isSavedLocked}
               onCheckedChange={(v) => setChecks((c) => ({ ...c, [p.id]: Boolean(v) }))}
             />
           </label>
         ))}
         <p className="text-xs text-muted-foreground">
           {doneCount}/{PROMPTS.length} marked. This is only for your preparation.
-
         </p>
       </div>
 
@@ -225,17 +276,15 @@ export function ConfessionPrep() {
           onChange={(e) => setNote(e.target.value)}
           placeholder="Keep notes short and concrete (names/details aren't required)."
           className="mt-2 min-h-28 rounded-2xl"
-          disabled={saveEnabled && locked}
+          disabled={isSavedLocked}
         />
         <p className="mt-2 text-xs text-muted-foreground">
           {!saveEnabled
             ? "Not saved (clears on refresh)."
             : locked
-              ? "Locked. Enter passphrase below to view or edit."
-              : "Saved (encrypted) on this device."}
-
+              ? "Locked. Enter a strong passphrase below to view or edit saved prep."
+              : "Checklist and notes are saved together in one encrypted record on this device."}
         </p>
-
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -247,6 +296,7 @@ export function ConfessionPrep() {
             setChecks({});
             setNote("");
           }}
+          disabled={isSavedLocked}
         >
           Reset
         </Button>
@@ -259,6 +309,7 @@ export function ConfessionPrep() {
             setChecks({});
             setNote("");
             setLegacyPlaintextNote(null);
+            setLegacyPlaintextChecks(null);
             setLocked(false);
             showSuccess("Cleared saved confession prep.");
           }}
@@ -278,24 +329,18 @@ export function ConfessionPrep() {
             <div className="grid gap-3 rounded-2xl border border-border/60 bg-background p-4">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium">Save on this device</p>
-                  <p className="text-xs text-muted-foreground">Off by default</p>
-                </div>
-                <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <div>
                   <p className="text-sm font-medium">Save on this device (encrypted)</p>
-                  <p className="text-xs text-muted-foreground">Off by default. Always encrypted when enabled.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Off by default. Checklist selections and notes are encrypted together when enabled.
+                  </p>
                 </div>
                 <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
               </div>
               {saveEnabled ? (
-
                 <div className="grid gap-2">
-                  {legacyPlaintextNote !== null ? (
+                  {legacyPlaintextNote !== null && legacyPlaintextChecks !== null ? (
                     <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-xs leading-relaxed text-destructive">
-                      A legacy plaintext confession note was found. It will stay hidden until you enter a passphrase and encrypt it.
+                      Legacy plaintext confession prep was found. It will stay hidden until you enter a strong passphrase and encrypt it.
                     </div>
                   ) : null}
                   <p className="text-xs font-semibold tracking-wide text-muted-foreground">Passphrase (session-only)</p>
@@ -304,7 +349,7 @@ export function ConfessionPrep() {
                       type="password"
                       value={pass}
                       onChange={(e) => setPass(e.target.value)}
-                      placeholder="Enter a passphrase"
+                      placeholder="Enter a strong passphrase"
                       className="h-11 rounded-2xl"
                     />
                     <Button
@@ -313,12 +358,12 @@ export function ConfessionPrep() {
                       onClick={unlock}
                       disabled={!pass}
                     >
-                      {legacyPlaintextNote !== null ? "Encrypt legacy note" : "Unlock"}
+                      {legacyPlaintextNote !== null ? "Encrypt legacy prep" : "Unlock"}
                     </Button>
                   </div>
                   <PassphraseMeter passphrase={pass} />
                   <p className="text-xs text-muted-foreground">
-                    Your passphrase is never stored. If forgotten, encrypted notes can't be recovered.
+                    Use a strong 12+ character passphrase. Short or common passphrases are vulnerable if someone gets your device storage or an export.
                   </p>
                 </div>
               ) : null}

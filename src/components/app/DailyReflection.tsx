@@ -31,6 +31,7 @@ import {
 } from "@/lib/deviceStorage";
 import type { EncryptedBlob } from "@/lib/cryptoVault";
 import { decryptString, encryptString } from "@/lib/cryptoVault";
+import { isStrongPassphrase, strongPassphraseMessage } from "@/lib/passphraseStrength";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
 import { getSettings } from "@/lib/settings";
@@ -43,15 +44,12 @@ function saveEnabledKey() {
   return "privacy:reflection_save";
 }
 
-function encryptEnabledKey() {
-  return "privacy:reflection_encrypt";
-}
-
 const NOTE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
 type StoredNote = string | { enc: 1; blob: EncryptedBlob };
 
 export function DailyReflection() {
+
   const today = useMemo(() => new Date(), []);
   const settings = useMemo(() => getSettings(), []);
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
@@ -63,11 +61,10 @@ export function DailyReflection() {
 
   const [note, setNote] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(false);
-  // Encryption is now mandatory for sensitive journal notes
-  const encryptEnabled = true;
 
   // passphrase is never persisted; it's session-only.
   const [passphrase, setPassphrase] = useState("");
+
   const [locked, setLocked] = useState(false);
   const [legacyPlaintextNote, setLegacyPlaintextNote] = useState<string | null>(null);
 
@@ -107,13 +104,14 @@ export function DailyReflection() {
   async function migrateLegacyPlaintextNote() {
     if (!saveEnabled || legacyPlaintextNote === null) return;
 
-    if (passphrase.length < 8) {
-      showError("Use a longer passphrase (8+ characters).");
+    if (!isStrongPassphrase(passphrase)) {
+      showError(strongPassphraseMessage);
       return;
     }
 
     try {
       const blob = await encryptString(legacyPlaintextNote, passphrase);
+
       setStoredItem(
         keyForDay(dayKey),
         { enc: 1, blob } satisfies StoredNote,
@@ -136,12 +134,13 @@ export function DailyReflection() {
       return;
     }
 
-    if (passphrase.length < 8) {
-      showError("Use a longer passphrase (8+ characters).");
+    if (!isStrongPassphrase(passphrase)) {
+      showError(strongPassphraseMessage);
       return;
     }
 
     const stored = getStoredItem<StoredNote>(keyForDay(dayKey));
+
     if (!stored || typeof stored === "string") {
       setLocked(false);
       return;
@@ -165,8 +164,10 @@ export function DailyReflection() {
       try {
         if (locked) return; // don't overwrite ciphertext while locked
         if (!passphrase) return; // need passphrase to encrypt
+        if (!isStrongPassphrase(passphrase)) return;
 
         const blob = await encryptString(note, passphrase);
+
         setStoredItem(
           keyForDay(dayKey),
           { enc: 1, blob } satisfies StoredNote,
@@ -276,9 +277,10 @@ export function DailyReflection() {
                               type="password"
                               value={passphrase}
                               onChange={(e) => setPassphrase(e.target.value)}
-                              placeholder="Enter a passphrase"
+                              placeholder="Enter a strong passphrase"
                               className="h-11 rounded-2xl border-amber-200 bg-white/70 pl-10"
                             />
+
                           </div>
                           <Button
                             type="button"
@@ -291,8 +293,9 @@ export function DailyReflection() {
                         </div>
                         <PassphraseMeter passphrase={passphrase} className="mt-3" />
                         <p className="mt-2 text-xs text-amber-900/70">
-                          Your passphrase is never stored. If you forget it, encrypted notes can't be recovered.
+                          Use a strong 12+ character passphrase. Short or common passphrases are vulnerable if someone gets your device storage or an export.
                         </p>
+
                       </div>
                     ) : null}
                   </div>
