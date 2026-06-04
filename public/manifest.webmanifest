@@ -1,7 +1,7 @@
 {
-  "name": "Theosis Shield: Orthodox Companion",
-  "short_name": "Theosis Shield",
-  "description": "An Orthodox Companion for prayer, Scripture, and field-ready daily rhythm.",
+  "name": "Nepsis Shield: Orthodox Watchfulness & Prayer",
+  "short_name": "Nepsis Shield",
+  "description": "Orthodox watchfulness, prayer, Scripture, and field-ready daily rhythm.",
   "start_url": "/today",
   "scope": "/",
   "display": "standalone",

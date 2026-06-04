@@ -21,7 +21,7 @@ export default function ReleaseNotes() {
             </p>
             <h1 className="text-2xl font-semibold tracking-tight">Release notes</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Version history for Theosis Shield and the Android APK track.
+              Version history for Nepsis Shield and the Android APK track.
             </p>
           </div>
         </div>

@@ -77,9 +77,9 @@ export function QuickStartDialog() {
       <DialogContent className="rounded-3xl p-0 sm:max-w-[36rem]">
         <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background p-5 sm:p-6">
           <DialogHeader>
-            <DialogTitle className="text-xl">Welcome to Theosis Shield</DialogTitle>
+            <DialogTitle className="text-xl">Welcome to Nepsis Shield</DialogTitle>
             <DialogDescription>
-              Your Orthodox Companion for one small, steady Christian practice today.
+              Orthodox watchfulness and prayer for one small, steady Christian practice today.
             </DialogDescription>
           </DialogHeader>
 

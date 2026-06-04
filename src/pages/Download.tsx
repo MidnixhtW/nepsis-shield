@@ -72,9 +72,9 @@ export default function Download() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Android package
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight">Download Theosis Shield APK</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield APK</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Orthodox Companion build for Android testing and direct install.
+              Orthodox watchfulness and prayer build for Android testing and direct install.
             </p>
           </div>
         </div>
@@ -163,8 +163,8 @@ export default function Download() {
           <div className="grid gap-3 text-sm">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">App name</p>
-              <p className="mt-1 font-semibold">Theosis Shield</p>
-              <p className="mt-1 text-xs text-muted-foreground">Orthodox Companion. Builds use simple version labels like V1, V2, and V3.</p>
+              <p className="mt-1 font-semibold">Nepsis Shield</p>
+              <p className="mt-1 text-xs text-muted-foreground">Orthodox Watchfulness & Prayer. Builds use simple version labels like V1, V2, and V3.</p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Release date</p>
@@ -269,7 +269,7 @@ export default function Download() {
               description="If Android blocks the install, allow your browser or file manager to install unknown apps, then try again."
             />
             <Step
-              title="Open Theosis Shield"
+              title="Open Nepsis Shield"
               description="The installed app keeps the same name. Check the build details for the current V-number."
             />
             <Step

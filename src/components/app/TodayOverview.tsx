@@ -191,7 +191,7 @@ export function TodayOverview({
       ].join("\n");
 
       const ics = createSimpleIcs({
-        title: "Fasting guidance (Theosis Shield)",
+        title: "Fasting guidance (Nepsis Shield)",
         description: desc,
         start,
         end,

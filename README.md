@@ -1,6 +1,6 @@
-# Theosis Shield
+# Nepsis Shield
 
-An Orthodox Companion React/Vite app configured for Android packaging with Capacitor.
+An Orthodox Watchfulness & Prayer React/Vite app configured for Android packaging with Capacitor.
 
 ## Field Manual
 
@@ -67,7 +67,7 @@ Configure these optional deployment variables only when overriding the default A
 
 Capacitor is configured with:
 
-- App name: `Theosis Shield`
+- App name: `Nepsis Shield`
 - Android package ID: `com.orthocompanion.app`
 - Web build directory: `dist`
 

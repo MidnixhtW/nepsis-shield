@@ -285,7 +285,7 @@ export function PrayerRule() {
                         ),
                       );
                       const ics = createSimpleIcs({
-                        title: "Morning Prayer (Theosis Shield)",
+                        title: "Morning Prayer (Nepsis Shield)",
                         description: "A small daily anchor: morning prayer + Scripture.",
                         start,
                         end,

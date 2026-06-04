@@ -25,7 +25,7 @@ export function createSimpleIcs(opts: {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Theosis Shield//EN",
+    "PRODID:-//Nepsis Shield//EN",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:${uid}`,
