@@ -21,25 +21,26 @@ export function AppFooter() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button asChild variant="ghost" size="sm" className="rounded-2xl">
+          <Button asChild variant="outline" size="sm" className="rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
             <Link to="/field-manual">
-              <Crosshair className="mr-2 h-4 w-4" /> Field Manual
+              <Crosshair className="mr-2 h-4 w-4 text-primary" /> Field Manual
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="sm" className="rounded-2xl">
+          <Button asChild variant="outline" size="sm" className="rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
             <Link to="/about">
-              <Info className="mr-2 h-4 w-4" /> About
+              <Info className="mr-2 h-4 w-4 text-primary" /> About
             </Link>
           </Button>
-          <Button asChild variant="ghost" size="sm" className="rounded-2xl">
+          <Button asChild variant="outline" size="sm" className="rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
             <Link to="/privacy">
-              <Shield className="mr-2 h-4 w-4" /> Privacy
+              <Shield className="mr-2 h-4 w-4 text-primary" /> Privacy
             </Link>
           </Button>
         </div>
       </div>
 
       <Accordion type="single" collapsible className="mt-2">
+
         <AccordionItem value="details" className="border-none">
           <AccordionTrigger className="rounded-xl py-2 text-xs font-semibold text-muted-foreground hover:no-underline">
             Sources & app install
