@@ -5,9 +5,11 @@ import {
   ArrowRight,
   BookOpen,
   CalendarPlus,
+  Church,
   ExternalLink,
   Flame,
   Hand,
+  Headphones,
   Leaf,
   MoonStar,
   PenLine,
@@ -386,6 +388,30 @@ export function TodayOverview({
                 >
                   <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Open Reading Plans
                 </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onNavigate?.({ section: "learn", tab: "liturgy" })}
+                >
+                  <Church className="mr-2 h-4 w-4 shrink-0" /> Liturgy Companion
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onNavigate?.({ section: "learn", tab: "audio" })}
+                >
+                  <Headphones className="mr-2 h-4 w-4 shrink-0" /> Orthodox Audio
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onOpenRoute?.("/saints")}
+                >
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Lives of Saints
+                </Button>
               </div>
               <Button
                 type="button"
@@ -394,6 +420,7 @@ export function TodayOverview({
                 className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
                 onClick={addFastingReminder}
               >
+
                 <CalendarPlus className="mr-2 h-4 w-4" /> Add Fasting Reminder
               </Button>
             </div>

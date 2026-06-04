@@ -44,10 +44,20 @@ function isReadTab(x: string | null): x is ReadTab {
 }
 
 function isLearnTab(x: string | null): x is LearnTab {
-  return x === "welcome" || x === "guide" || x === "qa" || x === "library" || x === "hymns" || x === "parish";
+  return (
+    x === "welcome" ||
+    x === "guide" ||
+    x === "qa" ||
+    x === "liturgy" ||
+    x === "audio" ||
+    x === "library" ||
+    x === "hymns" ||
+    x === "parish"
+  );
 }
 
 const Index = () => {
+
   const navigate = useNavigate();
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();

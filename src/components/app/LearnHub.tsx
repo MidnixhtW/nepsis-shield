@@ -9,8 +9,10 @@ import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
 import { SectionBar } from "@/components/app/SectionBar";
 import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
+import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
+import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 
-export type LearnTab = "welcome" | "guide" | "qa" | "library" | "hymns" | "parish";
+export type LearnTab = "welcome" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
 
 export function LearnHub({
   tab,
@@ -21,14 +23,14 @@ export function LearnHub({
 }) {
   return (
     <div className="grid gap-4">
-      <SectionBar title="More" hint="Guides, hymns, parish, library" />
+      <SectionBar title="More" hint="Guides, liturgy, audio, hymns, parish, library" />
 
       <Tabs
         value={tab ?? "welcome"}
         onValueChange={(v) => onTabChange?.(v as LearnTab)}
         className="w-full"
       >
-        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
+        <TabsList className="grid h-auto w-full grid-cols-4 gap-1 rounded-2xl bg-muted/20 p-1 lg:grid-cols-8">
           <TabsTrigger
             value="welcome"
             className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
@@ -46,6 +48,18 @@ export function LearnHub({
             className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Q&A
+          </TabsTrigger>
+          <TabsTrigger
+            value="liturgy"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+          >
+            Liturgy
+          </TabsTrigger>
+          <TabsTrigger
+            value="audio"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+          >
+            Audio
           </TabsTrigger>
           <TabsTrigger
             value="library"
@@ -79,6 +93,14 @@ export function LearnHub({
           <CatechesisQA />
         </TabsContent>
 
+        <TabsContent value="liturgy" className="mt-4">
+          <DivineLiturgyCompanion />
+        </TabsContent>
+
+        <TabsContent value="audio" className="mt-4">
+          <OrthodoxAudioLibrary />
+        </TabsContent>
+
         <TabsContent value="hymns" className="mt-4">
           <HymnsAndPropers />
         </TabsContent>
@@ -89,6 +111,7 @@ export function LearnHub({
 
         <TabsContent value="library" className="mt-4">
           <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+
             <h2 className="text-xl font-semibold tracking-tight">OCA library</h2>
             <p className="mt-1 text-sm text-muted-foreground">Browse the full OCA collection.</p>
 
