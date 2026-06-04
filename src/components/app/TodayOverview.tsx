@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
+import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
@@ -245,6 +246,8 @@ export function TodayOverview({
           </div>
         </div>
       </Card>
+
+      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

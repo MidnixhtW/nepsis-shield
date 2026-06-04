@@ -13,6 +13,7 @@ import {
   Sun,
   UsersRound,
 } from "lucide-react";
+import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -241,6 +242,8 @@ export default function FieldManual() {
             </div>
           </div>
         </Card>
+
+        <DutyModeCard />
 
         <Card className="ornate-card p-5">
           <div className="flex items-start justify-between gap-4">
