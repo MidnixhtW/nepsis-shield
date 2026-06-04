@@ -2,6 +2,7 @@ import { ReactNode, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
+  ArrowRight,
   BookOpen,
   CalendarPlus,
   ExternalLink,
@@ -113,18 +114,19 @@ function EssentialButton({
     <Button
       type="button"
       variant={variant}
-      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl px-4 py-3 text-left"
+      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl border border-border/70 px-4 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70"
       onClick={onClick}
     >
       <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
         {icon}
       </span>
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold leading-tight">{label}</span>
         <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
           {description}
         </span>
       </span>
+      <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
     </Button>
   );
 }
@@ -235,9 +237,9 @@ export function TodayOverview({
                 <SelectItem value="goarch">GOARCH</SelectItem>
               </SelectContent>
             </Select>
-            <Button asChild size="sm" variant="outline" className="tap rounded-2xl border-border/60">
+            <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40">
               <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
-                Open source <ExternalLink className="ml-2 h-4 w-4" />
+                Open Daily Source Website <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
               </a>
             </Button>
           </div>
@@ -285,12 +287,12 @@ export function TodayOverview({
                   {q.data.saints.length > 3 ? (
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="tap mt-1 w-fit rounded-2xl px-3"
+                      className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 px-3 shadow-sm hover:border-primary/40"
                       onClick={() => onOpenRoute?.("/saints")}
                     >
-                      More saints
+                      View All Saints
                     </Button>
                   ) : null}
                 </div>
@@ -299,49 +301,49 @@ export function TodayOverview({
 
             <div className="grid gap-2 content-start">
               <EssentialButton
-                label="Start Daily Prayer"
-                description="Choose morning, evening, or night prayer."
+                label="Go to Prayer"
+                description="Start morning, evening, or night prayer."
                 icon={<Hand className="h-4 w-4" />}
                 variant="default"
                 onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
               />
               <EssentialButton
-                label="Open Today’s Readings"
-                description="Read the Epistle, Gospel, and source links."
+                label="Go to Readings"
+                description="Open today’s Epistle, Gospel, and source links."
                 icon={<BookOpen className="h-4 w-4" />}
                 onClick={() => onNavigate?.({ section: "read", read: "daily" })}
               />
               <div className="grid gap-2 sm:grid-cols-3">
                 <Button
                   type="button"
-                  variant="ghost"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
                 >
-                  <Target className="mr-2 h-4 w-4 shrink-0" /> Jesus Prayer Counter
+                  <Target className="mr-2 h-4 w-4 shrink-0" /> Open Jesus Prayer
                 </Button>
                 <Button
                   type="button"
-                  variant="ghost"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
                 >
-                  <MoonStar className="mr-2 h-4 w-4 shrink-0" /> Evening Prayer
+                  <MoonStar className="mr-2 h-4 w-4 shrink-0" /> Open Evening Prayer
                 </Button>
                 <Button
                   type="button"
-                  variant="ghost"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "read", read: "plans" })}
                 >
-                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Reading Plans
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Open Reading Plans
                 </Button>
               </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="tap mt-1 w-fit rounded-2xl border-border/60"
+                className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
                 onClick={addFastingReminder}
               >
                 <CalendarPlus className="mr-2 h-4 w-4" /> Add Fasting Reminder

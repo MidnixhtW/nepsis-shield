@@ -9,10 +9,10 @@ const sectionMeta: Record<
   AppSection,
   { label: string; icon: typeof Home; aria: string }
 > = {
-  today: { label: "Today", icon: Home, aria: "Today" },
-  pray: { label: "Pray", icon: Hand, aria: "Prayer" },
-  read: { label: "Read", icon: BookOpen, aria: "Daily readings" },
-  learn: { label: "More", icon: MoreHorizontal, aria: "More" },
+  today: { label: "Today", icon: Home, aria: "Go to Today" },
+  pray: { label: "Prayer", icon: Hand, aria: "Go to Prayer" },
+  read: { label: "Read", icon: BookOpen, aria: "Go to Readings" },
+  learn: { label: "More", icon: MoreHorizontal, aria: "Open More tools" },
 };
 
 export function AppShell({
@@ -80,9 +80,9 @@ export function AppShell({
                 value={key}
                 aria-label={meta.aria}
                 className={cn(
-                  "h-12 rounded-2xl border border-transparent px-1 transition-colors",
-                  "hover:bg-muted/60",
-                  "data-[state=on]:border-border data-[state=on]:bg-muted/70 data-[state=on]:text-foreground",
+                  "h-12 rounded-2xl border border-border/45 bg-background/45 px-1 shadow-sm transition-colors",
+                  "hover:border-primary/35 hover:bg-muted/70",
+                  "data-[state=on]:border-primary/45 data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
                 )}
               >
                 <div className="flex w-full flex-col items-center justify-center gap-1">

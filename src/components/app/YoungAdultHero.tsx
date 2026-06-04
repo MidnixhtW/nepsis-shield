@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { BookOpen, Hand, Radio, Shield } from "lucide-react";
+import { ArrowRight, BookOpen, Hand, Radio, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
@@ -21,18 +21,19 @@ function HeroAction({
     <Button
       type="button"
       variant={variant}
-      className="tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-4 py-3 text-left"
+      className="tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl border border-border/70 px-4 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70"
       onClick={onClick}
     >
       <span className="mr-3 grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-background/70 text-primary">
         {icon}
       </span>
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         <span className="block text-sm font-semibold leading-tight">{title}</span>
         <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
           {detail}
         </span>
       </span>
+      <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
     </Button>
   );
 }
@@ -61,23 +62,22 @@ export function OrthodoxHero({
 
             <div className="mt-6 grid gap-2 sm:grid-cols-3">
               <HeroAction
-                title="Start Daily Prayer"
-                detail="Morning, evening, or night prayer."
+                title="Go to Prayer"
+                detail="Start morning, evening, or night prayer."
                 icon={<Hand className="h-4 w-4" />}
                 variant="default"
                 onClick={() => onAction?.({ section: "pray", tab: "daily" })}
               />
               <HeroAction
-                title="Open Today’s Readings"
-                detail="Go to the lectionary and source links."
+                title="Go to Readings"
+                detail="Open today’s Epistle, Gospel, and links."
                 icon={<BookOpen className="h-4 w-4" />}
                 onClick={() => onAction?.({ section: "read", read: "daily" })}
               />
               <HeroAction
-                title="Pray the Jesus Prayer"
+                title="Go to Jesus Prayer"
                 detail="Open the counter and stillness timer."
                 icon={<Radio className="h-4 w-4" />}
-                variant="ghost"
                 onClick={() => onAction?.({ section: "pray", tab: "counter" })}
               />
             </div>
