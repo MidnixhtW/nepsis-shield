@@ -101,11 +101,7 @@ export function TodayRhythmDashboard({
             </span>
           </button>
 
-          <div className="grid grid-cols-3 gap-2 text-center sm:w-[290px]">
-            <div className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-              <p className="text-xl font-semibold">{rhythm.streak}</p>
-              <p className="text-[11px] text-muted-foreground">days</p>
-            </div>
+          <div className="grid grid-cols-2 gap-2 text-center sm:w-[190px]">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-3">
               <p className="text-xl font-semibold">{rhythm.weekActiveDays}/7</p>
               <p className="text-[11px] text-muted-foreground">week</p>
@@ -115,6 +111,7 @@ export function TodayRhythmDashboard({
               <p className="text-[11px] text-muted-foreground">today</p>
             </div>
           </div>
+
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
