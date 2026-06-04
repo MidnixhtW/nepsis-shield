@@ -29,9 +29,16 @@ import {
   isNativeReminderUnavailable,
   scheduleSystemPrayerReminder,
 } from "@/lib/systemPrayerReminders";
+import {
+  clearPrayerResume,
+  getPrayerResume,
+  markPrayerComplete,
+  savePrayerResume,
+} from "@/lib/dailyHabits";
 import { showError, showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
+
 type PrayerMode = "short" | "standard" | "long" | "personal";
 
 type PrayerStep = {
@@ -390,6 +397,7 @@ export function DailyPrayerFlow() {
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
   const [reminders, setReminders] = useState<ReminderPrefs>(DEFAULT_REMINDERS);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const saved = getStoredItem<{ mode?: PrayerMode; readerPrefs?: ReaderPrefs }>(FLOW_PREFS_KEY);
@@ -404,6 +412,14 @@ export function DailyPrayerFlow() {
         night: { ...DEFAULT_REMINDERS.night, ...savedReminders.night },
       });
     }
+
+    const resume = getPrayerResume();
+    if (resume) {
+      setTime(resume.time);
+      setMode(resume.mode);
+      setStepIndex(resume.stepIndex);
+    }
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -419,6 +435,17 @@ export function DailyPrayerFlow() {
   const done = !!completed[progressKey];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
+
+  useEffect(() => {
+    if (!hydrated || done) return;
+    savePrayerResume({
+      time,
+      mode,
+      stepIndex: Math.min(stepIndex, steps.length - 1),
+      totalSteps: steps.length,
+      title: current.title,
+    });
+  }, [current.title, done, hydrated, mode, stepIndex, steps.length, time]);
 
   function start(nextTime: PrayerTime) {
     setTime(nextTime);
@@ -660,6 +687,8 @@ export function DailyPrayerFlow() {
               onClick={() => {
                 if (stepIndex >= steps.length - 1) {
                   setCompleted((prev) => ({ ...prev, [progressKey]: true }));
+                  markPrayerComplete(mode === "personal" ? "personal" : time, mode);
+                  showSuccess("Prayer marked complete for today.");
                   return;
                 }
                 setStepIndex((i) => i + 1);
@@ -676,10 +705,12 @@ export function DailyPrayerFlow() {
             onClick={() => {
               setStepIndex(0);
               setCompleted((prev) => ({ ...prev, [progressKey]: false }));
+              clearPrayerResume();
             }}
           >
             <RotateCcw className="mr-2 h-4 w-4" /> Reset flow
           </Button>
+
         </div>
       </Card>
 

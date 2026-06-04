@@ -32,12 +32,14 @@ import {
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
+import { TodayRhythmDashboard } from "@/components/app/TodayRhythmDashboard";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
 import { useSettings } from "@/hooks/useSettings";
 
 function fastingGuidanceLines(description: string, exception?: string) {
+
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
 
   const fastFree = raw.includes("no fast") || raw.includes("fast free");
@@ -208,12 +210,15 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
+      <TodayRhythmDashboard onNavigate={onNavigate} />
+
       <Card className="rounded-3xl border-primary/15 bg-primary/5 p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
               Start here
             </p>
+
             <h2 className="mt-1 text-xl font-semibold tracking-tight">A simple path for today</h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
               Pray, read, reflect, and prepare without hunting through menus.
