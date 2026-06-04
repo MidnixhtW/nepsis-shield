@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BookOpen, Hand, MoonStar, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
+import { BookOpen, Hand, MoonStar, Shield, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
 
 import {
   Accordion,
@@ -137,6 +137,27 @@ const theotokosShort = [
   "Most Holy Theotokos, save us.",
   "Beneath your compassion we take refuge, O Theotokos. Despise not our petitions in time of trouble, but deliver us from dangers, only Pure One, only Blessed One.",
   "It is truly meet to bless you, O Theotokos, ever-blessed and most pure, and the Mother of our God. More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption you gave birth to God the Word. True Theotokos, we magnify you.",
+];
+
+const stMichaelInvocation = [
+  "HOLY ARCHANGEL MICHAEL:",
+  "Holy Archangel Michael, commander of the bodiless hosts, defend us and pray to God for us.",
+  "Guard us from fear, anger, pride, and every temptation that darkens the heart.",
+  "By your prayers, may Christ our God grant us courage with humility, strength with mercy, and watchfulness in every duty. Amen.",
+];
+
+const stMichaelBeforeWatch = [
+  "BEFORE WATCH OR DUTY:",
+  "Holy Archangel Michael, stand with those who keep watch tonight: soldiers, sailors, airmen, guardians, first responders, and all who bear responsibility for others.",
+  "Ask the Lord to make us alert without anxiety, firm without cruelty, and ready to protect life with sober judgment.",
+  "Keep our minds attentive, our hands restrained, and our hearts turned toward Christ. Amen.",
+];
+
+const stMichaelProtection = [
+  "FOR PROTECTION WITHOUT HATRED:",
+  "Holy Archangel Michael, defender of the faithful, pray that God would protect us from danger seen and unseen.",
+  "Do not let fear become hatred in us, nor courage become pride. Teach us to resist evil while remembering that every person is made in the image of God.",
+  "May the Lord cover the innocent, strengthen the weary, heal the wounded, and bring all things under His mercy. Amen.",
 ];
 
 type SaintPrayer = {
@@ -701,6 +722,51 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="Grief and hope" lines={griefPrayer} />
                 <PrayerBlock title="Thanksgiving" lines={thanksgivingPrayer} />
                 <PrayerBlock title="Mercy today" lines={mercyPrayer} />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="st-michael" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-primary/25 bg-primary/10 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" /> St. Michael the Archangel
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <div className="rounded-2xl border border-primary/25 bg-background/50 p-4">
+                  <p className="text-xs font-semibold tracking-wide text-muted-foreground">
+                    Patron of Nepsis Shield
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    These short prayers ask St. Michael's intercession and are written as devotional aids for watchfulness, duty, protection, and mercy. For full hymn texts, use the official Orthodox links below.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                      <a
+                        href="https://www.oca.org/saints/troparia/2021/11/08/103244-synaxis-of-the-archangel-michael-and-the-other-bodiless-powers"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Synaxis hymn texts (OCA)
+                        <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                      <a
+                        href="https://www.oca.org/saints/lives/2021/11/08/103244-synaxis-of-the-archangel-michael-and-the-other-bodiless-powers"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Life & feast note (OCA)
+                        <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+                <PrayerBlock title="Invocation" lines={stMichaelInvocation} />
+                <PrayerBlock title="Before watch or duty" lines={stMichaelBeforeWatch} />
+                <PrayerBlock title="Protection without hatred" lines={stMichaelProtection} />
               </div>
             </AccordionContent>
           </AccordionItem>
