@@ -11,34 +11,34 @@ import {
 
 export function AppFooter() {
   return (
-    <Card className="mt-4 rounded-3xl border-border/60 bg-card/70 p-4 shadow-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-sm font-semibold tracking-tight">A quiet devotional aid</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+    <Card className="mt-4 overflow-hidden rounded-3xl border-border/60 bg-card/70 p-4 shadow-sm">
+      <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center xl:justify-between">
+        <div className="min-w-0 max-w-full">
+          <p className="break-words text-sm font-semibold tracking-tight">A quiet devotional aid</p>
+          <p className="mt-1 max-w-full break-words text-xs leading-relaxed text-muted-foreground">
             Under the patronage of St Michael the Archangel. Orthodox-rooted public resources for prayer and Scripture.
           </p>
         </div>
 
-        <div className="grid w-full gap-2 sm:w-auto sm:grid-cols-2 lg:grid-cols-4">
-          <Button asChild variant="outline" size="sm" className="w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
-            <Link to="/download">
-              <Download className="mr-2 h-4 w-4 text-primary" /> Install App
+        <div className="grid min-w-0 w-full gap-2 sm:grid-cols-2 xl:w-auto xl:grid-cols-4">
+          <Button asChild variant="outline" size="sm" className="min-w-0 w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
+            <Link to="/download" className="min-w-0">
+              <Download className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">Install App</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
-            <Link to="/field-manual">
-              <Crosshair className="mr-2 h-4 w-4 text-primary" /> Field Manual
+          <Button asChild variant="outline" size="sm" className="min-w-0 w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
+            <Link to="/field-manual" className="min-w-0">
+              <Crosshair className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">Field Manual</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
-            <Link to="/about">
-              <Info className="mr-2 h-4 w-4 text-primary" /> About
+          <Button asChild variant="outline" size="sm" className="min-w-0 w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
+            <Link to="/about" className="min-w-0">
+              <Info className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">About</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
-            <Link to="/privacy">
-              <Shield className="mr-2 h-4 w-4 text-primary" /> Privacy
+          <Button asChild variant="outline" size="sm" className="min-w-0 w-full justify-start rounded-2xl border-primary/25 bg-background shadow-sm hover:bg-primary/10">
+            <Link to="/privacy" className="min-w-0">
+              <Shield className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">Privacy</span>
             </Link>
           </Button>
         </div>
