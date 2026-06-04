@@ -46,7 +46,7 @@
   }
 
   .dark {
-    /* Dark mode: high-tech tactical command center — black olive, night-vision green, and amber. */
+    /* Deployed mode: high-tech tactical command center — black olive, night-vision green, and amber. */
     --background: 96 24% 5%;
     --foreground: 92 30% 88%;
 
@@ -85,6 +85,48 @@
     --sidebar-accent-foreground: 46 28% 88%;
     --sidebar-border: 86 12% 22%;
     --sidebar-ring: 98 34% 42%;
+  }
+
+  .red-dark {
+    /* Dark mode: black command center with red alert highlights. */
+    --background: 0 0% 3%;
+    --foreground: 0 0% 92%;
+
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 92%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 92%;
+
+    --primary: 0 78% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 26% 14%;
+    --secondary-foreground: 0 0% 92%;
+
+    --muted: 0 12% 13%;
+    --muted-foreground: 0 0% 68%;
+
+    --accent: 357 82% 44%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 88% 56%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 45% 23%;
+    --input: 0 45% 23%;
+    --ring: 0 78% 50%;
+
+    --radius: 1.25rem;
+
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 0 78% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 28% 15%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 45% 23%;
+    --sidebar-ring: 0 78% 50%;
   }
 
 }
@@ -135,13 +177,22 @@
     background: hsl(var(--primary) / 0.25);
   }
 
-  html:not(.dark) body {
+  html:not(.dark):not(.red-dark) body {
     background-image:
       radial-gradient(circle at 50% -10%, hsl(43 88% 64% / 0.38), transparent 30rem),
       radial-gradient(circle at 12% 12%, hsl(6 57% 42% / 0.16), transparent 24rem),
       radial-gradient(circle at 88% 18%, hsl(193 43% 29% / 0.18), transparent 26rem),
       radial-gradient(ellipse at 18% 78%, hsl(42 78% 52% / 0.20) 0 16%, transparent 17%),
       linear-gradient(135deg, hsl(43 78% 96%), hsl(42 62% 91%) 46%, hsl(39 62% 86%));
+  }
+
+  html.red-dark body {
+    background-image:
+      radial-gradient(circle at 18% 8%, hsl(0 78% 50% / 0.20), transparent 25rem),
+      radial-gradient(circle at 82% 14%, hsl(357 82% 44% / 0.14), transparent 22rem),
+      linear-gradient(hsl(0 78% 50% / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 78% 50% / 0.055) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(0 0% 2%), hsl(0 0% 4%) 45%, hsl(0 28% 8%));
   }
 }
 
@@ -200,9 +251,26 @@
     animation: tactical-blips 5.5s ease-in-out infinite;
   }
 
+  .red-dark .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(0 78% 50% / 0.11), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(357 82% 44% / 0.08), transparent 18rem),
+      linear-gradient(hsl(0 78% 50% / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 78% 50% / 0.05) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(0 0% 1% / 0.98), hsl(0 24% 5% / 0.96));
+    background-size: auto, auto, 42px 42px, 42px 42px, auto;
+  }
+
+  .red-dark .tactical-radar-field::before {
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(0 78% 50% / 0.09) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(0 78% 50% / 0.07) 55%, transparent 56% 100%);
+  }
+
   .radar-scope {
     position: absolute;
     width: min(82vw, 560px);
+
     aspect-ratio: 1;
     border-radius: 9999px;
     border: 1px solid hsl(var(--primary) / 0.16);
