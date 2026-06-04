@@ -132,6 +132,13 @@ export default function About() {
           <Separator className="my-4" />
 
           <div className="grid gap-3 text-sm">
+            <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
+              <p className="font-semibold">Created by Empathik</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life and field use.
+              </p>
+            </div>
+
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="font-semibold">Orthodox Church in America (OCA)</p>
               <p className="mt-1 text-xs text-muted-foreground">
