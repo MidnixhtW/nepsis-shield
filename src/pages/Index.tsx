@@ -10,6 +10,7 @@ import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+import { NavigationAid } from "@/components/app/NavigationAid";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -175,6 +176,15 @@ const Index = () => {
       <QuickStartDialog />
 
       <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <NavigationAid
+          section={section}
+          prayerTab={prayerTab}
+          readTab={readTab}
+          learnTab={learnTab}
+          onNavigate={navigateTo}
+          onOpenRoute={(path) => navigate(path)}
+        />
+
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
@@ -188,6 +198,7 @@ const Index = () => {
 
         <AppFooter />
       </div>
+
     </AppShell>
   );
 };

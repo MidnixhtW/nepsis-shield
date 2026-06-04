@@ -1,7 +1,8 @@
 import { format } from "date-fns";
-import { Crosshair, Download, Info, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
+import { BookOpen, Crosshair, Download, Hand, Home, Info, Map, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+
 import {
   Sheet,
   SheetContent,
@@ -15,44 +16,74 @@ import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 function MenuLinks() {
   return (
-    <div className="grid gap-2">
-      <ThemeToggle variant="row" />
+    <div className="grid gap-4">
+      <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
+        <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          Main map
+        </p>
+        <div className="mt-2 grid gap-1">
+          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+            <Link to="/today">
+              <Home className="mr-2 h-4 w-4" /> Today dashboard
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+            <Link to="/pray">
+              <Hand className="mr-2 h-4 w-4" /> Prayer station
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+            <Link to="/read">
+              <BookOpen className="mr-2 h-4 w-4" /> Reading room
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+            <Link to="/learn">
+              <Map className="mr-2 h-4 w-4" /> Tools & formation
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/settings">
-          <SettingsIcon className="mr-2 h-4 w-4" /> Settings
-        </Link>
-      </Button>
+      <div className="grid gap-2">
+        <ThemeToggle variant="row" />
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/saints">
-          <Sparkles className="mr-2 h-4 w-4" /> Saints
-        </Link>
-      </Button>
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/settings">
+            <SettingsIcon className="mr-2 h-4 w-4" /> Settings
+          </Link>
+        </Button>
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/field-manual">
-          <Crosshair className="mr-2 h-4 w-4" /> Field Manual
-        </Link>
-      </Button>
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/saints">
+            <Sparkles className="mr-2 h-4 w-4" /> Saints
+          </Link>
+        </Button>
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/download">
-          <Download className="mr-2 h-4 w-4" /> App install
-        </Link>
-      </Button>
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/field-manual">
+            <Crosshair className="mr-2 h-4 w-4" /> Field Manual
+          </Link>
+        </Button>
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/privacy">
-          <Shield className="mr-2 h-4 w-4" /> Privacy
-        </Link>
-      </Button>
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/download">
+            <Download className="mr-2 h-4 w-4" /> App install
+          </Link>
+        </Button>
 
-      <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-        <Link to="/about">
-          <Info className="mr-2 h-4 w-4" /> About
-        </Link>
-      </Button>
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/privacy">
+            <Shield className="mr-2 h-4 w-4" /> Privacy
+          </Link>
+        </Button>
+
+        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Link to="/about">
+            <Info className="mr-2 h-4 w-4" /> About
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }
@@ -92,11 +123,12 @@ export function AppHeader() {
               <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
             </SheetTitle>
             <SheetDescription>
-              Settings, saints, app install, privacy, and reference pages.
+              Use the main map first if you feel lost. Today is the home base; Prayer, Read, and Tools are the three main areas.
             </SheetDescription>
           </SheetHeader>
           <div className="mt-5">
             <MenuLinks />
+
           </div>
         </SheetContent>
       </Sheet>
