@@ -1,6 +1,6 @@
-# Ortho Companion
+# Theosis Shield
 
-A React/Vite app configured for Android packaging with Capacitor.
+An Orthodox Companion React/Vite app configured for Android packaging with Capacitor.
 
 ## Field Manual
 
@@ -67,7 +67,7 @@ Configure these optional deployment variables only when overriding the default A
 
 Capacitor is configured with:
 
-- App name: `Ortho Companion`
+- App name: `Theosis Shield`
 - Android package ID: `com.orthocompanion.app`
 - Web build directory: `dist`
 

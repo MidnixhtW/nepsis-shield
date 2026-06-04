@@ -86,7 +86,7 @@ export async function scheduleSystemPrayerReminder({
         {
           id,
           title: `${label} Prayer`,
-          body: "Open Ortho Companion and keep your prayer rule.",
+          body: "Open Theosis Shield and keep your prayer rule.",
           schedule: {
             at: nextReminderDate(time),
             every: "day",

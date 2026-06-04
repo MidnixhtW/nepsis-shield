@@ -65,9 +65,9 @@ export function AppHeader() {
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <h1 className="truncate text-base font-semibold tracking-tight">Ortho Companion</h1>
+          <h1 className="truncate text-base font-semibold tracking-tight">Theosis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
-            {format(new Date(), "EEE, MMM d")} · St Michael · Be still
+            Orthodox Companion · {format(new Date(), "EEE, MMM d")} · St Michael
           </p>
         </div>
       </Link>

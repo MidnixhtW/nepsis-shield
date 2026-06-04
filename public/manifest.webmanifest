@@ -1,7 +1,7 @@
 {
-  "name": "Ortho Companion: Field Guide",
-  "short_name": "Ortho Field",
-  "description": "A Christian field companion rooted in Orthodox prayer, Scripture, and daily battle rhythm.",
+  "name": "Theosis Shield: Orthodox Companion",
+  "short_name": "Theosis Shield",
+  "description": "An Orthodox Companion for prayer, Scripture, and field-ready daily rhythm.",
   "start_url": "/today",
   "scope": "/",
   "display": "standalone",

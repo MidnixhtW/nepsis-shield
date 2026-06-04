@@ -381,8 +381,8 @@ export function DailyPrayerFlow() {
     const { start, end } = makeReminderDate(reminder.time);
     const label = prayerMeta[nextTime].label;
     const ics = createSimpleIcs({
-      title: `${label} Prayer (Ortho Companion)`,
-      description: `Open Ortho Companion and pray the ${label.toLowerCase()} rule. This calendar item is created locally from your reminder preference.`,
+      title: `${label} Prayer (Theosis Shield)`,
+      description: `Open Theosis Shield and pray the ${label.toLowerCase()} rule. This calendar item is created locally from your reminder preference.`,
       start,
       end,
     });
@@ -405,7 +405,7 @@ export function DailyPrayerFlow() {
       }
 
       if ("reason" in result && result.reason === "permission-denied") {
-        showError("Notification permission was denied. Enable notifications for Ortho Companion in system settings.");
+        showError("Notification permission was denied. Enable notifications for Theosis Shield in system settings.");
         return;
       }
 

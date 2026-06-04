@@ -109,7 +109,7 @@ export default function About() {
             </div>
 
             <p className="text-sm leading-relaxed text-foreground/90">
-              Ortho Companion is an independent devotional tool for <span className="font-semibold">Christians of every tradition</span>, shaped by Orthodox prayer, Scripture, fasting, and the life of the Church. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
+              Theosis Shield is an independent Orthodox Companion for <span className="font-semibold">Christians of every tradition</span>, shaped by Orthodox prayer, Scripture, fasting, and the life of the Church. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
             </p>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
