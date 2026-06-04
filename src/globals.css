@@ -4,45 +4,45 @@
 
 @layer base {
   :root {
-    /* Light mode: field tan and olive */
-    --background: 45 24% 88%;
-    --foreground: 82 22% 13%;
+    /* Light mode: St. Michael icon palette — gold leaf, parchment, cinnabar, and blue-green. */
+    --background: 42 62% 91%;
+    --foreground: 29 38% 14%;
 
-    --card: 47 24% 92%;
-    --card-foreground: 82 22% 13%;
+    --card: 43 70% 96%;
+    --card-foreground: 29 38% 14%;
 
-    --popover: 47 24% 92%;
-    --popover-foreground: 82 22% 13%;
+    --popover: 43 70% 96%;
+    --popover-foreground: 29 38% 14%;
 
-    --primary: 84 34% 34%;
-    --primary-foreground: 42 32% 94%;
+    --primary: 193 43% 29%;
+    --primary-foreground: 43 78% 96%;
 
-    --secondary: 51 18% 79%;
-    --secondary-foreground: 82 22% 13%;
+    --secondary: 40 64% 84%;
+    --secondary-foreground: 29 38% 14%;
 
-    --muted: 51 18% 79%;
-    --muted-foreground: 80 9% 30%;
+    --muted: 41 48% 86%;
+    --muted-foreground: 30 20% 36%;
 
-    --accent: 38 49% 43%;
-    --accent-foreground: 42 32% 94%;
+    --accent: 6 57% 42%;
+    --accent-foreground: 43 78% 96%;
 
     --destructive: 0 63% 39%;
-    --destructive-foreground: 42 32% 94%;
+    --destructive-foreground: 43 78% 96%;
 
-    --border: 69 13% 61%;
-    --input: 69 13% 61%;
-    --ring: 84 34% 34%;
+    --border: 39 38% 70%;
+    --input: 39 38% 70%;
+    --ring: 193 43% 29%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 45 24% 88%;
-    --sidebar-foreground: 82 22% 13%;
-    --sidebar-primary: 84 34% 34%;
-    --sidebar-primary-foreground: 42 32% 94%;
-    --sidebar-accent: 51 18% 79%;
-    --sidebar-accent-foreground: 82 22% 13%;
-    --sidebar-border: 69 13% 61%;
-    --sidebar-ring: 84 34% 34%;
+    --sidebar-background: 42 62% 91%;
+    --sidebar-foreground: 29 38% 14%;
+    --sidebar-primary: 193 43% 29%;
+    --sidebar-primary-foreground: 43 78% 96%;
+    --sidebar-accent: 40 64% 84%;
+    --sidebar-accent-foreground: 29 38% 14%;
+    --sidebar-border: 39 38% 70%;
+    --sidebar-ring: 193 43% 29%;
   }
 
   .dark {
@@ -133,6 +133,15 @@
 
   ::selection {
     background: hsl(var(--primary) / 0.25);
+  }
+
+  html:not(.dark) body {
+    background-image:
+      radial-gradient(circle at 50% -10%, hsl(43 88% 64% / 0.38), transparent 30rem),
+      radial-gradient(circle at 12% 12%, hsl(6 57% 42% / 0.16), transparent 24rem),
+      radial-gradient(circle at 88% 18%, hsl(193 43% 29% / 0.18), transparent 26rem),
+      radial-gradient(ellipse at 18% 78%, hsl(42 78% 52% / 0.20) 0 16%, transparent 17%),
+      linear-gradient(135deg, hsl(43 78% 96%), hsl(42 62% 91%) 46%, hsl(39 62% 86%));
   }
 }
 
