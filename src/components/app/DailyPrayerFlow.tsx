@@ -32,7 +32,7 @@ import {
 import { showError, showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
-type PrayerMode = "short" | "standard" | "long";
+type PrayerMode = "short" | "standard" | "long" | "personal";
 
 type PrayerStep = {
   title: string;
@@ -239,6 +239,61 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
 };
 
+const personalDailyPrayer: PrayerStep[] = [
+  {
+    title: "Beginning",
+    body: [
+      "In the Name of the Father, and of the Son, and of the Holy Spirit. Amen.",
+      "Glory to Thee, our God, glory to Thee.",
+      "O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.",
+    ],
+  },
+  {
+    title: "The Trisagion Prayers",
+    body: [
+      "Holy God, Holy Mighty, Holy Immortal: have mercy on us. (3 times, making the sign of the Cross each time)",
+      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever, and unto ages of ages. Amen.",
+      "O All-Holy Trinity, have mercy on us. O Lord, cleanse us from our sins. O Master, pardon our iniquities. O Holy One, visit and heal our infirmities for Thy Name's sake.",
+      "Lord, have mercy. (3 times)",
+      "Glory to the Father... now and ever...",
+      "Our Father, Who art in heaven, hallowed be Thy name... (Recite the Lord's Prayer)",
+      "For Thine is the kingdom, and the power, and the glory, of the Father, and of the Son, and of the Holy Spirit, now and ever, and unto ages of ages. Amen.",
+    ],
+  },
+  {
+    title: "I. The Ascent of Humility — Prayer of St. Ephraim",
+    body: [
+      "O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk.",
+      "But give rather the spirit of chastity, humility, patience, and love to Thy servant.",
+      "Yea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.",
+      "Perform a prostration or a deep bow here.",
+    ],
+  },
+  {
+    title: "II. The Guard of the Mind — The Arrow Prayer for Purity",
+    body: ["Lord Jesus Christ, Son of God, have mercy on me and preserve my purity."],
+  },
+  {
+    title: "III. The Shield of Protection — Prayer to St. Michael",
+    body: [
+      "Holy Archangel Michael, Chief Commander of the Heavenly Hosts, defend us by thy prayers, shelter us under the wings of thine immaterial glory, and deliver us from all distress, for thou art the leader of the Powers on high.",
+    ],
+  },
+  {
+    title: "IV. The Offering of Praise — It Is Truly Meet",
+    body: [
+      "It is truly meet to bless thee, O Theotokos, who art ever-blessed and all-blameless, and the Mother of our God.",
+      "Greater in honor than the Cherubim, and beyond compare more glorious than the Seraphim; who without corruption gavest birth to God the Word: the true Theotokos, we magnify thee.",
+    ],
+  },
+  {
+    title: "The Dismissal",
+    body: [
+      "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us and save us. Amen.",
+    ],
+  },
+];
+
 const longExtras: Record<PrayerTime, PrayerStep[]> = {
   morning: [
     {
@@ -247,6 +302,7 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
         "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
         "Wash me thoroughly from mine iniquity, and cleanse me from my sin. For I know mine iniquity, and my sin is ever before me.",
         "Against Thee only have I sinned and done this evil before Thee, that Thou mightest be justified in Thy words and prevail when Thou art judged.",
+
         "Create in me a clean heart, O God, and renew a right spirit within me. Cast me not away from Thy presence, and take not Thy Holy Spirit from me.",
         "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
       ],
@@ -304,6 +360,7 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
 };
 
 function buildFlow(time: PrayerTime, mode: PrayerMode) {
+  if (mode === "personal") return personalDailyPrayer;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];
@@ -429,11 +486,11 @@ export function DailyPrayerFlow() {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold tracking-tight">Daily Prayer Flow</h2>
               <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                {prayerMeta[time].label}
+                {mode === "personal" ? "Personal" : prayerMeta[time].label}
               </Badge>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Choose morning, evening, or night and move through a calm step-by-step rule.
+              Choose morning, evening, night, or your personal daily prayer and move through a calm step-by-step rule.
             </p>
           </div>
           <Shield className="h-5 w-5 text-muted-foreground" />
@@ -472,7 +529,7 @@ export function DailyPrayerFlow() {
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Short for busy days, standard for normal use, longer when you have room.
+                Short for busy days, standard for normal use, longer when you have room, or personal for your daily prayer.
               </p>
             </div>
             <ToggleGroup
@@ -483,12 +540,13 @@ export function DailyPrayerFlow() {
                 setMode(value as PrayerMode);
                 setStepIndex(0);
               }}
-              className="justify-start gap-2"
+              className="flex-wrap justify-start gap-2"
             >
               {[
                 ["short", "Short"],
                 ["standard", "Standard"],
                 ["long", "Longer"],
+                ["personal", "Personal"],
               ].map(([value, label]) => (
                 <ToggleGroupItem
                   key={value}
@@ -503,6 +561,7 @@ export function DailyPrayerFlow() {
 
           <div className="grid gap-2 sm:grid-cols-3">
             <label className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-3 py-2">
+
               <span className="inline-flex items-center gap-2 text-sm font-medium">
                 <Eye className="h-4 w-4 text-primary" /> Focus
               </span>
