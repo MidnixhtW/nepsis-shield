@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { BookOpen, Hand, MoonStar, Shield, Sun, Utensils, Sparkles, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink, Hand, MoonStar, Shield, Sparkles, Star, Sun, Utensils } from "lucide-react";
 
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
+
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -13,10 +14,13 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { toggleFavoritePrayer, useDailyRhythm } from "@/lib/dailyHabits";
+import { cn } from "@/lib/utils";
 
 function PrayerBlock({ title, lines }: { title: string; lines: string[] }) {
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+
       <p className="text-xs font-semibold tracking-wide text-muted-foreground">
         {title}
       </p>
@@ -573,12 +577,24 @@ const ocaOccasions = [
   },
 ];
 
+const favoritePrayerOptions = [
+  { id: "basics", title: "Common starting prayers", lines: sharedPrayerBasics },
+  { id: "jesus", title: "Jesus Prayer", lines: jesus },
+  { id: "repentance", title: "Repentance", lines: repentancePrayer },
+  { id: "thanksgiving", title: "Thanksgiving", lines: thanksgivingPrayer },
+  { id: "mercy", title: "Mercy today", lines: mercyPrayer },
+  { id: "st-michael", title: "St. Michael", lines: stMichaelInvocation },
+  { id: "before-sleep", title: "Before sleep", lines: nightPrayer },
+  { id: "theotokos", title: "Theotokos", lines: theotokosShort },
+];
+
 const prayerSources = [
   {
     group: "Greek Orthodox Archdiocese of America (GOARCH)",
     items: [
       {
         label: "Personal & Devotional Prayers",
+
         href: "https://www.goarch.org/chapel/prayers",
         note: "In communion with OCA.",
       },
@@ -676,10 +692,14 @@ const prayerSources = [
 
 export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
   const [saintFilter, setSaintFilter] = useState<string>("all");
+  const rhythm = useDailyRhythm();
   const allowedCats =
     SAINT_FILTERS.find((f) => f.id === saintFilter)?.cats ??
     SAINT_FILTERS[0].cats;
   const filteredSaints = SAINT_PRAYERS.filter((p) => allowedCats.includes(p.category));
+  const favoritePrayers = favoritePrayerOptions.filter((prayer) =>
+    rhythm.favoritePrayerIds.includes(prayer.id),
+  );
 
   return (
     <div className="grid gap-4">
@@ -688,7 +708,46 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
+            <h2 className="text-xl font-semibold tracking-tight">Pinned prayers</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Star a few prayers you want one tap away.
+            </p>
+          </div>
+          <Star className="h-5 w-5 text-primary" />
+        </div>
+        <Separator className="my-4" />
+        <div className="flex flex-wrap gap-2">
+          {favoritePrayerOptions.map((prayer) => {
+            const active = rhythm.favoritePrayerIds.includes(prayer.id);
+            return (
+              <Button
+                key={prayer.id}
+                type="button"
+                variant={active ? "default" : "outline"}
+                size="sm"
+                className="rounded-2xl border-border/60"
+                onClick={() => toggleFavoritePrayer(prayer.id)}
+              >
+                <Star className={cn("mr-2 h-3.5 w-3.5", active ? "fill-current" : "")} />
+                {prayer.title}
+              </Button>
+            );
+          })}
+        </div>
+        {favoritePrayers.length ? (
+          <div className="mt-4 grid gap-3">
+            {favoritePrayers.map((prayer) => (
+              <PrayerBlock key={prayer.id} title={prayer.title} lines={prayer.lines} />
+            ))}
+          </div>
+        ) : null}
+      </Card>
+
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-4">
+          <div>
             <h2 className="text-xl font-semibold tracking-tight">Prayers</h2>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Daily prayers in-app, plus official links for many occasions.
             </p>

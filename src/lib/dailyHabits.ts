@@ -4,7 +4,21 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 export type DailyHabitKey = "prayer" | "reading" | "reflection" | "mercy";
 export type PrayerTimeKey = "morning" | "evening" | "night" | "personal";
 export type PrayerModeKey = "short" | "standard" | "long" | "personal";
-export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful";
+export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry";
+
+export type ResumeTarget = {
+  section?: "today" | "pray" | "read" | "learn";
+  tab?: string;
+  read?: string;
+  path?: string;
+};
+
+export type GlobalResume = {
+  label: string;
+  helper: string;
+  target: ResumeTarget;
+  updatedAt: number;
+};
 
 export type PrayerResume = {
   date: string;
@@ -23,6 +37,12 @@ export type Intention = {
   answered: boolean;
 };
 
+export type CustomRuleStep = {
+  id: string;
+  label: string;
+  createdAt: number;
+};
+
 export type DailyRecord = {
   date: string;
   habits: Record<DailyHabitKey, boolean>;
@@ -35,6 +55,9 @@ export type HabitStore = {
   records: Record<string, DailyRecord>;
   intentions: Intention[];
   prayerResume?: PrayerResume;
+  globalResume?: GlobalResume;
+  favoritePrayerIds: string[];
+  customRuleSteps: CustomRuleStep[];
 };
 
 export type DailyRhythm = {
@@ -42,6 +65,9 @@ export type DailyRhythm = {
   today: DailyRecord;
   intentions: Intention[];
   prayerResume?: PrayerResume;
+  globalResume?: GlobalResume;
+  favoritePrayerIds: string[];
+  customRuleSteps: CustomRuleStep[];
   streak: number;
   weekActiveDays: number;
   completedToday: number;
@@ -84,13 +110,18 @@ function emptyRecord(date = dayKey()): DailyRecord {
 }
 
 function getStore(): HabitStore {
-  if (!canUseBrowserStorage()) return { records: {}, intentions: [] };
+  if (!canUseBrowserStorage()) {
+    return { records: {}, intentions: [], favoritePrayerIds: [], customRuleSteps: [] };
+  }
 
   const saved = getStoredItem<Partial<HabitStore>>(STORE_KEY);
   return {
     records: saved?.records ?? {},
     intentions: saved?.intentions ?? [],
     prayerResume: saved?.prayerResume,
+    globalResume: saved?.globalResume,
+    favoritePrayerIds: saved?.favoritePrayerIds ?? [],
+    customRuleSteps: saved?.customRuleSteps ?? [],
   };
 }
 
@@ -140,6 +171,9 @@ function buildRhythm(): DailyRhythm {
     today: todayRecord,
     intentions: store.intentions,
     prayerResume: store.prayerResume?.date === today ? store.prayerResume : undefined,
+    globalResume: store.globalResume,
+    favoritePrayerIds: store.favoritePrayerIds,
+    customRuleSteps: store.customRuleSteps,
     streak,
     weekActiveDays,
     completedToday: Object.values(todayRecord.habits).filter(Boolean).length,
@@ -193,6 +227,12 @@ export function savePrayerResume(resume: Omit<PrayerResume, "date" | "updatedAt"
       date: dayKey(),
       updatedAt: Date.now(),
     };
+    store.globalResume = {
+      label: "Continue prayer",
+      helper: `${resume.title} — step ${resume.stepIndex + 1} of ${resume.totalSteps}`,
+      target: { section: "pray", tab: "daily" },
+      updatedAt: Date.now(),
+    };
   });
 }
 
@@ -205,6 +245,12 @@ export function clearPrayerResume() {
 export function getPrayerResume() {
   const resume = getStore().prayerResume;
   return resume?.date === dayKey() ? resume : undefined;
+}
+
+export function saveGlobalResume(resume: Omit<GlobalResume, "updatedAt">) {
+  mutateStore((store) => {
+    store.globalResume = { ...resume, updatedAt: Date.now() };
+  });
 }
 
 export function setQuickState(state: QuickStateKey) {
@@ -247,5 +293,37 @@ export function toggleIntention(id: string) {
 export function removeIntention(id: string) {
   mutateStore((store) => {
     store.intentions = store.intentions.filter((item) => item.id !== id);
+  });
+}
+
+export function toggleFavoritePrayer(id: string) {
+  mutateStore((store) => {
+    store.favoritePrayerIds = store.favoritePrayerIds.includes(id)
+      ? store.favoritePrayerIds.filter((item) => item !== id)
+      : [id, ...store.favoritePrayerIds].slice(0, 24);
+  });
+}
+
+export function addCustomRuleStep(label: string) {
+  const trimmed = label.trim();
+  if (!trimmed) return false;
+
+  mutateStore((store) => {
+    store.customRuleSteps = [
+      ...store.customRuleSteps,
+      {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        label: trimmed,
+        createdAt: Date.now(),
+      },
+    ].slice(-12);
+  });
+
+  return true;
+}
+
+export function removeCustomRuleStep(id: string) {
+  mutateStore((store) => {
+    store.customRuleSteps = store.customRuleSteps.filter((item) => item.id !== id);
   });
 }

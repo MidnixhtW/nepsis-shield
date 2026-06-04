@@ -11,6 +11,7 @@ import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { NavigationAid } from "@/components/app/NavigationAid";
+import { saveGlobalResume } from "@/lib/dailyHabits";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -57,9 +58,16 @@ function isLearnTab(x: string | null): x is LearnTab {
   );
 }
 
-const Index = () => {
+function resumeLabel(to: SectionTarget) {
+  if (to.section === "pray") return to.tab === "daily" ? "Continue prayer" : "Return to Prayer";
+  if (to.section === "read") return "Continue reading";
+  if (to.section === "learn") return "Return to tools";
+  return "Return to Today";
+}
 
+const Index = () => {
   const navigate = useNavigate();
+
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -115,6 +123,12 @@ const Index = () => {
 
     if (to.section === "read" && to.read) next.set("read", to.read);
     else next.delete("read");
+
+    saveGlobalResume({
+      label: resumeLabel(to),
+      helper: to.section === "today" ? "Home base" : "Last place you opened.",
+      target: { section: to.section, tab: to.tab, read: to.read },
+    });
 
     const qs = next.toString();
     navigate(to.section === "today" ? "/today" : qs ? `/${to.section}?${qs}` : `/${to.section}`);

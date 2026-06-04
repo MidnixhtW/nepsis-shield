@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -28,6 +29,7 @@ import {
   removeStoredItem,
   setStoredItem,
 } from "@/lib/deviceStorage";
+import { addCustomRuleStep, removeCustomRuleStep, useDailyRhythm } from "@/lib/dailyHabits";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 
 type RuleMode = "short" | "standard" | "long";
@@ -65,10 +67,12 @@ const CLEANUP_OLDER_THAN_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
 export function PrayerRule() {
   const dayKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const rhythm = useDailyRhythm();
 
   const [prefs, setPrefs] = useState<RulePrefs>(DEFAULT_PREFS);
   const [progress, setProgress] = useState<RuleProgress>({});
   const [saveEnabled, setSaveEnabled] = useState(true);
+  const [customStepText, setCustomStepText] = useState("");
 
   useEffect(() => {
     cleanupStoredByPrefix("prayer_rule:progress:", CLEANUP_OLDER_THAN_MS);
@@ -128,14 +132,25 @@ export function PrayerRule() {
       extras.push({ id: "after_meals", label: "After meals" });
     }
 
-    return [...base.slice(0, 1), ...extras, ...base.slice(1), ...modeExtras];
-  }, [prefs]);
+    const custom = rhythm.customRuleSteps.map((step) => ({
+      id: `custom:${step.id}`,
+      label: step.label,
+    }));
+
+    return [...base.slice(0, 1), ...extras, ...custom, ...base.slice(1), ...modeExtras];
+  }, [prefs, rhythm.customRuleSteps]);
 
   const doneCount = steps.filter((s) => progress[s.id]).length;
+
+  function addCustomStep() {
+    if (!addCustomRuleStep(customStepText)) return;
+    setCustomStepText("");
+  }
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between gap-4">
+
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-base font-semibold tracking-tight">Prayer rule</h3>
@@ -218,11 +233,49 @@ export function PrayerRule() {
             </AccordionTrigger>
             <AccordionContent className="pt-3">
               <div className="grid gap-3 rounded-2xl border border-border/60 bg-background p-4">
+                <div className="grid gap-2 rounded-2xl border border-border/60 bg-muted/20 p-3">
+                  <p className="text-sm font-medium">Custom steps</p>
+                  <div className="flex gap-2">
+                    <Input
+                      value={customStepText}
+                      onChange={(event) => setCustomStepText(event.target.value)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") addCustomStep();
+                      }}
+                      placeholder="Add a prayer, psalm, or intention"
+                      className="rounded-2xl"
+                    />
+                    <Button type="button" className="rounded-2xl" onClick={addCustomStep}>
+                      Add
+                    </Button>
+                  </div>
+                  {rhythm.customRuleSteps.length ? (
+                    <div className="grid gap-2">
+                      {rhythm.customRuleSteps.map((step) => (
+                        <div key={step.id} className="flex items-center justify-between gap-2 rounded-2xl border border-border/60 bg-background/70 px-3 py-2">
+                          <span className="min-w-0 text-sm">{step.label}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 shrink-0 rounded-2xl text-muted-foreground hover:text-destructive"
+                            onClick={() => removeCustomRuleStep(step.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Remove custom step</span>
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium">Include Before/After Meals</p>
                     <p className="text-xs text-muted-foreground">Common prayers</p>
                   </div>
+
                   <Switch
                     checked={prefs.includeMeals}
                     onCheckedChange={(checked) =>
