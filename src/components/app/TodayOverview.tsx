@@ -113,7 +113,7 @@ function EssentialButton({
     <Button
       type="button"
       variant={variant}
-      className="tap h-auto min-h-14 justify-start rounded-2xl px-4 py-3 text-left"
+      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl px-4 py-3 text-left"
       onClick={onClick}
     >
       <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
@@ -299,15 +299,15 @@ export function TodayOverview({
 
             <div className="grid gap-2 content-start">
               <EssentialButton
-                label="Begin prayer"
-                description="Open the daily prayer flow."
+                label="Start Daily Prayer"
+                description="Choose morning, evening, or night prayer."
                 icon={<Hand className="h-4 w-4" />}
                 variant="default"
                 onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
               />
               <EssentialButton
-                label="Daily readings"
-                description="Read today’s lectionary."
+                label="Open Today’s Readings"
+                description="Read the Epistle, Gospel, and source links."
                 icon={<BookOpen className="h-4 w-4" />}
                 onClick={() => onNavigate?.({ section: "read", read: "daily" })}
               />
@@ -315,26 +315,26 @@ export function TodayOverview({
                 <Button
                   type="button"
                   variant="ghost"
-                  className="tap justify-start rounded-2xl"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
                   onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
                 >
-                  <Target className="mr-2 h-4 w-4" /> Jesus Prayer
+                  <Target className="mr-2 h-4 w-4 shrink-0" /> Jesus Prayer Counter
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
-                  className="tap justify-start rounded-2xl"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
                   onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
                 >
-                  <MoonStar className="mr-2 h-4 w-4" /> Evening
+                  <MoonStar className="mr-2 h-4 w-4 shrink-0" /> Evening Prayer
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
-                  className="tap justify-start rounded-2xl"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl text-left"
                   onClick={() => onNavigate?.({ section: "read", read: "plans" })}
                 >
-                  <Sparkles className="mr-2 h-4 w-4" /> Plans
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Reading Plans
                 </Button>
               </div>
               <Button
@@ -344,7 +344,7 @@ export function TodayOverview({
                 className="tap mt-1 w-fit rounded-2xl border-border/60"
                 onClick={addFastingReminder}
               >
-                <CalendarPlus className="mr-2 h-4 w-4" /> Fasting reminder
+                <CalendarPlus className="mr-2 h-4 w-4" /> Add Fasting Reminder
               </Button>
             </div>
           </div>

@@ -16,7 +16,7 @@ export function AppFooter() {
         <div className="min-w-0">
           <p className="text-sm font-semibold tracking-tight">A quiet devotional aid</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Orthodox-rooted public resources for prayer and Scripture. Not a substitute for pastoral care.
+            Under the patronage of St Michael the Archangel. Orthodox-rooted public resources for prayer and Scripture.
           </p>
         </div>
 

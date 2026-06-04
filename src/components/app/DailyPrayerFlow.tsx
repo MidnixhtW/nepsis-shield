@@ -195,9 +195,9 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
       ],
     },
     {
-      title: "Patron saint",
+      title: "App patron: St Michael the Archangel",
       body: [
-        "Pray to God for me, O Saint _____________ well-pleasing to God. I fervently entreat you, who are the sure help and intercessor for my soul.",
+        "Holy Archangel Michael, defend us in battle, guard this work, and pray to God for us.",
       ],
     },
   ],

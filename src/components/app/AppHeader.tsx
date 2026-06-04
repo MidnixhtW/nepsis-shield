@@ -67,7 +67,7 @@ export function AppHeader() {
         <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Ortho Companion</h1>
           <p className="truncate text-xs text-muted-foreground">
-            {format(new Date(), "EEE, MMM d")} · Pray · Read · Be still
+            {format(new Date(), "EEE, MMM d")} · St Michael · Be still
           </p>
         </div>
       </Link>
