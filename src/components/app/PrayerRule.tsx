@@ -104,19 +104,19 @@ export function PrayerRule() {
   const steps = useMemo(() => {
     const base = [
       { id: "morning", label: "Morning prayer" },
-      { id: "readings", label: "Read Epistle & Gospel" },
-      { id: "rope", label: "Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner" },
+      { id: "readings", label: "Epistle & Gospel" },
+      { id: "rope", label: "Jesus Prayer" },
       { id: "evening", label: "Evening prayer" },
     ];
 
     const modeExtras: Array<{ id: string; label: string }> = [];
     if (prefs.mode === "standard" || prefs.mode === "long") {
-      modeExtras.push({ id: "night", label: "Night prayer / before sleep" });
-      modeExtras.push({ id: "mercy", label: "One act of mercy or reconciliation" });
+      modeExtras.push({ id: "night", label: "Before sleep" });
+      modeExtras.push({ id: "mercy", label: "Mercy or reconciliation" });
     }
     if (prefs.mode === "long") {
-      modeExtras.push({ id: "intercessions", label: "Intercessions for family, parish, and enemies" });
-      modeExtras.push({ id: "silence", label: "Stillness or Jesus Prayer timer: Lord Jesus Christ, Son of God, have mercy on me, a sinner" });
+      modeExtras.push({ id: "intercessions", label: "Intercessions" });
+      modeExtras.push({ id: "silence", label: "Stillness timer" });
     }
 
     const extras = [] as Array<{ id: string; label: string }>;

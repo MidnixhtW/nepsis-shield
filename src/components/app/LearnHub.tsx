@@ -21,47 +21,47 @@ export function LearnHub({
 }) {
   return (
     <div className="grid gap-4">
-      <SectionBar title="Learn" hint="Welcome, guide, Q&A, hymns, parish" />
+      <SectionBar title="More" hint="Guides, hymns, parish, library" />
 
       <Tabs
         value={tab ?? "welcome"}
         onValueChange={(v) => onTabChange?.(v as LearnTab)}
         className="w-full"
       >
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
+        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
           <TabsTrigger
             value="welcome"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
-            Welcome
+            Start
           </TabsTrigger>
           <TabsTrigger
             value="guide"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Guide
           </TabsTrigger>
           <TabsTrigger
             value="qa"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Q&A
           </TabsTrigger>
           <TabsTrigger
             value="library"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Library
           </TabsTrigger>
           <TabsTrigger
             value="hymns"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Hymns
           </TabsTrigger>
           <TabsTrigger
             value="parish"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Parish
           </TabsTrigger>

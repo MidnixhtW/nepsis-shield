@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Crosshair, Settings2, Wand2 } from "lucide-react";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
@@ -10,11 +9,7 @@ import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
-import { TodaySaintTile } from "@/components/app/TodaySaintTile";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
-import { HighlightCard } from "@/components/app/HighlightCard";
-import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
-import { Button } from "@/components/ui/button";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -169,63 +164,11 @@ const Index = () => {
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       <QuickStartDialog />
 
-      <div className="grid gap-5 animate-in fade-in slide-in-from-bottom-2 duration-500">
-        <ApkUpdateBanner />
-
+      <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
-
-            <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.5fr)] xl:items-start">
-              <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-              <TodaySaintTile onOpenSaints={() => navigate("/saints")} />
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              <HighlightCard
-                eyebrow="Field manual"
-                title="Duty, stress, travel, grief, and courage"
-                description="Open short prayers, practical steps, and pastoral safety notes for demanding environments."
-                icon={<Crosshair className="h-5 w-5 text-primary" />}
-                actions={
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="tap rounded-2xl border-border/60 bg-background/60"
-                    onClick={() => navigate("/field-manual")}
-                  >
-                    Open Field Manual
-                  </Button>
-                }
-              />
-
-              <HighlightCard
-                eyebrow="Setup"
-                title="Calendar, jurisdiction, hymns"
-                description="Adjust daily readings, fasting guidance, source links, and hymns when you need to."
-                icon={<Wand2 className="h-5 w-5 text-primary" />}
-                actions={
-                  <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="tap rounded-2xl border-border/60 bg-background/60"
-                      onClick={() => navigate("/settings")}
-                    >
-                      <Settings2 className="mr-2 h-4 w-4" /> Settings
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="tap rounded-2xl border-border/60 bg-background/60"
-                      onClick={() => navigateTo({ section: "learn", tab: "hymns" })}
-                    >
-                      Hymns
-                    </Button>
-                  </>
-                }
-              />
-            </div>
+            <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
           </div>
         ) : null}
 

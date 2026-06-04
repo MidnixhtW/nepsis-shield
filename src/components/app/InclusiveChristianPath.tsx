@@ -263,13 +263,13 @@ export function InclusiveChristianPath({
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <PathButton onClick={() => onNavigate?.({ section: "read", read: "plans" })}>
-                  <BookOpen className="mr-2 h-4 w-4" /> Gospel & Psalms plans
+                  <BookOpen className="mr-2 h-4 w-4" /> Reading plans
                 </PathButton>
                 <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}>
-                  <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer: Lord Jesus Christ, Son of God, have mercy on me, a sinner
+                  <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer
                 </PathButton>
                 <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}>
-                  <Heart className="mr-2 h-4 w-4" /> Reflection journal
+                  <Heart className="mr-2 h-4 w-4" /> Reflection
                 </PathButton>
               </div>
             </>
