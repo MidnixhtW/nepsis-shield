@@ -34,17 +34,17 @@ function MenuLinks() {
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/pray">
-              <Hand className="mr-2 h-4 w-4" /> Prayer station
+              <Hand className="mr-2 h-4 w-4" /> Prayer
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/read">
-              <BookOpen className="mr-2 h-4 w-4" /> Reading room
+              <BookOpen className="mr-2 h-4 w-4" /> Read
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/learn">
-              <Map className="mr-2 h-4 w-4" /> Tools & formation
+              <Map className="mr-2 h-4 w-4" /> Tools
             </Link>
           </Button>
         </div>
@@ -92,6 +92,10 @@ function MenuLinks() {
             <Info className="mr-2 h-4 w-4" /> About
           </Link>
         </Button>
+
+        <div className="rounded-3xl border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
+          Need app help or want to send feedback? Use the Help button in the bottom-left corner.
+        </div>
       </div>
     </div>
   );
@@ -135,12 +139,11 @@ export function AppHeader() {
               <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
             </SheetTitle>
             <SheetDescription>
-              Use the main map first if you feel lost. Today is the home base; Prayer, Read, and Tools are the three main areas.
+              Today is home base. Prayer, Read, and Tools are the main areas.
             </SheetDescription>
           </SheetHeader>
           <div className="mt-5">
             <MenuLinks />
-
           </div>
         </SheetContent>
       </Sheet>

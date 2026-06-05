@@ -8,10 +8,7 @@ import {
   Church,
   ExternalLink,
   Flame,
-  Hand,
-  Headphones,
   Leaf,
-  MoonStar,
   PenLine,
   ShieldCheck,
   Sparkles,
@@ -212,41 +209,33 @@ export function TodayOverview({
     <div className="grid gap-4">
       <TodayRhythmDashboard onNavigate={onNavigate} />
 
-      <Card className="rounded-3xl border-primary/15 bg-primary/5 p-5 shadow-sm sm:p-6">
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Start here
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Next steps
             </p>
-
-            <h2 className="mt-1 text-xl font-semibold tracking-tight">A simple path for today</h2>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">Choose one small action</h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Pray, read, reflect, and prepare without hunting through menus.
+              After prayer, continue with reading, reflection, or preparation.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-2 lg:min-w-[520px]">
-            <EssentialButton
-              label="Pray"
-              description="Begin the daily prayer flow."
-              icon={<Hand className="h-4 w-4" />}
-              variant="default"
-              onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
-            />
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
             <EssentialButton
               label="Read"
-              description="Open today’s Scripture readings."
+              description="Open today’s Scripture."
               icon={<BookOpen className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "read", read: "daily" })}
             />
             <EssentialButton
               label="Reflect"
-              description="Write a short encrypted journal note."
+              description="Write a short note."
               icon={<PenLine className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
             />
             <EssentialButton
               label="Prepare"
-              description="Open confession and preparation tools."
+              description="Confession tools."
               icon={<ShieldCheck className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
             />
@@ -294,7 +283,7 @@ export function TodayOverview({
             </Select>
             <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40">
               <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
-                Open Daily Source Website <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
+                Open daily source <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
               </a>
             </Button>
           </div>
@@ -354,36 +343,21 @@ export function TodayOverview({
               </div>
             </div>
 
-            <div className="grid gap-2 content-start">
-              <EssentialButton
-                label="Go to Prayer"
-                description="Start morning, evening, or night prayer."
-                icon={<Hand className="h-4 w-4" />}
-                variant="default"
-                onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
-              />
-              <EssentialButton
-                label="Go to Readings"
-                description="Open today’s Epistle, Gospel, and source links."
-                icon={<BookOpen className="h-4 w-4" />}
-                onClick={() => onNavigate?.({ section: "read", read: "daily" })}
-              />
-              <div className="grid gap-2 sm:grid-cols-3">
+            <div className="grid content-start gap-3">
+              <div className="rounded-3xl border border-primary/20 bg-primary/5 p-4">
+                <p className="text-sm font-semibold">Helpful today</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Use these only if they match your next step.
+                </p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
                 <Button
                   type="button"
                   variant="outline"
                   className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
                 >
-                  <Target className="mr-2 h-4 w-4 shrink-0" /> Open Jesus Prayer
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
-                  onClick={() => onNavigate?.({ section: "pray", tab: "daily" })}
-                >
-                  <MoonStar className="mr-2 h-4 w-4 shrink-0" /> Open Evening Prayer
+                  <Target className="mr-2 h-4 w-4 shrink-0" /> Jesus Prayer
                 </Button>
                 <Button
                   type="button"
@@ -391,7 +365,7 @@ export function TodayOverview({
                   className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "read", read: "plans" })}
                 >
-                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Open Reading Plans
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Reading Plans
                 </Button>
                 <Button
                   type="button"
@@ -399,15 +373,7 @@ export function TodayOverview({
                   className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "learn", tab: "liturgy" })}
                 >
-                  <Church className="mr-2 h-4 w-4 shrink-0" /> Liturgy Companion
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
-                  onClick={() => onNavigate?.({ section: "learn", tab: "audio" })}
-                >
-                  <Headphones className="mr-2 h-4 w-4 shrink-0" /> Orthodox Audio
+                  <Church className="mr-2 h-4 w-4 shrink-0" /> Liturgy Help
                 </Button>
                 <Button
                   type="button"
@@ -415,18 +381,17 @@ export function TodayOverview({
                   className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onOpenRoute?.("/saints")}
                 >
-                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Lives of Saints
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Saints
                 </Button>
               </div>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
+                className="tap w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
                 onClick={addFastingReminder}
               >
-
-                <CalendarPlus className="mr-2 h-4 w-4" /> Add Fasting Reminder
+                <CalendarPlus className="mr-2 h-4 w-4" /> Add fasting reminder
               </Button>
             </div>
           </div>

@@ -206,9 +206,15 @@ const Index = () => {
           </div>
         ) : null}
 
-        {section === "pray" ? <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} /> : null}
-        {section === "read" ? <ReadHub tab={readTab} onTabChange={setReadTab} /> : null}
-        {section === "learn" ? <LearnHub tab={learnTab} onTabChange={setLearnTab} /> : null}
+        {section === "pray" ? (
+          <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
+        ) : null}
+        {section === "read" ? (
+          <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
+        ) : null}
+        {section === "learn" ? (
+          <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
+        ) : null}
 
         <AppFooter />
       </div>

@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Home, Sparkles } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,19 +11,46 @@ import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
 import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
+import { FirstStepHint } from "@/components/app/FirstStepHint";
 
 export type LearnTab = "welcome" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
 
 export function LearnHub({
   tab,
   onTabChange,
+  onHome,
 }: {
   tab?: LearnTab;
   onTabChange?: (t: LearnTab) => void;
+  onHome?: () => void;
 }) {
   return (
     <div className="grid gap-4">
-      <SectionBar title="More" hint="Guides, liturgy, audio, hymns, parish, library" />
+      <SectionBar
+        title="Tools"
+        hint="Guide, Q&A, liturgy, audio, hymns, parish, library"
+        action={
+          onHome ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+              onClick={onHome}
+            >
+              <Home className="mr-2 h-4 w-4" /> Today
+            </Button>
+          ) : null
+        }
+      />
+
+      <FirstStepHint
+        title="New here? Start with the welcome guide."
+        description="It gives the simplest overview before you jump into Q&A, liturgy, audio, or parish tools."
+        actionLabel="Open Start"
+        icon={<Sparkles className="h-4 w-4" />}
+        onAction={() => onTabChange?.("welcome")}
+      />
 
       <Tabs
         value={tab ?? "welcome"}
