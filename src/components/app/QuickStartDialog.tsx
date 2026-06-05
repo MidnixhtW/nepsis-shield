@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ArrowRight,
   BookOpen,
   CheckCircle2,
   Compass,
@@ -13,7 +12,6 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -21,39 +19,41 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
+type TutorialMode = "intro" | "tour";
+
 type TutorialStep = {
   key: string;
-  navLabel: string;
-  eyebrow: string;
+  label: string;
   title: string;
   description: string;
   icon: ReactNode;
-  tapTarget: string;
-  details: string[];
-  actionLabel?: string;
-  action?: () => void;
+  route?: string;
+  bullets: string[];
 };
 
 export function QuickStartDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<TutorialMode>("intro");
   const [stepIndex, setStepIndex] = useState(0);
 
   useEffect(() => {
     const done = getStoredItem<boolean>(ONBOARDING_KEY);
-    setOpen(!done);
+    if (!done) {
+      setMode("intro");
+      setOpen(true);
+    }
   }, []);
 
   useEffect(() => {
     function startTutorial() {
+      setMode("tour");
       setStepIndex(0);
       setOpen(true);
     }
@@ -65,259 +65,210 @@ export function QuickStartDialog() {
   const steps = useMemo<TutorialStep[]>(
     () => [
       {
-        key: "welcome",
-        navLabel: "Map",
-        eyebrow: "Quick tour",
-        title: "A simple path through the app",
-        description:
-          "Follow these steps once and you will know where every main feature lives.",
-        icon: <Compass className="h-5 w-5 text-primary" />,
-        tapTarget: "Start at Today, then use the bottom bar: Today → Prayer → Read → Tools.",
-        details: [
-          "Today tells you what to do next.",
-          "Prayer holds daily prayer, the prayer rule, the Jesus Prayer counter, confession prep, and journal.",
-          "Read holds daily readings, Bible, and reading plans.",
-          "Tools holds learning, liturgy help, audio, hymns, parish finding, settings links, and support pages.",
-        ],
-        actionLabel: "Start at Today",
-        action: () => navigate("/today"),
-      },
-      {
         key: "today",
-        navLabel: "Today",
-        eyebrow: "Feature 1",
-        title: "Today is the home base",
-        description:
-          "Open this first when you want one clear next step instead of a long list of choices.",
+        label: "Today",
+        title: "Today",
+        description: "Your home base. Start here when you want one clear next step.",
         icon: <Home className="h-5 w-5 text-primary" />,
-        tapTarget: "Tap Today in the bottom navigation.",
-        details: [
-          "Use the main highlighted card to begin the day.",
-          "Use resume cards to return to the last prayer, reading, or tool you opened.",
-          "Use quick help cards when you need support or direction fast.",
-        ],
-        actionLabel: "Go to Today",
-        action: () => navigate("/today"),
+        route: "/today",
+        bullets: ["Daily overview", "Resume your last activity", "Quick help and direction"],
       },
       {
         key: "prayer",
-        navLabel: "Prayer",
-        eyebrow: "Feature 2",
-        title: "Prayer is for daily practice",
-        description:
-          "This is where the app becomes something you do, not just something you read.",
+        label: "Prayer",
+        title: "Prayer",
+        description: "Daily prayer, habits, stillness, confession prep, and journal.",
         icon: <Hand className="h-5 w-5 text-primary" />,
-        tapTarget: "Tap Prayer in the bottom navigation, then choose a tab at the top of the Prayer screen.",
-        details: [
-          "Daily gives a guided prayer flow.",
-          "Rule tracks small repeatable habits.",
-          "Counter and stillness help with the Jesus Prayer.",
-          "Prep and Journal help with confession, attention, gratitude, and repentance.",
-        ],
-        actionLabel: "Go to Prayer",
-        action: () => navigate("/pray"),
+        route: "/pray",
+        bullets: ["Guided daily prayer", "Prayer rule and Jesus Prayer counter", "Prep and journal tools"],
       },
       {
         key: "read",
-        navLabel: "Read",
-        eyebrow: "Feature 3",
-        title: "Read is for Scripture and plans",
-        description:
-          "Use this section when you want the daily readings, Bible navigation, or a structured plan.",
+        label: "Read",
+        title: "Read",
+        description: "Scripture, daily readings, and plans for steady reading.",
         icon: <BookOpen className="h-5 w-5 text-primary" />,
-        tapTarget: "Tap Read in the bottom navigation, then choose Daily, Bible, or Plans.",
-        details: [
-          "Daily readings are the quickest place to start.",
-          "Bible lets you browse books and passages.",
-          "Plans give structure when you want a longer devotional path.",
-        ],
-        actionLabel: "Go to Read",
-        action: () => navigate("/read"),
+        route: "/read",
+        bullets: ["Daily readings", "Bible browsing", "Reading plans"],
       },
       {
         key: "tools",
-        navLabel: "Tools",
-        eyebrow: "Feature 4",
-        title: "Tools is for learning and practical help",
-        description:
-          "Come here when you want answers, liturgy guidance, audio, hymns, parish help, or formation resources.",
+        label: "Tools",
+        title: "Tools",
+        description: "Learning, liturgy help, audio, hymns, and parish resources.",
         icon: <Sparkles className="h-5 w-5 text-primary" />,
-        tapTarget: "Tap Tools in the bottom navigation, then choose the tool you need.",
-        details: [
-          "Guide and Q&A explain Orthodox basics clearly.",
-          "Liturgy, audio, hymns, and library resources support worship and learning.",
-          "Parish finder helps connect the app to real Church life.",
-        ],
-        actionLabel: "Go to Tools",
-        action: () => navigate("/learn"),
+        route: "/learn",
+        bullets: ["Guide and Q&A", "Liturgy, audio, and hymns", "Parish finder"],
       },
       {
         key: "menu",
-        navLabel: "Menu",
-        eyebrow: "More options",
-        title: "The top-right menu holds everything outside the daily flow",
-        description:
-          "Use it for settings, saints, field manual, install, privacy, about, theme, and replaying this tutorial.",
+        label: "Menu",
+        title: "Menu",
+        description: "Everything outside the daily flow lives in the top-right menu.",
         icon: <Menu className="h-5 w-5 text-primary" />,
-        tapTarget: "Tap the menu button in the top-right corner.",
-        details: [
-          "Settings changes calendar and preference choices.",
-          "Privacy explains local device storage and data controls.",
-          "Tutorial reopens this guide anytime.",
-        ],
-        actionLabel: "Open Settings",
-        action: () => navigate("/settings"),
+        bullets: ["Settings and theme", "Saints, Field Manual, install, privacy, about", "Replay this tutorial anytime"],
       },
       {
-        key: "finish",
-        navLabel: "Done",
-        eyebrow: "Ready",
-        title: "Your clean starting path",
-        description:
-          "If you ever feel lost, follow this order: Today, Prayer, Read, Tools, then Menu.",
+        key: "done",
+        label: "Done",
+        title: "You’re ready",
+        description: "Use the app in this order when you feel lost: Today → Prayer → Read → Tools → Menu.",
         icon: <ShieldCheck className="h-5 w-5 text-primary" />,
-        tapTarget: "Return to Today and choose one small next step.",
-        details: [
-          "Use Today for direction.",
-          "Use Prayer for practice.",
-          "Use Read for Scripture.",
-          "Use Tools and Menu when you need learning, resources, or settings.",
-        ],
-        actionLabel: "Finish on Today",
-        action: () => navigate("/today"),
+        route: "/today",
+        bullets: ["Start small", "Follow one next step", "Come back anytime"],
       },
     ],
-    [navigate],
+    [],
   );
 
   const step = steps[stepIndex];
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === steps.length - 1;
-  const progress = ((stepIndex + 1) / steps.length) * 100;
 
   function finish() {
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
   }
 
+  function closeDialog(nextOpen: boolean) {
+    if (!nextOpen) finish();
+    else setOpen(true);
+  }
+
+  function startTour() {
+    setMode("tour");
+    setStepIndex(0);
+  }
+
   function next() {
-    if (isLast) finish();
-    else setStepIndex((current) => current + 1);
+    if (isLast) {
+      if (step.route) navigate(step.route);
+      finish();
+      return;
+    }
+
+    setStepIndex((current) => current + 1);
   }
 
   function openFeature() {
-    step.action?.();
-    if (isLast) finish();
+    if (step.route) navigate(step.route);
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="rounded-3xl p-0 sm:max-w-[39rem]">
-        <div className="rounded-3xl bg-background p-5 sm:p-6">
-          <DialogHeader>
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
-                  {step.icon}
-                </div>
-                <div className="text-left">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                    {step.eyebrow}
-                  </p>
-                  <DialogTitle className="mt-1 text-xl leading-tight">{step.title}</DialogTitle>
-                </div>
+    <Dialog open={open} onOpenChange={closeDialog}>
+      <DialogContent className="rounded-3xl p-0 sm:max-w-[34rem]">
+        {mode === "intro" ? (
+          <div className="rounded-3xl bg-background p-6">
+            <DialogHeader className="text-left">
+              <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+                <Compass className="h-5 w-5 text-primary" />
               </div>
-              <p className="shrink-0 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-                {stepIndex + 1}/{steps.length}
-              </p>
+              <DialogTitle className="text-2xl leading-tight">Want a quick tutorial first?</DialogTitle>
+              <DialogDescription className="pt-2 text-sm leading-relaxed">
+                A minimal tour will show where everything is: Today, Prayer, Read, Tools, and the Menu.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="mt-5 grid gap-2 rounded-3xl border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
+              <div className="flex gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                Takes less than a minute.
+              </div>
+              <div className="flex gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                You can skip it now and replay it later from the menu.
+              </div>
             </div>
-            <DialogDescription className="pt-3 text-left text-sm leading-relaxed">
-              {step.description}
-            </DialogDescription>
-          </DialogHeader>
 
-          <div className="mt-4 grid grid-cols-7 gap-1" aria-label="Tutorial progress">
-            {steps.map((item, index) => (
-              <button
-                key={item.key}
-                type="button"
-                className={cn(
-                  "h-2 rounded-full transition-colors",
-                  index <= stepIndex ? "bg-primary" : "bg-muted",
-                )}
-                onClick={() => setStepIndex(index)}
-                aria-label={`Go to ${item.navLabel} step`}
-              />
-            ))}
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
+                Skip for now
+              </Button>
+              <Button type="button" className="rounded-2xl" onClick={startTour}>
+                Start tutorial
+              </Button>
+            </div>
           </div>
-          <Progress value={progress} className="sr-only" />
-
-          <Separator className="my-4" />
-
-          <div className="grid gap-3">
-            <Card className="rounded-3xl border-primary/20 bg-primary/5 p-4 shadow-sm">
-              <div className="flex gap-3">
-                <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                <div>
-                  <p className="text-sm font-semibold">Where to go</p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {step.tapTarget}
-                  </p>
+        ) : (
+          <div className="rounded-3xl bg-background p-6">
+            <DialogHeader className="text-left">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+                    {step.icon}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                      {step.label}
+                    </p>
+                    <DialogTitle className="mt-1 text-2xl leading-tight">{step.title}</DialogTitle>
+                  </div>
                 </div>
+                <p className="shrink-0 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  {stepIndex + 1}/{steps.length}
+                </p>
               </div>
-            </Card>
+              <DialogDescription className="pt-3 text-sm leading-relaxed">
+                {step.description}
+              </DialogDescription>
+            </DialogHeader>
 
-            <Card className="rounded-3xl border-border/60 bg-card/70 p-4 shadow-sm">
+            <div className="mt-4 grid grid-cols-6 gap-1" aria-label="Tutorial progress">
+              {steps.map((item, index) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  className={cn(
+                    "h-1.5 rounded-full transition-colors",
+                    index <= stepIndex ? "bg-primary" : "bg-muted",
+                  )}
+                  onClick={() => setStepIndex(index)}
+                  aria-label={`Go to ${item.label}`}
+                />
+              ))}
+            </div>
+
+            <div className="mt-5 rounded-3xl border border-border bg-muted/20 p-4">
               <p className="mb-3 flex items-center gap-2 text-sm font-semibold">
-                <HelpCircle className="h-4 w-4 text-primary" /> What this feature is for
+                <HelpCircle className="h-4 w-4 text-primary" /> What it includes
               </p>
               <div className="grid gap-2.5">
-                {step.details.map((detail) => (
-                  <div key={detail} className="flex gap-3">
+                {step.bullets.map((bullet) => (
+                  <div key={bullet} className="flex gap-2.5 text-sm text-muted-foreground">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <p className="text-sm leading-relaxed text-muted-foreground">{detail}</p>
+                    <span>{bullet}</span>
                   </div>
                 ))}
               </div>
-            </Card>
-          </div>
+            </div>
 
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Button
-              type="button"
-              variant="ghost"
-              className="rounded-2xl text-muted-foreground hover:text-foreground"
-              onClick={finish}
-            >
-              Skip
-            </Button>
-
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-2xl"
-                disabled={isFirst}
-                onClick={() => setStepIndex((current) => current - 1)}
-              >
-                Back
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
+                Skip
               </Button>
-              {step.action ? (
+
+              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                 <Button
                   type="button"
-                  variant="secondary"
+                  variant="outline"
                   className="rounded-2xl"
-                  onClick={openFeature}
+                  disabled={isFirst}
+                  onClick={() => setStepIndex((current) => current - 1)}
                 >
-                  {step.actionLabel}
+                  Back
                 </Button>
-              ) : null}
-              <Button type="button" className="rounded-2xl" onClick={next}>
-                {isLast ? "Finish" : "Next feature"}
-              </Button>
+                {step.route ? (
+                  <Button type="button" variant="secondary" className="rounded-2xl" onClick={openFeature}>
+                    Open {step.label}
+                  </Button>
+                ) : null}
+                <Button type="button" className="rounded-2xl" onClick={next}>
+                  {isLast ? "Finish" : "Next"}
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );
