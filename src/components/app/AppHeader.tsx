@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { BookOpen, Crosshair, Download, Hand, Home, Info, Map, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
+import { BookOpen, Crosshair, Download, Hand, HelpCircle, Home, Info, Map, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/sheet";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
+import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
+
+function startTutorial() {
+  window.dispatchEvent(new Event(START_TUTORIAL_EVENT));
+}
 
 function MenuLinks() {
   return (
@@ -47,6 +52,10 @@ function MenuLinks() {
 
       <div className="grid gap-2">
         <ThemeToggle variant="row" />
+
+        <Button type="button" variant="ghost" className="h-11 justify-start rounded-2xl" onClick={startTutorial}>
+          <HelpCircle className="mr-2 h-4 w-4" /> Tutorial
+        </Button>
 
         <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
           <Link to="/settings">
@@ -105,6 +114,9 @@ export function AppHeader() {
 
       <div className="hidden items-center gap-1 sm:flex">
         <ThemeToggle />
+        <Button type="button" size="sm" variant="ghost" className="rounded-2xl" onClick={startTutorial}>
+          Tutorial
+        </Button>
         <Button asChild size="sm" variant="ghost" className="rounded-2xl">
           <Link to="/settings">Settings</Link>
         </Button>
