@@ -46,45 +46,45 @@
   }
 
   .dark {
-    /* Deployed mode: high-tech tactical command center — black olive, night-vision green, and amber. */
-    --background: 96 24% 5%;
-    --foreground: 92 30% 88%;
+    /* Deployed mode: soft neon green over true black. */
+    --background: 140 28% 3%;
+    --foreground: 132 42% 91%;
 
-    --card: 96 22% 8%;
-    --card-foreground: 92 30% 88%;
+    --card: 140 24% 6%;
+    --card-foreground: 132 42% 91%;
 
-    --popover: 96 22% 8%;
-    --popover-foreground: 92 30% 88%;
+    --popover: 140 24% 6%;
+    --popover-foreground: 132 42% 91%;
 
-    --primary: 98 38% 45%;
-    --primary-foreground: 102 34% 5%;
+    --primary: 132 88% 68%;
+    --primary-foreground: 140 48% 4%;
 
-    --secondary: 94 18% 13%;
-    --secondary-foreground: 92 30% 88%;
+    --secondary: 138 26% 11%;
+    --secondary-foreground: 132 42% 91%;
 
-    --muted: 94 18% 13%;
-    --muted-foreground: 96 14% 65%;
+    --muted: 138 22% 12%;
+    --muted-foreground: 132 18% 68%;
 
-    --accent: 43 70% 48%;
-    --accent-foreground: 102 34% 5%;
+    --accent: 150 78% 58%;
+    --accent-foreground: 140 48% 4%;
 
     --destructive: 6 76% 52%;
     --destructive-foreground: 46 28% 92%;
 
-    --border: 98 24% 20%;
-    --input: 98 24% 20%;
-    --ring: 98 38% 45%;
+    --border: 132 38% 22%;
+    --input: 132 38% 22%;
+    --ring: 132 88% 68%;
 
     --radius: 1.25rem;
 
-    --sidebar-background: 82 22% 8%;
-    --sidebar-foreground: 46 28% 88%;
-    --sidebar-primary: 98 34% 42%;
-    --sidebar-primary-foreground: 84 24% 8%;
-    --sidebar-accent: 82 15% 16%;
-    --sidebar-accent-foreground: 46 28% 88%;
-    --sidebar-border: 86 12% 22%;
-    --sidebar-ring: 98 34% 42%;
+    --sidebar-background: 140 24% 5%;
+    --sidebar-foreground: 132 42% 91%;
+    --sidebar-primary: 132 88% 68%;
+    --sidebar-primary-foreground: 140 48% 4%;
+    --sidebar-accent: 138 26% 11%;
+    --sidebar-accent-foreground: 132 42% 91%;
+    --sidebar-border: 132 38% 22%;
+    --sidebar-ring: 132 88% 68%;
   }
 
   .red-dark {
@@ -156,11 +156,11 @@
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.10), transparent 25rem),
-      radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.08), transparent 22rem),
-      linear-gradient(hsl(var(--primary) / 0.032) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--primary) / 0.032) 1px, transparent 1px),
-      linear-gradient(135deg, hsl(104 30% 5%), hsl(91 26% 7%) 45%, hsl(82 18% 10%));
+      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.13), transparent 25rem),
+      radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.09), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(140 40% 2%), hsl(140 30% 4%) 45%, hsl(132 28% 6%));
     background-position: center, center, 0 0, 0 0, center;
     background-size: auto, auto, 44px 44px, 44px 44px, auto;
     background-attachment: fixed;
@@ -209,8 +209,8 @@
 
   .field-grid {
     background-image:
-      radial-gradient(ellipse at 14% 26%, hsl(43 21% 52% / 0.13) 0 16%, transparent 17%),
-      radial-gradient(ellipse at 76% 20%, hsl(83 21% 34% / 0.12) 0 14%, transparent 15%),
+      radial-gradient(ellipse at 14% 26%, hsl(var(--primary) / 0.14) 0 16%, transparent 17%),
+      radial-gradient(ellipse at 76% 20%, hsl(var(--accent) / 0.11) 0 14%, transparent 15%),
       linear-gradient(hsl(var(--primary) / 0.06) 1px, transparent 1px),
       linear-gradient(90deg, hsl(var(--primary) / 0.06) 1px, transparent 1px);
     background-position: 0 0, 116px 24px, 0 0, 0 0;
@@ -230,12 +230,11 @@
 
   .tactical-radar-field {
     background:
-      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.07), transparent 22rem),
-
-      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.055), transparent 18rem),
-      linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px),
-      linear-gradient(135deg, hsl(102 34% 4% / 0.98), hsl(92 26% 7% / 0.96));
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.10), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.075), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(140 44% 2% / 0.98), hsl(140 30% 5% / 0.96));
     background-size: auto, auto, 42px 42px, 42px 42px, auto;
   }
 
