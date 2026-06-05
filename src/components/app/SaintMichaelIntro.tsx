@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:animated-icon-v3";
+const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:simple-complex-v4";
 
 function AnimatedSaintMichaelIcon() {
   return (
@@ -10,196 +10,135 @@ function AnimatedSaintMichaelIcon() {
       viewBox="0 0 360 420"
       className="michael-icon relative h-full w-full overflow-visible"
       role="img"
-      aria-label="Animated Orthodox-style icon of St. Michael raising a sword with wings"
+      aria-label="Animated icon of St. Michael raising a sword with wings"
     >
       <defs>
-        <radialGradient id="iconGoldGlow" cx="50%" cy="42%" r="58%">
-          <stop offset="0%" stopColor="#fff4bf" />
-          <stop offset="48%" stopColor="#d7a43a" />
-          <stop offset="100%" stopColor="#6d4214" />
+        <radialGradient id="haloGold" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fff5bf" />
+          <stop offset="58%" stopColor="#d8a236" />
+          <stop offset="100%" stopColor="#8a571b" />
         </radialGradient>
-        <linearGradient id="iconPanel" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#f9e6a4" />
-          <stop offset="48%" stopColor="#c88d2d" />
-          <stop offset="100%" stopColor="#553412" />
+        <linearGradient id="wingGold" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#fff0ad" />
+          <stop offset="100%" stopColor="#9b641e" />
         </linearGradient>
-        <linearGradient id="wingIconGold" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#fff6c7" />
-          <stop offset="45%" stopColor="#d6a13a" />
-          <stop offset="100%" stopColor="#7b4a16" />
+        <linearGradient id="robeBlue" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#355f9f" />
+          <stop offset="100%" stopColor="#14203f" />
         </linearGradient>
-        <linearGradient id="robeIconBlue" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#395f9f" />
-          <stop offset="52%" stopColor="#203d76" />
-          <stop offset="100%" stopColor="#101b37" />
-        </linearGradient>
-        <linearGradient id="mantleIconRed" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#bd4937" />
-          <stop offset="52%" stopColor="#86291f" />
-          <stop offset="100%" stopColor="#481312" />
-        </linearGradient>
-        <linearGradient id="lorosGold" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#fff2b8" />
-          <stop offset="52%" stopColor="#cf972b" />
-          <stop offset="100%" stopColor="#7a4614" />
+        <linearGradient id="mantleRed" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stopColor="#bc4634" />
+          <stop offset="100%" stopColor="#531716" />
         </linearGradient>
         <linearGradient id="swordSteel" x1="0" x2="1" y1="0" y2="1">
           <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="44%" stopColor="#d7dee5" />
-          <stop offset="100%" stopColor="#7d8792" />
+          <stop offset="48%" stopColor="#d8dee5" />
+          <stop offset="100%" stopColor="#7c8792" />
         </linearGradient>
-        <filter id="iconShadow" x="-25%" y="-25%" width="150%" height="150%">
-          <feDropShadow dx="0" dy="12" stdDeviation="12" floodColor="#000000" floodOpacity="0.28" />
-        </filter>
       </defs>
 
-      <g filter="url(#iconShadow)">
-        <path
-          className="michael-icon-panel"
-          d="M52 391V117C52 54 104 18 180 18s128 36 128 99v274H52Z"
-          fill="url(#iconPanel)"
-          stroke="hsl(var(--primary) / 0.45)"
-          strokeWidth="5"
-        />
-        <path
-          d="M70 371V120c0-50 42-83 110-83s110 33 110 83v251H70Z"
-          fill="none"
-          stroke="hsl(var(--background) / 0.42)"
-          strokeWidth="3"
-        />
-        <path
-          d="M75 88c58-37 151-37 210 0"
-          fill="none"
-          stroke="hsl(var(--primary) / 0.38)"
-          strokeLinecap="round"
-          strokeWidth="2"
-        />
-      </g>
-
-      <g className="michael-inscription" fill="hsl(var(--background) / 0.74)" fontFamily="serif" fontWeight="700">
-        <text x="85" y="114" fontSize="18">ΑΡΧ</text>
-        <text x="229" y="114" fontSize="18">ΜΙΧ</text>
-      </g>
+      <circle className="michael-aura" cx="180" cy="190" r="150" fill="hsl(var(--primary) / 0.12)" />
+      <circle className="michael-halo" cx="180" cy="126" r="55" fill="url(#haloGold)" />
+      <circle cx="180" cy="126" r="43" fill="none" stroke="hsl(var(--background) / 0.38)" strokeWidth="3" />
+      <path d="M180 78v96M132 126h96" stroke="hsl(var(--background) / 0.25)" strokeLinecap="round" strokeWidth="3" />
 
       <g className="michael-wing michael-wing-left">
         <path
-          d="M158 154C111 67 51 73 36 188c34-36 66-42 103-19-42 1-76 18-101 54 45-16 78-10 103 18-32 2-57 16-74 42 40-13 75-7 107 18 10-50 4-99-16-147Z"
-          fill="url(#wingIconGold)"
-          stroke="#6f4316"
-          strokeWidth="3"
+          d="M158 159C112 70 50 82 35 196c34-39 70-43 108-13-46 0-80 19-103 58 43-17 78-9 105 25-34-1-61 13-80 42 41-13 79-6 114 23 8-63 1-121-21-172Z"
+          fill="url(#wingGold)"
+          stroke="#6d4318"
+          strokeWidth="4"
           strokeLinejoin="round"
         />
         <path
-          d="M134 165c-34-21-63-15-88 18M138 198c-39-8-70 4-95 32M142 232c-30-1-55 12-74 42"
+          d="M139 172c-40-16-72-7-96 26M143 212c-39-4-69 9-91 40M147 252c-31 3-56 18-75 46"
           fill="none"
-          stroke="hsl(var(--background) / 0.54)"
+          stroke="hsl(var(--background) / 0.45)"
           strokeLinecap="round"
           strokeWidth="5"
-        />
-        <path
-          d="M156 154c-12 43-13 88-3 135"
-          fill="none"
-          stroke="#8c571d"
-          strokeLinecap="round"
-          strokeWidth="3"
         />
       </g>
 
       <g className="michael-wing michael-wing-right">
         <path
-          d="M202 154c47-87 107-81 122 34-34-36-66-42-103-19 42 1 76 18 101 54-45-16-78-10-103 18 32 2 57 16 74 42-40-13-75-7-107 18-10-50-4-99 16-147Z"
-          fill="url(#wingIconGold)"
-          stroke="#6f4316"
-          strokeWidth="3"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M226 165c34-21 63-15 88 18M222 198c39-8 70 4 95 32M218 232c30-1 55 12 74 42"
-          fill="none"
-          stroke="hsl(var(--background) / 0.54)"
-          strokeLinecap="round"
-          strokeWidth="5"
-        />
-        <path
-          d="M204 154c12 43 13 88 3 135"
-          fill="none"
-          stroke="#8c571d"
-          strokeLinecap="round"
-          strokeWidth="3"
-        />
-      </g>
-
-      <circle className="michael-halo" cx="180" cy="135" r="57" fill="url(#iconGoldGlow)" stroke="#fff0b4" strokeWidth="4" />
-      <circle cx="180" cy="135" r="46" fill="none" stroke="#8a561d" strokeWidth="3" />
-      <path d="M180 82v106M128 135h104" stroke="hsl(var(--background) / 0.32)" strokeLinecap="round" strokeWidth="3" />
-
-      <g className="michael-body">
-        <path
-          className="michael-mantle"
-          d="M120 198c18-37 38-54 60-54s42 17 60 54l23 160c-48 28-118 28-166 0l23-160Z"
-          fill="url(#mantleIconRed)"
-          stroke="#5c2116"
+          d="M202 159c46-89 108-77 123 37-34-39-70-43-108-13 46 0 80 19 103 58-43-17-78-9-105 25 34-1 61 13 80 42-41-13-79-6-114 23-8-63-1-121 21-172Z"
+          fill="url(#wingGold)"
+          stroke="#6d4318"
           strokeWidth="4"
           strokeLinejoin="round"
         />
         <path
-          d="M145 199c10-24 22-37 35-37s25 13 35 37l15 146c-29 15-71 15-100 0l15-146Z"
-          fill="url(#robeIconBlue)"
+          d="M221 172c40-16 72-7 96 26M217 212c39-4 69 9 91 40M213 252c31 3 56 18 75 46"
+          fill="none"
+          stroke="hsl(var(--background) / 0.45)"
+          strokeLinecap="round"
+          strokeWidth="5"
+        />
+      </g>
+
+      <g className="michael-body">
+        <path
+          className="michael-mantle"
+          d="M123 190c17-32 36-47 57-47s40 15 57 47l27 170c-49 29-119 29-168 0l27-170Z"
+          fill="url(#mantleRed)"
+          stroke="#5b2018"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M145 198c10-23 22-35 35-35s25 12 35 35l16 146c-30 17-72 17-102 0l16-146Z"
+          fill="url(#robeBlue)"
           stroke="hsl(var(--background) / 0.42)"
           strokeWidth="3"
           strokeLinejoin="round"
         />
         <path
-          d="M160 169l47 175M201 170l-46 175"
+          className="michael-loros"
+          d="M162 170l42 172M201 171l-43 171"
           fill="none"
-          stroke="url(#lorosGold)"
+          stroke="#d8a236"
           strokeLinecap="round"
-          strokeWidth="14"
+          strokeWidth="12"
         />
         <path
-          d="M160 169l47 175M201 170l-46 175"
+          d="M139 235c27 12 55 12 82 0M137 284c30 12 58 12 87 0"
           fill="none"
-          stroke="hsl(var(--background) / 0.35)"
-          strokeLinecap="round"
-          strokeDasharray="2 14"
-          strokeWidth="4"
-        />
-        <path
-          d="M139 223c27 14 55 14 82 0M137 272c29 13 58 13 87 0"
-          fill="none"
-          stroke="hsl(var(--primary) / 0.42)"
+          stroke="hsl(var(--primary) / 0.38)"
           strokeLinecap="round"
           strokeWidth="4"
         />
 
-        <g className="michael-face">
-          <ellipse cx="180" cy="134" rx="24" ry="30" fill="#d9a260" stroke="#62371d" strokeWidth="3" />
-          <path d="M154 121c10-31 42-35 55 1-18-13-36-13-55-1Z" fill="#5b321e" />
-          <path d="M166 135c5-3 10-3 15 0M190 135c5-3 10-3 15 0" stroke="#442518" strokeLinecap="round" strokeWidth="3" />
-          <path d="M180 137c-2 8-2 13 0 17" stroke="#7a4424" strokeLinecap="round" strokeWidth="2" />
-          <path d="M170 160c7 5 14 5 21 0" fill="none" stroke="#56301d" strokeLinecap="round" strokeWidth="3" />
-        </g>
+        <ellipse cx="180" cy="126" rx="23" ry="29" fill="#d8a05f" stroke="#63391f" strokeWidth="3" />
+        <path d="M156 113c11-28 38-31 49 1-16-10-32-10-49-1Z" fill="#57331f" />
+        <path d="M166 128c5-3 10-3 15 0M190 128c5-3 10-3 15 0" stroke="#402515" strokeLinecap="round" strokeWidth="3" />
+        <path d="M171 151c6 4 13 4 19 0" fill="none" stroke="#56301d" strokeLinecap="round" strokeWidth="3" />
       </g>
 
-      <g className="michael-left-arm">
-        <path d="M142 203c-18 21-29 45-34 74" fill="none" stroke="#d9a260" strokeLinecap="round" strokeWidth="12" />
-        <path d="M98 251l43 17-19 48-44-17 20-48Z" fill="#253a6b" stroke="#d8a43a" strokeWidth="4" />
-        <path d="M108 264l20 8M101 282l20 8" stroke="hsl(var(--background) / 0.42)" strokeLinecap="round" strokeWidth="3" />
+      <g className="michael-shield-arm">
+        <path d="M141 205c-19 22-31 48-36 78" fill="none" stroke="#d8a05f" strokeLinecap="round" strokeWidth="12" />
+        <path className="michael-shield" d="M98 253l45 17-18 54-47-18 20-53Z" fill="#213b70" stroke="#d8a236" strokeWidth="4" />
       </g>
 
       <g className="michael-sword-arm">
-        <path d="M221 196c15 1 28 16 36 44" fill="none" stroke="#d9a260" strokeLinecap="round" strokeWidth="12" />
-        <path d="M252 42l13 151-13 32-13-32 13-151Z" fill="url(#swordSteel)" stroke="#f7fbff" strokeWidth="2" />
-        <path d="M223 193h58" stroke="#d7a33a" strokeLinecap="round" strokeWidth="11" />
-        <path d="M252 198v48" stroke="#7d4717" strokeLinecap="round" strokeWidth="9" />
-        <circle cx="252" cy="250" r="8" fill="#d7a33a" />
-        <path d="M235 190c11 9 23 9 34 0" fill="none" stroke="#d9a260" strokeLinecap="round" strokeWidth="10" />
-        <path className="sword-shine" d="M252 58l4 118" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" opacity="0.65" />
+        <path d="M221 196c18 5 30 21 37 49" fill="none" stroke="#d8a05f" strokeLinecap="round" strokeWidth="12" />
+        <path d="M253 40l13 156-13 33-13-33 13-156Z" fill="url(#swordSteel)" stroke="#f9fbff" strokeWidth="2" />
+        <path d="M224 196h58" stroke="#d8a236" strokeLinecap="round" strokeWidth="11" />
+        <path d="M253 201v50" stroke="#80501a" strokeLinecap="round" strokeWidth="9" />
+        <circle cx="253" cy="255" r="8" fill="#d8a236" />
+        <path className="sword-shine" d="M253 58l4 122" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" />
+      </g>
+
+      <g className="michael-light-rays" stroke="hsl(var(--primary) / 0.35)" strokeLinecap="round" strokeWidth="4">
+        <path d="M180 25v24" />
+        <path d="M106 60l15 19" />
+        <path d="M254 60l-15 19" />
+        <path d="M62 142l26 6" />
+        <path d="M298 142l-26 6" />
       </g>
 
       <path
         className="michael-ground"
-        d="M92 374c48 22 128 22 176 0"
+        d="M88 372c51 22 133 22 184 0"
         fill="none"
         stroke="hsl(var(--primary) / 0.42)"
         strokeLinecap="round"
@@ -257,8 +196,8 @@ export function SaintMichaelIntro() {
           100% { transform: translate3d(72vw, -42vh, 0) scale(.52) rotate(18deg); opacity: 0; }
         }
         @keyframes iconGlow {
-          0%, 100% { filter: drop-shadow(0 1.8rem 2.5rem hsl(var(--primary)/0.22)); }
-          50% { filter: drop-shadow(0 2rem 3.5rem hsl(var(--primary)/0.38)); }
+          0%, 100% { filter: drop-shadow(0 1.8rem 2.5rem hsl(var(--primary)/0.24)); }
+          50% { filter: drop-shadow(0 2.2rem 3.6rem hsl(var(--primary)/0.42)); }
         }
         @keyframes starDrift {
           from { transform: translateX(-8vw); opacity: 0; }
@@ -266,49 +205,68 @@ export function SaintMichaelIntro() {
           to { transform: translateX(22vw); opacity: 0; }
         }
         @keyframes wingFlapLeft {
-          0%, 100% { transform: rotate(-5deg) translateY(0) scaleX(1); }
-          45% { transform: rotate(7deg) translateY(8px) scaleX(.96); }
+          0%, 100% { transform: rotate(-7deg) translateY(0) scaleX(1); }
+          32% { transform: rotate(9deg) translateY(9px) scaleX(.96); }
+          64% { transform: rotate(-2deg) translateY(3px) scaleX(1.02); }
         }
         @keyframes wingFlapRight {
-          0%, 100% { transform: rotate(5deg) translateY(0) scaleX(1); }
-          45% { transform: rotate(-7deg) translateY(8px) scaleX(.96); }
+          0%, 100% { transform: rotate(7deg) translateY(0) scaleX(1); }
+          32% { transform: rotate(-9deg) translateY(9px) scaleX(.96); }
+          64% { transform: rotate(2deg) translateY(3px) scaleX(1.02); }
         }
-        @keyframes swordRaiseIcon {
-          0% { transform: rotate(-15deg) translate(-12px, 20px); }
-          24% { transform: rotate(-4deg) translate(-4px, 6px); }
-          52%, 100% { transform: rotate(4deg) translate(0, -8px); }
+        @keyframes swordRaise {
+          0% { transform: rotate(-17deg) translate(-12px, 21px); }
+          24% { transform: rotate(-3deg) translate(-4px, 5px); }
+          55% { transform: rotate(6deg) translate(0, -9px); }
+          100% { transform: rotate(3deg) translate(0, -5px); }
+        }
+        @keyframes bodyFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
         }
         @keyframes mantleSway {
-          0%, 100% { transform: translateX(-1px); }
-          50% { transform: translateX(2px); }
+          0%, 100% { transform: translateX(-2px) skewX(-1deg); }
+          50% { transform: translateX(3px) skewX(1deg); }
         }
         @keyframes haloPulse {
           0%, 100% { opacity: .9; transform: scale(.985); }
-          50% { opacity: 1; transform: scale(1.025); }
+          50% { opacity: 1; transform: scale(1.035); }
         }
-        @keyframes iconPanelPulse {
-          0%, 100% { opacity: .95; }
-          50% { opacity: 1; }
+        @keyframes auraPulse {
+          0%, 100% { opacity: .45; transform: scale(.96); }
+          50% { opacity: .85; transform: scale(1.05); }
+        }
+        @keyframes rayPulse {
+          0%, 100% { opacity: .25; transform: scale(.94); }
+          50% { opacity: .8; transform: scale(1.04); }
+        }
+        @keyframes shieldTap {
+          0%, 100% { transform: rotate(-2deg) translateY(0); }
+          50% { transform: rotate(3deg) translateY(-3px); }
+        }
+        @keyframes swordShine {
+          0%, 100% { opacity: .25; }
+          50% { opacity: .95; }
         }
         @keyframes groundPulse {
           0%, 100% { opacity: .34; transform: scaleX(.92); }
           50% { opacity: .72; transform: scaleX(1.04); }
         }
-        @keyframes swordShine {
-          0%, 100% { opacity: .36; }
-          50% { opacity: .9; }
-        }
         .michael-flight { animation: michaelFlight 4.05s cubic-bezier(.22, .9, .22, 1) forwards; }
         .michael-icon { animation: iconGlow 1.4s ease-in-out infinite; }
-        .michael-icon-panel { animation: iconPanelPulse 1.6s ease-in-out infinite; }
+        .michael-aura { transform-box: fill-box; transform-origin: center; animation: auraPulse 1.5s ease-in-out infinite; }
+        .michael-halo { transform-box: fill-box; transform-origin: center; animation: haloPulse 1.25s ease-in-out infinite; }
         .michael-wing { transform-box: fill-box; }
-        .michael-wing-left { transform-origin: 86% 37%; animation: wingFlapLeft .7s ease-in-out infinite; }
-        .michael-wing-right { transform-origin: 14% 37%; animation: wingFlapRight .7s ease-in-out infinite; }
-        .michael-sword-arm { transform-box: fill-box; transform-origin: 28% 78%; animation: swordRaiseIcon 1.8s cubic-bezier(.2, .9, .2, 1) infinite alternate; }
-        .michael-mantle { transform-box: fill-box; transform-origin: 50% 18%; animation: mantleSway 1.4s ease-in-out infinite; }
-        .michael-halo { transform-box: fill-box; transform-origin: center; animation: haloPulse 1.4s ease-in-out infinite; }
+        .michael-wing-left { transform-origin: 86% 36%; animation: wingFlapLeft .62s ease-in-out infinite; }
+        .michael-wing-right { transform-origin: 14% 36%; animation: wingFlapRight .62s ease-in-out infinite; }
+        .michael-body { transform-box: fill-box; transform-origin: center; animation: bodyFloat 1.2s ease-in-out infinite; }
+        .michael-mantle { transform-box: fill-box; transform-origin: 50% 18%; animation: mantleSway 1.25s ease-in-out infinite; }
+        .michael-loros { animation: swordShine 1.1s ease-in-out infinite; }
+        .michael-sword-arm { transform-box: fill-box; transform-origin: 28% 78%; animation: swordRaise 1.7s cubic-bezier(.2, .9, .2, 1) infinite alternate; }
+        .michael-shield { transform-box: fill-box; transform-origin: center; animation: shieldTap 1.2s ease-in-out infinite; }
+        .michael-light-rays { transform-box: fill-box; transform-origin: center; animation: rayPulse 1.35s ease-in-out infinite; }
+        .sword-shine { animation: swordShine .82s ease-in-out infinite; }
         .michael-ground { transform-box: fill-box; transform-origin: center; animation: groundPulse 1.4s ease-in-out infinite; }
-        .sword-shine { animation: swordShine .9s ease-in-out infinite; }
         .star-drift { animation: starDrift 2.8s ease-in-out infinite; }
       `}</style>
 
