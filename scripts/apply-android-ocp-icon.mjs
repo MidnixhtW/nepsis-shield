@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 const resDir = join(process.cwd(), "android", "app", "src", "main", "res");
@@ -9,7 +9,23 @@ function writeAndroidResource(relativePath, content) {
   writeFileSync(destination, content.trimStart(), "utf8");
 }
 
+function removeAndroidResource(relativePath) {
+  const destination = join(resDir, relativePath);
+  if (existsSync(destination)) {
+    rmSync(destination, { force: true });
+  }
+}
+
+function removeLauncherIconSet(directory) {
+  for (const name of ["ic_launcher", "ic_launcher_round"]) {
+    for (const extension of ["xml", "png", "webp"]) {
+      removeAndroidResource(`${directory}/${name}.${extension}`);
+    }
+  }
+}
+
 const background = `<?xml version="1.0" encoding="utf-8"?>
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -64,6 +80,11 @@ const adaptiveIcon = `<?xml version="1.0" encoding="utf-8"?>
     <foreground android:drawable="@drawable/ic_launcher_foreground" />
 </adaptive-icon>`;
 
+removeLauncherIconSet("mipmap-anydpi-v26");
+for (const density of ["mipmap-mdpi", "mipmap-hdpi", "mipmap-xhdpi", "mipmap-xxhdpi", "mipmap-xxxhdpi"]) {
+  removeLauncherIconSet(density);
+}
+
 writeAndroidResource("drawable/ic_launcher_background.xml", background);
 writeAndroidResource("drawable/ic_launcher_foreground.xml", foreground);
 writeAndroidResource("mipmap-anydpi-v26/ic_launcher.xml", adaptiveIcon);
@@ -74,4 +95,4 @@ for (const density of ["mipmap-mdpi", "mipmap-hdpi", "mipmap-xhdpi", "mipmap-xxh
   writeAndroidResource(`${density}/ic_launcher_round.xml`, legacyIcon);
 }
 
-console.log("Applied OCP tactical Orthodox Android launcher icon resources, including legacy launcher icons.");
+console.log("Applied OCP tactical Orthodox Android launcher icon resources after removing generated default launcher icons.");
