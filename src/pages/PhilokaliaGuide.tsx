@@ -7,7 +7,6 @@ import {
   ExternalLink,
   HeartHandshake,
   Home,
-  Loader2,
   Lock,
   Mic,
   MicOff,
@@ -139,6 +138,53 @@ function relatedSources(input: string) {
   return (matched.length ? matched : sources.slice(0, 4)).slice(0, 4);
 }
 
+function includesAny(input: string, terms: string[]) {
+  return terms.some((term) => input.includes(term));
+}
+
+function sourceLine(input: string) {
+  return relatedSources(input)
+    .slice(0, 2)
+    .map((source) => source.title)
+    .join(" and ");
+}
+
+function localGuideResponse(input: string) {
+  const q = input.toLowerCase();
+  const sourcesToCheck = sourceLine(input);
+  const priestReminder = "Please confirm important spiritual counsel with your priest.";
+
+  if (includesAny(q, ["suicide", "self harm", "self-harm", "hurt myself", "abuse", "danger", "emergency"])) {
+    return `If there is immediate danger, abuse, self-harm, or a medical emergency, seek local emergency help now and contact trusted people near you. Do not try to carry that alone or handle it only through an app.\n\nAfter safety is addressed, bring the matter plainly to your priest and, where needed, qualified local professionals. Orthodox spiritual life is not opposed to practical protection, medical care, or asking for help.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["confession", "confess", "shame", "guilt", "repent"])) {
+    return `Prepare for confession simply: pray Psalm 50/51, ask God for truth without despair, and write a short plain list of sins without long explanations or self-defense.\n\nRepentance is not self-hatred. It is returning to Christ with honesty, humility, and hope. If you feel crushed by shame, keep the preparation shorter and more concrete: what happened, what pattern you see, and what mercy you need.\n\nStart with ${sourcesToCheck} for trustworthy Orthodox background on repentance, confession, and parish life.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["pray", "prayer", "rule", "jesus prayer", "distracted", "failing"])) {
+    return `Begin smaller than your ambition. A humble rule might be: the Trisagion prayers, the Lord’s Prayer, one short Psalm or Gospel reading, and a few minutes of the Jesus Prayer. Keep it steady rather than dramatic.\n\nWhen distracted, return gently. Do not judge prayer by emotion, length, novelty, or intensity. The point is faithfulness before God, not a spiritual performance.\n\nFor grounding, start with ${sourcesToCheck}, especially the Church’s public prayers and basic catechesis.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["fast", "fasting", "food", "lent", "wednesday", "friday"])) {
+    return `Treat fasting as obedience and mercy, not as a private athletic achievement. Keep the fast your parish gives you, avoid judging others, and do not turn food into anxiety or pride.\n\nIf you are new, ill, pregnant, recovering, very young, elderly, or under medical constraints, ask for guidance rather than inventing strict rules. The Orthodox fast is received in the Church, not self-designed from internet fragments.\n\nCheck ${sourcesToCheck} for basic Orthodox teaching and pastoral explanations.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["catechumen", "new", "convert", "learn", "orthodox", "catechism", "doctrine"])) {
+    return `Do not try to learn Orthodoxy by consuming everything at once. Begin with the Creed, the Divine Liturgy, basic prayer, Scripture as read in the Church, and regular attendance at one parish.\n\nA good path is: attend services, ask questions respectfully, read one catechetical source slowly, and practice one concrete act of obedience or mercy each week. Avoid online arguments; they often train the passions more than the heart.\n\nStart with ${sourcesToCheck}; the OCA’s The Orthodox Faith is especially useful for first foundations.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["mercy", "charity", "help", "serve", "poor", "forgive"])) {
+    return `Choose one quiet act of mercy today: pray for someone who irritates you, help at home without announcing it, give privately, or apologize plainly where you have wounded someone.\n\nMercy should make the heart softer, not more proud. Keep it hidden when possible, and let it interrupt your comfort in a small concrete way.\n\nFor Orthodox grounding, check ${sourcesToCheck} and keep mercy tied to prayer, repentance, and parish life.\n\n${priestReminder}`;
+  }
+
+  if (includesAny(q, ["source", "sources", "oca", "goarch", "antiochian", "rocor", "parish", "church", "directory"])) {
+    return `For trustworthy Orthodox learning, start with OCA – The Orthodox Faith for catechesis, OCA Questions & Answers for pastoral topics, OCA Prayers for the Church’s language of prayer, and OCA Daily Readings for Scripture with the Church calendar.\n\nYou can also compare introductory resources from canonical churches in communion, including the Antiochian Archdiocese, GOARCH, and ROCOR. To find a parish, use the Assembly of Canonical Orthodox Bishops parish directory.\n\nRead slowly and locally: one parish, one priest, one source family, one next faithful step.\n\n${priestReminder}`;
+  }
+
+  return `I would handle this with a simple Orthodox pattern: pray briefly, name the concern honestly, avoid dramatic conclusions, and take one concrete faithful step today. The spiritual life is usually healed by steadiness: repentance, humility, Scripture with the Church, confession, mercy, and parish life.\n\nFor sources, start with ${sourcesToCheck}. Read slowly and prefer the guidance of your actual parish over scattered online opinions.\n\nIf this question involves a major life decision, a serious sin pattern, family conflict, mental health, or strict fasting, do not settle it alone in an app. Bring it into confession or pastoral conversation.\n\n${priestReminder}`;
+}
+
 function SectionCard({ title, children, icon }: { title: string; children: React.ReactNode; icon: React.ReactNode }) {
   return (
     <Card className="rounded-3xl border-border/60 bg-card/90 p-5 text-card-foreground shadow-sm backdrop-blur-xl">
@@ -164,11 +210,10 @@ function CalmNote({ title, body }: { title: string; body: string }) {
 export default function PhilokaliaGuide() {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
-  const [isThinking, setIsThinking] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "guide",
-      text: "Peace be with you. Ask plainly; I will answer with Orthodox sources in mind.",
+      text: "Peace be with you. Ask plainly; I will answer locally with Orthodox sources in mind, without any API key.",
     },
   ]);
   const [listening, setListening] = useState(false);
@@ -183,43 +228,17 @@ export default function PhilokaliaGuide() {
     return relatedSources(input || lastUserMessage || "orthodox");
   }, [input, messages]);
 
-  async function askGuide(text = input) {
+  function askGuide(text = input) {
     const trimmed = text.trim();
-    if (!trimmed || isThinking) return;
+    if (!trimmed) return;
 
-    const nextMessages: Message[] = [...messages, { role: "user", text: trimmed }];
-    setMessages(nextMessages);
+    const answer = localGuideResponse(trimmed);
+    setMessages((current) => [
+      ...current,
+      { role: "user", text: trimmed },
+      { role: "guide", text: answer },
+    ]);
     setInput("");
-    setIsThinking(true);
-
-    try {
-      const response = await fetch("/api/philokalia-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: nextMessages.slice(-10) }),
-      });
-
-      if (!response.ok) {
-        throw new Error("AI unavailable");
-      }
-
-      const data = await response.json() as { text?: string };
-      const answer = data.text?.trim();
-      if (!answer) throw new Error("Empty AI response");
-
-      setMessages((current) => [...current, { role: "guide", text: answer }]);
-    } catch {
-      showError("Philokalia Guide AI is not available yet.");
-      setMessages((current) => [
-        ...current,
-        {
-          role: "guide",
-          text: "Philokalia Guide needs its AI key configured before it can answer.",
-        },
-      ]);
-    } finally {
-      setIsThinking(false);
-    }
   }
 
   function startVoice() {
@@ -280,7 +299,7 @@ export default function PhilokaliaGuide() {
             </Badge>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight">Philokalia Guide</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              A real AI Orthodox guide grounded in OCA catechesis and canonical Orthodox resources.
+              A local LLM-style Orthodox guide grounded in OCA catechesis and canonical Orthodox resources — no API key required.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -325,11 +344,6 @@ export default function PhilokaliaGuide() {
                           <p className="whitespace-pre-line">{message.text}</p>
                         </div>
                       ))}
-                      {isThinking ? (
-                        <div className="rounded-2xl border border-border/60 bg-background/60 p-4 text-sm text-muted-foreground">
-                          <Loader2 className="mr-2 inline h-4 w-4 animate-spin text-primary" /> Philokalia Guide is considering your question.
-                        </div>
-                      ) : null}
                     </div>
 
                     <Textarea
@@ -339,9 +353,8 @@ export default function PhilokaliaGuide() {
                       className="min-h-28 rounded-2xl border-border/60 bg-background/70 text-foreground placeholder:text-muted-foreground"
                     />
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" className="rounded-2xl" disabled={isThinking} onClick={() => askGuide()}>
-                        {isThinking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                        Ask
+                      <Button type="button" className="rounded-2xl" onClick={() => askGuide()}>
+                        <Send className="mr-2 h-4 w-4" /> Ask
                       </Button>
                       <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/55" onClick={listening ? stopVoice : startVoice}>
                         {listening ? <MicOff className="mr-2 h-4 w-4" /> : <Mic className="mr-2 h-4 w-4" />}
@@ -360,7 +373,6 @@ export default function PhilokaliaGuide() {
                           type="button"
                           className="rounded-2xl border border-border/60 bg-background/55 p-4 text-left transition-colors hover:border-primary/35 hover:bg-muted/60"
                           onClick={() => askGuide(card.body)}
-                          disabled={isThinking}
                         >
                           <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                             <span className="text-primary">{card.icon}</span> {card.title}
