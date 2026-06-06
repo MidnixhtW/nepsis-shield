@@ -70,7 +70,7 @@ jobs:
           set +o pipefail
           yes | "$SDKMANAGER" --licenses >/dev/null
           set -o pipefail
-          "$SDKMANAGER" --install "platform-tools" "platforms;android-36" "build-tools;35.0.0"
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0"
           "$SDKMANAGER" --list_installed
 
       - name: Install dependencies
@@ -83,6 +83,7 @@ jobs:
         run: |
           rm -rf android
           npx capacitor add android
+          printf "sdk.dir=%s\n" "$ANDROID_HOME" > android/local.properties
 
       - name: Sync Capacitor Android assets
         run: npx capacitor sync android
@@ -100,15 +101,21 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x ./gradlew
-          ./gradlew --version
-          ./gradlew --no-daemon clean assembleDebug --stacktrace --info --warning-mode all
+          ./gradlew --version | tee ../gradle-debug-build.log
+          ./gradlew --no-daemon clean assembleDebug --stacktrace --info --warning-mode all 2>&1 | tee -a ../gradle-debug-build.log
 
       - name: Print Gradle diagnostics on failure
         if: failure()
         run: |
           echo "Gradle failed. Printing useful diagnostics..."
+          if [ -f gradle-debug-build.log ]; then
+            echo "::group::Last 220 lines from Gradle output"
+            tail -n 220 gradle-debug-build.log || true
+            echo "::endgroup::"
+          fi
 
           find android -maxdepth 8 -path "*/build/reports/*" -type f -print || true
+
           find android -maxdepth 8 -path "*/build/reports/*" -type f \( -name "*.txt" -o -name "*.xml" -o -name "*.html" \) -print0 | while IFS= read -r -d '' file; do
             echo "::group::$file"
             sed -n '1,220p' "$file" || true
@@ -120,8 +127,17 @@ jobs:
             echo "::endgroup::"
           done
 
+      - name: Upload Gradle failure log
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: gradle-debug-build-log
+          path: gradle-debug-build.log
+          if-no-files-found: ignore
+
       - name: Build unsigned release APK
         working-directory: android
+
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3g
         run: ./gradlew --no-daemon assembleRelease --stacktrace --info --warning-mode all
