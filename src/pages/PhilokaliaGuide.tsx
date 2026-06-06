@@ -7,6 +7,7 @@ import {
   ExternalLink,
   HeartHandshake,
   Home,
+  Loader2,
   Lock,
   Mic,
   MicOff,
@@ -57,43 +58,43 @@ const sources: GuideSource[] = [
   {
     title: "OCA – The Orthodox Faith",
     url: "https://www.oca.org/orthodoxy/the-orthodox-faith",
-    note: "The main catechetical library used here: doctrine, Scripture, worship, spirituality, sacraments, and Church life.",
+    note: "Core catechetical library: doctrine, Scripture, worship, spirituality, sacraments, and Church life.",
     tags: ["catechism", "doctrine", "learn", "orthodox", "faith", "sacraments", "scripture"],
   },
   {
     title: "OCA – Questions & Answers",
     url: "https://www.oca.org/questions",
-    note: "Practical pastoral explanations on fasting, confession, worship, parish life, family questions, and common newcomer concerns.",
+    note: "Pastoral explanations on fasting, confession, worship, parish life, family questions, and newcomer concerns.",
     tags: ["question", "fast", "confession", "worship", "parish", "new", "catechumen"],
   },
   {
     title: "OCA – Prayers",
     url: "https://www.oca.org/orthodoxy/prayers",
-    note: "Public prayers that teach the Church’s language: repentance, daily prayer, thanksgiving, and intercession.",
+    note: "Public prayers that teach the Church’s language of repentance, daily prayer, thanksgiving, and intercession.",
     tags: ["prayer", "pray", "repentance", "psalm", "rule"],
   },
   {
     title: "OCA – Daily Readings",
     url: "https://www.oca.org/readings",
-    note: "Daily Scripture and saints, useful for keeping learning tied to the Church calendar rather than internet curiosity.",
+    note: "Daily Scripture and saints for keeping learning tied to the Church calendar.",
     tags: ["read", "scripture", "bible", "saints", "calendar", "daily"],
   },
   {
-    title: "Antiochian Orthodox Christian Archdiocese – Discover Orthodoxy",
-    url: "https://www.antiochian.org/dashboard?name=Discover%20Orthodoxy",
-    note: "A canonical Orthodox jurisdiction in communion with the OCA, with introductory teaching and parish resources.",
+    title: "Antiochian Orthodox Christian Archdiocese",
+    url: "https://www.antiochian.org/",
+    note: "Canonical Orthodox jurisdiction in communion with the OCA, with introductory teaching and parish resources.",
     tags: ["antiochian", "learn", "new", "catechumen", "orthodox"],
   },
   {
-    title: "Greek Orthodox Archdiocese – Introduction to Orthodoxy",
-    url: "https://www.goarch.org/-/introduction-to-orthodoxy",
-    note: "Introductory Orthodox teaching from GOARCH, another canonical Orthodox church body in communion with the OCA.",
+    title: "Greek Orthodox Archdiocese of America",
+    url: "https://www.goarch.org/",
+    note: "Canonical Orthodox church body in communion with the OCA, with educational and liturgical resources.",
     tags: ["goarch", "greek", "learn", "new", "catechism", "orthodox"],
   },
   {
     title: "Assembly of Canonical Orthodox Bishops – Parish Directory",
     url: "https://www.assemblyofbishops.org/directories/parishes/",
-    note: "A canonical Orthodox parish directory for finding churches in communion across North America.",
+    note: "Canonical Orthodox parish directory for finding churches in communion across North America.",
     tags: ["parish", "church", "directory", "communion", "oca", "find"],
   },
   {
@@ -132,120 +133,10 @@ const promptCards: PromptCard[] = [
   },
 ];
 
-const counselSeeds = [
-  "Do not try to become holy in your imagination. Keep one commandment near you today.",
-  "If the question makes you frantic, slow down. God is not served by panic.",
-  "The safest next step is usually ordinary: pray, forgive, attend, confess, ask your priest, and do the small good thing.",
-  "Do not use spiritual reading to avoid repentance. Read a little, then obey a little.",
-];
-
 function relatedSources(input: string) {
   const q = input.toLowerCase();
   const matched = sources.filter((source) => source.tags.some((tag) => q.includes(tag)));
   return (matched.length ? matched : sources.slice(0, 4)).slice(0, 4);
-}
-
-function sourceList(input: string) {
-  return relatedSources(input)
-    .map((source) => `• ${source.title} — ${source.url}`)
-    .join("\n");
-}
-
-function wiseFrame(input: string) {
-  const checksum = input.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return counselSeeds[checksum % counselSeeds.length];
-}
-
-function guidanceFor(input: string) {
-  const q = input.toLowerCase();
-  const priest = "Confirm this with your priest or catechist, especially if it touches confession, fasting, your prayer rule, family duties, health, or a major decision.";
-  const sourcesText = sourceList(input);
-  const frame = wiseFrame(input);
-
-  if (q.includes("source") || q.includes("catechism") || q.includes("website") || q.includes("oca") || q.includes("communion")) {
-    return [
-      "A trustworthy Orthodox learning path should begin with the Church’s own catechetical and pastoral sources, not random online argument threads.",
-      "Start with the OCA’s ‘The Orthodox Faith’ for catechism-level formation. Use OCA Questions & Answers for pastoral topics. Then compare introductory material from canonical Orthodox churches in communion, such as Antiochian, GOARCH, and ROCOR resources.",
-      "Use these sources slowly: read one section, write one question, and bring that question to your priest or catechist.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("confess") || q.includes("confession") || q.includes("sin") || q.includes("shame") || q.includes("guilt")) {
-    return [
-      frame,
-      "Prepare for confession plainly. Ask: What did I do? What did I leave undone? Where did I excuse myself? Where did I fail to love God or neighbor?",
-      "Do not write a courtroom speech. Write a short list. Do not dramatize, minimize, or explain everything. Shame says ‘hide’; repentance says ‘return.’",
-      "A practical step: read Psalm 50/51, make a brief list, ask God for contrition, and ask your priest how he prefers confession to be made.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("fast") || q.includes("food") || q.includes("calendar") || q.includes("lent")) {
-    return [
-      frame,
-      "Treat fasting as medicine, not performance. The aim is repentance, prayer, mercy, and freedom from compulsion — not proving strictness.",
-      "Start with the practice of your parish. If you are new, ill, pregnant, responsible for others, recovering from disordered eating, or under strain, do not invent a rule alone.",
-      "A practical step: keep the next meal simple, avoid judgment of others, and attach fasting to one act of mercy.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("pray") || q.includes("prayer") || q.includes("rule") || q.includes("jesus prayer") || q.includes("distracted")) {
-    return [
-      frame,
-      "Keep prayer small, regular, and honest. A humble rule that is actually kept is better than a beautiful rule abandoned after three days.",
-      "A sober beginning: the Trisagion prayers, the Lord’s Prayer, one Psalm or Gospel reading, and a few minutes of the Jesus Prayer with attention. Stop before it becomes theatrical or self-measuring.",
-      "When distracted, return gently. The point is not a feeling, but standing before God with faithfulness.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("learn") || q.includes("catechumen") || q.includes("new") || q.includes("orthodox") || q.includes("convert")) {
-    return [
-      frame,
-      "Learn Orthodoxy through worship, Scripture, parish life, and patient instruction. Do not try to become Orthodox through isolated online research.",
-      "A good order: attend services, read the Gospel daily, learn the Creed, understand the sacraments, learn how to confess, and practice mercy. Let doctrine become prayer and obedience, not trivia.",
-      "Do not rush to master every controversy. Stability matters more than intensity.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("mercy") || q.includes("serve") || q.includes("help") || q.includes("neighbor") || q.includes("charity")) {
-    return [
-      frame,
-      "Mercy should become concrete and quiet. Begin near you: family, parish, workplace, the poor, the lonely, the sick, and anyone you would rather avoid.",
-      "A practical rule for today: do one hidden good work, speak one fewer harsh word, and pray for one person without announcing it.",
-      "Mercy is not activism for self-image. It is love practiced under the eyes of God.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  if (q.includes("church") || q.includes("parish") || q.includes("priest") || q.includes("communion")) {
-    return [
-      frame,
-      "Do not live Orthodoxy as a private project. The normal place of healing is the parish: services, confession, communion, teaching, obedience, and ordinary fellowship.",
-      "If you are looking for a parish, prefer canonical Orthodox churches in communion with one another. In North America, the Assembly of Bishops parish directory is a useful starting point.",
-      "A practical step: attend Vespers or Divine Liturgy, introduce yourself briefly, and ask how catechumens or newcomers are normally received.",
-      priest,
-      `Sources to open next:\n${sourcesText}`,
-    ].join("\n\n");
-  }
-
-  return [
-    frame,
-    "Here is a sober way to begin: simplify the question, pray briefly, and choose the next faithful step rather than searching for a dramatic answer.",
-    "Orthodox guidance is usually concrete: pray, repent, attend the services, read Scripture with the Church, practice mercy, confess honestly, and avoid spiritual self-reliance.",
-    "If this concerns your conscience, confession, fasting, spiritual rule, relationships, or a serious decision, do not settle it through an app alone.",
-    priest,
-    `Sources to open next:\n${sourcesText}`,
-  ].join("\n\n");
 }
 
 function SectionCard({ title, children, icon }: { title: string; children: React.ReactNode; icon: React.ReactNode }) {
@@ -273,10 +164,11 @@ function CalmNote({ title, body }: { title: string; body: string }) {
 export default function PhilokaliaGuide() {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "guide",
-      text: "Peace be with you. Ask plainly. I will answer with Orthodox sources in mind — especially OCA catechetical material, OCA pastoral Q&A, and resources from canonical Orthodox churches in communion. I cannot replace your priest, but I can help you find the next sober step.",
+      text: "Peace be with you. Ask plainly; I will answer with Orthodox sources in mind.",
     },
   ]);
   const [listening, setListening] = useState(false);
@@ -286,18 +178,48 @@ export default function PhilokaliaGuide() {
     return "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
   }, []);
 
-  const currentSources = useMemo(() => relatedSources(input || messages[messages.length - 1]?.text || "orthodox"), [input, messages]);
+  const currentSources = useMemo(() => {
+    const lastUserMessage = [...messages].reverse().find((message) => message.role === "user")?.text;
+    return relatedSources(input || lastUserMessage || "orthodox");
+  }, [input, messages]);
 
-  function askGuide(text = input) {
+  async function askGuide(text = input) {
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed || isThinking) return;
 
-    setMessages((current) => [
-      ...current,
-      { role: "user", text: trimmed },
-      { role: "guide", text: guidanceFor(trimmed) },
-    ]);
+    const nextMessages: Message[] = [...messages, { role: "user", text: trimmed }];
+    setMessages(nextMessages);
     setInput("");
+    setIsThinking(true);
+
+    try {
+      const response = await fetch("/api/philokalia-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: nextMessages.slice(-10) }),
+      });
+
+      if (!response.ok) {
+        throw new Error("AI unavailable");
+      }
+
+      const data = await response.json() as { text?: string };
+      const answer = data.text?.trim();
+      if (!answer) throw new Error("Empty AI response");
+
+      setMessages((current) => [...current, { role: "guide", text: answer }]);
+    } catch {
+      showError("Philokalia Guide AI is not available yet.");
+      setMessages((current) => [
+        ...current,
+        {
+          role: "guide",
+          text: "Philokalia Guide needs its AI key configured before it can answer.",
+        },
+      ]);
+    } finally {
+      setIsThinking(false);
+    }
   }
 
   function startVoice() {
@@ -358,7 +280,7 @@ export default function PhilokaliaGuide() {
             </Badge>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight">Philokalia Guide</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              A wiser, source-directed Orthodox guide drawing from OCA catechesis, OCA pastoral Q&A, and canonical Orthodox resources in communion. Confirm spiritual counsel with your priest.
+              A real AI Orthodox guide grounded in OCA catechesis and canonical Orthodox resources.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -403,6 +325,11 @@ export default function PhilokaliaGuide() {
                           <p className="whitespace-pre-line">{message.text}</p>
                         </div>
                       ))}
+                      {isThinking ? (
+                        <div className="rounded-2xl border border-border/60 bg-background/60 p-4 text-sm text-muted-foreground">
+                          <Loader2 className="mr-2 inline h-4 w-4 animate-spin text-primary" /> Philokalia Guide is considering your question.
+                        </div>
+                      ) : null}
                     </div>
 
                     <Textarea
@@ -412,8 +339,9 @@ export default function PhilokaliaGuide() {
                       className="min-h-28 rounded-2xl border-border/60 bg-background/70 text-foreground placeholder:text-muted-foreground"
                     />
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" className="rounded-2xl" onClick={() => askGuide()}>
-                        <Send className="mr-2 h-4 w-4" /> Ask
+                      <Button type="button" className="rounded-2xl" disabled={isThinking} onClick={() => askGuide()}>
+                        {isThinking ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                        Ask
                       </Button>
                       <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/55" onClick={listening ? stopVoice : startVoice}>
                         {listening ? <MicOff className="mr-2 h-4 w-4" /> : <Mic className="mr-2 h-4 w-4" />}
@@ -432,6 +360,7 @@ export default function PhilokaliaGuide() {
                           type="button"
                           className="rounded-2xl border border-border/60 bg-background/55 p-4 text-left transition-colors hover:border-primary/35 hover:bg-muted/60"
                           onClick={() => askGuide(card.body)}
+                          disabled={isThinking}
                         >
                           <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                             <span className="text-primary">{card.icon}</span> {card.title}
@@ -477,9 +406,9 @@ export default function PhilokaliaGuide() {
             <TabsContent value="learn" className="mt-4">
               <SectionCard title="Source-based Orthodox learning" icon={<BookOpen className="h-4 w-4" />}>
                 <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-                  <p>Begin with OCA catechetical material, especially <span className="font-semibold text-foreground">The Orthodox Faith</span>. It is broad, sober, and structured enough for catechumens and practicing Orthodox Christians.</p>
+                  <p>Begin with OCA catechetical material, especially <span className="font-semibold text-foreground">The Orthodox Faith</span>.</p>
                   <p>Use OCA Questions & Answers for pastoral topics, then compare introductory materials from canonical Orthodox jurisdictions in communion such as Antiochian, GOARCH, and ROCOR resources.</p>
-                  <p>Read slowly: one source, one question, one practical act of obedience. Avoid turning catechism into argument collecting.</p>
+                  <p>Read slowly: one source, one question, one practical act of obedience.</p>
                 </div>
               </SectionCard>
             </TabsContent>
@@ -530,9 +459,6 @@ export default function PhilokaliaGuide() {
                     </a>
                   ))}
                 </div>
-                <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                  Philokalia Guide is source-directed, not a live web scraper. It points you toward trustworthy Orthodox sources and gives restrained guidance based on those categories; verify important matters with your priest.
-                </p>
               </SectionCard>
             </TabsContent>
           </Tabs>
