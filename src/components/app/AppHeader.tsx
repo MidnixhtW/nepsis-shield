@@ -115,7 +115,7 @@ export function AppHeader() {
     if (secretTaps.current.length >= 7) {
       secretTaps.current = [];
       unlockPhilokaliaGuide();
-      showSuccess("Philokalia Guide unlocked.");
+      showSuccess("Nepsis Compass unlocked.");
       navigate("/philokalia");
     }
   }

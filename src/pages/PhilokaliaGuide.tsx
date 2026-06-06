@@ -277,7 +277,7 @@ export default function PhilokaliaGuide() {
 
   function lockAgain() {
     lockPhilokaliaGuide();
-    showSuccess("Philokalia Guide hidden again.");
+    showSuccess("Nepsis Compass hidden again.");
     navigate("/today", { replace: true });
   }
 
@@ -297,9 +297,9 @@ export default function PhilokaliaGuide() {
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-primary hover:bg-primary/10">
               Hidden companion
             </Badge>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight">Philokalia Guide</h1>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight">Nepsis Compass</h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              A local LLM-style Orthodox guide grounded in OCA catechesis and canonical Orthodox resources — no API key required.
+              A local Orthodox watchfulness guide grounded in OCA catechesis and canonical Orthodox resources — no API key required.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -325,7 +325,7 @@ export default function PhilokaliaGuide() {
 
             <TabsContent value="ask" className="mt-4">
               <div className="grid gap-4 lg:grid-cols-[1fr_0.85fr]">
-                <SectionCard title="Ask Philokalia Guide" icon={<Sprout className="h-4 w-4" />}>
+                <SectionCard title="Ask Nepsis Compass" icon={<Sprout className="h-4 w-4" />}>
                   <div className="space-y-3">
                     <div className="max-h-[28rem] space-y-3 overflow-y-auto pr-1">
                       {messages.map((message, index) => (
@@ -339,7 +339,7 @@ export default function PhilokaliaGuide() {
                           }
                         >
                           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                            {message.role === "guide" ? "Philokalia Guide" : "You"}
+                            {message.role === "guide" ? "Nepsis Compass" : "You"}
                           </p>
                           <p className="whitespace-pre-line">{message.text}</p>
                         </div>
