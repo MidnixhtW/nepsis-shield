@@ -75,10 +75,13 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build web app
+        env:
+          VITE_DISABLE_NITRO: "1"
         run: npm run build
 
       - name: Generate Android project
         run: |
+
           rm -rf android
           npx capacitor add android
           printf "sdk.dir=%s\n" "$ANDROID_HOME" > android/local.properties
