@@ -145,14 +145,23 @@ function guidanceFor(input: string) {
 
 function SectionCard({ title, children, icon }: { title: string; children: React.ReactNode; icon: React.ReactNode }) {
   return (
-    <Card className="rounded-[1.75rem] border-[#8d2d24]/20 bg-[#fff5dc]/80 p-5 text-[#2b241b] shadow-sm">
+    <Card className="rounded-3xl border-border/60 bg-card/90 p-5 text-card-foreground shadow-sm backdrop-blur-xl">
       <div className="flex items-center gap-2">
-        <span className="grid h-9 w-9 place-items-center rounded-2xl bg-[#8d2d24]/10 text-[#8d2d24]">{icon}</span>
+        <span className="grid h-9 w-9 place-items-center rounded-2xl bg-primary/10 text-primary">{icon}</span>
         <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
       </div>
-      <Separator className="my-4 bg-[#7a4f2a]/20" />
+      <Separator className="my-4" />
       {children}
     </Card>
+  );
+}
+
+function CalmNote({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background/55 p-4">
+      <p className="font-semibold text-foreground">{title}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
+    </div>
   );
 }
 
@@ -249,37 +258,45 @@ export default function PhilokaliaGuide() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#2b2924] text-[#f7ecd2]">
-      <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-5 sm:px-5">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
+      <div aria-hidden className="tactical-radar-field pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.14),transparent_34rem)]" />
+        <div className="radar-scope radar-scope-primary" />
+        <div className="radar-scope radar-scope-secondary" />
+        <div className="absolute inset-0 tactical-scanlines" />
+        <div className="absolute inset-x-0 top-0 h-px bg-primary/40" />
+      </div>
+
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-4 pb-24 pt-5 sm:px-5">
+        <header className="flex flex-col gap-4 rounded-3xl border border-border/60 bg-card/80 p-4 shadow-sm backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div>
-            <Badge className="rounded-full bg-[#d4a33c]/15 px-3 py-1 text-[#f3d28a] hover:bg-[#d4a33c]/15">
+            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-primary hover:bg-primary/10">
               Hidden companion
             </Badge>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#fff5dc]">Philokalia Guide</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#d8c6a2]">
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight">Philokalia Guide</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               A sober Orthodox guide for prayer, learning, mercy, confession preparation, and source-based education. Confirm spiritual counsel with your priest.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" className="rounded-2xl border-[#d4a33c]/30 bg-[#3a3227] text-[#fff5dc] hover:bg-[#4a3a2d] hover:text-[#fff5dc]">
+            <Button asChild variant="outline" className="rounded-2xl border-border/60 bg-background/55">
               <Link to="/today"><Home className="mr-2 h-4 w-4" /> Main app</Link>
             </Button>
-            <Button type="button" variant="outline" className="rounded-2xl border-[#8d2d24]/40 bg-[#3a2523] text-[#f7d8cf] hover:bg-[#4a2926] hover:text-[#f7d8cf]" onClick={lockAgain}>
+            <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/55" onClick={lockAgain}>
               <Lock className="mr-2 h-4 w-4" /> Hide again
             </Button>
           </div>
         </header>
 
-        <div className="mt-5 rounded-[2rem] border border-[#d4a33c]/20 bg-[#f5e7c8] p-3 text-[#2b241b] shadow-2xl shadow-black/20 sm:p-4">
+        <div className="mt-5 rounded-3xl border border-border/60 bg-card/80 p-3 shadow-sm backdrop-blur-xl sm:p-4">
           <Tabs defaultValue="ask" className="w-full">
-            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-[#7a4f2a]/10 p-1 text-[#4f3926] sm:grid-cols-6">
-              <TabsTrigger value="ask" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Ask</TabsTrigger>
-              <TabsTrigger value="prayer" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Prayer</TabsTrigger>
-              <TabsTrigger value="learn" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Learn</TabsTrigger>
-              <TabsTrigger value="mercy" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Mercy</TabsTrigger>
-              <TabsTrigger value="confess" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Confess</TabsTrigger>
-              <TabsTrigger value="sources" className="rounded-xl data-[state=active]:bg-[#fff8e7]">Sources</TabsTrigger>
+            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
+              <TabsTrigger value="ask" className="rounded-xl">Ask</TabsTrigger>
+              <TabsTrigger value="prayer" className="rounded-xl">Prayer</TabsTrigger>
+              <TabsTrigger value="learn" className="rounded-xl">Learn</TabsTrigger>
+              <TabsTrigger value="mercy" className="rounded-xl">Mercy</TabsTrigger>
+              <TabsTrigger value="confess" className="rounded-xl">Confess</TabsTrigger>
+              <TabsTrigger value="sources" className="rounded-xl">Sources</TabsTrigger>
             </TabsList>
 
             <TabsContent value="ask" className="mt-4">
@@ -293,11 +310,11 @@ export default function PhilokaliaGuide() {
                           className={
                             "rounded-2xl border p-4 text-sm leading-relaxed " +
                             (message.role === "guide"
-                              ? "border-[#7a4f2a]/20 bg-[#fff8e7] text-[#33271e]"
-                              : "ml-6 border-[#8d2d24]/20 bg-[#8d2d24]/10 text-[#3d241d]")
+                              ? "border-border/60 bg-background/60 text-foreground"
+                              : "ml-6 border-primary/25 bg-primary/10 text-foreground")
                           }
                         >
-                          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#8d2d24]">
+                          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                             {message.role === "guide" ? "Philokalia Guide" : "You"}
                           </p>
                           <p className="whitespace-pre-line">{message.text}</p>
@@ -309,13 +326,13 @@ export default function PhilokaliaGuide() {
                       value={input}
                       onChange={(event) => setInput(event.target.value)}
                       placeholder="Ask about prayer, learning, mercy, fasting, confession preparation, or parish life..."
-                      className="min-h-28 rounded-2xl border-[#7a4f2a]/25 bg-[#fffdf4] text-[#2b241b] placeholder:text-[#7a4f2a]/60"
+                      className="min-h-28 rounded-2xl border-border/60 bg-background/70 text-foreground placeholder:text-muted-foreground"
                     />
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" className="rounded-2xl bg-[#8d2d24] text-[#fff5dc] hover:bg-[#6f241d]" onClick={() => askGuide()}>
+                      <Button type="button" className="rounded-2xl" onClick={() => askGuide()}>
                         <Send className="mr-2 h-4 w-4" /> Ask
                       </Button>
-                      <Button type="button" variant="outline" className="rounded-2xl border-[#7a4f2a]/30 bg-[#fff8e7]" onClick={listening ? stopVoice : startVoice}>
+                      <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/55" onClick={listening ? stopVoice : startVoice}>
                         {listening ? <MicOff className="mr-2 h-4 w-4" /> : <Mic className="mr-2 h-4 w-4" />}
                         {listening ? "Stop dictation" : "Voice dictation"}
                       </Button>
@@ -329,13 +346,13 @@ export default function PhilokaliaGuide() {
                       <button
                         key={card.title}
                         type="button"
-                        className="rounded-2xl border border-[#7a4f2a]/20 bg-[#fff8e7] p-4 text-left transition-colors hover:bg-[#f8edcf]"
+                        className="rounded-2xl border border-border/60 bg-background/55 p-4 text-left transition-colors hover:border-primary/35 hover:bg-muted/60"
                         onClick={() => askGuide(card.body)}
                       >
-                        <span className="flex items-center gap-2 text-sm font-semibold text-[#8d2d24]">
-                          {card.icon} {card.title}
+                        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                          <span className="text-primary">{card.icon}</span> {card.title}
                         </span>
-                        <span className="mt-1 block text-xs leading-relaxed text-[#5d4a36]">{card.body}</span>
+                        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{card.body}</span>
                       </button>
                     ))}
                   </div>
@@ -346,23 +363,16 @@ export default function PhilokaliaGuide() {
             <TabsContent value="prayer" className="mt-4">
               <SectionCard title="Prayer without spiritual noise" icon={<Church className="h-4 w-4" />}>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {[
-                    ["Begin small", "Trisagion prayers, the Lord’s Prayer, one Psalm, and a few minutes of the Jesus Prayer."],
-                    ["Keep attention", "When distracted, return gently. Do not measure prayer by emotion or novelty."],
-                    ["Ask blessing", "Let your priest help shape your rule so it is obedient, merciful, and sustainable."],
-                  ].map(([title, body]) => (
-                    <div key={title} className="rounded-2xl border border-[#7a4f2a]/20 bg-[#fff8e7] p-4">
-                      <p className="font-semibold text-[#8d2d24]">{title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#5d4a36]">{body}</p>
-                    </div>
-                  ))}
+                  <CalmNote title="Begin small" body="Trisagion prayers, the Lord’s Prayer, one Psalm, and a few minutes of the Jesus Prayer." />
+                  <CalmNote title="Keep attention" body="When distracted, return gently. Do not measure prayer by emotion or novelty." />
+                  <CalmNote title="Ask blessing" body="Let your priest help shape your rule so it is obedient, merciful, and sustainable." />
                 </div>
               </SectionCard>
             </TabsContent>
 
             <TabsContent value="learn" className="mt-4">
               <SectionCard title="Source-based Orthodox learning" icon={<BookOpen className="h-4 w-4" />}>
-                <div className="space-y-3 text-sm leading-relaxed text-[#4f3926]">
+                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
                   <p>Learn through the Church: worship, Scripture, parish instruction, tested catechetical sources, and patience.</p>
                   <p>A good weekly rhythm: attend services, read the Gospel, learn the Creed, review one OCA article, and write one question for your priest or catechist.</p>
                   <p>Avoid treating the internet as a spiritual elder. Use sources to become teachable, not argumentative.</p>
@@ -379,8 +389,8 @@ export default function PhilokaliaGuide() {
                     "Give without making your gift part of your identity.",
                     "If you failed someone, apologize plainly and without self-defense.",
                   ].map((item) => (
-                    <div key={item} className="flex gap-2 rounded-2xl border border-[#7a4f2a]/20 bg-[#fff8e7] p-4 text-sm leading-relaxed text-[#4f3926]">
-                      <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-[#8d2d24]" /> {item}
+                    <div key={item} className="flex gap-2 rounded-2xl border border-border/60 bg-background/55 p-4 text-sm leading-relaxed text-muted-foreground">
+                      <ChevronRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> {item}
                     </div>
                   ))}
                 </div>
@@ -390,17 +400,10 @@ export default function PhilokaliaGuide() {
             <TabsContent value="confess" className="mt-4">
               <SectionCard title="Confession preparation" icon={<PenLine className="h-4 w-4" />}>
                 <div className="grid gap-3">
-                  {[
-                    ["Pray", "Begin with Psalm 50/51 and ask God for truth without despair."],
-                    ["Name", "Write a short plain list. Avoid explanations unless your priest asks."],
-                    ["Return", "Confession is not self-hatred. It is returning to Christ’s mercy."],
-                    ["Confirm", "Ask your priest how often to confess and how to prepare in your parish."],
-                  ].map(([title, body]) => (
-                    <div key={title} className="rounded-2xl border border-[#7a4f2a]/20 bg-[#fff8e7] p-4">
-                      <p className="font-semibold text-[#8d2d24]">{title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#5d4a36]">{body}</p>
-                    </div>
-                  ))}
+                  <CalmNote title="Pray" body="Begin with Psalm 50/51 and ask God for truth without despair." />
+                  <CalmNote title="Name" body="Write a short plain list. Avoid explanations unless your priest asks." />
+                  <CalmNote title="Return" body="Confession is not self-hatred. It is returning to Christ’s mercy." />
+                  <CalmNote title="Confirm" body="Ask your priest how often to confess and how to prepare in your parish." />
                 </div>
               </SectionCard>
             </TabsContent>
@@ -414,10 +417,10 @@ export default function PhilokaliaGuide() {
                       href={source.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="rounded-2xl border border-[#7a4f2a]/20 bg-[#fff8e7] p-4 transition-colors hover:bg-[#f8edcf]"
+                      className="rounded-2xl border border-border/60 bg-background/55 p-4 transition-colors hover:border-primary/35 hover:bg-muted/60"
                     >
-                      <span className="font-semibold text-[#8d2d24]">{source.title}</span>
-                      <span className="mt-1 block text-sm leading-relaxed text-[#5d4a36]">{source.note}</span>
+                      <span className="font-semibold text-foreground">{source.title}</span>
+                      <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{source.note}</span>
                     </a>
                   ))}
                 </div>
