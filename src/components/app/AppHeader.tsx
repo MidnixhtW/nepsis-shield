@@ -110,7 +110,7 @@ export function AppHeader() {
 
   function handleSecretTap() {
     const now = Date.now();
-    secretTaps.current = [...secretTaps.current.filter((tap) => now - tap < 3500), now];
+    secretTaps.current = [...secretTaps.current.filter((tap) => now - tap < 5000), now];
 
     if (secretTaps.current.length >= 7) {
       secretTaps.current = [];
@@ -122,31 +122,17 @@ export function AppHeader() {
 
   return (
     <header className="flex items-center justify-between gap-3">
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="relative shrink-0">
-          <Link to="/today" className="grid h-9 w-9 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
-            <OrthodoxCrossIcon className="h-5 w-5" />
-            <span className="sr-only">Open Today</span>
-          </Link>
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-hidden="true"
-            className="absolute left-0 top-0 h-4 w-4 rounded-full opacity-0"
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              handleSecretTap();
-            }}
-          />
+      <Link to="/today" className="flex min-w-0 items-center gap-3">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
+          <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
-        <Link to="/today" className="min-w-0">
+        <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
             Orthodox Watchfulness & Prayer · {format(new Date(), "EEE, MMM d")}
           </p>
-        </Link>
-      </div>
+        </div>
+      </Link>
 
       <div className="hidden items-center gap-1 sm:flex">
         <ThemeToggle />
@@ -167,8 +153,14 @@ export function AppHeader() {
         </SheetTrigger>
         <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
           <SheetHeader className="text-left">
-            <SheetTitle className="flex items-center gap-2">
-              <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
+            <SheetTitle>
+              <button
+                type="button"
+                className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={handleSecretTap}
+              >
+                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
+              </button>
             </SheetTitle>
             <SheetDescription>
               Today is home base. Prayer, Read, and Tools are the main areas.
