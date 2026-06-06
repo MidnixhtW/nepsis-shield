@@ -13,6 +13,7 @@ import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
+import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
 import PhilokaliaGuide from "@/pages/PhilokaliaGuide";
@@ -31,6 +32,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ConnectionStatusBanner />
           <SaintMichaelIntro />
           <ScrollToTop />
           <Routes>
