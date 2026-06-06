@@ -11,12 +11,13 @@ permissions:
   contents: read
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   build-android-debug-apk:
     name: Build debug APK
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
     env:
@@ -67,7 +68,8 @@ jobs:
           set +o pipefail
           yes | "$SDKMANAGER" --licenses >/dev/null
           set -o pipefail
-          "$SDKMANAGER" --install "platform-tools" "build-tools;36.0.0" "platforms;android-36"
+          "$SDKMANAGER" --install "platform-tools" "platforms;android-36" "build-tools;35.0.0"
+          "$SDKMANAGER" --list_installed
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -97,7 +99,7 @@ jobs:
           set -euo pipefail
           chmod +x ./gradlew
           ./gradlew --version
-          ./gradlew --no-daemon clean assembleDebug --stacktrace --warning-mode all
+          ./gradlew --no-daemon clean assembleDebug --stacktrace --info --warning-mode all
 
       - name: Print Gradle diagnostics on failure
         if: failure()
