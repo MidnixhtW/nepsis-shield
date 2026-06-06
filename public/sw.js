@@ -1,9 +1,9 @@
-const CACHE_NAME = "ortho-field-cache-v1";
+const CACHE_NAME = "nepsis-shield-pwa-v2";
 const APP_SHELL = [
   "/",
   "/today",
-  "/pray?tab=prayers",
-  "/read?read=plans",
+  "/pray?tab=daily",
+  "/read?read=daily",
   "/learn?tab=welcome",
   "/field-manual",
   "/download",
@@ -46,7 +46,7 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(async () => {
           const cached = await caches.match(request);
-          return cached || caches.match("/offline.html");
+          return cached || caches.match("/today") || caches.match("/offline.html");
         }),
     );
     return;

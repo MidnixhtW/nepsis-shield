@@ -1,6 +1,7 @@
+import { useRef } from "react";
 import { format } from "date-fns";
 import { BookOpen, Crosshair, Download, Hand, HelpCircle, Home, Info, Map, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -14,6 +15,8 @@ import {
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
+import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
+import { showSuccess } from "@/utils/toast";
 
 function startTutorial() {
   window.dispatchEvent(new Event(START_TUTORIAL_EVENT));
@@ -102,19 +105,48 @@ function MenuLinks() {
 }
 
 export function AppHeader() {
+  const navigate = useNavigate();
+  const secretTaps = useRef<number[]>([]);
+
+  function handleSecretTap() {
+    const now = Date.now();
+    secretTaps.current = [...secretTaps.current.filter((tap) => now - tap < 3500), now];
+
+    if (secretTaps.current.length >= 7) {
+      secretTaps.current = [];
+      unlockPhilokaliaGuide();
+      showSuccess("Philokalia Guide unlocked.");
+      navigate("/philokalia");
+    }
+  }
+
   return (
     <header className="flex items-center justify-between gap-3">
-      <Link to="/today" className="flex min-w-0 items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
-          <OrthodoxCrossIcon className="h-5 w-5" />
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="relative shrink-0">
+          <Link to="/today" className="grid h-9 w-9 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
+            <OrthodoxCrossIcon className="h-5 w-5" />
+            <span className="sr-only">Open Today</span>
+          </Link>
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-hidden="true"
+            className="absolute left-0 top-0 h-4 w-4 rounded-full opacity-0"
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              handleSecretTap();
+            }}
+          />
         </div>
-        <div className="min-w-0">
+        <Link to="/today" className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
             Orthodox Watchfulness & Prayer · {format(new Date(), "EEE, MMM d")}
           </p>
-        </div>
-      </Link>
+        </Link>
+      </div>
 
       <div className="hidden items-center gap-1 sm:flex">
         <ThemeToggle />

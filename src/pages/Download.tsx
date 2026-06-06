@@ -14,6 +14,7 @@ import {
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { PwaInstallCard } from "@/components/app/PwaInstallCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -91,6 +92,10 @@ export default function Download() {
 
       <div className="mt-5">
         <ApkUpdateBanner showUpToDate />
+      </div>
+
+      <div className="mt-5">
+        <PwaInstallCard />
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
