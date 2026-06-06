@@ -20,11 +20,11 @@ jobs:
     name: Build APK release files
     runs-on: ubuntu-latest
     permissions:
-
       contents: read
     env:
       VITE_APK_VERSION: V${{ github.run_number }}
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
+
       ANDROID_VERSION_CODE: ${{ github.run_number }}
       ANDROID_VERSION_NAME: V${{ github.run_number }}
       ANDROID_APP_NAME: Ortho Companion
@@ -124,13 +124,13 @@ jobs:
         working-directory: android
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3g
-        run: ./gradlew --no-daemon assembleRelease --stacktrace --warning-mode all
+        run: ./gradlew --no-daemon assembleRelease --stacktrace --info --warning-mode all
 
       - name: Sign release APK with Android SDK tools
         if: env.SIGNING_READY == 'true'
         env:
-
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
