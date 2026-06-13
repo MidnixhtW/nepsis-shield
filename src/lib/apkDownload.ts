@@ -43,6 +43,22 @@ export function buildLatestDebugApkUrl(repository: string) {
     : "";
 }
 
+export function buildReleaseAabUrl(repository: string, version: string) {
+  const normalized = normalizeGitHubRepository(repository);
+  const releaseVersion = version.trim();
+  return normalized && /^V\d+$/i.test(releaseVersion)
+    ? `https://github.com/${normalized}/releases/download/${releaseVersion}/ortho-companion-${releaseVersion}-play-store.aab`
+    : "";
+}
+
+export function buildReleaseArtifactsUrl(repository: string, version: string) {
+  const normalized = normalizeGitHubRepository(repository);
+  const releaseVersion = version.trim();
+  return normalized && /^V\d+$/i.test(releaseVersion)
+    ? `https://github.com/${normalized}/releases/tag/${releaseVersion}`
+    : "";
+}
+
 export function buildApkArtifactsUrl(repository: string) {
   const normalized = normalizeGitHubRepository(repository);
   return normalized
@@ -75,18 +91,27 @@ export function trustedGitHubHttpsUrl(value: string) {
 }
 
 const customApkDownloadUrl = trustedGitHubHttpsUrl(import.meta.env.VITE_APK_DOWNLOAD_URL || "");
+const customAabDownloadUrl = trustedGitHubHttpsUrl(import.meta.env.VITE_AAB_DOWNLOAD_URL || "");
 const customApkArtifactsUrl = trustedGitHubHttpsUrl(import.meta.env.VITE_APK_ARTIFACTS_URL || "");
-
-export const APK_DOWNLOAD_URL = customApkDownloadUrl || latestDebugApkUrl || "/download";
-
-export const APK_DOWNLOAD_IS_DIRECT = Boolean(customApkDownloadUrl || latestDebugApkUrl);
-
-export const APK_ARTIFACTS_URL =
-  customApkArtifactsUrl || buildApkArtifactsUrl(APK_GITHUB_REPOSITORY);
 
 export const APK_VERSION_IS_CONFIGURED = Boolean(import.meta.env.VITE_APK_VERSION);
 
 export const APK_VERSION = import.meta.env.VITE_APK_VERSION || "web-preview";
+
+const releaseAabUrl = buildReleaseAabUrl(APK_GITHUB_REPOSITORY, APK_VERSION);
+
+export const APK_DOWNLOAD_URL = customApkDownloadUrl || latestDebugApkUrl || "/download";
+
+export const AAB_DOWNLOAD_URL = customAabDownloadUrl || releaseAabUrl;
+
+export const APK_DOWNLOAD_IS_DIRECT = Boolean(customApkDownloadUrl || latestDebugApkUrl);
+
+export const AAB_DOWNLOAD_IS_DIRECT = Boolean(AAB_DOWNLOAD_URL);
+
+export const APK_ARTIFACTS_URL =
+  customApkArtifactsUrl ||
+  buildReleaseArtifactsUrl(APK_GITHUB_REPOSITORY, APK_VERSION) ||
+  buildApkArtifactsUrl(APK_GITHUB_REPOSITORY);
 
 export const APK_RELEASE_DATE =
   import.meta.env.VITE_APK_RELEASE_DATE ||
@@ -98,6 +123,16 @@ export const APK_DOWNLOAD_SOURCE = customApkDownloadUrl
     ? "github-release"
     : "missing-config";
 
+export const AAB_DOWNLOAD_SOURCE = customAabDownloadUrl
+  ? "custom-url"
+  : releaseAabUrl
+    ? "github-release"
+    : "missing-config";
+
 export const APK_DOWNLOAD_HOST = APK_DOWNLOAD_URL.startsWith("https://")
   ? new URL(APK_DOWNLOAD_URL).hostname
+  : "this site";
+
+export const AAB_DOWNLOAD_HOST = AAB_DOWNLOAD_URL.startsWith("https://")
+  ? new URL(AAB_DOWNLOAD_URL).hostname
   : "this site";

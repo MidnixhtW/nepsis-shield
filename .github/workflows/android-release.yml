@@ -1,4 +1,4 @@
-name: Publish Android APK Release
+name: Publish Android Release
 
 on:
   workflow_dispatch:
@@ -17,8 +17,9 @@ env:
 
 jobs:
   build-android-apk:
-    name: Build APK release files
+    name: Build Android release files
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
     env:
@@ -138,15 +139,16 @@ jobs:
           path: gradle-debug-build.log
           if-no-files-found: ignore
 
-      - name: Build unsigned release APK
+      - name: Build unsigned release APK and AAB
         working-directory: android
 
         env:
           GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx3g
-        run: ./gradlew --no-daemon assembleRelease --stacktrace --info --warning-mode all
+        run: ./gradlew --no-daemon assembleRelease bundleRelease --stacktrace --info --warning-mode all
 
       - name: Sign release APK with Android SDK tools
         if: env.SIGNING_READY == 'true'
+
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
 
@@ -174,7 +176,33 @@ jobs:
           "$build_tools_dir/apksigner" verify "$signed_apk"
           rm -f signing/release.keystore
 
-      - name: Collect APK files
+      - name: Sign Play Store AAB with Java tools
+        if: env.SIGNING_READY == 'true'
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p signing
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > signing/release.keystore
+
+          unsigned_aab="android/app/build/outputs/bundle/release/app-release.aab"
+          signed_aab="android/app/build/outputs/bundle/release/app-release-signed.aab"
+
+          jarsigner \
+            -keystore signing/release.keystore \
+            -storepass "$ANDROID_KEYSTORE_PASSWORD" \
+            -keypass "$ANDROID_KEY_PASSWORD" \
+            -signedjar "$signed_aab" \
+            "$unsigned_aab" \
+            "$ANDROID_KEY_ALIAS"
+          jarsigner -verify -certs "$signed_aab"
+
+          rm -f signing/release.keystore
+
+      - name: Collect Android release files
         run: |
           mkdir -p release-files
           cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-V${{ github.run_number }}-debug.apk
@@ -183,12 +211,17 @@ jobs:
           else
             cp android/app/build/outputs/apk/release/app-release-unsigned.apk release-files/ortho-companion-V${{ github.run_number }}-unsigned-release.apk
           fi
+          if [ -f android/app/build/outputs/bundle/release/app-release-signed.aab ]; then
+            cp android/app/build/outputs/bundle/release/app-release-signed.aab release-files/ortho-companion-V${{ github.run_number }}-play-store.aab
+          else
+            cp android/app/build/outputs/bundle/release/app-release.aab release-files/ortho-companion-V${{ github.run_number }}-unsigned-play-store.aab
+          fi
 
       - name: Upload release build artifact
         uses: actions/upload-artifact@v6
         with:
-          name: ortho-companion-V${{ github.run_number }}-apk-files
-          path: release-files/*.apk
+          name: ortho-companion-V${{ github.run_number }}-android-files
+          path: release-files/*
           if-no-files-found: error
 
   publish-github-release:
@@ -203,10 +236,11 @@ jobs:
       - name: Download release build artifact
         uses: actions/download-artifact@v7
         with:
-          name: ortho-companion-V${{ github.run_number }}-apk-files
+          name: ortho-companion-V${{ github.run_number }}-android-files
           path: release-files
 
       - name: Publish GitHub release
+
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -216,26 +250,29 @@ jobs:
           cat > release-notes.md <<'EOF'
           ## Ortho Companion V${{ github.run_number }}
 
-          Android APK release for testing and distribution.
+          Android release files for testing, distribution, and Play Console upload.
 
           - Debug APK is for testing.
           - Signed release APK is included when signing secrets are configured.
-          - Unsigned release APK is included only when signing secrets are missing.
+          - Play Store AAB is included for Google Play Console upload when signing secrets are configured.
+          - Unsigned APK/AAB files are included only when signing secrets are missing and are not ready for public distribution.
 
           Configure the deployed app with:
           - VITE_APK_VERSION=V${{ github.run_number }}
           - VITE_APK_RELEASE_DATE=${{ github.run_started_at }}
           - VITE_APK_DOWNLOAD_URL=(direct APK asset URL after release publish)
+          - VITE_AAB_DOWNLOAD_URL=(direct AAB asset URL after release publish)
           - VITE_APK_ARTIFACTS_URL=(this release page URL)
           EOF
 
           release_args=(
             "V${{ github.run_number }}"
-            release-files/*.apk
+            release-files/*
             --repo "${{ github.repository }}"
             --title "Ortho Companion V${{ github.run_number }}"
             --notes-file release-notes.md
           )
+
           if [ "$IS_PRERELEASE" = "true" ]; then
             release_args+=(--prerelease)
           fi

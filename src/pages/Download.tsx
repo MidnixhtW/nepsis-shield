@@ -21,6 +21,10 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
+  AAB_DOWNLOAD_HOST,
+  AAB_DOWNLOAD_IS_DIRECT,
+  AAB_DOWNLOAD_SOURCE,
+  AAB_DOWNLOAD_URL,
   APK_ARTIFACTS_URL,
   APK_DOWNLOAD_IS_DIRECT,
   APK_DOWNLOAD_SOURCE,
@@ -30,8 +34,10 @@ import {
   APK_REPOSITORY_STORAGE_KEY,
   APK_VERSION,
   buildLatestDebugApkUrl,
+  buildReleaseAabUrl,
   normalizeGitHubRepository,
 } from "@/lib/apkDownload";
+
 import { RELEASE_NOTES } from "@/lib/releaseInfo";
 
 function Step({ title, description }: { title: string; description: string }) {
@@ -50,8 +56,10 @@ export default function Download() {
   const [repoInput, setRepoInput] = useState(APK_GITHUB_REPOSITORY);
   const normalizedRepo = normalizeGitHubRepository(repoInput);
   const previewApkUrl = normalizedRepo ? buildLatestDebugApkUrl(normalizedRepo) : "";
+  const previewAabUrl = normalizedRepo ? buildReleaseAabUrl(normalizedRepo, APK_VERSION) : "";
 
   function saveRepository() {
+
     if (!normalizedRepo) return;
     window.localStorage.setItem(APK_REPOSITORY_STORAGE_KEY, normalizedRepo);
     window.location.reload();
@@ -73,10 +81,11 @@ export default function Download() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Android package
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield APK</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Orthodox watchfulness and prayer for military, first responders, and the wider service-and-protection community.
+              Android APK testing builds and Play Store app bundles for the service-and-protection community.
             </p>
+
           </div>
 
         </div>
@@ -114,26 +123,59 @@ export default function Download() {
                 <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
                   {APK_DOWNLOAD_IS_DIRECT ? "APK available" : "Awaiting hosted APK"}
                 </Badge>
+                <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                  {AAB_DOWNLOAD_IS_DIRECT ? "Play Store AAB available" : "Awaiting hosted AAB"}
+                </Badge>
               </div>
 
               <h2 className="mt-4 text-2xl font-semibold tracking-tight">
-                {APK_DOWNLOAD_IS_DIRECT ? "APK ready to download." : "Download page ready."}
+                {APK_DOWNLOAD_IS_DIRECT || AAB_DOWNLOAD_IS_DIRECT ? "Android downloads ready." : "Download page ready."}
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                {APK_DOWNLOAD_IS_DIRECT
-                  ? "Tap the button below to download the latest Android APK from the configured GitHub release. This direct build is intended for testing and sideload installation."
-                  : "The app is ready to download the rolling GitHub Release APK once a repository or direct APK URL is configured."}
+                Download an APK for direct device testing, or the signed Android App Bundle (.aab) for Google Play Console upload.
               </p>
 
               <Separator className="my-5" />
 
-              {APK_DOWNLOAD_IS_DIRECT ? (
-                <div className="flex flex-wrap gap-2">
-                  <ApkDownloadButton className="rounded-2xl" label="Download APK now" />
+              {APK_DOWNLOAD_IS_DIRECT || AAB_DOWNLOAD_IS_DIRECT ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
+                    <p className="text-sm font-semibold">Testing APK</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Use this file for sideload testing on Android devices.
+                    </p>
+                    <div className="mt-3">
+                      {APK_DOWNLOAD_IS_DIRECT ? (
+                        <ApkDownloadButton className="rounded-2xl" label="Download APK" />
+                      ) : (
+                        <Button disabled className="rounded-2xl">APK not hosted yet</Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                    <p className="text-sm font-semibold">Play Store App Bundle</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Upload this .aab file in Google Play Console for app release review.
+                    </p>
+                    <div className="mt-3 inline-flex flex-col items-start gap-1">
+                      {AAB_DOWNLOAD_IS_DIRECT ? (
+                        <Button asChild className="rounded-2xl">
+                          <a href={AAB_DOWNLOAD_URL}>
+                            <FileArchive className="mr-2 h-4 w-4" /> Download AAB for Play Store
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button disabled className="rounded-2xl">AAB not hosted yet</Button>
+                      )}
+                      <span className="text-xs text-muted-foreground">From {AAB_DOWNLOAD_HOST}</span>
+                    </div>
+                  </div>
+
                   {APK_ARTIFACTS_URL ? (
-                    <Button asChild variant="outline" className="rounded-2xl border-border/60">
+                    <Button asChild variant="outline" className="rounded-2xl border-border/60 sm:col-span-2 sm:w-fit">
                       <a href={APK_ARTIFACTS_URL} target="_blank" rel="noopener noreferrer">
-                        Build artifacts <ExternalLink className="ml-2 h-4 w-4" />
+                        Open release/build artifacts <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
                   ) : null}
@@ -143,14 +185,15 @@ export default function Download() {
                   <div className="flex gap-3">
                     <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold">No repository or direct APK URL is configured yet.</p>
+                      <p className="text-sm font-semibold">No repository or direct Android download URL is configured yet.</p>
                       <p className="mt-1 text-xs leading-relaxed opacity-85">
-                        The workflow now publishes ortho-companion-latest-debug.apk to GitHub Releases. Set VITE_GITHUB_REPOSITORY to owner/repo, or set VITE_APK_DOWNLOAD_URL to a trusted https://github.com APK URL.
+                        The release workflow now publishes APK files and a Play Store .aab. Set VITE_GITHUB_REPOSITORY to owner/repo, or set VITE_APK_DOWNLOAD_URL and VITE_AAB_DOWNLOAD_URL to trusted https://github.com release assets.
                       </p>
                     </div>
                   </div>
                 </div>
               )}
+
             </div>
           </div>
         </Card>
@@ -159,7 +202,8 @@ export default function Download() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-base font-semibold tracking-tight">Build details</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Current APK metadata.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Current Android package metadata.</p>
+
             </div>
             <FileArchive className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -178,18 +222,26 @@ export default function Download() {
             </div>
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Build type</p>
-              <p className="mt-1 font-semibold">Debug APK for testing</p>
+              <p className="mt-1 font-semibold">APK for testing · AAB for Play Store upload</p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Download source</p>
               <p className="mt-1 font-semibold">
-                {APK_DOWNLOAD_SOURCE === "github-release"
+                APK: {APK_DOWNLOAD_SOURCE === "github-release"
                   ? "GitHub Release"
                   : APK_DOWNLOAD_SOURCE === "custom-url"
                     ? "Custom APK URL"
                     : "Not configured"}
               </p>
+              <p className="mt-1 font-semibold">
+                AAB: {AAB_DOWNLOAD_SOURCE === "github-release"
+                  ? "GitHub Release"
+                  : AAB_DOWNLOAD_SOURCE === "custom-url"
+                    ? "Custom AAB URL"
+                    : "Not configured"}
+              </p>
             </div>
+
           </div>
         </Card>
       </div>
@@ -197,10 +249,11 @@ export default function Download() {
       <Card className="mt-4 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-base font-semibold tracking-tight">APK link diagnostic</h2>
+            <h2 className="text-base font-semibold tracking-tight">Android link diagnostic</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              The app now uses MidnixhtW/swift-zebra-sprint by default. Use this only if you need to override the APK source.
+              The app now uses MidnixhtW/swift-zebra-sprint by default. Use this only if you need to override the APK or AAB source.
             </p>
+
           </div>
           <Info className="h-5 w-5 text-muted-foreground" />
         </div>
@@ -213,7 +266,13 @@ export default function Download() {
             <p className="mt-1 break-all text-sm font-medium">{APK_DOWNLOAD_URL}</p>
           </div>
 
+          <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Current Play Store AAB link</p>
+            <p className="mt-1 break-all text-sm font-medium">{AAB_DOWNLOAD_URL || "Awaiting a V-number release or VITE_AAB_DOWNLOAD_URL"}</p>
+          </div>
+
           <div className="grid gap-2 rounded-2xl border border-border/60 bg-background/45 p-4">
+
             <label htmlFor="github-repo" className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
               GitHub repository
             </label>
@@ -244,9 +303,13 @@ export default function Download() {
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">
               {previewApkUrl
-                ? `This will use: ${previewApkUrl}`
-                : "Enter a repository in owner/repo format only if you need to override the default APK source."}
+                ? `APK: ${previewApkUrl}`
+                : "Enter a repository in owner/repo format only if you need to override the default Android package source."}
             </p>
+            {previewAabUrl ? (
+              <p className="break-all text-xs leading-relaxed text-muted-foreground">AAB: {previewAabUrl}</p>
+            ) : null}
+
           </div>
         </div>
       </Card>
@@ -267,22 +330,23 @@ export default function Download() {
 
           <div className="grid gap-3">
             <Step
-              title="Download the APK"
-              description="Use the download button once a direct APK URL is configured. The file should end in .apk."
+              title="Download the APK for testing"
+              description="Use the APK button for direct sideload testing on Android devices. The file should end in .apk."
+            />
+            <Step
+              title="Download the AAB for Google Play"
+              description="Use the Play Store App Bundle button for Play Console upload. The file should end in .aab and must be signed with your release key."
             />
             <Step
               title="Allow the install source"
-              description="If Android blocks the install, allow your browser or file manager to install unknown apps, then try again."
-            />
-            <Step
-              title="Open Nepsis Shield"
-              description="The installed app keeps the same name. Check the build details for the current V-number."
+              description="If Android blocks a sideloaded APK install, allow your browser or file manager to install unknown apps, then try again."
             />
             <Step
               title="If Android says app not installed"
               description="Install updates over a build signed with the same key. If you previously installed a debug build with a different package or signature, uninstall that old test copy first."
             />
           </div>
+
         </Card>
 
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -300,16 +364,18 @@ export default function Download() {
 
           <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
             <p className="text-sm leading-relaxed text-foreground/90">
-              Only install APKs from builds you trust. A debug APK is useful for testing, but a public release should be signed and distributed through a trusted channel such as Google Play, GitHub Releases, or your official website.
+              Only install APKs from builds you trust. Use the AAB only for Play Console upload, and make sure it was signed with the release key connected to your Google Play app.
             </p>
+
           </div>
 
           <div className="mt-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
             <div className="flex items-start gap-3">
               <Info className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
               <p className="text-sm leading-relaxed text-muted-foreground">
-                The debug workflow publishes a stable asset named ortho-companion-latest-debug.apk. Configure VITE_GITHUB_REPOSITORY as owner/repo, or use VITE_APK_DOWNLOAD_URL only for a trusted https://github.com APK URL.
+                The release workflow now publishes APK files and a Play Store .aab asset. Configure VITE_GITHUB_REPOSITORY as owner/repo, or use VITE_APK_DOWNLOAD_URL and VITE_AAB_DOWNLOAD_URL only for trusted https://github.com release asset URLs.
               </p>
+
             </div>
           </div>
         </Card>
