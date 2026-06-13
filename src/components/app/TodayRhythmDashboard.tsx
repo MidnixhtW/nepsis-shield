@@ -1,6 +1,5 @@
 import {
   ArrowRight,
-  BarChart3,
   BookOpen,
   CheckCircle2,
   Circle,
@@ -72,17 +71,6 @@ export function TodayRhythmDashboard({
   const rhythm = useDailyRhythm();
   const progress = Math.round((rhythm.completedToday / missions.length) * 100);
   const nextMission = missions.find((mission) => !rhythm.today.habits[mission.key]) ?? missions[0];
-  const strongestHabit = missions.reduce((best, mission) =>
-    rhythm.weekHabitTotals[mission.key] > rhythm.weekHabitTotals[best.key] ? mission : best,
-  );
-  const growthHabit = missions.reduce((lowest, mission) =>
-    rhythm.weekHabitTotals[mission.key] < rhythm.weekHabitTotals[lowest.key] ? mission : lowest,
-  );
-  const weeklyInsight = rhythm.weekActiveDays === 0
-    ? "Start with one tiny action today. Consistency begins small."
-    : rhythm.weekActiveDays >= 5
-      ? "Strong rhythm this week. Keep it peaceful, not pressured."
-      : `Your next growth area is ${growthHabit.label.toLowerCase()}. Keep it simple.`;
 
   function openMission(mission: Mission) {
     saveGlobalResume({
@@ -173,37 +161,6 @@ export function TodayRhythmDashboard({
                     {completed ? "Open again" : "Start"}
                     <ArrowRight className="ml-2 h-3.5 w-3.5" />
                   </Button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Card>
-
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="min-w-0">
-            <p className="inline-flex items-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              <BarChart3 className="mr-2 h-4 w-4 text-primary" /> Weekly insight
-            </p>
-            <h3 className="mt-2 text-xl font-semibold tracking-tight">{weeklyInsight}</h3>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Strongest this week: {strongestHabit.label} · Growth focus: {growthHabit.label}
-            </p>
-          </div>
-
-          <div className="grid gap-2 sm:grid-cols-4 lg:min-w-[28rem]">
-            {missions.map((mission) => {
-              const Icon = mission.icon;
-              const total = rhythm.weekHabitTotals[mission.key];
-              return (
-                <div key={mission.key} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <Icon className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold">{total}/7</span>
-                  </div>
-                  <p className="mt-2 text-xs font-medium text-muted-foreground">{mission.label}</p>
-                  <Progress value={Math.round((total / 7) * 100)} className="mt-2 h-1.5" />
                 </div>
               );
             })}
