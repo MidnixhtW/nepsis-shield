@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
@@ -136,6 +138,50 @@ function EssentialButton({
   );
 }
 
+function TodayDetailsSkeleton() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-label="Loading today's details">
+      <div className="grid gap-5">
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-20 rounded-full" />
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-8 w-36 rounded-full" />
+            <Skeleton className="h-8 w-24 rounded-full" />
+          </div>
+          <Skeleton className="h-3 w-48 rounded-full" />
+          <Skeleton className="h-3 w-40 rounded-full" />
+        </div>
+
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-16 rounded-full" />
+          <div className="grid gap-2">
+            <Skeleton className="h-4 w-11/12 rounded-full" />
+            <Skeleton className="h-4 w-10/12 rounded-full" />
+            <Skeleton className="h-4 w-8/12 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid content-start gap-3">
+        <div className="rounded-3xl border border-primary/10 bg-primary/5 p-4">
+          <Skeleton className="h-4 w-28 rounded-full" />
+          <Skeleton className="mt-3 h-3 w-56 rounded-full" />
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="rounded-2xl border border-border/60 bg-background/60 p-3">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-8 w-8 rounded-xl" />
+                <Skeleton className="h-4 w-28 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function formatGoarchChapelUrl(date: Date) {
   const m = date.getMonth() + 1;
   const d = date.getDate();
@@ -144,6 +190,7 @@ function formatGoarchChapelUrl(date: Date) {
 }
 
 function buildPrimaryDailySourceUrl(settings: ReturnType<typeof getSettings>, date: Date) {
+
   if (settings.jurisdiction === "goarch") return formatGoarchChapelUrl(date);
   return "";
 }
@@ -292,10 +339,11 @@ export function TodayOverview({
         <Separator className="my-4" />
 
         {q.isLoading ? (
-          <div className="text-sm text-muted-foreground">Loading today…</div>
+          <TodayDetailsSkeleton />
         ) : q.isError ? (
           <div className="text-sm text-destructive">
             Couldn't load today's details. You can still open the daily source.
+
           </div>
         ) : q.data ? (
           <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">

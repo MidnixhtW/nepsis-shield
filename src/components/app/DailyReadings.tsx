@@ -12,9 +12,39 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { fetchDailyData, readingText } from "@/lib/orthocal";
+
 import { useNavigate } from "react-router-dom";
 import { useSettings } from "@/hooks/useSettings";
+
+function ReadingsSkeleton() {
+  return (
+    <div className="grid gap-3" aria-label="Loading readings">
+      {Array.from({ length: 2 }).map((_, index) => (
+        <div key={index} className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="grid flex-1 gap-2">
+              <Skeleton className="h-3 w-16 rounded-full" />
+              <Skeleton className="h-5 w-40 rounded-full" />
+            </div>
+            <Skeleton className="h-7 w-14 rounded-full" />
+          </div>
+          <div className="mt-4 grid gap-2">
+            <Skeleton className="h-4 w-full rounded-full" />
+            <Skeleton className="h-4 w-11/12 rounded-full" />
+            <Skeleton className="h-4 w-10/12 rounded-full" />
+            <Skeleton className="h-4 w-8/12 rounded-full" />
+          </div>
+        </div>
+      ))}
+      <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background/50 p-3">
+        <Skeleton className="h-3 w-44 rounded-full" />
+        <Skeleton className="h-9 w-28 rounded-2xl" />
+      </div>
+    </div>
+  );
+}
 
 function ReadingCard({
   label,
@@ -22,6 +52,7 @@ function ReadingCard({
   text,
   onReadInApp,
 }: {
+
   label: string;
   display?: string;
   text: string;
@@ -97,10 +128,11 @@ export function DailyReadings() {
         <Separator className="my-4" />
 
         {q.isLoading ? (
-          <div className="text-sm text-muted-foreground">Loading readings…</div>
+          <ReadingsSkeleton />
         ) : q.isError ? (
           <div className="text-sm text-destructive">Couldn't load readings right now.</div>
         ) : q.data ? (
+
           <div className="grid gap-3">
             {(() => {
               const full = readingText(q.data.readings.epistle, Number.POSITIVE_INFINITY);

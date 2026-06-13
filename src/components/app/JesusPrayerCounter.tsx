@@ -48,7 +48,14 @@ function isInteractiveTarget(target: EventTarget | null) {
   );
 }
 
+function prayerRopeHaptic() {
+  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+    navigator.vibrate(12);
+  }
+}
+
 export function JesusPrayerCounter() {
+
   const dayKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
   const [count, setCount] = useState(0);
   const [goal, setGoal] = useState(100);
@@ -248,11 +255,15 @@ export function JesusPrayerCounter() {
               <Minus className="mr-2 h-4 w-4" /> -1
             </Button>
             <Button
-              onClick={() => setCount((c) => c + 1)}
+              onClick={() => {
+                prayerRopeHaptic();
+                setCount((c) => c + 1);
+              }}
               className="h-12 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="mr-2 h-4 w-4" /> +1
             </Button>
+
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -264,12 +275,16 @@ export function JesusPrayerCounter() {
               -10
             </Button>
             <Button
-              onClick={() => setCount((c) => c + 10)}
+              onClick={() => {
+                prayerRopeHaptic();
+                setCount((c) => c + 10);
+              }}
               variant="outline"
               className="h-12 rounded-2xl border-border/60"
             >
               +10
             </Button>
+
           </div>
 
           <Button
@@ -281,9 +296,10 @@ export function JesusPrayerCounter() {
           </Button>
 
           <p className="text-xs text-muted-foreground">
-            Tip: + / - to adjust, R to reset.
+            Tip: + / - to adjust, R to reset. On supported phones, each prayer tap gives a soft vibration like a prayer rope bead.
           </p>
         </div>
+
       </Card>
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">

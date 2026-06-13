@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { ExternalLink, Filter, HelpCircle, Search, SearchX } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BookOpen, Crosshair, ExternalLink, Filter, Hand, HelpCircle, Search, SearchX, ShieldCheck } from "lucide-react";
+
 import {
   Accordion,
   AccordionContent,
@@ -44,7 +46,47 @@ type QA = {
   sourceUrl: string;
 };
 
+function practicalToolFor(item: QA) {
+  const text = `${item.category} ${item.q}`.toLowerCase();
+
+  if (text.includes("confession") || text.includes("repent")) {
+    return { label: "Open confession prep", to: "/pray?tab=prep", icon: <ShieldCheck className="h-4 w-4" /> };
+  }
+
+  if (text.includes("bible") || text.includes("scripture") || text.includes("liturgy") || text.includes("service")) {
+    return { label: "Open readings", to: "/read?read=daily", icon: <BookOpen className="h-4 w-4" /> };
+  }
+
+  if (text.includes("fast") || text.includes("daily") || text.includes("service") || text.includes("field")) {
+    return { label: "Open field manual", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> };
+  }
+
+  return { label: "Open prayer tools", to: "/pray?tab=prayers", icon: <Hand className="h-4 w-4" /> };
+}
+
+function PracticalToolLink({ item }: { item: QA }) {
+  const tool = practicalToolFor(item);
+
+  return (
+    <div className="rounded-2xl border border-primary/15 bg-primary/5 p-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Practice next</p>
+      <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Connect this teaching to a concrete prayer or reading action inside the app.
+        </p>
+        <Button asChild size="sm" className="shrink-0 rounded-2xl">
+          <Link to={tool.to}>
+            {tool.icon}
+            <span className="ml-2">{tool.label}</span>
+          </Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 const QA_ITEMS: QA[] = [
+
   // --- Worship / Liturgy ---
   {
     category: "Worship",
@@ -831,11 +873,14 @@ export function CatechesisQA() {
                             {item.a}
                           </p>
 
+                          <PracticalToolLink item={item} />
+
                           <div className="grid gap-2">
                             <Button
                               asChild
                               variant="outline"
                               className="btn-wrap rounded-2xl border-border/60"
+
                             >
                               <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
                                 {item.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
@@ -881,10 +926,13 @@ export function CatechesisQA() {
                       {item.a}
                     </p>
 
+                    <PracticalToolLink item={item} />
+
                     <div className="grid gap-2">
                       <Button
                         asChild
                         variant="outline"
+
                         className="btn-wrap rounded-2xl border-border/60"
                       >
                         <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
