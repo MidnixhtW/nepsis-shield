@@ -1,10 +1,12 @@
-import { BookOpen } from "lucide-react";
-
+import { BookOpen, Home, Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DailyReadings } from "@/components/app/DailyReadings";
 import { OrthodoxBible } from "@/components/app/OrthodoxBible";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionBar } from "@/components/app/SectionBar";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
+import { showError, showSuccess } from "@/utils/toast";
 import { ReadingPlans } from "@/components/app/ReadingPlans";
 
 export type ReadTab = "daily" | "bible" | "plans";
@@ -12,31 +14,70 @@ export type ReadTab = "daily" | "bible" | "plans";
 export function ReadHub({
   tab,
   onTabChange,
+  onHome,
 }: {
   tab: ReadTab;
   onTabChange: (t: ReadTab) => void;
   onHome?: () => void;
 }) {
-  return (
+  async function copyLink() {
+    try {
+      const url = new URL(window.location.href);
+      url.pathname = "/read";
+      url.searchParams.set("read", tab);
+      await navigator.clipboard.writeText(url.toString());
+      showSuccess("Link copied.");
+    } catch {
+      showError("Couldn't copy link.");
+    }
+  }
 
+  return (
     <div className="grid gap-4">
       <SectionBar
         title="Read"
-        hint="Daily readings first; Bible and plans when you need more."
+        hint="Daily readings, Bible, plans"
+        action={
+          <div className="flex gap-2">
+            {onHome ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+                onClick={onHome}
+              >
+                <Home className="mr-2 h-4 w-4" /> Today
+              </Button>
+            ) : null}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+                  onClick={copyLink}
+                >
+                  <Link2 className="h-4 w-4" />
+                  <span className="sr-only">Copy link</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Copy link</TooltipContent>
+            </Tooltip>
+          </div>
+        }
       />
 
-      {tab !== "daily" ? (
-        <FirstStepHint
-          title="Return to Daily readings"
-          description="Daily is the fastest route when browsing and plans feel like too much."
-          actionLabel="Open Daily"
-          icon={<BookOpen className="h-4 w-4" />}
-          onAction={() => onTabChange("daily")}
-        />
-      ) : null}
+      <FirstStepHint
+        title="New here? Start with Daily readings."
+        description="Daily is the fastest route. Use Bible for browsing and Plans when you want structure."
+        actionLabel="Open Daily"
+        icon={<BookOpen className="h-4 w-4" />}
+        onAction={() => onTabChange("daily")}
+      />
 
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as ReadTab)}>
-
         <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1">
           <TabsTrigger
             value="daily"

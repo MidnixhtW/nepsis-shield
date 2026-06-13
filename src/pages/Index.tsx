@@ -10,6 +10,7 @@ import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+import { NavigationAid } from "@/components/app/NavigationAid";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
@@ -189,8 +190,16 @@ const Index = () => {
       <QuickStartDialog />
 
       <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
-        {section === "today" ? (
+        <NavigationAid
+          section={section}
+          prayerTab={prayerTab}
+          readTab={readTab}
+          learnTab={learnTab}
+          onNavigate={navigateTo}
+          onOpenRoute={(path) => navigate(path)}
+        />
 
+        {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
@@ -198,13 +207,13 @@ const Index = () => {
         ) : null}
 
         {section === "pray" ? (
-          <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} />
+          <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
         {section === "read" ? (
-          <ReadHub tab={readTab} onTabChange={setReadTab} />
+          <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
         {section === "learn" ? (
-          <LearnHub tab={learnTab} onTabChange={setLearnTab} />
+          <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
 
         <AppFooter />

@@ -1,12 +1,17 @@
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
+  ArrowRight,
   BookOpen,
+  CalendarPlus,
+  Church,
   ExternalLink,
   Flame,
   Leaf,
   PenLine,
+  ShieldCheck,
+  Sparkles,
   Target,
 } from "lucide-react";
 
@@ -22,18 +27,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
-import { NeedHelpNow } from "@/components/app/NeedHelpNow";
-
+import { TodayRhythmDashboard } from "@/components/app/TodayRhythmDashboard";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
@@ -106,8 +104,41 @@ function FastingBadge({
   );
 }
 
-function TodayDetailsSkeleton() {
+function EssentialButton({
+  label,
+  description,
+  icon,
+  onClick,
+  variant = "outline",
+}: {
+  label: string;
+  description: string;
+  icon: ReactNode;
+  onClick?: () => void;
+  variant?: "default" | "outline" | "ghost";
+}) {
+  return (
+    <Button
+      type="button"
+      variant={variant}
+      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl border border-border/70 px-4 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70"
+      onClick={onClick}
+    >
+      <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold leading-tight">{label}</span>
+        <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
+          {description}
+        </span>
+      </span>
+      <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
+    </Button>
+  );
+}
 
+function TodayDetailsSkeleton() {
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-label="Loading today's details">
       <div className="grid gap-5">
@@ -223,8 +254,45 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+      <TodayRhythmDashboard onNavigate={onNavigate} />
 
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Next steps
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">Choose one small action</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              After prayer, continue with reading, reflection, or preparation.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
+            <EssentialButton
+              label="Read"
+              description="Open today’s Scripture."
+              icon={<BookOpen className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+            />
+            <EssentialButton
+              label="Reflect"
+              description="Write a short note."
+              icon={<PenLine className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+            />
+            <EssentialButton
+              label="Prepare"
+              description="Confession tools."
+              icon={<ShieldCheck className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
+            />
+          </div>
+        </div>
+      </Card>
+
+      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
 
@@ -323,17 +391,18 @@ export function TodayOverview({
               </div>
             </div>
 
-            <div className="grid content-start gap-3 rounded-3xl border border-primary/15 bg-primary/5 p-4">
-              <div>
-                <p className="text-sm font-semibold">Next action</p>
+            <div className="grid content-start gap-3">
+              <div className="rounded-3xl border border-primary/20 bg-primary/5 p-4">
+                <p className="text-sm font-semibold">Helpful today</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  Pick one. Everything else can wait.
+                  Use these only if they match your next step.
                 </p>
               </div>
-              <div className="grid gap-2">
+              <div className="grid gap-2 sm:grid-cols-2">
                 <Button
                   type="button"
-                  className="tap h-11 justify-start rounded-2xl"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
                 >
                   <Target className="mr-2 h-4 w-4 shrink-0" /> Jesus Prayer
@@ -341,53 +410,41 @@ export function TodayOverview({
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-11 justify-start rounded-2xl border-border/70 bg-background/60"
-                  onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onNavigate?.({ section: "read", read: "plans" })}
                 >
-                  <BookOpen className="mr-2 h-4 w-4 shrink-0" /> Read today
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Reading Plans
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-11 justify-start rounded-2xl border-border/70 bg-background/60"
-                  onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onNavigate?.({ section: "learn", tab: "liturgy" })}
                 >
-                  <PenLine className="mr-2 h-4 w-4 shrink-0" /> Reflect
+                  <Church className="mr-2 h-4 w-4 shrink-0" /> Liturgy Help
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
+                  onClick={() => onOpenRoute?.("/saints")}
+                >
+                  <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Saints
                 </Button>
               </div>
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="tap w-fit rounded-2xl px-2 text-muted-foreground hover:text-foreground"
+                className="tap w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
                 onClick={addFastingReminder}
               >
-                Add fasting reminder
+                <CalendarPlus className="mr-2 h-4 w-4" /> Add fasting reminder
               </Button>
             </div>
-
           </div>
         ) : null}
       </Card>
-
-      <Accordion type="single" collapsible>
-        <AccordionItem value="support" className="rounded-3xl border border-border/60 bg-card px-4 shadow-sm">
-          <AccordionTrigger className="py-4 text-left hover:no-underline">
-            <span>
-              <span className="block text-sm font-semibold">Support tools</span>
-              <span className="block text-xs font-normal text-muted-foreground">
-                Open only when you need quick help or duty-mode guidance.
-              </span>
-            </span>
-          </AccordionTrigger>
-          <AccordionContent className="pb-4">
-            <div className="grid gap-3">
-              <NeedHelpNow onNavigate={onNavigate} />
-              <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
     </div>
   );
 }
