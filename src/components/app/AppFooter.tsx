@@ -16,7 +16,7 @@ export function AppFooter() {
         <div className="min-w-0 max-w-full">
           <p className="break-words text-sm font-semibold tracking-tight">A quiet devotional aid</p>
           <p className="mt-1 max-w-full break-words text-xs leading-relaxed text-muted-foreground">
-            Under the patronage of St Michael the Archangel. Orthodox-rooted public resources for prayer and Scripture.
+            Under the patronage of St Michael the Archangel, for military, first responders, and the wider service-and-protection community.
           </p>
         </div>
 

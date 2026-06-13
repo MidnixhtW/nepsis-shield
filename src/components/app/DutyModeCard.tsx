@@ -83,10 +83,11 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
             </Badge>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">Orthodox field-ready rhythm</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              A fast-access watch brief for military life: short prayer, clear action, and no guilt when field conditions limit a normal rule.
+              A fast-access watch brief for military, first responders, public safety, chaplains, medical teams, and all who keep watch: short prayer, clear action, and no guilt when duty limits a normal rule.
             </p>
 
             <div className="mt-4 grid grid-cols-2 gap-2">
+
               {(Object.keys(dutyModes) as DutyMode[]).map((key) => {
                 const item = dutyModes[key];
                 const ItemIcon = item.icon;

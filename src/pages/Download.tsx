@@ -75,9 +75,10 @@ export default function Download() {
             </p>
             <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield APK</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Orthodox watchfulness and prayer build for Android testing and direct install.
+              Orthodox watchfulness and prayer for military, first responders, and the wider service-and-protection community.
             </p>
           </div>
+
         </div>
 
         <div className="flex flex-wrap gap-2">

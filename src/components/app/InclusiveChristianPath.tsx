@@ -131,14 +131,15 @@ export function InclusiveChristianPath({
           <div className="mt-3 grid gap-3 lg:grid-cols-[1.4fr_0.9fr] lg:items-end">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight">
-                For every Christian seeking a deeper life in Christ.
+                For those who serve, protect, heal, and keep watch.
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                A Christian prayer and formation app rooted in the Orthodox tradition, welcoming all who seek Scripture, prayer, the wisdom of the early Church, and a steadier life in Christ.
+                A Christian prayer and formation app rooted in the Orthodox tradition for military, first responders, public safety, medical teams, chaplains, dispatchers, security, their families, and all who seek Scripture, prayer, and a steadier life in Christ.
               </p>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+
               <PathButton variant="default" onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}>
                 <Hand className="mr-2 h-4 w-4" /> Start with prayer
               </PathButton>

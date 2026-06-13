@@ -1,10 +1,10 @@
 # Nepsis Shield
 
-An Orthodox Watchfulness & Prayer React/Vite app configured for Android packaging with Capacitor.
+An Orthodox Watchfulness & Prayer React/Vite app for military, first responders, public safety, medical teams, chaplains, dispatchers, security, and the wider service-and-protection community. It is configured for Android packaging with Capacitor.
 
 ## Field Manual
 
-The app includes a dedicated `/field-manual` page with military Orthodox cross branding, short field prayers, practical battle-rhythm prompts, and pastoral/safety notes for duty, stress, travel, grief, courage, the wounded/sick, the departed, and thanksgiving after danger.
+The app includes a dedicated `/field-manual` page with service-focused Orthodox cross branding, short field prayers, practical battle-rhythm prompts, and pastoral/safety notes for duty, stress, travel, grief, courage, the wounded/sick, the departed, and thanksgiving after danger.
 
 ## Offline field mode
 

@@ -17,9 +17,10 @@ export default function About() {
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            A Christian field guide for prayer, Scripture, and Orthodox-rooted daily rhythm.
+            A Christian field guide for military, first responders, and the wider service-and-protection community.
           </p>
         </div>
+
         <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline" className="rounded-2xl border-border/60">
             <Link to="/today">Back to app</Link>
@@ -109,10 +110,11 @@ export default function About() {
             </div>
 
             <p className="text-sm leading-relaxed text-foreground/90">
-              Nepsis Shield is an independent tool for Orthodox watchfulness and prayer, made for <span className="font-semibold">Christians of every tradition</span> and shaped by Orthodox prayer, Scripture, fasting, and the life of the Church. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
+              Nepsis Shield is an independent tool for Orthodox watchfulness and prayer, made for <span className="font-semibold">Christians of every tradition</span>, especially military, first responders, public safety, medical teams, chaplains, security, dispatchers, and others who keep watch or carry responsibility for others. It is shaped by Orthodox prayer, Scripture, fasting, and the life of the Church. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
             </p>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
+
               "Orthodox Church in America" and "OCA" are trademarks of their respective owners. Names and links are used for identification of Orthodox sources only.
             </p>
           </div>
@@ -135,11 +137,12 @@ export default function About() {
             <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
               <p className="font-semibold">Created by Empathik</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life and field use.
+                Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life, field use, first response, public safety, and service under pressure.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+
               <p className="font-semibold">Orthodox Church in America (OCA)</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Used primarily for links to prayers, articles, and daily reading pages.

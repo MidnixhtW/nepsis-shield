@@ -51,10 +51,11 @@ const entries: ManualEntry[] = [
   {
     id: "before-duty",
     title: "Before duty",
-    subtitle: "For work, watch, service, or command responsibility.",
+    subtitle: "For military, first-response, public safety, medical, chaplain, or command responsibility.",
     icon: <ShieldCheck className="h-4 w-4 text-primary" />,
     prayer:
       "O Lord, bless the work set before me. Keep me from pride, carelessness, anger, and fear. Help me serve with discipline, patience, and love for every person made in Your image. Amen.",
+
     practice: [
       "Pause before beginning; do not rush into the day scattered.",
       "Ask God to protect those under your care.",
@@ -181,9 +182,10 @@ export default function FieldManual() {
               Orthodox Field Manual
             </h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Short prayers and battle-rhythm practices for duty, stress, travel, grief, and thanksgiving.
+              Short prayers and battle-rhythm practices for military, first responders, public safety, medical teams, chaplains, and others who serve under pressure.
             </p>
           </div>
+
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -206,7 +208,7 @@ export default function FieldManual() {
             <div className="relative p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="rounded-full border border-primary/20 bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
-                  <Shield className="mr-1 h-3.5 w-3.5" /> Military Orthodox rhythm
+                  <Shield className="mr-1 h-3.5 w-3.5" /> Service Orthodox rhythm
                 </Badge>
                 <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
                   For prayer under pressure
@@ -217,7 +219,7 @@ export default function FieldManual() {
                 Keep the watch. Guard the heart. Serve in Christ.
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                This field manual is a devotional aid for Christians, especially those who serve in demanding environments. These are original short prayers rooted in Orthodox language and checked for theological clarity, not official liturgical texts.
+                This field manual is a devotional aid for Christians in the service-and-protection circle: military, first responders, public safety, dispatchers, medical teams, chaplains, security, and those carrying responsibility for others. These are original short prayers rooted in Orthodox language and checked for theological clarity, not official liturgical texts.
               </p>
 
               <div className="my-6 h-px gold-hairline" />

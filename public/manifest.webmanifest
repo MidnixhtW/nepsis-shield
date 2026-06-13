@@ -2,8 +2,9 @@
   "id": "/today",
   "name": "Nepsis Shield: Orthodox Watchfulness & Prayer",
   "short_name": "Nepsis Shield",
-  "description": "Orthodox watchfulness, prayer, Scripture, and field-ready daily rhythm.",
+  "description": "Orthodox watchfulness, prayer, Scripture, and field-ready rhythm for military, first responders, and the wider service-and-protection community.",
   "start_url": "/today",
+
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui", "browser"],
