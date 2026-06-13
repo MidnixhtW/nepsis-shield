@@ -70,6 +70,7 @@ export type DailyRhythm = {
   customRuleSteps: CustomRuleStep[];
   streak: number;
   weekActiveDays: number;
+  weekHabitTotals: Record<DailyHabitKey, number>;
   completedToday: number;
 };
 
@@ -161,9 +162,22 @@ function buildRhythm(): DailyRhythm {
   }
 
   let weekActiveDays = 0;
+  const weekHabitTotals: Record<DailyHabitKey, number> = {
+    prayer: 0,
+    reading: 0,
+    reflection: 0,
+    mercy: 0,
+  };
   for (let offset = 0; offset < 7; offset += 1) {
     const key = dayKey(addDays(new Date(), -offset));
-    if (activeRecord(store.records[key])) weekActiveDays += 1;
+    const record = store.records[key];
+    if (activeRecord(record)) weekActiveDays += 1;
+
+    if (record) {
+      for (const habit of Object.keys(EMPTY_HABITS) as DailyHabitKey[]) {
+        if (record.habits[habit]) weekHabitTotals[habit] += 1;
+      }
+    }
   }
 
   return {
@@ -176,6 +190,7 @@ function buildRhythm(): DailyRhythm {
     customRuleSteps: store.customRuleSteps,
     streak,
     weekActiveDays,
+    weekHabitTotals,
     completedToday: Object.values(todayRecord.habits).filter(Boolean).length,
   };
 }
