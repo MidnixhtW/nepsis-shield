@@ -27,17 +27,17 @@ function MenuLinks() {
     <div className="grid gap-4">
       <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Main map
+          Go to
         </p>
         <div className="mt-2 grid gap-1">
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/today">
-              <Home className="mr-2 h-4 w-4" /> Today dashboard
+              <Home className="mr-2 h-4 w-4" /> Today
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/pray">
-              <Hand className="mr-2 h-4 w-4" /> Prayer
+              <Hand className="mr-2 h-4 w-4" /> Pray
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
@@ -127,7 +127,7 @@ export function AppHeader() {
         <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
-            For those who serve & keep watch · {format(new Date(), "EEE, MMM d")}
+            Today · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
 
