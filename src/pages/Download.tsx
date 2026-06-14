@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { ApkUpdateBanner } from "@/components/app/ApkUpdateBanner";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { AppLogo } from "@/components/app/AppLogo";
 import { PwaInstallCard } from "@/components/app/PwaInstallCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,9 +74,7 @@ export default function Download() {
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
-            <OrthodoxCrossIcon className="h-8 w-8" />
-          </div>
+          <AppLogo className="h-12 w-12" />
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Android package
