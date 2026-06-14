@@ -25,6 +25,18 @@ function startTutorial() {
 function MenuLinks() {
   return (
     <div className="grid gap-4">
+      <Button asChild className="h-auto justify-start rounded-3xl p-4 text-left shadow-lg shadow-primary/10">
+        <Link to="/download" className="flex items-center gap-3">
+          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-foreground/15">
+            <Download className="h-5 w-5" />
+          </span>
+          <span>
+            <span className="block text-sm font-semibold">Install / share</span>
+            <span className="mt-1 block text-xs font-normal opacity-85">APK, web app, QR code, and share links</span>
+          </span>
+        </Link>
+      </Button>
+
       <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
           Main map

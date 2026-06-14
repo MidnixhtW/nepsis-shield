@@ -1,5 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
-import { BookOpen, Hand, Home, MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BookOpen, Download, Hand, Home, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -66,49 +67,59 @@ export function AppShell({
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-primary/25 bg-background/82 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
+        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
+          <ToggleGroup
+            type="single"
+            value={section}
+            onValueChange={(v) => {
+              if (v) onSectionChange(v as AppSection);
+            }}
+            className="contents"
+          >
+            {items.map(([key, meta]) => {
+              const Icon = meta.icon;
+              const active = section === key;
+              return (
+                <ToggleGroupItem
+                  key={key}
+                  value={key}
+                  aria-label={meta.aria}
+                  className={cn(
+                    "h-12 rounded-2xl border border-border/45 bg-background/45 px-1 shadow-sm transition-colors",
+                    "hover:border-primary/35 hover:bg-muted/70",
+                    "data-[state=on]:border-primary/45 data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
+                  )}
+                >
+                  <div className="flex w-full flex-col items-center justify-center gap-1">
+                    <Icon
+                      className={cn(
+                        "h-[18px] w-[18px]",
+                        active ? "text-primary" : "text-muted-foreground",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "text-[11px] font-medium leading-none",
+                        active ? "text-foreground" : "text-muted-foreground",
+                      )}
+                    >
+                      {meta.label}
+                    </span>
+                  </div>
+                </ToggleGroupItem>
+              );
+            })}
+          </ToggleGroup>
 
-        <ToggleGroup
-          type="single"
-          value={section}
-          onValueChange={(v) => {
-            if (v) onSectionChange(v as AppSection);
-          }}
-          className="mx-auto grid max-w-md grid-cols-4 gap-1"
-        >
-          {items.map(([key, meta]) => {
-            const Icon = meta.icon;
-            const active = section === key;
-            return (
-              <ToggleGroupItem
-                key={key}
-                value={key}
-                aria-label={meta.aria}
-                className={cn(
-                  "h-12 rounded-2xl border border-border/45 bg-background/45 px-1 shadow-sm transition-colors",
-                  "hover:border-primary/35 hover:bg-muted/70",
-                  "data-[state=on]:border-primary/45 data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
-                )}
-              >
-                <div className="flex w-full flex-col items-center justify-center gap-1">
-                  <Icon
-                    className={cn(
-                      "h-[18px] w-[18px]",
-                      active ? "text-primary" : "text-muted-foreground",
-                    )}
-                  />
-                  <span
-                    className={cn(
-                      "text-[11px] font-medium leading-none",
-                      active ? "text-foreground" : "text-muted-foreground",
-                    )}
-                  >
-                    {meta.label}
-                  </span>
-                </div>
-              </ToggleGroupItem>
-            );
-          })}
-        </ToggleGroup>
+          <Link
+            to="/download"
+            aria-label="Open install and share"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-2xl border border-primary/30 bg-primary/10 px-1 text-primary shadow-sm transition-colors hover:border-primary/45 hover:bg-primary/15"
+          >
+            <Download className="h-[18px] w-[18px]" />
+            <span className="text-[11px] font-medium leading-none">Install</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
