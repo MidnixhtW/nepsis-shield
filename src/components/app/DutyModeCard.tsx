@@ -15,9 +15,27 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { showError, showSuccess } from "@/utils/toast";
 
 type ResponderMode = "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
+
+type ResponderTheme = {
+  card: string;
+  orbOne: string;
+  orbTwo: string;
+  badge: string;
+  icon: string;
+  focus: string;
+  quote: string;
+  step: string;
+  reset: string;
+  tag: string;
+  checklist: string;
+  primaryButton: string;
+  modeButton: string;
+  modeButtonActive: string;
+};
 
 type ResponderBrief = {
   label: string;
@@ -28,6 +46,7 @@ type ResponderBrief = {
   steps: string[];
   reset: string;
   suitedFor: string[];
+  theme: ResponderTheme;
 };
 
 const responderModes: Record<ResponderMode, ResponderBrief> = {
@@ -45,6 +64,22 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the call: unclench your jaw, thank God for any life preserved, and name one truthful thing before replaying the scene.",
     suitedFor: ["Police", "Deputies", "Security", "Public safety"],
+    theme: {
+      card: "border-sky-500/30 bg-gradient-to-br from-sky-500/10 via-card to-blue-950/5",
+      orbOne: "border-sky-400/25 bg-sky-400/10",
+      orbTwo: "border-blue-500/20 bg-blue-500/10",
+      badge: "border-sky-500/30 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+      icon: "bg-sky-500/10 text-sky-700 ring-1 ring-sky-500/25 dark:text-sky-300",
+      focus: "border-sky-500/20 bg-sky-500/10",
+      quote: "border-sky-500/20 bg-sky-950/5 dark:bg-sky-500/10",
+      step: "bg-sky-500/10 text-sky-700 dark:text-sky-300",
+      reset: "border-sky-500/20 bg-sky-500/10 text-sky-900 dark:text-sky-100",
+      tag: "bg-sky-500/10 text-sky-800 dark:text-sky-200",
+      checklist: "border-sky-500/25 text-sky-800 dark:text-sky-200",
+      primaryButton: "bg-sky-700 text-white hover:bg-sky-800 dark:bg-sky-500 dark:text-sky-950 dark:hover:bg-sky-400",
+      modeButton: "border-sky-500/20 hover:bg-sky-500/10 hover:text-sky-800 dark:hover:text-sky-200",
+      modeButtonActive: "border-sky-700 bg-sky-700 text-white hover:bg-sky-800 dark:border-sky-400 dark:bg-sky-500 dark:text-sky-950 dark:hover:bg-sky-400",
+    },
   },
   fire: {
     label: "Fire & rescue",
@@ -60,6 +95,22 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the call: wash up slowly, check on your crew, and offer the names of the injured and the rescued to God.",
     suitedFor: ["Firefighters", "Rescue", "Wildland", "Technical rescue"],
+    theme: {
+      card: "border-red-500/30 bg-gradient-to-br from-red-500/10 via-card to-orange-500/10",
+      orbOne: "border-red-400/25 bg-red-400/10",
+      orbTwo: "border-orange-500/25 bg-orange-500/10",
+      badge: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300",
+      icon: "bg-red-500/10 text-red-700 ring-1 ring-red-500/25 dark:text-red-300",
+      focus: "border-red-500/20 bg-red-500/10",
+      quote: "border-orange-500/20 bg-orange-950/5 dark:bg-orange-500/10",
+      step: "bg-red-500/10 text-red-700 dark:text-red-300",
+      reset: "border-orange-500/25 bg-orange-500/10 text-orange-900 dark:text-orange-100",
+      tag: "bg-red-500/10 text-red-800 dark:text-red-200",
+      checklist: "border-orange-500/25 text-orange-800 dark:text-orange-200",
+      primaryButton: "bg-red-700 text-white hover:bg-red-800 dark:bg-red-500 dark:text-red-950 dark:hover:bg-red-400",
+      modeButton: "border-red-500/20 hover:bg-red-500/10 hover:text-red-800 dark:hover:text-red-200",
+      modeButtonActive: "border-red-700 bg-red-700 text-white hover:bg-red-800 dark:border-red-400 dark:bg-red-500 dark:text-red-950 dark:hover:bg-red-400",
+    },
   },
   ems: {
     label: "EMS / medical",
@@ -75,6 +126,22 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the call: hydrate, document truthfully, and release what was never yours to command.",
     suitedFor: ["EMT", "Paramedic", "ER teams", "Medics"],
+    theme: {
+      card: "border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-card to-teal-500/10",
+      orbOne: "border-emerald-400/25 bg-emerald-400/10",
+      orbTwo: "border-teal-500/25 bg-teal-500/10",
+      badge: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+      icon: "bg-emerald-500/10 text-emerald-700 ring-1 ring-emerald-500/25 dark:text-emerald-300",
+      focus: "border-emerald-500/20 bg-emerald-500/10",
+      quote: "border-teal-500/20 bg-teal-950/5 dark:bg-teal-500/10",
+      step: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+      reset: "border-teal-500/25 bg-teal-500/10 text-teal-900 dark:text-teal-100",
+      tag: "bg-emerald-500/10 text-emerald-800 dark:text-emerald-200",
+      checklist: "border-teal-500/25 text-teal-800 dark:text-teal-200",
+      primaryButton: "bg-emerald-700 text-white hover:bg-emerald-800 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400",
+      modeButton: "border-emerald-500/20 hover:bg-emerald-500/10 hover:text-emerald-800 dark:hover:text-emerald-200",
+      modeButtonActive: "border-emerald-700 bg-emerald-700 text-white hover:bg-emerald-800 dark:border-emerald-400 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400",
+    },
   },
   dispatch: {
     label: "Dispatch / comms",
@@ -90,6 +157,22 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the call: stand if you can, breathe out slowly, and pray for the caller and the units by role if you do not know their names.",
     suitedFor: ["911", "Dispatch", "Call takers", "Radio operators"],
+    theme: {
+      card: "border-violet-500/30 bg-gradient-to-br from-violet-500/10 via-card to-fuchsia-500/10",
+      orbOne: "border-violet-400/25 bg-violet-400/10",
+      orbTwo: "border-fuchsia-500/20 bg-fuchsia-500/10",
+      badge: "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+      icon: "bg-violet-500/10 text-violet-700 ring-1 ring-violet-500/25 dark:text-violet-300",
+      focus: "border-violet-500/20 bg-violet-500/10",
+      quote: "border-fuchsia-500/20 bg-fuchsia-950/5 dark:bg-fuchsia-500/10",
+      step: "bg-violet-500/10 text-violet-700 dark:text-violet-300",
+      reset: "border-fuchsia-500/25 bg-fuchsia-500/10 text-fuchsia-900 dark:text-fuchsia-100",
+      tag: "bg-violet-500/10 text-violet-800 dark:text-violet-200",
+      checklist: "border-fuchsia-500/25 text-fuchsia-800 dark:text-fuchsia-200",
+      primaryButton: "bg-violet-700 text-white hover:bg-violet-800 dark:bg-violet-500 dark:text-violet-950 dark:hover:bg-violet-400",
+      modeButton: "border-violet-500/20 hover:bg-violet-500/10 hover:text-violet-800 dark:hover:text-violet-200",
+      modeButtonActive: "border-violet-700 bg-violet-700 text-white hover:bg-violet-800 dark:border-violet-400 dark:bg-violet-500 dark:text-violet-950 dark:hover:bg-violet-400",
+    },
   },
   custody: {
     label: "Corrections / custody",
@@ -105,6 +188,22 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the shift: leave the unit at the gate, pray for those still inside, and do one gentle thing at home on purpose.",
     suitedFor: ["Corrections", "Detention", "Jail staff", "Custody teams"],
+    theme: {
+      card: "border-slate-500/30 bg-gradient-to-br from-slate-500/10 via-card to-zinc-500/10",
+      orbOne: "border-slate-400/25 bg-slate-400/10",
+      orbTwo: "border-zinc-500/20 bg-zinc-500/10",
+      badge: "border-slate-500/30 bg-slate-500/10 text-slate-700 dark:text-slate-300",
+      icon: "bg-slate-500/10 text-slate-700 ring-1 ring-slate-500/25 dark:text-slate-300",
+      focus: "border-slate-500/20 bg-slate-500/10",
+      quote: "border-zinc-500/20 bg-zinc-950/5 dark:bg-zinc-500/10",
+      step: "bg-slate-500/10 text-slate-700 dark:text-slate-300",
+      reset: "border-zinc-500/25 bg-zinc-500/10 text-zinc-900 dark:text-zinc-100",
+      tag: "bg-slate-500/10 text-slate-800 dark:text-slate-200",
+      checklist: "border-zinc-500/25 text-zinc-800 dark:text-zinc-200",
+      primaryButton: "bg-slate-800 text-white hover:bg-slate-900 dark:bg-slate-300 dark:text-slate-950 dark:hover:bg-slate-200",
+      modeButton: "border-slate-500/20 hover:bg-slate-500/10 hover:text-slate-800 dark:hover:text-slate-200",
+      modeButtonActive: "border-slate-800 bg-slate-800 text-white hover:bg-slate-900 dark:border-slate-300 dark:bg-slate-300 dark:text-slate-950 dark:hover:bg-slate-200",
+    },
   },
   chaplain: {
     label: "Chaplain / peer support",
@@ -120,12 +219,29 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
     ],
     reset: "After the call: write one boundary, one grief, and one gratitude; place all three before God.",
     suitedFor: ["Chaplains", "Peer support", "Clergy", "CISM teams"],
+    theme: {
+      card: "border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-card to-yellow-500/10",
+      orbOne: "border-amber-400/25 bg-amber-400/10",
+      orbTwo: "border-yellow-500/25 bg-yellow-500/10",
+      badge: "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300",
+      icon: "bg-amber-500/10 text-amber-800 ring-1 ring-amber-500/25 dark:text-amber-300",
+      focus: "border-amber-500/20 bg-amber-500/10",
+      quote: "border-yellow-500/20 bg-yellow-950/5 dark:bg-yellow-500/10",
+      step: "bg-amber-500/10 text-amber-800 dark:text-amber-300",
+      reset: "border-yellow-500/25 bg-yellow-500/10 text-yellow-900 dark:text-yellow-100",
+      tag: "bg-amber-500/10 text-amber-900 dark:text-amber-200",
+      checklist: "border-yellow-500/25 text-yellow-900 dark:text-yellow-200",
+      primaryButton: "bg-amber-700 text-white hover:bg-amber-800 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300",
+      modeButton: "border-amber-500/20 hover:bg-amber-500/10 hover:text-amber-900 dark:hover:text-amber-200",
+      modeButtonActive: "border-amber-700 bg-amber-700 text-white hover:bg-amber-800 dark:border-amber-400 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300",
+    },
   },
 };
 
 export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void }) {
   const [mode, setMode] = useState<ResponderMode>("law");
   const active = responderModes[mode];
+  const theme = active.theme;
   const Icon = active.icon;
 
   const checklist = useMemo(
@@ -156,19 +272,19 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
   }
 
   return (
-    <Card className="overflow-hidden rounded-3xl border-primary/20 bg-card shadow-sm">
+    <Card className={cn("overflow-hidden rounded-3xl shadow-sm transition-colors duration-300", theme.card)}>
       <div className="relative p-5 sm:p-6">
-        <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full border border-primary/15" />
-        <div className="absolute -right-24 -top-24 h-60 w-60 rounded-full border border-accent/15" />
+        <div className={cn("absolute -right-16 -top-16 h-44 w-44 rounded-full border transition-colors duration-300", theme.orbOne)} />
+        <div className={cn("absolute -right-24 -top-24 h-60 w-60 rounded-full border transition-colors duration-300", theme.orbTwo)} />
 
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
           <div>
-            <Badge className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary">
+            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] transition-colors duration-300", theme.badge)}>
               <Crosshair className="mr-1.5 h-3.5 w-3.5" /> First responder modes
             </Badge>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">Choose your field mode</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Role-specific watch briefs for public safety and emergency service work: short prayer, tactical focus, practical steps, and a reset after the call.
+              Role-specific watch briefs for public safety and emergency service work. Each occupation switches the card color, prayer, tactical focus, practical steps, and after-call reset.
             </p>
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -180,8 +296,11 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
                   <Button
                     key={key}
                     type="button"
-                    variant={selected ? "default" : "outline"}
-                    className="tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left"
+                    variant="outline"
+                    className={cn(
+                      "tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left transition-all duration-200",
+                      selected ? item.theme.modeButtonActive : item.theme.modeButton,
+                    )}
                     onClick={() => setMode(key)}
                   >
                     <ItemIcon className="mr-2 h-4 w-4 shrink-0" />
@@ -195,9 +314,9 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
             </div>
           </div>
 
-          <div className="rounded-3xl border border-border/60 bg-background/60 p-4 shadow-sm backdrop-blur">
+          <div className="rounded-3xl border border-border/60 bg-background/70 p-4 shadow-sm backdrop-blur">
             <div className="flex items-start gap-3">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+              <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-colors duration-300", theme.icon)}>
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0">
@@ -206,18 +325,18 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               </div>
             </div>
 
-            <p className="mt-4 rounded-2xl border border-primary/15 bg-primary/5 p-4 text-sm leading-relaxed text-foreground/90">
+            <p className={cn("mt-4 rounded-2xl border p-4 text-sm leading-relaxed text-foreground/90 transition-colors duration-300", theme.focus)}>
               {active.focus}
             </p>
 
-            <blockquote className="mt-3 rounded-2xl border border-border/60 bg-muted/25 p-4 text-sm leading-relaxed text-foreground/90">
+            <blockquote className={cn("mt-3 rounded-2xl border p-4 text-sm leading-relaxed text-foreground/90 transition-colors duration-300", theme.quote)}>
               {active.prayer}
             </blockquote>
 
             <ol className="mt-4 grid gap-2 text-sm leading-relaxed text-muted-foreground">
               {active.steps.map((step, index) => (
                 <li key={step} className="flex gap-2">
-                  <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary/10 text-[11px] font-bold text-primary">
+                  <span className={cn("mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px] font-bold transition-colors duration-300", theme.step)}>
                     {index + 1}
                   </span>
                   <span>{step}</span>
@@ -225,16 +344,16 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               ))}
             </ol>
 
-            <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-3">
-              <div className="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
-                <HeartPulse className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <div className={cn("mt-4 rounded-2xl border p-3 transition-colors duration-300", theme.reset)}>
+              <div className="flex items-start gap-2 text-sm leading-relaxed">
+                <HeartPulse className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>{active.reset}</span>
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {active.suitedFor.map((item) => (
-                <Badge key={item} variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                <Badge key={item} variant="secondary" className={cn("rounded-full px-3 py-1 text-xs font-medium", theme.tag)}>
                   {item}
                 </Badge>
               ))}
@@ -242,20 +361,20 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
 
             <div className="mt-3 flex flex-wrap gap-2">
               {checklist.map((item) => (
-                <Badge key={item} variant="outline" className="rounded-full border-border/60 px-3 py-1 text-xs font-medium">
+                <Badge key={item} variant="outline" className={cn("rounded-full px-3 py-1 text-xs font-medium", theme.checklist)}>
                   <CheckCircle2 className="mr-1 h-3 w-3" /> {item}
                 </Badge>
               ))}
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button type="button" size="sm" className="rounded-2xl" onClick={copyPrayer}>
+              <Button type="button" size="sm" className={cn("rounded-2xl", theme.primaryButton)} onClick={copyPrayer}>
                 <Radio className="mr-2 h-4 w-4" /> Copy prayer
               </Button>
-              <Button type="button" size="sm" variant="outline" className="rounded-2xl border-border/60" onClick={copyBrief}>
+              <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={copyBrief}>
                 <Search className="mr-2 h-4 w-4" /> Copy brief
               </Button>
-              <Button type="button" size="sm" variant="outline" className="rounded-2xl border-border/60" onClick={onOpenFieldManual}>
+              <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={onOpenFieldManual}>
                 <HeartHandshake className="mr-2 h-4 w-4" /> Field manual
               </Button>
             </div>
