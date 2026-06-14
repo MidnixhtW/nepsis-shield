@@ -5,10 +5,13 @@ import {
   ArrowRight,
   BookOpen,
   CalendarPlus,
+  CheckCircle2,
   Church,
+  Compass,
   ExternalLink,
   Flame,
   Leaf,
+  MoonStar,
   PenLine,
   ShieldCheck,
   Sparkles,
@@ -255,6 +258,40 @@ export function TodayOverview({
   return (
     <div className="grid gap-4">
       <TodayRhythmDashboard onNavigate={onNavigate} />
+
+      <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              Companion features
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">Guided paths when you do not know where to start</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Sleep prayer, short challenges, and a personal path based on what you need most.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
+            <EssentialButton
+              label="Sleep"
+              description="Night prayer + dim timer."
+              icon={<MoonStar className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "sleep" })}
+            />
+            <EssentialButton
+              label="Challenges"
+              description="7–14 day prayer paths."
+              icon={<CheckCircle2 className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "challenges" })}
+            />
+            <EssentialButton
+              label="My Path"
+              description="Personalized next steps."
+              icon={<Compass className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "path" })}
+            />
+          </div>
+        </div>
+      </Card>
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

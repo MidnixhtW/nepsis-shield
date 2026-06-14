@@ -95,10 +95,10 @@ export function QuickStartDialog() {
         key: "tools",
         label: "Tools",
         title: "Tools",
-        description: "Learning, liturgy help, audio, hymns, and parish resources.",
+        description: "Personal path, challenges, learning, liturgy help, audio, hymns, and parish resources.",
         icon: <Sparkles className="h-5 w-5 text-primary" />,
-        route: "/learn",
-        bullets: ["Guide and Q&A", "Liturgy, audio, and hymns", "Parish finder"],
+        route: "/learn?tab=path",
+        bullets: ["Personalized path", "Guided prayer challenges", "Guide, Q&A, liturgy, audio, and parish finder"],
       },
       {
         key: "menu",
@@ -140,6 +140,12 @@ export function QuickStartDialog() {
     setStepIndex(0);
   }
 
+  function openPersonalPath() {
+    setStoredItem(ONBOARDING_KEY, true);
+    setOpen(false);
+    navigate("/learn?tab=path");
+  }
+
   function next() {
     if (isLast) {
       if (step.route) navigate(step.route);
@@ -163,20 +169,20 @@ export function QuickStartDialog() {
               <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
                 <Compass className="h-5 w-5 text-primary" />
               </div>
-              <DialogTitle className="text-2xl leading-tight">Want a quick tutorial first?</DialogTitle>
+              <DialogTitle className="text-2xl leading-tight">Want a quick start?</DialogTitle>
               <DialogDescription className="pt-2 text-sm leading-relaxed">
-                A minimal tour will show where everything is: Today, Prayer, Read, Tools, and the Menu.
+                Take a short tour, or build a personal path based on what you need most right now.
               </DialogDescription>
             </DialogHeader>
 
             <div className="mt-5 grid gap-2 rounded-3xl border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
               <div className="flex gap-2">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                Takes less than a minute.
+                The personal path recommends prayer, reading, sleep mode, or challenges.
               </div>
               <div className="flex gap-2">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                You can skip it now and replay it later from the menu.
+                You can replay the tutorial later from the menu.
               </div>
             </div>
 
@@ -184,8 +190,11 @@ export function QuickStartDialog() {
               <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
                 Skip for now
               </Button>
-              <Button type="button" className="rounded-2xl" onClick={startTour}>
-                Start tutorial
+              <Button type="button" variant="secondary" className="rounded-2xl" onClick={startTour}>
+                Tour app
+              </Button>
+              <Button type="button" className="rounded-2xl" onClick={openPersonalPath}>
+                Build my path
               </Button>
             </div>
           </div>

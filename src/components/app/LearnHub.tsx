@@ -12,8 +12,10 @@ import { ParishFinder } from "@/components/app/ParishFinder";
 import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
+import { PrayerChallenges } from "@/components/app/PrayerChallenges";
+import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 
-export type LearnTab = "welcome" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
+export type LearnTab = "welcome" | "path" | "challenges" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
 
 export function LearnHub({
   tab,
@@ -28,7 +30,7 @@ export function LearnHub({
     <div className="grid gap-4">
       <SectionBar
         title="Tools"
-        hint="Guide, Q&A, liturgy, audio, hymns, parish, library"
+        hint="Personal path, challenges, guide, Q&A, liturgy, audio, hymns, parish, library"
         action={
           onHome ? (
             <Button
@@ -45,11 +47,11 @@ export function LearnHub({
       />
 
       <FirstStepHint
-        title="New here? Start with the welcome guide."
-        description="It gives the simplest overview before you jump into Q&A, liturgy, audio, or parish tools."
-        actionLabel="Open Start"
+        title="New here? Build your personal path."
+        description="Choose what you need most and how much time you have; the app will recommend a simple starting rhythm."
+        actionLabel="Open Path"
         icon={<Sparkles className="h-4 w-4" />}
-        onAction={() => onTabChange?.("welcome")}
+        onAction={() => onTabChange?.("path")}
       />
 
       <Tabs
@@ -57,12 +59,24 @@ export function LearnHub({
         onValueChange={(v) => onTabChange?.(v as LearnTab)}
         className="w-full"
       >
-        <TabsList className="grid h-auto w-full grid-cols-4 gap-1 rounded-2xl bg-muted/20 p-1 lg:grid-cols-8">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-5 lg:grid-cols-10">
           <TabsTrigger
             value="welcome"
             className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Start
+          </TabsTrigger>
+          <TabsTrigger
+            value="path"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+          >
+            Path
+          </TabsTrigger>
+          <TabsTrigger
+            value="challenges"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+          >
+            Challenges
           </TabsTrigger>
           <TabsTrigger
             value="guide"
@@ -110,6 +124,14 @@ export function LearnHub({
 
         <TabsContent value="welcome" className="mt-4">
           <InclusiveChristianPath />
+        </TabsContent>
+
+        <TabsContent value="path" className="mt-4">
+          <PersonalizedPath />
+        </TabsContent>
+
+        <TabsContent value="challenges" className="mt-4">
+          <PrayerChallenges />
         </TabsContent>
 
         <TabsContent value="guide" className="mt-4">
