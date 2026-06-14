@@ -17,8 +17,14 @@ import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
+import PhilokaliaGuide from "@/pages/PhilokaliaGuide";
+import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
 const queryClient = new QueryClient();
+
+function PhilokaliaRoute() {
+  return isPhilokaliaUnlocked() ? <PhilokaliaGuide /> : <NotFound />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -41,6 +47,7 @@ const App = () => (
             <Route path="/release-notes" element={<ReleaseNotes />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/saints" element={<Saints />} />
+            <Route path="/philokalia" element={<PhilokaliaRoute />} />
             <Route path="/:section" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
