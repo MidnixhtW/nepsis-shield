@@ -74,55 +74,55 @@ export function ShareDistributionCard() {
   }
 
   return (
-    <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-accent/10 p-5 shadow-sm">
+    <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <div className="flex items-center gap-2 text-primary">
             <Megaphone className="h-5 w-5" />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em]">Share kit</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em]">Share</p>
           </div>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight">Get Nepsis Shield to others</h2>
+          <h2 className="mt-2 text-xl font-semibold tracking-tight">Share the app</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Share the install page for the cleanest path. It includes the web app, Android APK, and QR code in one place.
+            Send one clean install link with web, APK, and QR options.
           </p>
         </div>
         <Button type="button" className="rounded-2xl lg:shrink-0" onClick={shareInstall}>
-          <Share2 className="mr-2 h-4 w-4" /> Share install page
+          <Share2 className="mr-2 h-4 w-4" /> Share
         </Button>
       </div>
 
       <Separator className="my-4" />
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 bg-background/60 p-4 text-left" onClick={() => copyToClipboard("Download page link", downloadPageUrl)}>
+        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Download page link", downloadPageUrl)}>
           <ClipboardCopy className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
-            <span className="block text-sm font-semibold">Copy install link</span>
-            <span className="mt-1 block text-xs font-normal text-muted-foreground">Best all-device link</span>
+            <span className="block text-sm font-semibold">Install link</span>
+            <span className="mt-1 block text-xs font-normal text-muted-foreground">All devices</span>
           </span>
         </Button>
 
-        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 bg-background/60 p-4 text-left" onClick={() => copyToClipboard("Web app link", webAppUrl)}>
+        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Web app link", webAppUrl)}>
           <ShieldCheck className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
-            <span className="block text-sm font-semibold">Copy web app link</span>
-            <span className="mt-1 block text-xs font-normal text-muted-foreground">Browser/PWA access</span>
+            <span className="block text-sm font-semibold">Web link</span>
+            <span className="mt-1 block text-xs font-normal text-muted-foreground">Browser/PWA</span>
           </span>
         </Button>
 
-        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 bg-background/60 p-4 text-left" disabled={!APK_DOWNLOAD_IS_DIRECT} onClick={() => copyToClipboard("APK link", APK_DOWNLOAD_URL)}>
+        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" disabled={!APK_DOWNLOAD_IS_DIRECT} onClick={() => copyToClipboard("APK link", APK_DOWNLOAD_URL)}>
           <QrCode className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
-            <span className="block text-sm font-semibold">Copy APK link</span>
-            <span className="mt-1 block text-xs font-normal text-muted-foreground">Android direct install</span>
+            <span className="block text-sm font-semibold">APK link</span>
+            <span className="mt-1 block text-xs font-normal text-muted-foreground">Android</span>
           </span>
         </Button>
 
-        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 bg-background/60 p-4 text-left" onClick={() => copyToClipboard("Share message", shareText)}>
+        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Share message", shareText)}>
           <MessageSquare className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
-            <span className="block text-sm font-semibold">Copy message</span>
-            <span className="mt-1 block text-xs font-normal text-muted-foreground">Text to a group</span>
+            <span className="block text-sm font-semibold">Message</span>
+            <span className="mt-1 block text-xs font-normal text-muted-foreground">Copy text</span>
           </span>
         </Button>
       </div>

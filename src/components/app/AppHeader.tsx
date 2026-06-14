@@ -50,13 +50,13 @@ function MenuLink({
     <SheetClose asChild>
       <Link
         to={to}
-        className="group flex min-w-0 items-center gap-3 rounded-2xl border border-transparent px-3 py-2.5 text-sm transition-colors hover:border-primary/20 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group flex min-w-0 items-center gap-3 rounded-xl px-2.5 py-2 text-sm transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/15 group-hover:text-primary">
+        <span className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary">
           {icon}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-semibold leading-tight text-foreground">{label}</span>
+          <span className="block truncate font-medium leading-tight text-foreground">{label}</span>
           {description ? <span className="mt-0.5 block truncate text-xs text-muted-foreground">{description}</span> : null}
         </span>
       </Link>
@@ -66,11 +66,11 @@ function MenuLink({
 
 function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="rounded-3xl border border-border/60 bg-card/70 p-2 shadow-sm">
-      <h3 className="px-3 pb-1 pt-2 text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+    <section className="border-t border-border/60 pt-3 first:border-t-0 first:pt-0">
+      <h3 className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {title}
       </h3>
-      <div className="grid gap-1">{children}</div>
+      <div className="grid gap-0.5">{children}</div>
     </section>
   );
 }
@@ -81,24 +81,24 @@ function MenuLinks() {
       <SheetClose asChild>
         <Link
           to="/download"
-          className="group flex min-w-0 items-center gap-3 rounded-3xl border border-primary/25 bg-primary/10 p-3 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="group flex min-w-0 items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 text-left transition-colors hover:border-primary/30 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
+          <span className="shrink-0 text-primary">
             <Download className="h-5 w-5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-bold tracking-tight text-foreground">Install / share</span>
-            <span className="mt-0.5 block truncate text-xs text-muted-foreground">QR, web app, and APK download</span>
+            <span className="block truncate text-sm font-semibold tracking-tight text-foreground">Install / share</span>
+            <span className="mt-0.5 block truncate text-xs text-muted-foreground">QR, web app, APK</span>
           </span>
         </Link>
       </SheetClose>
 
       <MenuSection title="Core">
         <div className="grid grid-cols-2 gap-1">
-          <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" description="Dashboard" />
-          <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Prayer" description="Rule & tools" />
-          <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" description="Scripture" />
-          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Tools" description="Guides" />
+          <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
+          <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Prayer" />
+          <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" />
+          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Tools" />
         </div>
       </MenuSection>
 
@@ -108,21 +108,21 @@ function MenuLinks() {
         <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
       </MenuSection>
 
-      <MenuSection title="Settings & support">
-        <div className="rounded-2xl px-1 py-1">
+      <MenuSection title="Settings">
+        <div className="px-0.5 py-1">
           <ThemeToggle variant="row" />
         </div>
         <SheetClose asChild>
           <button
             type="button"
-            className="group flex min-w-0 items-center gap-3 rounded-2xl border border-transparent px-3 py-2.5 text-left text-sm transition-colors hover:border-primary/20 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="group flex min-w-0 items-center gap-3 rounded-xl px-2.5 py-2 text-left text-sm transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             onClick={startTutorial}
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-muted text-muted-foreground transition-colors group-hover:bg-primary/15 group-hover:text-primary">
+            <span className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary">
               <HelpCircle className="h-4 w-4" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate font-semibold leading-tight text-foreground">Tutorial</span>
+              <span className="block truncate font-medium leading-tight text-foreground">Tutorial</span>
               <span className="mt-0.5 block truncate text-xs text-muted-foreground">Replay onboarding</span>
             </span>
           </button>
@@ -131,9 +131,9 @@ function MenuLinks() {
         <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
       </MenuSection>
 
-      <div className="rounded-3xl border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
         Need help or want to send feedback? Use the Help button in the bottom-left corner.
-      </div>
+      </p>
     </div>
   );
 }
@@ -185,8 +185,8 @@ export function AppHeader() {
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex h-dvh w-[min(23rem,92vw)] flex-col gap-0 overflow-hidden rounded-l-3xl p-0">
-          <SheetHeader className="shrink-0 border-b border-border/60 bg-card/70 px-4 pb-3 pt-5 text-left backdrop-blur">
+        <SheetContent side="right" className="flex h-dvh w-[min(22rem,92vw)] flex-col gap-0 overflow-hidden p-0">
+          <SheetHeader className="shrink-0 border-b border-border/60 px-4 pb-3 pt-5 text-left">
             <SheetTitle>
               <button
                 type="button"
@@ -197,7 +197,7 @@ export function AppHeader() {
               </button>
             </SheetTitle>
             <SheetDescription className="text-xs leading-relaxed">
-              Organized navigation for prayer, reading, tools, install, and settings.
+              Prayer, reading, tools, install, and settings.
             </SheetDescription>
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">

@@ -37,28 +37,30 @@ function Step({ title, description }: { title: string; description: string }) {
 
 function QrDownloadCard({ qrCodeUrl }: { qrCodeUrl: string }) {
   return (
-    <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-accent/10 p-5 shadow-sm">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center">
+    <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
         <div>
           <div className="flex items-center gap-2 text-primary">
             <QrCode className="h-5 w-5" />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em]">Top QR code</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em]">QR code</p>
           </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to download the APK</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to download</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            This QR code points directly to the Android APK. Put this at the top of printed handouts, slides, emails, or in-person rollout material.
+            The QR code points directly to the Android APK for quick in-person sharing.
           </p>
-          <Button asChild className="mt-4 rounded-2xl">
-            <a href={qrCodeUrl} download="nepsis-shield-download-qr.png" target="_blank" rel="noopener noreferrer">
-              <DownloadIcon className="mr-2 h-4 w-4" /> Download QR code
-            </a>
-          </Button>
-          <p className="mt-3 break-all text-xs leading-relaxed text-muted-foreground">
-            QR target: {APK_DOWNLOAD_URL}
-          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild className="rounded-2xl">
+              <a href={qrCodeUrl} download="nepsis-shield-download-qr.png" target="_blank" rel="noopener noreferrer">
+                <DownloadIcon className="mr-2 h-4 w-4" /> Download QR
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="rounded-2xl border-border/60">
+              <a href={APK_DOWNLOAD_URL}>Open APK link</a>
+            </Button>
+          </div>
         </div>
 
-        <div className="mx-auto w-full max-w-72 rounded-3xl border border-border/60 bg-white p-4 shadow-sm">
+        <div className="mx-auto w-full max-w-64 rounded-3xl border border-border/60 bg-white p-3 shadow-sm">
           <img
             src={qrCodeUrl}
             alt="QR code for the direct Nepsis Shield APK download"
@@ -72,54 +74,47 @@ function QrDownloadCard({ qrCodeUrl }: { qrCodeUrl: string }) {
 
 function ApkDownloadCard() {
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
-      <div className="relative field-grid">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/65 to-accent/10" />
-        <div className="relative p-5 sm:p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
-              <Smartphone className="mr-1 h-3.5 w-3.5" /> Android APK
-            </Badge>
-            <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-              Version {APK_VERSION}
-            </Badge>
-            <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-              {APK_DOWNLOAD_IS_DIRECT ? "Direct APK available" : "Awaiting hosted APK"}
-            </Badge>
+    <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+          <Smartphone className="mr-1 h-3.5 w-3.5" /> Android APK
+        </Badge>
+        <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+          Version {APK_VERSION}
+        </Badge>
+        <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+          {APK_DOWNLOAD_IS_DIRECT ? "Direct APK available" : "Awaiting hosted APK"}
+        </Badge>
+      </div>
+
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight">APK direct download</h2>
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        Download the Android APK directly for device testing and sideload installs.
+      </p>
+
+      <Separator className="my-5" />
+
+      <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold">Nepsis Shield APK</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Release date: {APK_RELEASE_DATE}. Source: {APK_DOWNLOAD_HOST}.
+            </p>
           </div>
-
-          <h2 className="mt-4 text-2xl font-semibold tracking-tight">APK direct download</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Download the Android APK directly for device testing and sideload installs.
-          </p>
-
-          <Separator className="my-5" />
-
-          <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-semibold">Nepsis Shield APK</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  Release date: {APK_RELEASE_DATE}. Source: {APK_DOWNLOAD_HOST}.
-                </p>
-              </div>
-              {APK_DOWNLOAD_IS_DIRECT ? (
-                <ApkDownloadButton className="rounded-2xl" label="Download APK" />
-              ) : (
-                <Button disabled className="rounded-2xl">APK not hosted yet</Button>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-2xl border border-border/60 bg-muted/20 p-4">
-            <div className="flex items-start gap-3">
-              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                Only install APKs from builds you trust. Android may ask you to allow installation from your browser or file manager.
-              </p>
-            </div>
-          </div>
+          {APK_DOWNLOAD_IS_DIRECT ? (
+            <ApkDownloadButton className="rounded-2xl" label="Download APK" />
+          ) : (
+            <Button disabled className="rounded-2xl">APK not hosted yet</Button>
+          )}
         </div>
+      </div>
+
+      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
+        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          Only install APKs from builds you trust. Android may ask you to allow installation from your browser or file manager.
+        </p>
       </div>
     </Card>
   );
@@ -132,16 +127,16 @@ export default function Download() {
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
-            <OrthodoxCrossIcon className="h-8 w-8" />
+          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border/60 bg-card text-primary">
+            <OrthodoxCrossIcon className="h-7 w-7" />
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              App downloads
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              Install
             </p>
-            <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Get Nepsis Shield</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              QR first, then web install, then Android APK, with the share kit at the bottom.
+              QR, web install, APK, and sharing tools.
             </p>
           </div>
         </div>

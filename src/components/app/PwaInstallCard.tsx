@@ -118,14 +118,14 @@ export function PwaInstallCard() {
       <Separator className="my-4" />
 
       <div className="grid gap-3 text-sm sm:grid-cols-2">
-        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-          <p className="flex items-center gap-2 font-semibold"><Share2 className="h-4 w-4" /> Manual web install</p>
+        <div>
+          <p className="flex items-center gap-2 font-semibold"><Share2 className="h-4 w-4 text-primary" /> Manual web install</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{browserHint}</p>
         </div>
-        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-          <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4" /> Field-ready offline shell</p>
+        <div>
+          <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-primary" /> Offline shell</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Install once while online; saved app pages can still open if signal drops.
+            Install once while online; saved pages can still open if signal drops.
           </p>
         </div>
       </div>
