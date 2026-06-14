@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Ambulance,
@@ -17,11 +17,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { responderModeOrder, useResponderMode, type ResponderMode } from "@/lib/responderMode";
 import { showError, showSuccess } from "@/utils/toast";
-
-type ResponderMode = "military" | "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
-
-const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain"];
 
 type ResponderTheme = {
   card: string;
@@ -273,7 +270,7 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
 };
 
 export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void }) {
-  const [mode, setMode] = useState<ResponderMode>("military");
+  const [mode, setMode] = useResponderMode();
   const active = responderModes[mode];
   const theme = active.theme;
   const Icon = active.icon;

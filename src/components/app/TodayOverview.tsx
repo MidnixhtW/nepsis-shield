@@ -34,11 +34,19 @@ import {
 import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
+import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { TodayRhythmDashboard } from "@/components/app/TodayRhythmDashboard";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
 import { useSettings } from "@/hooks/useSettings";
+import { cn } from "@/lib/utils";
+import {
+  responderModeAccentClasses,
+  responderModeLabels,
+  responderModeShortLabels,
+  useResponderMode,
+} from "@/lib/responderMode";
 
 function fastingGuidanceLines(description: string, exception?: string) {
 
@@ -138,6 +146,30 @@ function EssentialButton({
       </span>
       <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
     </Button>
+  );
+}
+
+function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void }) {
+  const [mode] = useResponderMode();
+  const theme = responderModeAccentClasses[mode];
+
+  return (
+    <Card className={cn("rounded-3xl p-5 shadow-sm sm:p-6", theme.card)}>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em]", theme.badge)}>
+            <Target className="mr-1.5 h-3.5 w-3.5" /> {responderModeShortLabels[mode]} mode active
+          </Badge>
+          <h2 className="mt-3 text-xl font-semibold tracking-tight">Today is tuned for {responderModeLabels[mode]}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Your selected role now carries across Today, field mode, and the emergency reset.
+          </p>
+        </div>
+        <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/70" onClick={onOpenFieldManual}>
+          Open field manual <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+    </Card>
   );
 }
 
@@ -257,6 +289,9 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
+      <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+      <GroundMeNow />
+
       <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">

@@ -2,7 +2,7 @@
   "id": "/today",
   "name": "Nepsis Shield: Orthodox Watchfulness & Prayer",
   "short_name": "Nepsis Shield",
-  "description": "Orthodox watchfulness, prayer, Scripture, and field-ready rhythm for military, first responders, and the wider service-and-protection community.",
+  "description": "Offline-ready Orthodox watchfulness, prayer, Scripture, first-responder modes, and field rhythm for military, first responders, and the wider service-and-protection community.",
   "start_url": "/today",
 
   "scope": "/",
@@ -43,11 +43,19 @@
       "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
-      "name": "Field Manual",
-      "short_name": "Field",
-      "description": "Open short field prayers and battle-rhythm prompts.",
-      "url": "/field-manual",
+      "name": "Ground Me Now",
+      "short_name": "Reset",
+      "description": "Open the emergency grounding reset from Today.",
+      "url": "/today#ground",
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Install",
+      "short_name": "Install",
+      "description": "Open APK, web, and QR download options.",
+      "url": "/download",
       "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }

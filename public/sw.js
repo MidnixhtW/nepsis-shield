@@ -1,10 +1,13 @@
-const CACHE_NAME = "nepsis-shield-pwa-v2";
+const CACHE_NAME = "nepsis-shield-pwa-v3";
 const APP_SHELL = [
   "/",
   "/today",
   "/pray?tab=daily",
+  "/pray?tab=sleep",
   "/read?read=daily",
   "/learn?tab=welcome",
+  "/learn?tab=path",
+  "/learn?tab=challenges",
   "/field-manual",
   "/download",
   "/release-notes",

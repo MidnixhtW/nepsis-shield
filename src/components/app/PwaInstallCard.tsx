@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, MonitorSmartphone, Share2 } from "lucide-react";
+import { Download, MonitorSmartphone, RefreshCw, Share2, ShieldCheck } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +19,7 @@ function isStandalone() {
 export function PwaInstallCard() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [installed, setInstalled] = useState(false);
+  const [swReady, setSwReady] = useState(false);
 
   useEffect(() => {
     setInstalled(isStandalone());
@@ -35,6 +37,13 @@ export function PwaInstallCard() {
 
     window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
     window.addEventListener("appinstalled", onInstalled);
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistration().then((registration) => {
+        if (registration) setSwReady(true);
+        else navigator.serviceWorker.ready.then(() => setSwReady(true)).catch(() => setSwReady(false));
+      }).catch(() => setSwReady(false));
+    }
 
     return () => {
       window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
@@ -63,29 +72,62 @@ export function PwaInstallCard() {
     }
   }
 
+  async function refreshOfflineCache() {
+    if (!("serviceWorker" in navigator)) {
+      showError("Offline support is not available in this browser.");
+      return;
+    }
+
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) {
+      showError("Offline support is enabled after the production app is installed or rebuilt.");
+      return;
+    }
+
+    await registration.update();
+    setSwReady(true);
+    showSuccess("Offline-ready pages checked.");
+  }
+
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <MonitorSmartphone className="h-5 w-5 text-primary" />
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Web download</p>
+            <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs">
+              {swReady ? "Offline shell ready" : "Offline shell pending"}
+            </Badge>
           </div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight">Install the web app</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Add Nepsis Shield to your home screen from the browser. It opens like an app where web installs are supported.
+            Add Nepsis Shield to your home screen from the browser. Core pages for Today, Prayer, Read, Tools, Field Manual, install, and offline fallback are cached for field use.
           </p>
         </div>
-        <Button type="button" className="rounded-2xl" disabled={installed || !installEvent} onClick={install}>
-          <Download className="mr-2 h-4 w-4" /> {installed ? "Installed" : installEvent ? "Download web app" : "Use browser install"}
-        </Button>
+        <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
+          <Button type="button" className="rounded-2xl" disabled={installed || !installEvent} onClick={install}>
+            <Download className="mr-2 h-4 w-4" /> {installed ? "Installed" : installEvent ? "Download web app" : "Use browser install"}
+          </Button>
+          <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={refreshOfflineCache}>
+            <RefreshCw className="mr-2 h-4 w-4" /> Check offline
+          </Button>
+        </div>
       </div>
 
       <Separator className="my-4" />
 
-      <div className="rounded-2xl border border-border/60 bg-muted/20 p-4 text-sm">
-        <p className="flex items-center gap-2 font-semibold"><Share2 className="h-4 w-4" /> Manual web install</p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{browserHint}</p>
+      <div className="grid gap-3 text-sm sm:grid-cols-2">
+        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+          <p className="flex items-center gap-2 font-semibold"><Share2 className="h-4 w-4" /> Manual web install</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{browserHint}</p>
+        </div>
+        <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+          <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4" /> Field-ready offline shell</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Install once while online; saved app pages can still open if signal drops.
+          </p>
+        </div>
       </div>
     </Card>
   );

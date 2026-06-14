@@ -21,6 +21,14 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
+import {
+  getStoredResponderMode,
+  responderModeAccentClasses,
+  responderModeLabels,
+  responderModeOrder,
+  setStoredResponderMode,
+  type ResponderMode,
+} from "@/lib/responderMode";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
@@ -42,6 +50,7 @@ export function QuickStartDialog() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<TutorialMode>("intro");
   const [stepIndex, setStepIndex] = useState(0);
+  const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
 
   useEffect(() => {
     const done = getStoredItem<boolean>(ONBOARDING_KEY);
@@ -125,7 +134,13 @@ export function QuickStartDialog() {
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === steps.length - 1;
 
+  function chooseRole(role: ResponderMode) {
+    setSelectedRole(role);
+    setStoredResponderMode(role);
+  }
+
   function finish() {
+    setStoredResponderMode(selectedRole);
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
   }
@@ -141,6 +156,7 @@ export function QuickStartDialog() {
   }
 
   function openPersonalPath() {
+    setStoredResponderMode(selectedRole);
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
     navigate("/learn?tab=path");
@@ -174,6 +190,32 @@ export function QuickStartDialog() {
                 Take a short tour, or build a personal path based on what you need most right now.
               </DialogDescription>
             </DialogHeader>
+
+            <div className="mt-5 rounded-3xl border border-border bg-muted/20 p-4">
+              <p className="text-sm font-semibold tracking-tight">Choose your role</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                This personalizes colors, field prompts, and emergency reset language.
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {responderModeOrder.map((role) => {
+                  const selected = selectedRole === role;
+                  const theme = responderModeAccentClasses[role];
+                  return (
+                    <button
+                      key={role}
+                      type="button"
+                      className={cn(
+                        "rounded-2xl border px-3 py-2 text-left text-xs font-semibold transition-colors",
+                        selected ? theme.badge : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/50",
+                      )}
+                      onClick={() => chooseRole(role)}
+                    >
+                      {responderModeLabels[role]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <div className="mt-5 grid gap-2 rounded-3xl border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
               <div className="flex gap-2">
