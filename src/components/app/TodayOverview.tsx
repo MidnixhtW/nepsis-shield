@@ -327,7 +327,7 @@ export function TodayOverview({
 
       <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+      <Card className="order-first rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(18rem,1.05fr)] lg:items-start">
           <div>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
