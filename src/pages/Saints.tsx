@@ -175,7 +175,7 @@ export default function Saints() {
           <div className="flex items-start gap-3">
             <Heart className="mt-0.5 h-5 w-5 text-muted-foreground" />
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Simple practice: “Holy [Name], pray to God for me.” Intercession is part of Orthodox life, always directed toward Christ and His mercy.
+              Simple practice: “Holy [Name], pray to God for me.” Intercession is part of Eastern Christian life, always directed toward Christ and His mercy.
             </p>
           </div>
         </Card>

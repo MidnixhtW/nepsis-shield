@@ -54,7 +54,7 @@ const TOPICS: Topic[] = [
       "Join fasting to prayer and mercy.",
       "Avoid comparison; ask your priest for guidance if needed.",
     ],
-    sourceLabel: "OCA – Orthodox fasting",
+    sourceLabel: "OCA – Fasting",
     sourceUrl: "https://www.oca.org/questions/dailylife/orthodox-fasting",
     icon: ShieldCheck,
   },
@@ -86,7 +86,7 @@ const TOPICS: Topic[] = [
   {
     key: "liturgy",
     title: "Divine Liturgy",
-    description: "The center of Orthodox life: worship and Communion with Christ.",
+    description: "The center of Eastern Christian life: worship and Communion with Christ.",
     bullets: [
       "Arrive early if possible; stay for the whole service when you can.",
       "Prepare for Communion with prayer, fasting, repentance, and guidance.",
@@ -117,9 +117,9 @@ export function OrthodoxDailyGuide() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">Daily Orthodox life</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Daily Eastern Christian life</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              A simple rhythm, with official OCA sources.
+              A simple rhythm, with trusted source links.
             </p>
           </div>
           <HeartHandshake className="h-5 w-5 text-muted-foreground" />

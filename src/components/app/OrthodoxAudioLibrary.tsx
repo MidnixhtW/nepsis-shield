@@ -14,18 +14,18 @@ type AudioShelf = {
 const shelves: AudioShelf[] = [
   {
     title: "Daily listening",
-    description: "Short Orthodox audio for commutes, chores, and quiet morning routines.",
+    description: "Short Eastern Christian audio for commutes, chores, and quiet morning routines.",
     icon: <Headphones className="h-5 w-5" />,
     links: [
       {
         label: "Ancient Faith Radio",
         href: "https://www.ancientfaith.com/",
-        note: "Podcasts, talks, interviews, and daily Orthodox formation.",
+        note: "Podcasts, talks, interviews, and daily Eastern Christian formation.",
       },
       {
         label: "Ancient Faith — Daily Orthodox Scriptures",
         href: "https://www.ancientfaith.com/podcasts/dailyscriptures",
-        note: "Daily Scripture readings with Orthodox commentary.",
+        note: "Daily Scripture readings with commentary from the Orthodox tradition.",
       },
     ],
   },
@@ -42,7 +42,7 @@ const shelves: AudioShelf[] = [
       {
         label: "OCA — Liturgical music",
         href: "https://www.oca.org/liturgics/music-downloads",
-        note: "Downloadable Orthodox liturgical music from the OCA.",
+        note: "Downloadable liturgical music from the OCA.",
       },
     ],
   },
@@ -65,18 +65,18 @@ const shelves: AudioShelf[] = [
   },
   {
     title: "Homilies and teaching",
-    description: "Catechesis, Scripture, liturgy, and practical Orthodox life.",
+    description: "Catechesis, Scripture, liturgy, and practical Eastern Christian life.",
     icon: <Mic2 className="h-5 w-5" />,
     links: [
       {
         label: "OCA — The Orthodox Faith",
         href: "https://www.oca.org/orthodoxy/the-orthodox-faith",
-        note: "Core Orthodox teaching to pair with audio study.",
+        note: "Core Orthodox teaching within the wider Christian East.",
       },
       {
         label: "Patristic Nectar Publications",
         href: "https://patristicnectar.org/",
-        note: "Orthodox lectures, homilies, and catechetical courses.",
+        note: "Lectures, homilies, and catechetical courses from the Orthodox tradition.",
       },
     ],
   },
@@ -104,9 +104,9 @@ export function OrthodoxAudioLibrary() {
                 Chant • prayers • homilies • Scripture
               </Badge>
             </div>
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight">Orthodox audio for the whole day</h2>
+            <h2 className="mt-4 text-2xl font-semibold tracking-tight">Eastern Christian audio for the whole day</h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              A curated, trustworthy listening hub so the app can compete with polished Catholic and Protestant audio experiences while keeping an Orthodox spirit.
+              A curated listening hub for chant, Scripture, prayer, homilies, and formation from the Christian East.
             </p>
           </div>
         </div>

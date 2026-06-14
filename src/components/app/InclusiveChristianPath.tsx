@@ -79,9 +79,9 @@ function PathButton({
 
 const calendarContent: Record<CalendarLens, { title: string; items: string[] }> = {
   orthodox: {
-    title: "Orthodox calendar",
+    title: "Eastern calendar",
     items: [
-      "Daily saints, feasts, fasting guidance, tones, and trusted Orthodox source links.",
+      "Daily saints, feasts, fasting guidance, tones, and trusted Eastern Christian source links.",
       "New Calendar / Old Calendar selection stays in Settings for parish alignment.",
       "Fasting guidance remains pastoral: follow your priest, health needs, and local parish practice.",
     ],
@@ -91,14 +91,14 @@ const calendarContent: Record<CalendarLens, { title: string; items: string[] }> 
     items: [
       "Nativity/Christmas, Theophany/Epiphany, Pascha/Easter, Ascension, Pentecost, and major biblical feasts.",
       "Scripture, Psalms, the Lord's Prayer, repentance, thanksgiving, and works of mercy remain central.",
-      "Helpful for Catholics, Protestants, seekers, and Orthodox users who want a simple shared view.",
+      "Helpful for Eastern Catholics, Orthodox, Protestants, seekers, and Christians who want a simple shared view.",
     ],
   },
   both: {
     title: "Both together",
     items: [
-      "Shows the shared Christian center while keeping Orthodox feasts, fasting seasons, saints, and hymn links visible.",
-      "Best default for an app that welcomes all Christians without hiding its Orthodox roots.",
+      "Shows the shared Christian center while keeping Eastern feasts, fasting seasons, saints, and hymn links visible.",
+      "Best default for an app that welcomes all Christians without hiding its Eastern Christian roots.",
       "Use the app devotionally; use parish and pastoral guidance for sacramental participation.",
     ],
   },
@@ -124,7 +124,7 @@ export function InclusiveChristianPath({
               <HeartHandshake className="mr-1 h-3.5 w-3.5" /> Welcome
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-              Orthodox-rooted • Christian-first
+              Eastern Christian • ecumenical welcome
             </Badge>
           </div>
 
@@ -134,7 +134,7 @@ export function InclusiveChristianPath({
                 For those who serve, protect, heal, and keep watch.
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                A Christian prayer and formation app rooted in the Orthodox tradition for military, first responders, public safety, medical teams, chaplains, dispatchers, security, their families, and all who seek Scripture, prayer, and a steadier life in Christ.
+                An Eastern Christian prayer and formation app rooted in the ancient Christian East for military, first responders, public safety, medical teams, chaplains, dispatchers, security, their families, and all who seek Scripture, prayer, and a steadier life in Christ.
               </p>
             </div>
 
@@ -144,7 +144,7 @@ export function InclusiveChristianPath({
                 <Hand className="mr-2 h-4 w-4" /> Start with prayer
               </PathButton>
               <PathButton onClick={() => onNavigate?.({ section: "learn", tab: "qa" })}>
-                <MessageCircleQuestion className="mr-2 h-4 w-4" /> Learn Orthodoxy gently
+                <MessageCircleQuestion className="mr-2 h-4 w-4" /> Learn the Christian East
               </PathButton>
             </div>
           </div>
@@ -159,17 +159,17 @@ export function InclusiveChristianPath({
               items={[
                 "Daily Scripture, Gospel reading plans, Psalms, and the Lord's Prayer.",
                 "Morning, evening, meal, repentance, thanksgiving, grief, and mercy prayers.",
-                "Simple guidance for how to pray without assuming Orthodox background.",
+                "Simple guidance for how to pray without assuming Eastern Christian background.",
               ]}
             />
             <FeatureCard
-              title="Orthodox depth, offered clearly"
+              title="Eastern Christian depth, offered clearly"
               description="Rooted in the Church's prayer without becoming combative."
               icon={<Church className="h-5 w-5" />}
               items={[
                 "Morning/evening prayers, the Jesus Prayer — \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" — prayer rope practice, icons, feasts, fasting, saints, hymns, and propers.",
                 "Beginner explanations for Theotokos, icons, Divine Liturgy, sacraments/mysteries, and Holy Tradition.",
-                "Official Orthodox source links when a topic needs more than a short summary.",
+                "Trusted Eastern Christian source links when a topic needs more than a short summary.",
               ]}
             />
           </div>
@@ -182,9 +182,9 @@ export function InclusiveChristianPath({
                   description="Examples of repentance, courage, teaching, holiness, and love for Christ."
                   icon={<UsersRound className="h-5 w-5" />}
                   items={[
-                    "Orthodox saints of the day, biblical figures, early Church Fathers, martyrs, monastics, and modern saints.",
+                    "Eastern Christian saints of the day, biblical figures, early Church Fathers, martyrs, monastics, and modern saints.",
                     "Where appropriate, focus biographies on the shared Christian virtues rather than polemics.",
-                    "Intercession is explained as Orthodox practice while still inviting non-Orthodox users to learn respectfully.",
+                    "Intercession is explained respectfully for users from different Christian backgrounds.",
                   ]}
                 />
                 <FeatureCard
@@ -207,7 +207,7 @@ export function InclusiveChristianPath({
                       <h3 className="text-base font-semibold tracking-tight">Calendar lens</h3>
                     </div>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                      Let people see the Christian center, the Orthodox calendar, or both together.
+                      Let people see the Christian center, the Eastern calendar, or both together.
                     </p>
                   </div>
                   <ToggleGroup
@@ -217,7 +217,7 @@ export function InclusiveChristianPath({
                     className="flex flex-wrap justify-start gap-2 sm:justify-end"
                   >
                     <ToggleGroupItem value="orthodox" className="rounded-2xl border border-border/60 px-3 text-xs font-semibold data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10">
-                      Orthodox
+                      Eastern
                     </ToggleGroupItem>
                     <ToggleGroupItem value="shared" className="rounded-2xl border border-border/60 px-3 text-xs font-semibold data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10">
                       Shared
@@ -243,7 +243,7 @@ export function InclusiveChristianPath({
                   <Compass className="h-5 w-5 text-primary" />
                   <h3 className="mt-2 text-sm font-semibold">Respectful tone</h3>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    Teach Orthodox Christianity as an invitation into the fullness of the early Church, not as an attack on other Christians.
+                    Present the Christian East as an invitation into prayer, mercy, and the life of the early Church, not as an attack on other Christians.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
@@ -257,7 +257,7 @@ export function InclusiveChristianPath({
                   <Info className="h-5 w-5 text-primary" />
                   <h3 className="mt-2 text-sm font-semibold">Pastoral humility</h3>
                   <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    Fasting, confession, Communion preparation, and reception into Orthodoxy require guidance from a priest or pastor.
+                    Fasting, confession, Communion preparation, and church reception questions require guidance from a priest or pastor.
                   </p>
                 </div>
               </div>

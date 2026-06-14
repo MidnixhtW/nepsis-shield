@@ -1,8 +1,8 @@
 {
   "id": "/today",
-  "name": "Nepsis Shield: Orthodox Watchfulness & Prayer",
+  "name": "Nepsis Shield: Eastern Christian Watchfulness",
   "short_name": "Nepsis Shield",
-  "description": "Offline-ready Orthodox watchfulness, prayer, Scripture, first-responder modes, and field rhythm for military, first responders, and the wider service-and-protection community.",
+  "description": "Offline-ready Eastern Christian watchfulness, prayer, Scripture, first-responder modes, and field rhythm for military, first responders, and the wider service-and-protection community.",
   "start_url": "/today",
 
   "scope": "/",

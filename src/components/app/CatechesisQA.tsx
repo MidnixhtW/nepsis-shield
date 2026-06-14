@@ -745,9 +745,9 @@ export function CatechesisQA() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight">Catechesis (Q&A)</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Eastern Christian Q&A</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Short summaries + direct OCA sources.
+              Short summaries with direct source links, especially OCA sources where a question is specifically Orthodox.
             </p>
           </div>
           <HelpCircle className="h-5 w-5 text-muted-foreground" />
