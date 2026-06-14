@@ -80,7 +80,7 @@ function MenuLinks() {
 
         <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
           <Link to="/download">
-            <Download className="mr-2 h-4 w-4" /> App install
+            <Download className="mr-2 h-4 w-4" /> Install / share
           </Link>
         </Button>
 

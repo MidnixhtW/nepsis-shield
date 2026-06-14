@@ -10,6 +10,7 @@ import {
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { PwaInstallCard } from "@/components/app/PwaInstallCard";
+import { ShareDistributionCard } from "@/components/app/ShareDistributionCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -65,7 +66,11 @@ export default function Download() {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="mt-5">
+        <ShareDistributionCard />
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
           <div className="relative field-grid">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/65 to-accent/10" />
@@ -186,9 +191,9 @@ export default function Download() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-base font-semibold tracking-tight">Available options only</h2>
+              <h2 className="text-base font-semibold tracking-tight">Distribution checklist</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Other package and artifact download choices have been removed from this page.
+                Use this as the handoff checklist before sending the app to a group.
               </p>
             </div>
             <CheckCircle2 className="h-5 w-5 text-primary" />
@@ -196,11 +201,24 @@ export default function Download() {
 
           <Separator className="my-4" />
 
-          <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground">
-            <li>APK direct download</li>
-            <li>Web download</li>
-            <li>QR code download</li>
-          </ul>
+          <div className="grid gap-3">
+            <Step
+              title="Share the install page first"
+              description="The install page works for every device and keeps the web app, APK, and QR code together."
+            />
+            <Step
+              title="Use APK only for Android sideloading"
+              description="Android users may need to allow installs from their browser or file manager."
+            />
+            <Step
+              title="Use QR for in-person rollout"
+              description="Print or text the QR image for parish, unit, station, or team distribution."
+            />
+            <Step
+              title="Tell users it is local-first"
+              description="Preferences stay on their device. External readings and links still need signal."
+            />
+          </div>
         </Card>
       </div>
     </div>

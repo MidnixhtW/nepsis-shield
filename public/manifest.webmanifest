@@ -50,9 +50,9 @@
       "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
-      "name": "Install",
-      "short_name": "Install",
-      "description": "Open APK, web, and QR download options.",
+      "name": "Install / Share",
+      "short_name": "Share",
+      "description": "Open sharing, APK, web, and QR download options.",
       "url": "/download",
       "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     }

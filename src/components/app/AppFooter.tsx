@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 const utilityLinks = [
-  { label: "Install", to: "/download", icon: <Download className="h-4 w-4" /> },
+  { label: "Install / share", to: "/download", icon: <Download className="h-4 w-4" /> },
   { label: "Field Manual", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> },
   { label: "About", to: "/about", icon: <Info className="h-4 w-4" /> },
   { label: "Privacy", to: "/privacy", icon: <Shield className="h-4 w-4" /> },
