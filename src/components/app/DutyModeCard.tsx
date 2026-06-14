@@ -19,7 +19,9 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { showError, showSuccess } from "@/utils/toast";
 
-type ResponderMode = "law" | "military" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
+type ResponderMode = "military" | "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
+
+const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain"];
 
 type ResponderTheme = {
   card: string;
@@ -271,7 +273,7 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
 };
 
 export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void }) {
-  const [mode, setMode] = useState<ResponderMode>("law");
+  const [mode, setMode] = useState<ResponderMode>("military");
   const active = responderModes[mode];
   const theme = active.theme;
   const Icon = active.icon;
@@ -320,7 +322,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
             </p>
 
             <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
-              {(Object.keys(responderModes) as ResponderMode[]).map((key) => {
+              {responderModeOrder.map((key) => {
                 const item = responderModes[key];
                 const ItemIcon = item.icon;
                 const selected = mode === key;
