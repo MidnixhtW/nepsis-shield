@@ -257,8 +257,6 @@ export function TodayOverview({
 
   return (
     <div className="grid gap-4">
-      <TodayRhythmDashboard onNavigate={onNavigate} />
-
       <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
@@ -330,47 +328,52 @@ export function TodayOverview({
       <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(18rem,1.05fr)] lg:items-start">
           <div>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  Today’s rhythm · {format(today, "EEEE")}
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+                  {format(today, "MMMM d")}
+                </h2>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                    {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
+                  </Badge>
+                  {q.data?.tone?.value || q.data?.tone?.description ? (
+                    <Badge variant="secondary" className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                      {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
+                    </Badge>
+                  ) : null}
+                </div>
+              </div>
 
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              {format(today, "EEEE")}
-            </p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight">
-              {format(today, "MMMM d")}
-            </h2>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
-                {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
-              </Badge>
-              {q.data?.tone?.value || q.data?.tone?.description ? (
-                <Badge variant="secondary" className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                  {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
-                </Badge>
-              ) : null}
+              <div className="grid gap-2 sm:min-w-[210px] lg:min-w-0">
+                <Select
+                  value={sourceOverride}
+                  onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
+                >
+                  <SelectTrigger className="h-10 rounded-2xl">
+                    <SelectValue placeholder="Source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="preferred">Preferred source</SelectItem>
+                    <SelectItem value="oca">OCA</SelectItem>
+                    <SelectItem value="goarch">GOARCH</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40">
+                  <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
+                    Open daily source <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
+                  </a>
+                </Button>
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-2 sm:min-w-[210px]">
-            <Select
-              value={sourceOverride}
-              onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
-            >
-              <SelectTrigger className="h-10 rounded-2xl">
-                <SelectValue placeholder="Source" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="preferred">Preferred source</SelectItem>
-                <SelectItem value="oca">OCA</SelectItem>
-                <SelectItem value="goarch">GOARCH</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40">
-              <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
-                Open daily source <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
-              </a>
-            </Button>
-          </div>
+          <TodayRhythmDashboard onNavigate={onNavigate} />
         </div>
 
         <Separator className="my-4" />
