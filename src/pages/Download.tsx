@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   APK_DOWNLOAD_HOST,
   APK_DOWNLOAD_IS_DIRECT,
+  APK_DOWNLOAD_URL,
   APK_RELEASE_DATE,
   APK_VERSION,
 } from "@/lib/apkDownload";
@@ -33,14 +34,8 @@ function Step({ title, description }: { title: string; description: string }) {
   );
 }
 
-function getDownloadPageUrl() {
-  if (typeof window === "undefined") return "/download";
-  return `${window.location.origin}/download`;
-}
-
 export default function Download() {
-  const downloadPageUrl = getDownloadPageUrl();
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&data=${encodeURIComponent(downloadPageUrl)}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&data=${encodeURIComponent(APK_DOWNLOAD_URL)}`;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
@@ -55,7 +50,7 @@ export default function Download() {
             </p>
             <h1 className="text-2xl font-semibold tracking-tight">Download Nepsis Shield</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Choose APK direct download, web download, or download a QR code to share this page.
+              Choose APK direct download, web download, or download a QR code that opens the APK directly.
             </p>
           </div>
         </div>
@@ -126,9 +121,9 @@ export default function Download() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">QR code download</p>
-              <h2 className="mt-2 text-xl font-semibold tracking-tight">Download the sharing QR code</h2>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight">Download the direct APK QR code</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Save this QR code so others can scan it and open the download page.
+                Save this QR code so others can scan it and download the APK directly.
               </p>
             </div>
             <QrCode className="h-5 w-5 text-muted-foreground" />
@@ -139,7 +134,7 @@ export default function Download() {
           <div className="mx-auto max-w-64 rounded-3xl border border-border/60 bg-white p-4 shadow-sm">
             <img
               src={qrCodeUrl}
-              alt="QR code for the Nepsis Shield download page"
+              alt="QR code for the direct Nepsis Shield APK download"
               className="aspect-square w-full rounded-2xl"
             />
           </div>
@@ -151,7 +146,7 @@ export default function Download() {
           </Button>
 
           <p className="mt-3 break-all text-xs leading-relaxed text-muted-foreground">
-            QR target: {downloadPageUrl}
+            QR target: {APK_DOWNLOAD_URL}
           </p>
         </Card>
       </div>
@@ -183,7 +178,7 @@ export default function Download() {
             />
             <Step
               title="QR code download"
-              description="Download the QR image and share it so someone else can scan and open this download page."
+              description="Download the QR image and share it so someone else can scan and start the APK download directly."
             />
           </div>
         </Card>
