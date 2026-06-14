@@ -1,66 +1,32 @@
 import { useEffect, useState } from "react";
-import { Crosshair, Flame, HeartPulse, Moon, Radio, Shield, Sun } from "lucide-react";
+import { Moon, Shield, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { APP_THEMES } from "@/components/app/ThemeProvider";
 
-type AppTheme = (typeof APP_THEMES)[number];
+type AppTheme = "dark" | "light" | "red-dark";
 
-const themeOrder: AppTheme[] = [...APP_THEMES];
+const themeOrder: AppTheme[] = ["dark", "light", "red-dark"];
 
-const themeMeta: Record<AppTheme, { label: string; shortLabel: string; next: string; icon: typeof Shield }> = {
+const themeMeta: Record<AppTheme, { label: string; next: string; icon: typeof Shield }> = {
   dark: {
-    label: "Military green",
-    shortLabel: "Military",
-    next: "Switch theme",
-    icon: Crosshair,
+    label: "Deployed green",
+    next: "Switch to St Michael light",
+    icon: Shield,
   },
   light: {
     label: "St Michael light",
-    shortLabel: "Light",
-    next: "Switch theme",
+    next: "Switch to red dark",
     icon: Sun,
   },
   "red-dark": {
-    label: "Command red",
-    shortLabel: "Command",
-    next: "Switch theme",
+    label: "Red dark",
+    next: "Switch to deployed green",
     icon: Moon,
-  },
-  police: {
-    label: "Law enforcement blue",
-    shortLabel: "Police",
-    next: "Switch theme",
-    icon: Shield,
-  },
-  fire: {
-    label: "Fire rescue orange",
-    shortLabel: "Fire",
-    next: "Switch theme",
-    icon: Flame,
-  },
-  ems: {
-    label: "EMS teal",
-    shortLabel: "EMS",
-    next: "Switch theme",
-    icon: HeartPulse,
-  },
-  dispatch: {
-    label: "Dispatch purple",
-    shortLabel: "Dispatch",
-    next: "Switch theme",
-    icon: Radio,
-  },
-  corrections: {
-    label: "Corrections gold",
-    shortLabel: "Corrections",
-    next: "Switch theme",
-    icon: Shield,
   },
 };
 
 function normalizeTheme(theme: string | undefined): AppTheme {
-  return APP_THEMES.includes(theme as AppTheme) ? (theme as AppTheme) : "dark";
+  return theme === "light" || theme === "red-dark" ? theme : "dark";
 }
 
 export function ThemeToggle({
@@ -85,36 +51,15 @@ export function ThemeToggle({
 
   if (variant === "row") {
     return (
-      <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Service themes
-            </p>
-            <p className="mt-1 text-sm font-semibold">{meta.label}</p>
-          </div>
-          <Icon className="h-5 w-5 text-primary" />
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {themeOrder.map((item) => {
-            const ItemIcon = themeMeta[item].icon;
-            const active = item === currentTheme;
-            return (
-              <Button
-                key={item}
-                type="button"
-                variant={active ? "default" : "outline"}
-                size="sm"
-                className="h-10 justify-start rounded-2xl border-border/60 px-3"
-                onClick={() => setTheme(item)}
-              >
-                <ItemIcon className="mr-2 h-4 w-4" />
-                {themeMeta[item].shortLabel}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
+      <Button
+        type="button"
+        variant="outline"
+        className="h-11 justify-start rounded-2xl border-border/60"
+        onClick={cycleTheme}
+      >
+        <Icon className="mr-2 h-4 w-4" />
+        {meta.label}
+      </Button>
     );
   }
 
@@ -125,7 +70,7 @@ export function ThemeToggle({
       variant="outline"
       className="h-10 w-10 rounded-2xl border-border/60 bg-background/60"
       onClick={cycleTheme}
-      aria-label={`${meta.label}. ${meta.next}`}
+      aria-label={meta.next}
       title={`${meta.label} · ${meta.next}`}
     >
       <Icon className="h-5 w-5" />

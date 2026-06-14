@@ -8,7 +8,6 @@ import {
   RotateCcw,
   ShieldAlert,
 } from "lucide-react";
-import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -127,16 +126,6 @@ export default function Settings() {
       </div>
 
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm lg:col-span-2">
-          <h2 className="text-base font-semibold tracking-tight">Audience theme</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Choose a visual style for military, law enforcement, fire rescue, EMS, dispatch, corrections, or command-center use.
-          </p>
-          <div className="mt-4">
-            <ThemeToggle variant="row" />
-          </div>
-        </Card>
-
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>

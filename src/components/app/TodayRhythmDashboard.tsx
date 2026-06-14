@@ -92,7 +92,7 @@ export function TodayRhythmDashboard({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                Service daily mission
+                Daily mission
               </span>
               <span className="inline-flex items-center rounded-full bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground">
                 <Flame className="mr-1.5 h-3.5 w-3.5 text-primary" />
@@ -110,7 +110,7 @@ export function TodayRhythmDashboard({
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               {progress === 100
                 ? "Keep it simple: protect the peace you’ve received and return tomorrow."
-                : `${nextMission.line} Built for shifts, watches, calls, rounds, and duty days.`}
+                : nextMission.line}
             </p>
 
             <div className="mt-5 grid gap-2 sm:max-w-xl">

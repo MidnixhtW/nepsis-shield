@@ -17,7 +17,7 @@ export function AppFooter() {
         <div className="min-w-0">
           <p className="text-sm font-semibold tracking-tight">A quiet devotional aid</p>
           <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">
-            Under the patronage of St Michael the Archangel, for military, law enforcement, fire rescue, EMS, dispatch, corrections, chaplains, families, and the wider service-and-protection community.
+            Under the patronage of St Michael the Archangel, for military, first responders, and the wider service-and-protection community.
           </p>
           <div className="mt-3 flex items-start gap-2 rounded-2xl border border-primary/15 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
             <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-primary" />

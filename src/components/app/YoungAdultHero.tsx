@@ -39,13 +39,13 @@ export function OrthodoxHero({
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Military & first responder prayer
+              Start here
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Keep watch. Pray steady.
+              Begin today’s rhythm.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-              Built for soldiers, police, fire rescue, EMS, dispatch, corrections, chaplains, and families: pray first, read slowly, then use tools when duty gets heavy.
+              One simple path: pray first, read slowly, then use tools only when you need them.
             </p>
 
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
@@ -71,13 +71,13 @@ export function OrthodoxHero({
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Duty-ready order
+                  Daily order
                 </p>
                 <p className="text-sm font-semibold">Prayer → Read → Tools</p>
               </div>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              When the shift, watch, call, or station day gets loud, return to Today and choose the next small step.
+              If you feel lost, return to Today and choose the next step.
             </p>
           </div>
         </div>
