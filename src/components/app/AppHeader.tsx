@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { AppLogo } from "@/components/app/AppLogo";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
@@ -123,9 +123,7 @@ export function AppHeader() {
   return (
     <header className="flex items-center justify-between gap-3">
       <Link to="/today" className="flex min-w-0 items-center gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
-          <OrthodoxCrossIcon className="h-5 w-5" />
-        </div>
+        <AppLogo className="h-10 w-10" />
         <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
@@ -160,7 +158,7 @@ export function AppHeader() {
                 className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={handleSecretTap}
               >
-                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
+                <AppLogo className="h-7 w-7 rounded-xl" /> More
               </button>
             </SheetTitle>
             <SheetDescription>
