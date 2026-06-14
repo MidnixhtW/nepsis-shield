@@ -23,94 +23,96 @@ function startTutorial() {
 }
 
 function MenuLinks() {
+  const linkClass = "h-10 justify-start rounded-2xl px-3 text-sm";
+  const iconClass = "mr-2 h-4 w-4 shrink-0";
+
   return (
-    <div className="grid gap-4">
-      <Button asChild className="h-auto justify-start rounded-3xl p-4 text-left shadow-lg shadow-primary/10">
-        <Link to="/download" className="flex items-center gap-3">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary-foreground/15">
-            <Download className="h-5 w-5" />
+    <div className="grid gap-3 pb-3">
+      <Button asChild className="h-auto justify-start rounded-2xl p-3 text-left shadow-lg shadow-primary/10">
+        <Link to="/download" className="flex min-w-0 items-center gap-3">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-primary-foreground/15">
+            <Download className="h-4 w-4" />
           </span>
-          <span>
-            <span className="block text-sm font-semibold">Install / share</span>
-            <span className="mt-1 block text-xs font-normal opacity-85">APK, web app, QR code, and share links</span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold">Install / share</span>
+            <span className="mt-0.5 block truncate text-xs font-normal opacity-85">APK, web app, QR</span>
           </span>
         </Link>
       </Button>
 
-      <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
-        <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Main map
+      <div className="rounded-2xl border border-border/60 bg-muted/20 p-2">
+        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          Main
         </p>
-        <div className="mt-2 grid gap-1">
-          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+        <div className="mt-1 grid grid-cols-2 gap-1">
+          <Button asChild variant="ghost" className={linkClass}>
             <Link to="/today">
-              <Home className="mr-2 h-4 w-4" /> Today dashboard
+              <Home className={iconClass} /> Today
             </Link>
           </Button>
-          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Button asChild variant="ghost" className={linkClass}>
             <Link to="/pray">
-              <Hand className="mr-2 h-4 w-4" /> Prayer
+              <Hand className={iconClass} /> Prayer
             </Link>
           </Button>
-          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Button asChild variant="ghost" className={linkClass}>
             <Link to="/read">
-              <BookOpen className="mr-2 h-4 w-4" /> Read
+              <BookOpen className={iconClass} /> Read
             </Link>
           </Button>
-          <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
+          <Button asChild variant="ghost" className={linkClass}>
             <Link to="/learn">
-              <Map className="mr-2 h-4 w-4" /> Tools
+              <Map className={iconClass} /> Tools
             </Link>
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-2">
-        <ThemeToggle variant="row" />
+      <div className="rounded-2xl border border-border/60 bg-muted/20 p-2">
+        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          More
+        </p>
+        <div className="mt-1 grid gap-1">
+          <ThemeToggle variant="row" />
 
-        <Button type="button" variant="ghost" className="h-11 justify-start rounded-2xl" onClick={startTutorial}>
-          <HelpCircle className="mr-2 h-4 w-4" /> Tutorial
-        </Button>
+          <Button type="button" variant="ghost" className={linkClass} onClick={startTutorial}>
+            <HelpCircle className={iconClass} /> Tutorial
+          </Button>
 
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/settings">
-            <SettingsIcon className="mr-2 h-4 w-4" /> Settings
-          </Link>
-        </Button>
+          <Button asChild variant="ghost" className={linkClass}>
+            <Link to="/settings">
+              <SettingsIcon className={iconClass} /> Settings
+            </Link>
+          </Button>
 
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/saints">
-            <Sparkles className="mr-2 h-4 w-4" /> Saints
-          </Link>
-        </Button>
+          <Button asChild variant="ghost" className={linkClass}>
+            <Link to="/saints">
+              <Sparkles className={iconClass} /> Saints
+            </Link>
+          </Button>
 
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/field-manual">
-            <Crosshair className="mr-2 h-4 w-4" /> Field Manual
-          </Link>
-        </Button>
+          <Button asChild variant="ghost" className={linkClass}>
+            <Link to="/field-manual">
+              <Crosshair className={iconClass} /> Field Manual
+            </Link>
+          </Button>
 
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/download">
-            <Download className="mr-2 h-4 w-4" /> Install / share
-          </Link>
-        </Button>
+          <Button asChild variant="ghost" className={linkClass}>
+            <Link to="/privacy">
+              <Shield className={iconClass} /> Privacy
+            </Link>
+          </Button>
 
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/privacy">
-            <Shield className="mr-2 h-4 w-4" /> Privacy
-          </Link>
-        </Button>
-
-        <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
-          <Link to="/about">
-            <Info className="mr-2 h-4 w-4" /> About
-          </Link>
-        </Button>
-
-        <div className="rounded-3xl border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
-          Need app help or want to send feedback? Use the Help button in the bottom-left corner.
+          <Button asChild variant="ghost" className={linkClass}>
+            <Link to="/about">
+              <Info className={iconClass} /> About
+            </Link>
+          </Button>
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-border/60 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
+        Need help or want to send feedback? Use the Help button in the bottom-left corner.
       </div>
     </div>
   );
@@ -164,8 +166,8 @@ export function AppHeader() {
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
-          <SheetHeader className="text-left">
+        <SheetContent side="right" className="flex h-dvh w-[min(22rem,92vw)] flex-col gap-0 overflow-hidden rounded-l-3xl p-0">
+          <SheetHeader className="shrink-0 border-b border-border/60 px-4 pb-3 pt-5 text-left">
             <SheetTitle>
               <button
                 type="button"
@@ -175,11 +177,11 @@ export function AppHeader() {
                 <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
               </button>
             </SheetTitle>
-            <SheetDescription>
+            <SheetDescription className="text-xs leading-relaxed">
               Today is home base. Prayer, Read, and Tools are the main areas.
             </SheetDescription>
           </SheetHeader>
-          <div className="mt-5">
+          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
             <MenuLinks />
           </div>
         </SheetContent>
