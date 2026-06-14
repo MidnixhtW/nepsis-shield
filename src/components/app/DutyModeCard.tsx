@@ -4,6 +4,7 @@ import {
   Ambulance,
   CheckCircle2,
   Crosshair,
+  Flag,
   Flame,
   HeartHandshake,
   HeartPulse,
@@ -18,7 +19,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { showError, showSuccess } from "@/utils/toast";
 
-type ResponderMode = "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
+type ResponderMode = "law" | "military" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
 
 type ResponderTheme = {
   card: string;
@@ -79,6 +80,37 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       primaryButton: "bg-sky-700 text-white hover:bg-sky-800 dark:bg-sky-500 dark:text-sky-950 dark:hover:bg-sky-400",
       modeButton: "border-sky-500/20 hover:bg-sky-500/10 hover:text-sky-800 dark:hover:text-sky-200",
       modeButtonActive: "border-sky-700 bg-sky-700 text-white hover:bg-sky-800 dark:border-sky-400 dark:bg-sky-500 dark:text-sky-950 dark:hover:bg-sky-400",
+    },
+  },
+  military: {
+    label: "Military",
+    badge: "Mission with restraint",
+    icon: Flag,
+    focus: "Stay mission-ready while guarding humility, discipline, lawful obedience, and the souls entrusted to your left and right.",
+    prayer:
+      "Lord Jesus Christ, guard me in danger, steady me under orders, and keep my strength obedient to mercy, truth, and lawful duty. Protect my unit and those we are sent to defend. Amen.",
+    steps: [
+      "Before movement or watch: check gear, orders, buddy, and conscience.",
+      "Keep discipline under stress: speak clearly, obey lawful command, and refuse needless cruelty.",
+      "Remember the person beside you; courage includes checking on your team after the adrenaline drops.",
+    ],
+    reset: "After the mission or watch: secure your gear, thank God for preservation, pray for your unit, and hand over what you cannot carry alone.",
+    suitedFor: ["Active duty", "Guard", "Reserve", "Veterans"],
+    theme: {
+      card: "border-lime-700/30 bg-gradient-to-br from-lime-700/10 via-card to-stone-500/10",
+      orbOne: "border-lime-700/25 bg-lime-700/10",
+      orbTwo: "border-stone-500/25 bg-stone-500/10",
+      badge: "border-lime-700/30 bg-lime-700/10 text-lime-900 dark:text-lime-300",
+      icon: "bg-lime-700/10 text-lime-900 ring-1 ring-lime-700/25 dark:text-lime-300",
+      focus: "border-lime-700/20 bg-lime-700/10",
+      quote: "border-stone-500/20 bg-stone-950/5 dark:bg-stone-500/10",
+      step: "bg-lime-700/10 text-lime-900 dark:text-lime-300",
+      reset: "border-stone-500/25 bg-stone-500/10 text-stone-900 dark:text-stone-100",
+      tag: "bg-lime-700/10 text-lime-950 dark:text-lime-200",
+      checklist: "border-stone-500/25 text-stone-900 dark:text-stone-200",
+      primaryButton: "bg-lime-800 text-white hover:bg-lime-900 dark:bg-lime-400 dark:text-lime-950 dark:hover:bg-lime-300",
+      modeButton: "border-lime-700/20 hover:bg-lime-700/10 hover:text-lime-950 dark:hover:text-lime-200",
+      modeButtonActive: "border-lime-800 bg-lime-800 text-white hover:bg-lime-900 dark:border-lime-400 dark:bg-lime-400 dark:text-lime-950 dark:hover:bg-lime-300",
     },
   },
   fire: {
@@ -287,7 +319,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               Role-specific watch briefs for public safety and emergency service work. Each occupation switches the card color, prayer, tactical focus, practical steps, and after-call reset.
             </p>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
               {(Object.keys(responderModes) as ResponderMode[]).map((key) => {
                 const item = responderModes[key];
                 const ItemIcon = item.icon;
