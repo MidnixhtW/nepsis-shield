@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { BadgeCheck, CalendarDays, ListChecks } from "lucide-react";
-import { AppLogo } from "@/components/app/AppLogo";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,9 @@ export default function ReleaseNotes() {
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <AppLogo className="h-12 w-12" />
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
+            <OrthodoxCrossIcon className="h-8 w-8" />
+          </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Release log

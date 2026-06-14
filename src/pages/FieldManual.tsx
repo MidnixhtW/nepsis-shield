@@ -13,7 +13,6 @@ import {
   Sun,
   UsersRound,
 } from "lucide-react";
-import { AppLogo } from "@/components/app/AppLogo";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
@@ -172,7 +171,9 @@ export default function FieldManual() {
     <div className="mx-auto w-full max-w-6xl px-4 pb-28 pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
-          <AppLogo className="h-14 w-14" />
+          <div className="icon-medallion h-14 w-14 p-2">
+            <OrthodoxCrossIcon className="h-8 w-8" />
+          </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">
               Field manual
@@ -255,7 +256,9 @@ export default function FieldManual() {
                 Open the situation you need. Keep it simple and attentive.
               </p>
             </div>
-            <AppLogo className="h-11 w-11" />
+            <div className="icon-medallion h-11 w-11">
+              <OrthodoxCrossIcon className="h-6 w-6" />
+            </div>
           </div>
 
           <div className="my-4 h-px gold-hairline" />
