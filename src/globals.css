@@ -148,8 +148,12 @@
     overflow-x: hidden;
   }
 
-  :where(p, a, li, h1, h2, h3, h4, h5, h6) {
+  :where(p, a, li, h1, h2, h3, h4, h5, h6, button, span) {
     overflow-wrap: anywhere;
+  }
+
+  :where(button, [role="button"]) {
+    max-width: 100%;
   }
 
   body {

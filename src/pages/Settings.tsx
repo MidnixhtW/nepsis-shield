@@ -179,13 +179,13 @@ export default function Settings() {
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
         <Card className={cn("rounded-3xl p-5 shadow-sm", roleTheme.card)}>
           <div className="flex items-start justify-between gap-3">
-            <div>
+            <div className="min-w-0 break-words">
               <h2 className="text-base font-semibold tracking-tight">Role / mode</h2>
               <p id="role-help" className="mt-1 text-sm text-muted-foreground">
                 Sets your default first-responder mode across Today, Field Manual, and Ground Me Now.
               </p>
             </div>
-            <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
+            <SlidersHorizontal className="h-5 w-5 shrink-0 text-muted-foreground" />
           </div>
           <Separator className="my-4" />
           <div className="grid gap-2">

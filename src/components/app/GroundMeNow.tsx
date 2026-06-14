@@ -68,9 +68,9 @@ export function GroundMeNow() {
     <>
       <Card id="ground" className={cn("scroll-mt-24 rounded-3xl p-5 shadow-sm sm:p-6", theme.card)}>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="min-w-0">
-            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em]", theme.badge)}>
-              <HeartPulse className="mr-1.5 h-3.5 w-3.5" /> Ground Me Now
+          <div className="min-w-0 break-words">
+            <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
+              <HeartPulse className="mr-1.5 h-3.5 w-3.5 shrink-0" /> Ground Me Now
             </Badge>
             <h2 className="mt-3 text-xl font-semibold tracking-tight">Emergency reset for {responderModeLabels[mode]}</h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -78,8 +78,8 @@ export function GroundMeNow() {
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
-            <Button type="button" className={cn("rounded-2xl", theme.button)} onClick={() => setOpen(true)}>
-              <TimerReset className="mr-2 h-4 w-4" /> Start 60-second reset
+            <Button type="button" className={cn("h-auto whitespace-normal rounded-2xl text-left leading-tight", theme.button)} onClick={() => setOpen(true)}>
+              <TimerReset className="mr-2 h-4 w-4 shrink-0" /> Start 60-second reset
             </Button>
           </div>
         </div>

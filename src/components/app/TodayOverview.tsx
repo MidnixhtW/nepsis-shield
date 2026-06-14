@@ -156,17 +156,17 @@ function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void
   return (
     <Card className={cn("rounded-3xl p-5 shadow-sm sm:p-6", theme.card)}>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="min-w-0">
-          <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em]", theme.badge)}>
-            <Target className="mr-1.5 h-3.5 w-3.5" /> {responderModeShortLabels[mode]} mode active
+        <div className="min-w-0 break-words">
+          <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
+            <Target className="mr-1.5 h-3.5 w-3.5 shrink-0" /> {responderModeShortLabels[mode]} mode active
           </Badge>
           <h2 className="mt-3 text-xl font-semibold tracking-tight">Today is tuned for {responderModeLabels[mode]}</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Your selected role now carries across Today, field mode, and the emergency reset.
           </p>
         </div>
-        <Button type="button" variant="outline" className="rounded-2xl border-border/60 bg-background/70" onClick={onOpenFieldManual}>
-          Open field manual <ArrowRight className="ml-2 h-4 w-4" />
+        <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-2xl border-border/60 bg-background/70 text-left leading-tight" onClick={onOpenFieldManual}>
+          Open field manual <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
         </Button>
       </div>
     </Card>

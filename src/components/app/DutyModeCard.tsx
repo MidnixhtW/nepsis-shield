@@ -318,7 +318,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               Role-specific watch briefs for public safety and emergency service work. Each occupation switches the card color, prayer, tactical focus, practical steps, and after-call reset.
             </p>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-4 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
               {responderModeOrder.map((key) => {
                 const item = responderModes[key];
                 const ItemIcon = item.icon;
@@ -329,15 +329,15 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
                     type="button"
                     variant="outline"
                     className={cn(
-                      "tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left transition-all duration-200",
+                      "tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left leading-tight transition-all duration-200",
                       selected ? item.theme.modeButtonActive : item.theme.modeButton,
                     )}
                     onClick={() => setMode(key)}
                   >
                     <ItemIcon className="mr-2 h-4 w-4 shrink-0" />
-                    <span>
+                    <span className="min-w-0 flex-1 break-words">
                       <span className="block text-xs font-semibold leading-tight">{item.label}</span>
-                      <span className="block text-[11px] font-normal opacity-80">{item.badge}</span>
+                      <span className="block text-[11px] font-normal leading-tight opacity-80">{item.badge}</span>
                     </span>
                   </Button>
                 );
@@ -350,8 +350,8 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               <span className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl transition-colors duration-300", theme.icon)}>
                 <Icon className="h-5 w-5" />
               </span>
-              <div className="min-w-0">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">{active.badge}</p>
+              <div className="min-w-0 break-words">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">{active.badge}</p>
                 <h3 className="mt-1 text-lg font-semibold tracking-tight">{active.label}</h3>
               </div>
             </div>

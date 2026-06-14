@@ -196,7 +196,7 @@ export function QuickStartDialog() {
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 This personalizes colors, field prompts, and emergency reset language.
               </p>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3">
                 {responderModeOrder.map((role) => {
                   const selected = selectedRole === role;
                   const theme = responderModeAccentClasses[role];
@@ -205,7 +205,7 @@ export function QuickStartDialog() {
                       key={role}
                       type="button"
                       className={cn(
-                        "rounded-2xl border px-3 py-2 text-left text-xs font-semibold transition-colors",
+                        "min-h-10 rounded-2xl border px-3 py-2 text-left text-xs font-semibold leading-tight transition-colors whitespace-normal break-words",
                         selected ? theme.badge : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/50",
                       )}
                       onClick={() => chooseRole(role)}

@@ -264,8 +264,8 @@ export default function FieldManual() {
                 <div key={section.mode} className={cn("rounded-3xl border p-4 shadow-sm", theme.card)}>
                   <div className="flex items-start gap-3">
                     <span className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-2xl", theme.icon)}>{section.icon}</span>
-                    <div className="min-w-0">
-                      <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold", theme.badge)}>{responderModeLabels[section.mode]}</Badge>
+                    <div className="min-w-0 break-words">
+                      <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold leading-tight", theme.badge)}>{responderModeLabels[section.mode]}</Badge>
                       <h3 className="mt-2 text-lg font-semibold tracking-tight">{section.title}</h3>
                       <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{section.focus}</p>
                     </div>
