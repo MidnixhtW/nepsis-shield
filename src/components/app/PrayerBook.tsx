@@ -773,7 +773,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     How to use this section
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    The Lord's Prayer, Jesus Prayer, and Scripture prayer here use standard Eastern Christian wording. The short repentance, grief, thanksgiving, and mercy prayers below are original devotional aids, not replacements for parish prayer books or services.
+                    The Lord's Prayer, Jesus Prayer, and Scripture prayer here use standard Orthodox wording. The short repentance, grief, thanksgiving, and mercy prayers below are original devotional aids, not replacements for parish prayer books or services.
                   </p>
                 </div>
                 <PrayerBlock title="Common starting prayers" lines={sharedPrayerBasics} />
@@ -798,7 +798,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     Patron of Nepsis Shield
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These short prayers ask St. Michael's intercession and are written as devotional aids for watchfulness, duty, protection, and mercy. For full hymn texts, use the source links below.
+                    These short prayers ask St. Michael's intercession and are written as devotional aids for watchfulness, duty, protection, and mercy. For full hymn texts, use the official Orthodox links below.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
@@ -1008,7 +1008,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     How to use this
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These are Eastern Christian invocations and quick prayers you can say any time. For full hymn texts (troparia/kontakia) and lives, open the official OCA links.
+                    These are Orthodox invocations and quick prayers you can say any time. For full hymn texts (troparia/kontakia) and lives, open the official OCA links.
                   </p>
 
                   <div className="mt-3 flex flex-wrap gap-2">

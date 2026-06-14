@@ -327,7 +327,7 @@ export default function Privacy() {
             Control what the app stores on this device and export/import your local data.
           </p>
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-foreground">Not official:</span> This is an independent Eastern Christian project and not an official app of the Orthodox Church in America (OCA).
+            <span className="font-semibold text-foreground">Not official:</span> This is an independent project and not an official app of the Orthodox Church in America (OCA).
           </p>
         </div>
         <Button asChild variant="outline" className="rounded-2xl border-border/60">

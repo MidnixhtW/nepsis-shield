@@ -17,7 +17,7 @@ export default function About() {
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            An Eastern Christian field guide for military, first responders, and the wider service-and-protection community.
+            A Christian field guide for military, first responders, and the wider service-and-protection community.
           </p>
         </div>
 
@@ -32,7 +32,7 @@ export default function About() {
           </Button>
           <ApkDownloadButton className="rounded-2xl" />
           <Button asChild className="rounded-2xl">
-            <a href="mailto:feedback@example.com?subject=Nepsis%20Shield%20feedback">
+            <a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback">
               <Mail className="mr-2 h-4 w-4" /> Feedback
             </a>
           </Button>
@@ -110,11 +110,12 @@ export default function About() {
             </div>
 
             <p className="text-sm leading-relaxed text-foreground/90">
-              Nepsis Shield is an independent Eastern Christian watchfulness and prayer companion, made for <span className="font-semibold">Christians of every tradition</span>, especially military, first responders, public safety, medical teams, chaplains, security, dispatchers, and others who keep watch or carry responsibility for others. It draws from the ancient Christian East—especially Orthodox prayer, Scripture, fasting, saints, and the life of the Church—while remaining welcoming to Eastern Catholics and other Christians. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
+              Nepsis Shield is an independent tool for Orthodox watchfulness and prayer, made for <span className="font-semibold">Christians of every tradition</span>, especially military, first responders, public safety, medical teams, chaplains, security, dispatchers, and others who keep watch or carry responsibility for others. It is shaped by Orthodox prayer, Scripture, fasting, and the life of the Church. It is <span className="font-semibold">not an official app</span> of the Orthodox Church in America (OCA) and is <span className="font-semibold">not endorsed by or affiliated with</span> the OCA.
             </p>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
-              "Orthodox Church in America" and "OCA" are trademarks of their respective owners. Names and links are used for identification of source material only.
+
+              "Orthodox Church in America" and "OCA" are trademarks of their respective owners. Names and links are used for identification of Orthodox sources only.
             </p>
           </div>
         </Card>
@@ -136,7 +137,7 @@ export default function About() {
             <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
               <p className="font-semibold">Created by Empathik</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Nepsis Shield is built as an Eastern Christian watchfulness and prayer companion for daily life, field use, first response, public safety, and service under pressure.
+                Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life, field use, first response, public safety, and service under pressure.
               </p>
             </div>
 
@@ -211,7 +212,7 @@ export default function About() {
           <Separator className="my-4" />
 
           <p className="text-sm leading-relaxed text-foreground/90">
-            This app is a devotional aid (prayer, Scripture reading, field manual prompts, and personal notes). It is not a substitute for pastoral care, emergency care, mental health care, or sacramental life. For spiritual guidance, confession preparation, and questions of doctrine or practice, please consult your priest, spiritual father, pastor, or chaplain.
+            This app is a devotional aid (prayer, Scripture reading, field manual prompts, and personal notes). It is not a substitute for pastoral care, emergency care, mental health care, or sacramental life. For spiritual guidance, confession preparation, and questions of doctrine or practice, please consult your priest/spiritual father. If you are not Orthodox, speak with your pastor or chaplain.
           </p>
 
           <p className="mt-3 text-xs leading-relaxed text-muted-foreground">

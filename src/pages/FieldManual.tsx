@@ -196,7 +196,7 @@ export default function FieldManual() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Field manual</p>
             <h1 className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-3xl font-bold tracking-tight text-transparent">
-              Eastern Christian Field Manual
+              Orthodox Field Manual
             </h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
               Role-specific prayers, checklists, and battle-rhythm practices for military, first responders, public safety, medical teams, chaplains, and families.
@@ -222,7 +222,7 @@ export default function FieldManual() {
             <div className="relative p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge className="rounded-full border border-primary/20 bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
-                  <Shield className="mr-1 h-3.5 w-3.5" /> Service prayer rhythm
+                  <Shield className="mr-1 h-3.5 w-3.5" /> Service Orthodox rhythm
                 </Badge>
                 <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
                   Copyable field reference
@@ -337,7 +337,7 @@ export default function FieldManual() {
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-border/60 bg-background/55 p-4 shadow-sm backdrop-blur">
               <p className="text-sm leading-relaxed text-foreground/90">
-                For sacramental questions, confession preparation, fasting, Communion, or church reception questions, speak with a priest. Christians from other traditions are welcome to use these prayers devotionally and to speak with their pastor or chaplain.
+                For sacramental questions, confession preparation, fasting, Communion, or reception into Orthodoxy, speak with an Orthodox priest. If you are not Orthodox, you are welcome to use these prayers devotionally and to speak with your pastor or chaplain.
               </p>
             </div>
             <div className="rounded-2xl border border-amber-300/50 bg-amber-500/10 p-4 text-amber-900 shadow-sm backdrop-blur dark:text-amber-100">

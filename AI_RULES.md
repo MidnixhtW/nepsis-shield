@@ -11,12 +11,6 @@
 - ALWAYS try to use the shadcn/ui library.
 - Tailwind CSS: always use Tailwind CSS for styling components. Utilize Tailwind classes extensively for layout, spacing, colors, and other design aspects.
 
-# Product Voice
-
-- Position the app as Eastern Christian and ecumenically welcoming.
-- Prefer broad user-facing language like "Eastern Christian," "Christian East," and "ancient Christian East" where appropriate.
-- Keep "Orthodox" language when naming specific Orthodox sources, jurisdictions, practices, calendar details, or source titles.
-
 Available packages and libraries:
 
 - The lucide-react package is installed for icons.

@@ -157,7 +157,7 @@ export function PrayerChallenges() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Challenges</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight">Choose a guided path.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              Short Eastern Christian practice plans for prayer, Scripture, watchfulness, and mercy.
+              Short Orthodox practice plans for prayer, Scripture, watchfulness, and mercy.
             </p>
           </div>
           <Badge variant="secondary" className="w-fit rounded-full px-3 py-1 text-xs font-semibold">

@@ -47,7 +47,7 @@ const liturgyFlow = [
   },
   {
     title: "Holy Communion",
-    cue: "Receive Holy Communion according to your Church's discipline, with preparation, confession as needed, fasting, and pastoral guidance.",
+    cue: "Orthodox Christians receive with preparation, confession as needed, fasting, and pastoral guidance.",
     response: "If you are not receiving, pray quietly and ask for a blessing if local practice allows.",
   },
   {
@@ -99,7 +99,7 @@ export function DivineLiturgyCompanion() {
               <div>
                 <h2 className="text-2xl font-semibold tracking-tight">Divine Liturgy companion</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  A reverent guide for newcomers, catechumens, Eastern Christians, and anyone learning to follow the service with more attention.
+                  A reverent guide for newcomers, catechumens, and lifelong Orthodox Christians who want to follow the service with more attention.
                 </p>
               </div>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
