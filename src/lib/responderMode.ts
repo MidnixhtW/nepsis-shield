@@ -44,11 +44,11 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     soft: "border-lime-700/20 bg-lime-700/10",
   },
   law: {
-    card: "border-sky-500/30 bg-gradient-to-br from-sky-500/10 via-card to-blue-950/5",
-    badge: "border-sky-500/30 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-    icon: "bg-sky-500/10 text-sky-700 ring-1 ring-sky-500/25 dark:text-sky-300",
-    button: "bg-sky-700 text-white hover:bg-sky-800 dark:bg-sky-500 dark:text-sky-950 dark:hover:bg-sky-400",
-    soft: "border-sky-500/20 bg-sky-500/10",
+    card: "border-blue-950/35 bg-gradient-to-br from-blue-950/15 via-card to-blue-900/10 dark:border-blue-400/25 dark:from-blue-950/50 dark:to-blue-800/20",
+    badge: "border-blue-950/30 bg-blue-950/10 text-blue-950 dark:border-blue-400/30 dark:bg-blue-400/10 dark:text-blue-200",
+    icon: "bg-blue-950/10 text-blue-950 ring-1 ring-blue-950/25 dark:bg-blue-400/10 dark:text-blue-200 dark:ring-blue-400/25",
+    button: "bg-blue-950 text-white hover:bg-blue-900 dark:bg-blue-500 dark:text-blue-950 dark:hover:bg-blue-400",
+    soft: "border-blue-950/20 bg-blue-950/10 dark:border-blue-400/20 dark:bg-blue-400/10",
   },
   fire: {
     card: "border-red-500/30 bg-gradient-to-br from-red-500/10 via-card to-orange-500/10",
