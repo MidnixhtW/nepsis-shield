@@ -60,7 +60,7 @@ export function PwaInstallCard() {
 
   async function install() {
     if (!installEvent) {
-      showError("Use your browser menu to add Nepsis Shield to the home screen.");
+      showSuccess(browserHint);
       return;
     }
 
@@ -80,7 +80,7 @@ export function PwaInstallCard() {
 
     const registration = await navigator.serviceWorker.getRegistration();
     if (!registration) {
-      showError("Offline support is enabled after the production app is installed or rebuilt.");
+      showError("Offline support is enabled after the published app is opened once while online.");
       return;
     }
 
@@ -106,8 +106,8 @@ export function PwaInstallCard() {
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
-          <Button type="button" className="rounded-2xl" disabled={installed || !installEvent} onClick={install}>
-            <Download className="mr-2 h-4 w-4" /> {installed ? "Installed" : installEvent ? "Download web app" : "Use browser install"}
+          <Button type="button" className="rounded-2xl" disabled={installed} onClick={install}>
+            <Download className="mr-2 h-4 w-4" /> {installed ? "Installed" : installEvent ? "Download web app" : "Show install steps"}
           </Button>
           <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={refreshOfflineCache}>
             <RefreshCw className="mr-2 h-4 w-4" /> Check offline

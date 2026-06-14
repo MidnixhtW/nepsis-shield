@@ -1,7 +1,6 @@
-import { useRef } from "react";
 import { format } from "date-fns";
 import { BookOpen, Crosshair, Download, Hand, HelpCircle, Home, Info, Map, Menu, Settings as SettingsIcon, Shield, Sparkles } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -15,8 +14,6 @@ import {
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
-import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
-import { showSuccess } from "@/utils/toast";
 
 function startTutorial() {
   window.dispatchEvent(new Event(START_TUTORIAL_EVENT));
@@ -117,21 +114,6 @@ function MenuLinks() {
 }
 
 export function AppHeader() {
-  const navigate = useNavigate();
-  const secretTaps = useRef<number[]>([]);
-
-  function handleSecretTap() {
-    const now = Date.now();
-    secretTaps.current = [...secretTaps.current.filter((tap) => now - tap < 5000), now];
-
-    if (secretTaps.current.length >= 7) {
-      secretTaps.current = [];
-      unlockPhilokaliaGuide();
-      showSuccess("Nepsis Compass unlocked.");
-      navigate("/philokalia");
-    }
-  }
-
   return (
     <header className="flex items-center justify-between gap-3">
       <Link to="/today" className="flex min-w-0 items-center gap-3">
@@ -166,14 +148,8 @@ export function AppHeader() {
         </SheetTrigger>
         <SheetContent side="right" className="w-[20rem] rounded-l-3xl">
           <SheetHeader className="text-left">
-            <SheetTitle>
-              <button
-                type="button"
-                className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={handleSecretTap}
-              >
-                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
-              </button>
+            <SheetTitle className="inline-flex items-center gap-2">
+              <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
             </SheetTitle>
             <SheetDescription>
               Today is home base. Prayer, Read, and Tools are the main areas.

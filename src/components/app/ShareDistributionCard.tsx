@@ -12,11 +12,32 @@ function absoluteUrl(path: string) {
 }
 
 async function copyToClipboard(label: string, value: string) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      showSuccess(`${label} copied.`);
+      return;
+    } catch {
+      // Fall through to the textarea copy method below.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+
   try {
-    await navigator.clipboard.writeText(value);
+    const copied = document.execCommand("copy");
+    if (!copied) throw new Error("copy failed");
     showSuccess(`${label} copied.`);
   } catch {
     showError("Couldn't copy to clipboard.");
+  } finally {
+    document.body.removeChild(textarea);
   }
 }
 
@@ -35,7 +56,7 @@ export function ShareDistributionCard() {
   }, []);
 
   async function shareInstall() {
-    if (!navigator.share) {
+    if (typeof navigator.share !== "function") {
       await copyToClipboard("Install message", shareText);
       return;
     }
@@ -48,7 +69,7 @@ export function ShareDistributionCard() {
       });
     } catch (error) {
       if (error instanceof DOMException && error.name === "AbortError") return;
-      showError("Couldn't open the share sheet.");
+      await copyToClipboard("Install message", shareText);
     }
   }
 
