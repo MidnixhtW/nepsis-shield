@@ -77,7 +77,7 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       tag: "bg-blue-950/10 text-blue-950 dark:bg-blue-400/10 dark:text-blue-100",
       checklist: "border-blue-950/25 text-blue-950 dark:border-blue-400/25 dark:text-blue-100",
       primaryButton: "bg-blue-950 text-white hover:bg-blue-900 dark:bg-blue-500 dark:text-blue-950 dark:hover:bg-blue-400",
-      modeButton: "border-blue-950/35 bg-blue-950/10 text-blue-950 hover:bg-blue-950/15 dark:border-blue-400/25 dark:bg-blue-400/10 dark:text-blue-100 dark:hover:bg-blue-400/15",
+      modeButton: "border-blue-950/20 hover:bg-blue-950/10 hover:text-blue-950 dark:border-blue-400/20 dark:hover:bg-blue-400/10 dark:hover:text-blue-100",
       modeButtonActive: "border-blue-950 bg-blue-950 text-white hover:bg-blue-900 dark:border-blue-400 dark:bg-blue-500 dark:text-blue-950 dark:hover:bg-blue-400",
     },
   },
