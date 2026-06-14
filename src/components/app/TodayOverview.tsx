@@ -1,12 +1,16 @@
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
+  ArrowRight,
+  BookOpen,
   CalendarPlus,
   Church,
   ExternalLink,
   Flame,
   Leaf,
+  PenLine,
+  ShieldCheck,
   Sparkles,
   Target,
 } from "lucide-react";
@@ -97,6 +101,40 @@ function FastingBadge({
         <div>{guidance.allowed}</div>
       </div>
     </div>
+  );
+}
+
+function EssentialButton({
+  label,
+  description,
+  icon,
+  onClick,
+  variant = "outline",
+}: {
+  label: string;
+  description: string;
+  icon: ReactNode;
+  onClick?: () => void;
+  variant?: "default" | "outline" | "ghost";
+}) {
+  return (
+    <Button
+      type="button"
+      variant={variant}
+      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl border border-border/70 px-4 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70"
+      onClick={onClick}
+    >
+      <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold leading-tight">{label}</span>
+        <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
+          {description}
+        </span>
+      </span>
+      <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
+    </Button>
   );
 }
 
@@ -217,6 +255,42 @@ export function TodayOverview({
   return (
     <div className="grid gap-4">
       <TodayRhythmDashboard onNavigate={onNavigate} />
+
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Next steps
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">Choose one small action</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              After prayer, continue with reading, reflection, or preparation.
+            </p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
+            <EssentialButton
+              label="Read"
+              description="Open today’s Scripture."
+              icon={<BookOpen className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+            />
+            <EssentialButton
+              label="Reflect"
+              description="Write a short note."
+              icon={<PenLine className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+            />
+            <EssentialButton
+              label="Prepare"
+              description="Confession tools."
+              icon={<ShieldCheck className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
+            />
+          </div>
+        </div>
+      </Card>
+
+      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -371,8 +445,6 @@ export function TodayOverview({
           </div>
         ) : null}
       </Card>
-
-      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
     </div>
   );
 }

@@ -14,9 +14,9 @@
   "categories": ["lifestyle", "education", "books"],
   "icons": [
     {
-      "src": "/nepsis-shield-logo.png",
-      "sizes": "1024x1024",
-      "type": "image/png",
+      "src": "/military-orthodox-cross.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
@@ -26,28 +26,28 @@
       "short_name": "Today",
       "description": "Open the daily dashboard.",
       "url": "/today",
-      "icons": [{ "src": "/nepsis-shield-logo.png", "sizes": "1024x1024", "type": "image/png" }]
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Prayer",
       "short_name": "Pray",
       "description": "Open the prayer section.",
       "url": "/pray?tab=daily",
-      "icons": [{ "src": "/nepsis-shield-logo.png", "sizes": "1024x1024", "type": "image/png" }]
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Read",
       "short_name": "Read",
       "description": "Open daily readings.",
       "url": "/read?read=daily",
-      "icons": [{ "src": "/nepsis-shield-logo.png", "sizes": "1024x1024", "type": "image/png" }]
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Field Manual",
       "short_name": "Field",
       "description": "Open short field prayers and battle-rhythm prompts.",
       "url": "/field-manual",
-      "icons": [{ "src": "/nepsis-shield-logo.png", "sizes": "1024x1024", "type": "image/png" }]
+      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
   ]
 }

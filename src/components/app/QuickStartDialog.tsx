@@ -184,17 +184,6 @@ export function QuickStartDialog() {
               <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
                 Skip for now
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-2xl"
-                onClick={() => {
-                  navigate("/learn?tab=path");
-                  finish();
-                }}
-              >
-                Personalize path
-              </Button>
               <Button type="button" className="rounded-2xl" onClick={startTour}>
                 Start tutorial
               </Button>

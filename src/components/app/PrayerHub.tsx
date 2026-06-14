@@ -8,14 +8,13 @@ import { DailyReflection } from "@/components/app/DailyReflection";
 import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
 import { ConfessionPrep } from "@/components/app/ConfessionPrep";
-import { SleepMode } from "@/components/app/SleepMode";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionBar } from "@/components/app/SectionBar";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { showError, showSuccess } from "@/utils/toast";
 
-export type PrayerTab = "daily" | "rule" | "prayers" | "counter" | "prep" | "journal" | "sleep";
+export type PrayerTab = "daily" | "rule" | "prayers" | "counter" | "prep" | "journal";
 
 export function PrayerHub({
   tab,
@@ -42,7 +41,7 @@ export function PrayerHub({
     <div className="grid gap-4">
       <SectionBar
         title="Prayer"
-        hint="Daily, rule, texts, practice, prep, journal, sleep"
+        hint="Daily, rule, texts, practice, prep, journal"
         action={
           <div className="flex gap-2">
             {onHome ? (
@@ -84,7 +83,7 @@ export function PrayerHub({
       />
 
       <Tabs value={tab} onValueChange={(v) => onTabChange(v as PrayerTab)}>
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-4 lg:grid-cols-7">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-6">
           <TabsTrigger
             value="daily"
             className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
@@ -122,12 +121,6 @@ export function PrayerHub({
           >
             Journal
           </TabsTrigger>
-          <TabsTrigger
-            value="sleep"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
-          >
-            Sleep
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="daily" className="mt-4">
@@ -158,10 +151,6 @@ export function PrayerHub({
 
         <TabsContent value="journal" className="mt-4">
           <DailyReflection />
-        </TabsContent>
-
-        <TabsContent value="sleep" className="mt-4">
-          <SleepMode />
         </TabsContent>
       </Tabs>
     </div>

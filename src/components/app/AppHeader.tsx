@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { AppLogo } from "@/components/app/AppLogo";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
@@ -27,17 +27,17 @@ function MenuLinks() {
     <div className="grid gap-4">
       <div className="rounded-3xl border border-border/60 bg-muted/20 p-3">
         <p className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          Go to
+          Main map
         </p>
         <div className="mt-2 grid gap-1">
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/today">
-              <Home className="mr-2 h-4 w-4" /> Today
+              <Home className="mr-2 h-4 w-4" /> Today dashboard
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
             <Link to="/pray">
-              <Hand className="mr-2 h-4 w-4" /> Pray
+              <Hand className="mr-2 h-4 w-4" /> Prayer
             </Link>
           </Button>
           <Button asChild variant="ghost" className="h-11 justify-start rounded-2xl">
@@ -123,11 +123,13 @@ export function AppHeader() {
   return (
     <header className="flex items-center justify-between gap-3">
       <Link to="/today" className="flex min-w-0 items-center gap-3">
-        <AppLogo className="h-10 w-10" />
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border bg-muted/40 text-primary">
+          <OrthodoxCrossIcon className="h-5 w-5" />
+        </div>
         <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
-            Today · {format(new Date(), "EEE, MMM d")}
+            For those who serve & keep watch · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
 
@@ -158,7 +160,7 @@ export function AppHeader() {
                 className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={handleSecretTap}
               >
-                <AppLogo className="h-7 w-7 rounded-xl" /> More
+                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> More
               </button>
             </SheetTitle>
             <SheetDescription>
