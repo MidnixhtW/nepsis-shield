@@ -11,6 +11,7 @@ import Download from "./pages/Download";
 import FieldManual from "./pages/FieldManual";
 import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
+import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
@@ -28,6 +29,7 @@ function PhilokaliaRoute() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
+      <AccessibilityPreferences />
       <TooltipProvider>
         <Toaster />
         <Sonner />

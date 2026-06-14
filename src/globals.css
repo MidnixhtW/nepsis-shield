@@ -177,6 +177,43 @@
     background: hsl(var(--primary) / 0.25);
   }
 
+  html.a11y-large-text {
+    font-size: 18px;
+  }
+
+  html.a11y-high-contrast {
+    --foreground: 0 0% 100%;
+    --muted-foreground: 0 0% 86%;
+    --border: 0 0% 64%;
+    --ring: 50 100% 62%;
+  }
+
+  html.a11y-high-contrast:not(.dark):not(.red-dark) {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 100%;
+    --muted-foreground: 0 0% 22%;
+    --border: 0 0% 36%;
+  }
+
+  html.a11y-high-contrast body {
+    background-image: none !important;
+  }
+
+  html.a11y-high-contrast :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  html.a11y-reduce-motion *,
+  html.a11y-reduce-motion *::before,
+  html.a11y-reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
   html:not(.dark):not(.red-dark) body {
     background-image:
       radial-gradient(circle at 50% -10%, hsl(43 88% 64% / 0.38), transparent 30rem),

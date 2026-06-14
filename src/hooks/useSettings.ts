@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import {
   getSettings,
   setSettings,
+  type AccessibilityPrefs,
   type AppSettings,
   DEFAULT_SETTINGS,
+  type PersonalizationPrefs,
   type ReminderPrefs,
 } from "@/lib/settings";
 
@@ -13,8 +15,10 @@ export function broadcastSettingsChanged() {
   window.dispatchEvent(new Event(EVENT));
 }
 
-type SettingsPatch = Partial<Omit<AppSettings, "reminders">> & {
+type SettingsPatch = Partial<Omit<AppSettings, "reminders" | "accessibility" | "personalization">> & {
   reminders?: Partial<ReminderPrefs>;
+  accessibility?: Partial<AccessibilityPrefs>;
+  personalization?: Partial<PersonalizationPrefs>;
 };
 
 export function useSettings() {
@@ -36,6 +40,14 @@ export function useSettings() {
       reminders: {
         ...prev.reminders,
         ...(patch.reminders ?? {}),
+      },
+      accessibility: {
+        ...prev.accessibility,
+        ...(patch.accessibility ?? {}),
+      },
+      personalization: {
+        ...prev.personalization,
+        ...(patch.personalization ?? {}),
       },
     };
     setSettings(next);

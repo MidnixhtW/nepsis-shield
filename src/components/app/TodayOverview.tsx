@@ -290,7 +290,7 @@ export function TodayOverview({
   return (
     <div className="grid gap-4">
       <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
-      <GroundMeNow />
+      {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
       <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

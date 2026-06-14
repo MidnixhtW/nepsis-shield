@@ -5,9 +5,19 @@ export type Jurisdiction = "oca" | "goarch" | "antiochian" | "rocor";
 export type LanguagePref = "en" | "el" | "ru" | "ar";
 
 export type ReminderPrefs = {
-  enableNotifications: boolean; // best-effort; may be unsupported
-  morningHour: number; // 0-23
-  eveningHour: number; // 0-23
+  enableNotifications: boolean;
+  morningHour: number;
+  eveningHour: number;
+};
+
+export type AccessibilityPrefs = {
+  largeText: boolean;
+  highContrast: boolean;
+  reduceMotion: boolean;
+};
+
+export type PersonalizationPrefs = {
+  showGroundingOnToday: boolean;
 };
 
 export type AppSettings = {
@@ -15,6 +25,8 @@ export type AppSettings = {
   jurisdiction: Jurisdiction;
   language: LanguagePref;
   reminders: ReminderPrefs;
+  accessibility: AccessibilityPrefs;
+  personalization: PersonalizationPrefs;
 };
 
 const KEY = "app:settings";
@@ -28,6 +40,14 @@ export const DEFAULT_SETTINGS: AppSettings = {
     morningHour: 7,
     eveningHour: 21,
   },
+  accessibility: {
+    largeText: false,
+    highContrast: false,
+    reduceMotion: false,
+  },
+  personalization: {
+    showGroundingOnToday: true,
+  },
 };
 
 export function getSettings(): AppSettings {
@@ -38,6 +58,14 @@ export function getSettings(): AppSettings {
     reminders: {
       ...DEFAULT_SETTINGS.reminders,
       ...(stored?.reminders ?? {}),
+    },
+    accessibility: {
+      ...DEFAULT_SETTINGS.accessibility,
+      ...(stored?.accessibility ?? {}),
+    },
+    personalization: {
+      ...DEFAULT_SETTINGS.personalization,
+      ...(stored?.personalization ?? {}),
     },
   };
 }
