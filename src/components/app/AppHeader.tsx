@@ -127,7 +127,7 @@ export function AppHeader() {
         <div className="min-w-0">
           <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
           <p className="truncate text-xs text-muted-foreground">
-            For those who serve & keep watch · {format(new Date(), "EEE, MMM d")}
+            Orthodox prayer for military & first responders · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
 
