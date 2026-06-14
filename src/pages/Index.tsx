@@ -38,7 +38,7 @@ const legacyMap: Record<
 };
 
 function isPrayerTab(x: string | null): x is PrayerTab {
-  return x === "daily" || x === "rule" || x === "prayers" || x === "counter" || x === "prep" || x === "journal";
+  return x === "daily" || x === "rule" || x === "prayers" || x === "counter" || x === "prep" || x === "journal" || x === "sleep";
 }
 
 function isReadTab(x: string | null): x is ReadTab {
@@ -48,6 +48,8 @@ function isReadTab(x: string | null): x is ReadTab {
 function isLearnTab(x: string | null): x is LearnTab {
   return (
     x === "welcome" ||
+    x === "path" ||
+    x === "challenges" ||
     x === "guide" ||
     x === "qa" ||
     x === "liturgy" ||
