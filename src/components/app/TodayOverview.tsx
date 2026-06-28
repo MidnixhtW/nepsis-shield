@@ -292,18 +292,18 @@ export function TodayOverview({
       <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
       {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
-      <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Companion features
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              Guided paths
             </p>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight">Guided paths when you do not know where to start</h2>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">When you do not know where to start</h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Sleep prayer, short challenges, and a personal path based on what you need most.
+              Choose one focused path and keep the next step simple.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[500px]">
             <EssentialButton
               label="Sleep"
               description="Night prayer + dim timer."
@@ -337,16 +337,16 @@ export function TodayOverview({
               After prayer, continue with reading, reflection, or preparation.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[540px]">
+          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[500px]">
             <EssentialButton
               label="Read"
-              description="Open today’s Scripture."
+              description="Today’s Scripture."
               icon={<BookOpen className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "read", read: "daily" })}
             />
             <EssentialButton
               label="Reflect"
-              description="Write a short note."
+              description="Short journal note."
               icon={<PenLine className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
             />

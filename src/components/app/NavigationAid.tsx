@@ -80,11 +80,11 @@ export function NavigationAid({
   const activeLabel = activeTab === "overview" ? "Overview" : tabLabels[activeTab] ?? activeTab;
 
   return (
-    <Card className="rounded-3xl border-border/60 bg-card/80 p-3 shadow-sm backdrop-blur-xl sm:p-4">
+    <Card className="rounded-3xl border-border/60 bg-card p-3 shadow-sm sm:p-4">
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary">
+            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary">
               {copy.title}
             </Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">
@@ -94,7 +94,7 @@ export function NavigationAid({
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{copy.purpose}</p>
         </div>
 
-        <div className="grid grid-cols-4 gap-1 rounded-2xl border border-border/60 bg-background/45 p-1 lg:min-w-[360px]">
+        <div className="grid grid-cols-4 gap-1 rounded-2xl border border-border/60 bg-background/60 p-1 lg:min-w-[340px]">
           {appMap.map((item) => (
             <Button
               key={item.label}

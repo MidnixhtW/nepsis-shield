@@ -44,15 +44,11 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="tactical-radar-field pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.14),transparent_34rem)]" />
-        <div className="radar-scope radar-scope-primary" />
-        <div className="radar-scope radar-scope-secondary" />
-        <div className="absolute inset-0 tactical-scanlines" />
-        <div className="absolute inset-x-0 top-0 h-px bg-primary/40" />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.08),transparent_32rem)]" />
       </div>
 
-      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/82 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
+      <div className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
         <div className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-5">
           {header}
         </div>
@@ -66,8 +62,8 @@ export function AppShell({
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-primary/25 bg-background/82 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
-        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/92 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/82">
+        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1 rounded-3xl border border-border/50 bg-card/70 p-1 shadow-sm">
           <ToggleGroup
             type="single"
             value={section}
@@ -85,9 +81,9 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-12 rounded-2xl border border-border/45 bg-background/45 px-1 shadow-sm transition-colors",
-                    "hover:border-primary/35 hover:bg-muted/70",
-                    "data-[state=on]:border-primary/45 data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
+                    "h-11 rounded-2xl border border-transparent bg-transparent px-1 transition-colors",
+                    "hover:bg-muted/70",
+                    "data-[state=on]:border-border/60 data-[state=on]:bg-background data-[state=on]:shadow-sm data-[state=on]:text-foreground",
                   )}
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1">
@@ -114,7 +110,7 @@ export function AppShell({
           <Link
             to="/download"
             aria-label="Open install and share"
-            className="flex h-12 flex-col items-center justify-center gap-1 rounded-2xl border border-primary/30 bg-primary/10 px-1 text-primary shadow-sm transition-colors hover:border-primary/45 hover:bg-primary/15"
+            className="flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary"
           >
             <Download className="h-[18px] w-[18px]" />
             <span className="text-[11px] font-medium leading-none">Install</span>

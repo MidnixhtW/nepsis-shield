@@ -173,7 +173,11 @@ export function QuickStartDialog() {
   }
 
   function openFeature() {
-    if (step.route) navigate(step.route);
+    if (!step.route) return;
+    setStoredResponderMode(selectedRole);
+    setStoredItem(ONBOARDING_KEY, true);
+    setOpen(false);
+    navigate(step.route);
   }
 
   return (

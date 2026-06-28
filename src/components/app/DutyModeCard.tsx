@@ -1,8 +1,6 @@
-import { useMemo } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Ambulance,
-  CheckCircle2,
   Crosshair,
   Flag,
   Flame,
@@ -275,11 +273,6 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
   const theme = active.theme;
   const Icon = active.icon;
 
-  const checklist = useMemo(
-    () => ["Prayer", "Safety", "Restraint", "Mercy", "Debrief"],
-    [],
-  );
-
   async function copyPrayer() {
     try {
       await navigator.clipboard.writeText(active.prayer);
@@ -305,17 +298,14 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
   return (
     <Card className={cn("overflow-hidden rounded-3xl shadow-sm transition-colors duration-300", theme.card)}>
       <div className="relative p-5 sm:p-6">
-        <div className={cn("absolute -right-16 -top-16 h-44 w-44 rounded-full border transition-colors duration-300", theme.orbOne)} />
-        <div className={cn("absolute -right-24 -top-24 h-60 w-60 rounded-full border transition-colors duration-300", theme.orbTwo)} />
-
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
           <div>
-            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] transition-colors duration-300", theme.badge)}>
-              <Crosshair className="mr-1.5 h-3.5 w-3.5" /> First responder modes
+            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] transition-colors duration-300", theme.badge)}>
+              <Crosshair className="mr-1.5 h-3.5 w-3.5" /> Field modes
             </Badge>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">Choose your field mode</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Role-specific watch briefs for public safety and emergency service work. Each occupation switches the card color, prayer, tactical focus, practical steps, and after-call reset.
+              Role-specific prayer, focus, and reset language for public safety and service work.
             </p>
 
             <div className="mt-4 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
@@ -390,14 +380,6 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               ))}
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              {checklist.map((item) => (
-                <Badge key={item} variant="outline" className={cn("rounded-full px-3 py-1 text-xs font-medium", theme.checklist)}>
-                  <CheckCircle2 className="mr-1 h-3 w-3" /> {item}
-                </Badge>
-              ))}
-            </div>
-
             <div className="mt-4 flex flex-wrap gap-2">
               <Button type="button" size="sm" className={cn("rounded-2xl", theme.primaryButton)} onClick={copyPrayer}>
                 <Radio className="mr-2 h-4 w-4" /> Copy prayer
@@ -405,9 +387,11 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={copyBrief}>
                 <Search className="mr-2 h-4 w-4" /> Copy brief
               </Button>
-              <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={onOpenFieldManual}>
-                <HeartHandshake className="mr-2 h-4 w-4" /> Field manual
-              </Button>
+              {onOpenFieldManual ? (
+                <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={onOpenFieldManual}>
+                  <HeartHandshake className="mr-2 h-4 w-4" /> Field manual
+                </Button>
+              ) : null}
             </div>
           </div>
         </div>
