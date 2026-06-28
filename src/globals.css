@@ -160,14 +160,10 @@
     max-width: 100%;
   }
 
-  :where(a, button, input, textarea, select, [role="button"], [data-state], .rounded-2xl, .rounded-3xl) {
-    transition-property: color, background-color, border-color, opacity, box-shadow, transform, filter, backdrop-filter;
-    transition-duration: 240ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  :where(a, button, [role="button"]):active {
-    transform: translateY(1px) scale(0.99);
+  :where(a, button, input, textarea, select, [role="button"], [data-state]) {
+    transition-property: color, background-color, border-color, opacity, box-shadow;
+    transition-duration: 180ms;
+    transition-timing-function: ease-out;
   }
 
   body {
@@ -232,15 +228,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .water-page {
-      animation: water-page-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
-    .water-page :where(.rounded-2xl, .rounded-3xl, [class*="rounded-"]) {
-      will-change: transform;
-    }
-
-    .water-page :where(.rounded-2xl, .rounded-3xl):hover {
-      transform: translateY(-1px);
+      animation: water-page-rise 260ms ease-out both;
     }
   }
 
@@ -262,14 +250,12 @@
 @keyframes water-page-rise {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.995);
-    filter: blur(2px);
+    transform: translateY(4px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
+    transform: translateY(0);
   }
 }
 

@@ -61,13 +61,13 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-5xl px-4 pt-3 pb-[calc(5.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="water-page relative z-10 mx-auto w-full max-w-5xl px-4 pt-3 pb-[calc(6.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-background via-background/95 to-transparent px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-4 backdrop-blur-sm">
-        <div className="mx-auto grid max-w-lg grid-cols-6 gap-0.5 rounded-[1.35rem] border border-border/45 bg-card/90 p-1 shadow-lg shadow-black/10 backdrop-blur-xl">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/95 px-2 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
+        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 rounded-2xl border border-border/45 bg-card/85 p-1 shadow-lg shadow-black/10">
           <ToggleGroup
             type="single"
             value={section}
@@ -85,21 +85,21 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-10 rounded-[1rem] border border-transparent bg-transparent px-0.5 transition-colors",
+                    "h-12 rounded-xl border border-transparent bg-transparent px-1 transition-colors",
                     "hover:bg-muted/60",
                     "data-[state=on]:border-primary/25 data-[state=on]:bg-primary/10 data-[state=on]:shadow-sm data-[state=on]:text-foreground",
                   )}
                 >
-                  <div className="flex w-full flex-col items-center justify-center gap-0.5">
+                  <div className="flex w-full flex-col items-center justify-center gap-1">
                     <Icon
                       className={cn(
-                        "h-4 w-4",
+                        "h-[17px] w-[17px]",
                         active ? "text-primary" : "text-muted-foreground",
                       )}
                     />
                     <span
                       className={cn(
-                        "text-[10px] font-medium leading-none",
+                        "text-[11px] font-medium leading-none",
                         active ? "text-foreground" : "text-muted-foreground",
                       )}
                     >
@@ -114,32 +114,32 @@ export function AppShell({
           <Link
             to="/saints"
             aria-label="Open Saints"
-            className="flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
           >
-            <Sparkles className="h-4 w-4" />
-            <span className="text-[10px] font-medium leading-none">Saints</span>
+            <Sparkles className="h-[17px] w-[17px]" />
+            <span className="text-[11px] font-medium leading-none">Saints</span>
           </Link>
 
           <button
             type="button"
             aria-label={toolsMeta.aria}
             className={cn(
-              "flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary",
+              "flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary",
               toolsActive && "border-primary/25 bg-primary/10 text-foreground shadow-sm",
             )}
             onClick={() => onSectionChange("learn")}
           >
-            <ToolsIcon className={cn("h-4 w-4", toolsActive ? "text-primary" : "text-muted-foreground")} />
-            <span className={cn("text-[10px] font-medium leading-none", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
+            <ToolsIcon className={cn("h-[17px] w-[17px]", toolsActive ? "text-primary" : "text-muted-foreground")} />
+            <span className={cn("text-[11px] font-medium leading-none", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
           </button>
 
           <Link
             to="/download"
             aria-label="Open install and share"
-            className="flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
           >
-            <Download className="h-4 w-4" />
-            <span className="text-[10px] font-medium leading-none">Install</span>
+            <Download className="h-[17px] w-[17px]" />
+            <span className="text-[11px] font-medium leading-none">Install</span>
           </Link>
         </div>
       </div>

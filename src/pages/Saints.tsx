@@ -55,8 +55,11 @@ export default function Saints() {
   }, [currentDaily]);
 
   const saintSearch = search.trim();
+  const [showAllPatrons, setShowAllPatrons] = useState(false);
   const localResults = useMemo(() => searchLocalSaintLibrary(saintSearch, currentDaily), [saintSearch, currentDaily]);
   const matchingPatronNeeds = localResults.patrons;
+  const visiblePatronNeeds = saintSearch || showAllPatrons ? matchingPatronNeeds : matchingPatronNeeds.slice(0, 12);
+  const hiddenPatronCount = Math.max(matchingPatronNeeds.length - visiblePatronNeeds.length, 0);
   const matchingSaintNames = localResults.saintNames;
   const ocaSearchQuery = matchingPatronNeeds[0]?.search ?? matchingSaintNames[0]?.name ?? saintSearch;
 
@@ -203,10 +206,10 @@ export default function Saints() {
           ) : null}
 
           {matchingPatronNeeds.length ? (
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {matchingPatronNeeds.map((item) => (
-                <div key={item.need} className="rounded-2xl border border-border/60 bg-background/60 p-4 shadow-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {visiblePatronNeeds.map((item) => (
+                <div key={item.need} className="rounded-2xl border border-border/50 bg-background/55 p-3 shadow-sm sm:p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
                     {item.need}
                   </p>
                   <h3 className="mt-1 text-sm font-semibold">{item.saints}</h3>
@@ -224,6 +227,14 @@ export default function Saints() {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : null}
+
+          {hiddenPatronCount ? (
+            <div className="mt-4 flex justify-center">
+              <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={() => setShowAllPatrons(true)}>
+                Show {hiddenPatronCount} more saints
+              </Button>
             </div>
           ) : null}
 
