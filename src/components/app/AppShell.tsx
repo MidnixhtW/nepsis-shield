@@ -29,11 +29,14 @@ export function AppShell({
 }) {
   const items = useMemo(
     () =>
-      Object.entries(sectionMeta) as Array<
-        [AppSection, (typeof sectionMeta)[AppSection]]
-      >,
+      (["today", "pray", "read"] as AppSection[]).map((key) =>
+        [key, sectionMeta[key]] as [AppSection, (typeof sectionMeta)[AppSection]],
+      ),
     [],
   );
+  const toolsMeta = sectionMeta.learn;
+  const ToolsIcon = toolsMeta.icon;
+  const toolsActive = section === "learn";
 
   return (
     <div className="relative min-h-dvh overflow-hidden bg-background text-foreground">
@@ -119,6 +122,19 @@ export function AppShell({
             <Sparkles className="h-[18px] w-[18px]" />
             <span className="text-[11px] font-medium leading-none">Saints</span>
           </Link>
+
+          <button
+            type="button"
+            aria-label={toolsMeta.aria}
+            className={cn(
+              "flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary",
+              toolsActive && "border-primary/35 bg-primary/15 text-foreground shadow-sm",
+            )}
+            onClick={() => onSectionChange("learn")}
+          >
+            <ToolsIcon className={cn("h-[18px] w-[18px]", toolsActive ? "text-primary" : "text-muted-foreground")} />
+            <span className={cn("text-[11px] font-medium leading-none", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
+          </button>
 
           <Link
             to="/download"
