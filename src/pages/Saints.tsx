@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { Copy, ExternalLink, Heart, Search, Sparkles, Star } from "lucide-react";
@@ -9,112 +9,10 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { fetchDailyData } from "@/lib/orthocal";
-import { findPatronNeeds } from "@/lib/patronSaints";
+import { getLocalSaintIndexStats, searchLocalSaintLibrary, upsertDailySaints } from "@/lib/localSaintSearch";
+import { ocaSaintSearchUrl, patronNeeds } from "@/lib/patronSaints";
 import { getSettings } from "@/lib/settings";
 import { showError, showSuccess } from "@/utils/toast";
-
-const patronNeeds = [
-  {
-    need: "Lost things",
-    saints: "Saint Phanourios",
-    search: "Phanourios",
-    note: "For finding what is lost and returning with gratitude.",
-    prayer:
-      "Holy Greatmartyr Phanourios, pray to God for me. Ask the Lord to reveal what is hidden if it is profitable for my salvation, and teach me to seek first the Kingdom of God. Amen.",
-  },
-  {
-    need: "Anxiety, depression, and dark thoughts",
-    saints: "Saints Porphyrios and Paisios",
-    search: "Porphyrios Paisios",
-    note: "For despondency, fear, intrusive thoughts, and the need for peace.",
-    prayer:
-      "Holy Elders Porphyrios and Paisios, pray to Christ our God for me. Ask Him to quiet my thoughts, guard me from despair, strengthen me to seek help, and fill my heart with repentance, hope, and the light of His mercy. Amen.",
-  },
-  {
-    need: "Illness and healing",
-    saints: "Saint Panteleimon",
-    search: "Panteleimon",
-    note: "For sickness, medical care, surgery, and those who treat the sick.",
-    prayer:
-      "Holy Greatmartyr and Healer Panteleimon, pray to God for the sick and suffering. Ask Christ the Physician of souls and bodies to grant healing, patience, courage, and salvation according to His holy will. Amen.",
-  },
-  {
-    need: "Protection on duty",
-    saints: "Holy Archangel Michael",
-    search: "Archangel Michael",
-    note: "For watchfulness, courage, restraint, and protection from danger.",
-    prayer:
-      "Holy Archangel Michael, commander of the bodiless hosts, defend us and pray to God for us. Guard us from fear, anger, pride, and every temptation that darkens the heart. Amen.",
-  },
-  {
-    need: "Work, money, and housing",
-    saints: "Saint Xenia of Petersburg",
-    search: "Xenia Petersburg",
-    note: "For housing, employment, provision, and trusting God in instability.",
-    prayer:
-      "Blessed Xenia, fool-for-Christ and quick helper, pray to God for me. Ask the Lord to provide what is needful, to open a righteous path, and to make me generous, patient, and faithful in uncertainty. Amen.",
-  },
-  {
-    need: "Travel and safe return",
-    saints: "Saint Nicholas the Wonderworker",
-    search: "Nicholas Wonderworker",
-    note: "For travelers, sailors, commuters, families apart, and those in danger.",
-    prayer:
-      "Holy Father Nicholas, wonderworker and shepherd, pray to God for all who travel by land, sea, and air. Ask the Lord to guide, protect, and return us in peace. Amen.",
-  },
-  {
-    need: "Study, exams, and wisdom",
-    saints: "The Three Holy Hierarchs",
-    search: "Three Holy Hierarchs",
-    note: "For learning, teaching, exams, discernment, and Orthodox formation.",
-    prayer:
-      "Holy Basil the Great, Gregory the Theologian, and John Chrysostom, pray to God for me. Ask the Lord to grant humility, attention, memory, wisdom, and love for the truth. Amen.",
-  },
-  {
-    need: "Anger and strong passions",
-    saints: "Saint Moses the Black",
-    search: "Moses the Black",
-    note: "For anger, violence, resentment, lust, addiction, and repentance after falls.",
-    prayer:
-      "Venerable Moses, who rose from violence to holiness by repentance, pray to God for me. Ask Christ to break the power of anger and passion, give me tears of repentance, and teach me mercy. Amen.",
-  },
-  {
-    need: "Family and children",
-    saints: "Saints Joachim and Anna",
-    search: "Joachim Anna",
-    note: "For marriage, children, parents, infertility, and homes under strain.",
-    prayer:
-      "Holy and righteous Joachim and Anna, grandparents of Christ according to the flesh, pray to God for our homes. Ask Him to bless parents and children, heal wounds, and teach us patience and love. Amen.",
-  },
-  {
-    need: "Grief and loneliness",
-    saints: "Saint Xenia of Petersburg",
-    search: "Xenia Petersburg",
-    note: "For widowhood, grief, abandonment, and loneliness.",
-    prayer:
-      "Blessed Xenia, you bore grief with holy foolishness and love for Christ. Pray for me, that sorrow may not become despair, and that Christ would comfort, strengthen, and save me. Amen.",
-  },
-  {
-    need: "Confession and repentance",
-    saints: "Saint Mary of Egypt",
-    search: "Mary of Egypt",
-    note: "For returning to confession, chastity, repentance, and starting again.",
-    prayer:
-      "Venerable Mother Mary of Egypt, pray to God for me. Ask the Lord to grant me true repentance, courage to confess, freedom from shame, and the strength to rise again. Amen.",
-  },
-  {
-    need: "Before building or creating",
-    saints: "Saint Joseph the Betrothed",
-    search: "Joseph Betrothed",
-    note: "For honest work, craft, discipline, and serving others through what you build.",
-    prayer:
-      "Holy and righteous Joseph, guardian of the Theotokos and the Christ Child, pray to God for me. Ask the Lord to bless the work of my hands, keep me humble, and make my labor useful and pure. Amen.",
-  },
-];
-
-function ocaSaintSearchUrl(query: string) {
-  return `https://www.oca.org/saints/lives?search=${encodeURIComponent(query)}`;
-}
 
 async function copyPrayer(label: string, prayer: string) {
   try {
@@ -130,18 +28,37 @@ export default function Saints() {
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
   const settings = useMemo(() => getSettings(), []);
   const [search, setSearch] = useState("");
+  const [localStats, setLocalStats] = useState(() => getLocalSaintIndexStats());
 
   const q = useQuery({
     queryKey: ["daily", settings.calendarMode, dayKey],
     queryFn: () => fetchDailyData(today, settings.calendarMode),
   });
 
-  const saintSearch = search.trim();
-  const matchingPatronNeeds = useMemo(
-    () => (saintSearch ? findPatronNeeds(saintSearch, patronNeeds.length) : patronNeeds),
-    [saintSearch],
+  const currentDaily = useMemo(
+    () =>
+      q.data?.saints?.length
+        ? {
+            dateKey: dayKey,
+            calendarMode: settings.calendarMode,
+            saints: q.data.saints,
+            sourceUrl: q.data.sources.ocaDailyUrl,
+          }
+        : undefined,
+    [dayKey, q.data?.saints, q.data?.sources.ocaDailyUrl, settings.calendarMode],
   );
-  const ocaSearchQuery = matchingPatronNeeds.length === 1 ? matchingPatronNeeds[0].search : saintSearch;
+
+  useEffect(() => {
+    if (!currentDaily) return;
+    upsertDailySaints(currentDaily);
+    setLocalStats(getLocalSaintIndexStats());
+  }, [currentDaily]);
+
+  const saintSearch = search.trim();
+  const localResults = useMemo(() => searchLocalSaintLibrary(saintSearch, currentDaily), [saintSearch, currentDaily]);
+  const matchingPatronNeeds = localResults.patrons;
+  const matchingSaintNames = localResults.saintNames;
+  const ocaSearchQuery = matchingPatronNeeds[0]?.search ?? matchingSaintNames[0]?.name ?? saintSearch;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
@@ -150,7 +67,7 @@ export default function Saints() {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Saints</p>
           <h1 className="text-2xl font-semibold tracking-tight">Lives of the Saints</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Daily commemorations, Orthodox patron saints, and short intercession prayers.
+            Local saint-name, patron, and prayer search with daily commemorations saved from the OCA-linked feed.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -172,43 +89,104 @@ export default function Saints() {
               <Search className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Start here</p>
-              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search a saint by name or need</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Local search</p>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search saints, names, patrons, and prayers</h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Look up a saint, patron, feast, title, or condition like depression in the OCA Lives collection and patron-saints guide.
+                Search works locally across the patron guide, prayer text, and every daily saint list this device has received. Daily names are refreshed from the app’s OCA-linked daily source when that feed updates.
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Try depression, anxiety, Nicholas, Mary of Egypt…"
+                  placeholder="Try depression, Panteleimon, prayer, grief, Nicholas…"
                   className="h-11 rounded-2xl bg-background/70"
                 />
                 {saintSearch ? (
                   <Button asChild className="rounded-2xl">
                     <a href={ocaSaintSearchUrl(ocaSearchQuery)} target="_blank" rel="noopener noreferrer">
-                      Search lives <ExternalLink className="ml-2 h-4 w-4" />
+                      Search OCA lives <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
                 ) : (
                   <Button type="button" disabled className="rounded-2xl">
-                    Search lives <ExternalLink className="ml-2 h-4 w-4" />
+                    Search OCA lives <ExternalLink className="ml-2 h-4 w-4" />
                   </Button>
                 )}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
+                  {patronNeeds.length} patron needs
+                </Badge>
+                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
+                  {localStats.saints} saved daily saints
+                </Badge>
+                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
+                  {localStats.days} saved days
+                </Badge>
               </div>
             </div>
           </div>
         </Card>
 
+        {saintSearch ? (
+          <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                  Local name matches
+                </Badge>
+                <h2 className="mt-3 text-xl font-semibold tracking-tight">Saint names found on this device</h2>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  These results come from today’s commemorations, saved daily updates, and patron-saint names.
+                </p>
+              </div>
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+
+            <Separator className="my-4" />
+
+            {matchingSaintNames.length ? (
+              <div className="grid gap-2 md:grid-cols-2">
+                {matchingSaintNames.map((item) => (
+                  <Button
+                    key={`${item.source}:${item.dateKey ?? "patron"}:${item.name}`}
+                    asChild
+                    variant="outline"
+                    className="btn-wrap h-auto min-h-12 justify-between rounded-2xl border-border/60 bg-background/50 py-3"
+                  >
+                    <a href={ocaSaintSearchUrl(item.name)} target="_blank" rel="noopener noreferrer">
+                      <span className="min-w-0 text-left">
+                        <span className="block font-semibold">{item.name}</span>
+                        <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                          {item.source === "today"
+                            ? "Today’s commemoration"
+                            : item.source === "patron"
+                              ? "Patron guide name"
+                              : `${item.dateKey} · saved daily update`}
+                        </span>
+                      </span>
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No local saint-name matches yet. The index grows as daily commemorations are loaded on this device.
+              </p>
+            )}
+          </Card>
+        ) : null}
+
         <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/15 via-card to-accent/10 p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
               <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
-                There's an app for that
+                Patron guide
               </Badge>
-              <h2 className="mt-3 text-xl font-semibold tracking-tight">Patron saints for common needs</h2>
+              <h2 className="mt-3 text-xl font-semibold tracking-tight">Patron saints and prayers for common needs</h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Find an Orthodox intercessor, pray a short prayer, and open further reading. All prayer is directed to Christ, asking the saints to pray with us and for us.
+                Find an Orthodox intercessor, pray a short prayer, and open further reading. The local search includes saint names, needs, keywords, notes, and prayer text.
               </p>
             </div>
             <Star className="h-5 w-5 text-primary" />
@@ -219,8 +197,8 @@ export default function Saints() {
           {saintSearch ? (
             <p className="mb-3 text-sm text-muted-foreground">
               {matchingPatronNeeds.length
-                ? `Showing patron saints connected with “${saintSearch}”.`
-                : `No patron-saint matches found for “${saintSearch}”. Try anxiety, illness, grief, family, work, or travel.`}
+                ? `Showing local patron and prayer matches for “${saintSearch}”.`
+                : `No patron/prayer matches found for “${saintSearch}”. Try anxiety, illness, grief, family, work, travel, confession, or anger.`}
             </p>
           ) : null}
 
@@ -267,11 +245,11 @@ export default function Saints() {
                   {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
                 </Badge>
                 <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-                  Tap to open OCA lives
+                  Saved locally after load
                 </Badge>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Pick one saint and ask their prayers throughout the day.
+                Today’s daily commemorations are added to local saint search when the feed loads.
               </p>
             </div>
             <Sparkles className="h-5 w-5 text-muted-foreground" />
