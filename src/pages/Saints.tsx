@@ -124,6 +124,22 @@ async function copyPrayer(label: string, prayer: string) {
   }
 }
 
+function matchesPatronNeed(item: (typeof patronNeeds)[number], query: string) {
+  const words = query
+    .toLowerCase()
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter(Boolean);
+
+  if (!words.length) return false;
+
+  const haystack = [item.need, item.saints, item.search, item.note, item.prayer]
+    .join(" ")
+    .toLowerCase();
+
+  return words.every((word) => haystack.includes(word));
+}
+
 export default function Saints() {
   const today = useMemo(() => new Date(), []);
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
@@ -136,6 +152,11 @@ export default function Saints() {
   });
 
   const saintSearch = search.trim();
+  const matchingPatronNeeds = useMemo(
+    () => (saintSearch ? patronNeeds.filter((item) => matchesPatronNeed(item, saintSearch)) : patronNeeds),
+    [saintSearch],
+  );
+  const ocaSearchQuery = matchingPatronNeeds.length === 1 ? matchingPatronNeeds[0].search : saintSearch;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
@@ -167,20 +188,20 @@ export default function Saints() {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Start here</p>
-              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search a saint by name</h2>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search a saint by name or need</h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Look up a saint, patron, feast, or title in the OCA Lives collection.
+                Look up a saint, patron, feast, title, or condition like depression in the OCA Lives collection and patron-saints guide.
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
                 <Input
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Try Nicholas, Mary of Egypt, John Chrysostom…"
+                  placeholder="Try depression, anxiety, Nicholas, Mary of Egypt…"
                   className="h-11 rounded-2xl bg-background/70"
                 />
                 {saintSearch ? (
                   <Button asChild className="rounded-2xl">
-                    <a href={ocaSaintSearchUrl(saintSearch)} target="_blank" rel="noopener noreferrer">
+                    <a href={ocaSaintSearchUrl(ocaSearchQuery)} target="_blank" rel="noopener noreferrer">
                       Search lives <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
@@ -210,28 +231,38 @@ export default function Saints() {
 
           <Separator className="my-4" />
 
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {patronNeeds.map((item) => (
-              <div key={item.need} className="rounded-2xl border border-border/60 bg-background/60 p-4 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-                  {item.need}
-                </p>
-                <h3 className="mt-1 text-sm font-semibold">{item.saints}</h3>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.note}</p>
-                <p className="mt-3 text-sm leading-relaxed text-foreground/90">{item.prayer}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Button type="button" variant="outline" size="sm" className="rounded-2xl border-border/60" onClick={() => void copyPrayer(item.need, item.prayer)}>
-                    <Copy className="mr-2 h-4 w-4" /> Copy
-                  </Button>
-                  <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
-                    <a href={ocaSaintSearchUrl(item.search)} target="_blank" rel="noopener noreferrer">
-                      Read life <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
+          {saintSearch ? (
+            <p className="mb-3 text-sm text-muted-foreground">
+              {matchingPatronNeeds.length
+                ? `Showing patron saints connected with “${saintSearch}”.`
+                : `No patron-saint matches found for “${saintSearch}”. Try anxiety, illness, grief, family, work, or travel.`}
+            </p>
+          ) : null}
+
+          {matchingPatronNeeds.length ? (
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {matchingPatronNeeds.map((item) => (
+                <div key={item.need} className="rounded-2xl border border-border/60 bg-background/60 p-4 shadow-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+                    {item.need}
+                  </p>
+                  <h3 className="mt-1 text-sm font-semibold">{item.saints}</h3>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{item.note}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-foreground/90">{item.prayer}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button type="button" variant="outline" size="sm" className="rounded-2xl border-border/60" onClick={() => void copyPrayer(item.need, item.prayer)}>
+                      <Copy className="mr-2 h-4 w-4" /> Copy
+                    </Button>
+                    <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+                      <a href={ocaSaintSearchUrl(item.search)} target="_blank" rel="noopener noreferrer">
+                        Read life <ExternalLink className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : null}
 
           <div className="mt-4 rounded-2xl border border-border/60 bg-background/60 p-4">
             <p className="text-sm leading-relaxed text-muted-foreground">
