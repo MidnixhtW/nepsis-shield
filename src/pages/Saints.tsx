@@ -160,6 +160,40 @@ export default function Saints() {
       </div>
 
       <div className="mt-5 grid gap-4">
+        <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+              <Search className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Start here</p>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search a saint by name</h2>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                Look up a saint, patron, feast, or title in the OCA Lives collection.
+              </p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+                <Input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Try Nicholas, Mary of Egypt, John Chrysostom…"
+                  className="h-11 rounded-2xl bg-background/70"
+                />
+                {saintSearch ? (
+                  <Button asChild className="rounded-2xl">
+                    <a href={ocaSaintSearchUrl(saintSearch)} target="_blank" rel="noopener noreferrer">
+                      Search lives <ExternalLink className="ml-2 h-4 w-4" />
+                    </a>
+                  </Button>
+                ) : (
+                  <Button type="button" disabled className="rounded-2xl">
+                    Search lives <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </Card>
+
         <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/15 via-card to-accent/10 p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -259,37 +293,6 @@ export default function Saints() {
               )}
             </div>
           )}
-        </Card>
-
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-          <div className="flex items-start gap-3">
-            <Search className="mt-1 h-5 w-5 text-primary" />
-            <div className="min-w-0 flex-1">
-              <h2 className="text-base font-semibold tracking-tight">Search a saint by name</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Look up a saint, patron, feast, or title in the OCA Lives collection.
-              </p>
-              <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Try Nicholas, Mary of Egypt, John Chrysostom…"
-                  className="h-11 rounded-2xl"
-                />
-                {saintSearch ? (
-                  <Button asChild className="rounded-2xl">
-                    <a href={ocaSaintSearchUrl(saintSearch)} target="_blank" rel="noopener noreferrer">
-                      Search lives <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                ) : (
-                  <Button type="button" disabled className="rounded-2xl">
-                    Search lives <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
         </Card>
 
         <Card className="rounded-3xl border-border/60 bg-muted/20 p-5 shadow-sm">

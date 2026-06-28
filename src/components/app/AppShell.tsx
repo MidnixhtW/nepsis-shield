@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { BookOpen, Download, Hand, Home, MoreHorizontal } from "lucide-react";
+import { BookOpen, Download, Hand, Home, MoreHorizontal, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -67,7 +67,7 @@ export function AppShell({
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/92 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/82">
-        <div className="mx-auto grid max-w-lg grid-cols-5 gap-1 rounded-3xl border border-border/50 bg-card/70 p-1 shadow-sm">
+        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 rounded-3xl border border-border/50 bg-card/70 p-1 shadow-sm">
           <ToggleGroup
             type="single"
             value={section}
@@ -110,6 +110,15 @@ export function AppShell({
               );
             })}
           </ToggleGroup>
+
+          <Link
+            to="/saints"
+            aria-label="Open Saints"
+            className="flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary"
+          >
+            <Sparkles className="h-[18px] w-[18px]" />
+            <span className="text-[11px] font-medium leading-none">Saints</span>
+          </Link>
 
           <Link
             to="/download"
