@@ -155,20 +155,20 @@ export function AppHeader() {
   }
 
   return (
-    <header className="flex items-center justify-between gap-3">
-      <Link to="/today" className="flex min-w-0 items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-border/70 bg-card text-primary shadow-sm">
-          <OrthodoxCrossIcon className="h-5 w-5" />
+    <header className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+      <Link to="/today" className="flex min-w-0 items-center gap-2 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:gap-3">
+        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-primary shadow-sm sm:h-9 sm:w-9 sm:rounded-2xl">
+          <OrthodoxCrossIcon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
         <div className="min-w-0">
-          <h1 className="truncate text-base font-semibold tracking-tight">Nepsis Shield</h1>
-          <p className="truncate text-xs text-muted-foreground">
+          <h1 className="truncate text-sm font-semibold tracking-tight sm:text-base">Nepsis Shield</h1>
+          <p className="truncate text-[11px] text-muted-foreground max-[359px]:hidden sm:text-xs">
             Orthodox field companion · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
       </Link>
 
-      <div className="hidden items-center gap-1 sm:flex">
+      <div className="hidden shrink-0 items-center gap-1 sm:flex">
         <ThemeToggle />
         <Button type="button" size="sm" variant="ghost" className="rounded-2xl" onClick={startTutorial}>
           Tutorial
