@@ -13,7 +13,6 @@ import {
   Moon,
   MoonStar,
   RotateCcw,
-  Shield,
   Sparkles,
   Sun,
   Sunset,
@@ -450,7 +449,7 @@ function BeginTodayCalendar() {
 
   if (q.isLoading) {
     return (
-      <div className="mt-4 rounded-2xl border border-border/60 bg-background/45 p-4 text-sm text-muted-foreground">
+      <div className="rounded-3xl border border-border/60 bg-card p-5 text-sm text-muted-foreground shadow-sm">
         Loading today’s fasting and saints…
       </div>
     );
@@ -458,7 +457,7 @@ function BeginTodayCalendar() {
 
   if (q.isError || !q.data) {
     return (
-      <div className="mt-4 rounded-2xl border border-border/60 bg-background/45 p-4 text-sm text-muted-foreground">
+      <div className="rounded-3xl border border-border/60 bg-card p-5 text-sm leading-relaxed text-muted-foreground shadow-sm">
         Today’s fasting and saints could not be loaded. Keep your parish calendar and priest as your guide.
       </div>
     );
@@ -468,52 +467,100 @@ function BeginTodayCalendar() {
   const firstSaint = saints[0];
 
   return (
-    <div className="mt-4 grid gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:grid-cols-2">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          <Leaf className="h-3.5 w-3.5 text-primary" /> Fasting today
-        </div>
-        <p className="mt-2 text-sm font-semibold leading-relaxed">
-          {fastingLabel(q.data.fasting.description, q.data.fasting.exception)}
-        </p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          Follow your parish calendar, health needs, and priest’s blessing.
+    <Card className="overflow-hidden rounded-3xl border-primary/20 bg-card shadow-sm">
+      <div className="border-b border-border/60 bg-primary/5 px-5 py-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Before you begin</p>
+        <h3 className="mt-1 text-lg font-semibold tracking-tight">Today in the Church</h3>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          Let the calendar set the tone: fasting teaches watchfulness, and the saints remind us we never pray alone.
         </p>
       </div>
 
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-primary" /> Saints of the day
-        </div>
-        <div className="mt-2 grid gap-1.5">
-          {saints.length ? (
-            saints.map((saint) => (
-              <p key={saint} className="text-sm leading-relaxed">
-                {saint}
+      <div className="grid gap-0 divide-y divide-border/60 md:grid-cols-2 md:divide-x md:divide-y-0">
+        <section className="p-5">
+          <div className="flex items-start gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-amber-500/12 text-amber-700 dark:text-amber-200">
+              <Leaf className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Fasting today</p>
+              <p className="mt-1 text-sm font-semibold leading-relaxed">
+                {fastingLabel(q.data.fasting.description, q.data.fasting.exception)}
               </p>
-            ))
-          ) : (
-            <p className="text-sm text-muted-foreground">See today’s calendar commemorations.</p>
-          )}
-        </div>
-        {firstSaint ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-3 h-auto min-h-9 rounded-2xl border-border/60 bg-background/60 text-xs"
-            onClick={() =>
-              window.open(
-                `https://www.oca.org/saints/lives?search=${encodeURIComponent(firstSaint)}`,
-                "_blank",
-                "noopener,noreferrer",
-              )
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Follow your parish calendar, health needs, and priest’s blessing.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="p-5">
+          <div className="flex items-start gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+              <Sparkles className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Saints of the day</p>
+              <div className="mt-1 grid gap-1.5">
+                {saints.length ? (
+                  saints.map((saint) => (
+                    <p key={saint} className="text-sm leading-relaxed">
+                      {saint}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">See today’s calendar commemorations.</p>
+                )}
+              </div>
+              {firstSaint ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 h-auto min-h-9 rounded-2xl border-border/60 bg-background/60 text-xs"
+                  onClick={() =>
+                    window.open(
+                      `https://www.oca.org/saints/lives?search=${encodeURIComponent(firstSaint)}`,
+                      "_blank",
+                      "noopener,noreferrer",
+                    )
+                  }
+                >
+                  Read first life <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        </section>
+      </div>
+    </Card>
+  );
+}
+
+function PrayerFlowSteps({ current }: { current: number }) {
+  const items = ["Prepare", "Pray", "Continue"];
+
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {items.map((item, index) => {
+        const active = index === current;
+        const complete = index < current;
+        return (
+          <div
+            key={item}
+            className={
+              "rounded-2xl border px-3 py-2 text-center text-xs font-semibold transition-colors " +
+              (active
+                ? "border-primary/40 bg-primary/10 text-primary"
+                : complete
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200"
+                  : "border-border/60 bg-muted/20 text-muted-foreground")
             }
           >
-            Read first life <ExternalLink className="ml-2 h-3.5 w-3.5" />
-          </Button>
-        ) : null}
-      </div>
+            {item}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -563,6 +610,7 @@ export function DailyPrayerFlow() {
   const done = !!completed[progressKey];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
+  const flowStage = done ? 2 : stepIndex === 0 ? 0 : 1;
 
   useEffect(() => {
     if (!hydrated || done) return;
@@ -636,7 +684,7 @@ export function DailyPrayerFlow() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.7fr)] lg:items-start">
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold tracking-tight">Daily Prayer Flow</h2>
@@ -644,11 +692,16 @@ export function DailyPrayerFlow() {
                 {mode === "personal" ? "Developer's Rule" : prayerMeta[time].label}
               </Badge>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Choose morning, evening, night, or the developer's Orthodox prayer rule and move through a calm step-by-step rule.
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Set the rule, receive today’s Church calendar, then pray one step at a time.
             </p>
           </div>
-          <Shield className="h-5 w-5 text-muted-foreground" />
+          <div className="grid gap-2">
+            <PrayerFlowSteps current={flowStage} />
+            <p className="text-xs leading-relaxed text-muted-foreground lg:text-right">
+              Keep the movement simple: prepare the heart, pray the rule, then carry it into the day.
+            </p>
+          </div>
         </div>
 
         <Separator className="my-4" />
@@ -747,6 +800,8 @@ export function DailyPrayerFlow() {
         </div>
       </Card>
 
+      {stepIndex === 0 && !done ? <BeginTodayCalendar /> : null}
+
       <Card
         className={
           "rounded-3xl border-border/60 p-5 shadow-sm transition-colors " +
@@ -790,7 +845,6 @@ export function DailyPrayerFlow() {
               <p key={index}>{line}</p>
             ))}
           </div>
-          {stepIndex === 0 ? <BeginTodayCalendar /> : null}
         </div>
 
         {!readerPrefs.focus ? (
@@ -823,7 +877,7 @@ export function DailyPrayerFlow() {
                 setStepIndex((i) => i + 1);
               }}
             >
-              {stepIndex >= steps.length - 1 ? "Mark complete" : "Next"}
+              {stepIndex >= steps.length - 1 ? "Mark complete" : stepIndex === 0 ? "Begin prayer" : "Next"}
               {stepIndex >= steps.length - 1 ? <Check className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
             </Button>
           </div>
