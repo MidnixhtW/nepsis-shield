@@ -143,6 +143,10 @@
     overflow-x: hidden;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   #root {
     width: 100%;
     overflow-x: hidden;
@@ -154,6 +158,16 @@
 
   :where(button, [role="button"]) {
     max-width: 100%;
+  }
+
+  :where(a, button, input, textarea, select, [role="button"], [data-state], .rounded-2xl, .rounded-3xl) {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-duration: 240ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :where(a, button, [role="button"]):active {
+    transform: translateY(1px) scale(0.99);
   }
 
   body {
@@ -216,6 +230,20 @@
     transition-duration: 0.001ms !important;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    .water-page {
+      animation: water-page-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .water-page :where(.rounded-2xl, .rounded-3xl, [class*="rounded-"]) {
+      will-change: transform;
+    }
+
+    .water-page :where(.rounded-2xl, .rounded-3xl):hover {
+      transform: translateY(-1px);
+    }
+  }
+
   html:not(.dark):not(.red-dark) body {
     background-image:
       radial-gradient(circle at 50% -10%, hsl(43 96% 58% / 0.30), transparent 30rem),
@@ -228,6 +256,20 @@
       radial-gradient(circle at 18% 8%, hsl(0 78% 50% / 0.14), transparent 25rem),
       radial-gradient(circle at 82% 14%, hsl(357 82% 44% / 0.10), transparent 22rem),
       linear-gradient(135deg, hsl(0 0% 2%), hsl(0 0% 4%) 45%, hsl(0 28% 8%));
+  }
+}
+
+@keyframes water-page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 

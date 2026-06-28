@@ -61,7 +61,7 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-3 pb-[calc(5.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="water-page relative z-10 mx-auto w-full max-w-5xl px-4 pt-3 pb-[calc(5.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
       >
         {children}
       </main>
