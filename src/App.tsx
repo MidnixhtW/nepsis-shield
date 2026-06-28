@@ -15,7 +15,6 @@ import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferen
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
-import { SaintSearchAssistant } from "@/components/app/SaintSearchAssistant";
 import Saints from "@/pages/Saints";
 import Settings from "@/pages/Settings";
 import PhilokaliaGuide from "@/pages/PhilokaliaGuide";
@@ -38,7 +37,6 @@ const App = () => (
           <ConnectionStatusBanner />
           <SaintMichaelIntro />
           <ScrollToTop />
-          <SaintSearchAssistant />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/privacy" element={<Privacy />} />
