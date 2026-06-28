@@ -37,9 +37,9 @@ export const responderModeAccentClasses: Record<ResponderMode, {
   soft: string;
 }> = {
   military: {
-    card: "border-lime-700/30 bg-gradient-to-br from-lime-700/10 via-card to-stone-500/10",
-    badge: "border-lime-700/30 bg-lime-700/10 text-lime-900 dark:text-lime-300",
-    icon: "bg-lime-700/10 text-lime-900 ring-1 ring-lime-700/25 dark:text-lime-300",
+    card: "border-lime-700/40 bg-gradient-to-br from-lime-700/16 via-card to-stone-500/14",
+    badge: "border-lime-700/40 bg-lime-700/15 text-lime-950 dark:text-lime-200",
+    icon: "bg-lime-700/15 text-lime-950 ring-1 ring-lime-700/35 dark:text-lime-200",
     button: "bg-lime-800 text-white hover:bg-lime-900 dark:bg-lime-400 dark:text-lime-950 dark:hover:bg-lime-300",
     soft: "border-lime-700/20 bg-lime-700/10",
   },
@@ -51,9 +51,9 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     soft: "border-blue-950/20 bg-blue-950/10 dark:border-blue-400/20 dark:bg-blue-400/10",
   },
   fire: {
-    card: "border-red-500/30 bg-gradient-to-br from-red-500/10 via-card to-orange-500/10",
-    badge: "border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300",
-    icon: "bg-red-500/10 text-red-700 ring-1 ring-red-500/25 dark:text-red-300",
+    card: "border-red-500/40 bg-gradient-to-br from-red-500/16 via-card to-orange-500/15",
+    badge: "border-red-500/40 bg-red-500/15 text-red-800 dark:text-red-200",
+    icon: "bg-red-500/15 text-red-800 ring-1 ring-red-500/35 dark:text-red-200",
     button: "bg-red-700 text-white hover:bg-red-800 dark:bg-red-500 dark:text-red-950 dark:hover:bg-red-400",
     soft: "border-red-500/20 bg-red-500/10",
   },
@@ -65,9 +65,9 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     soft: "border-slate-200 bg-white/80 dark:border-white/20 dark:bg-white/10",
   },
   dispatch: {
-    card: "border-violet-500/30 bg-gradient-to-br from-violet-500/10 via-card to-fuchsia-500/10",
-    badge: "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-300",
-    icon: "bg-violet-500/10 text-violet-700 ring-1 ring-violet-500/25 dark:text-violet-300",
+    card: "border-violet-500/40 bg-gradient-to-br from-violet-500/16 via-card to-fuchsia-500/15",
+    badge: "border-violet-500/40 bg-violet-500/15 text-violet-800 dark:text-violet-200",
+    icon: "bg-violet-500/15 text-violet-800 ring-1 ring-violet-500/35 dark:text-violet-200",
     button: "bg-violet-700 text-white hover:bg-violet-800 dark:bg-violet-500 dark:text-violet-950 dark:hover:bg-violet-400",
     soft: "border-violet-500/20 bg-violet-500/10",
   },
@@ -79,9 +79,9 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     soft: "border-slate-500/20 bg-slate-500/10",
   },
   chaplain: {
-    card: "border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-card to-yellow-500/10",
-    badge: "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300",
-    icon: "bg-amber-500/10 text-amber-800 ring-1 ring-amber-500/25 dark:text-amber-300",
+    card: "border-amber-500/40 bg-gradient-to-br from-amber-500/16 via-card to-yellow-500/16",
+    badge: "border-amber-500/40 bg-amber-500/15 text-amber-900 dark:text-amber-200",
+    icon: "bg-amber-500/15 text-amber-900 ring-1 ring-amber-500/35 dark:text-amber-200",
     button: "bg-amber-700 text-white hover:bg-amber-800 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300",
     soft: "border-amber-500/20 bg-amber-500/10",
   },

@@ -45,7 +45,7 @@ export function AppShell({
       </a>
 
       <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.08),transparent_32rem)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.14),transparent_32rem),radial-gradient(circle_at_90%_8%,hsl(var(--accent)/0.10),transparent_24rem)]" />
       </div>
 
       <div className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
@@ -83,7 +83,7 @@ export function AppShell({
                   className={cn(
                     "h-11 rounded-2xl border border-transparent bg-transparent px-1 transition-colors",
                     "hover:bg-muted/70",
-                    "data-[state=on]:border-border/60 data-[state=on]:bg-background data-[state=on]:shadow-sm data-[state=on]:text-foreground",
+                    "data-[state=on]:border-primary/35 data-[state=on]:bg-primary/15 data-[state=on]:shadow-sm data-[state=on]:text-foreground",
                   )}
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1">

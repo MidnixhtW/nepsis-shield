@@ -32,9 +32,9 @@ export function OrthodoxHero({
   onAction?: (to: { section: "today" | "pray" | "read" | "learn"; tab?: string; read?: string }) => void;
 }) {
   return (
-    <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
+    <Card className="overflow-hidden rounded-3xl border-primary/25 bg-gradient-to-br from-primary/15 via-card to-accent/10 shadow-sm">
       <div className="relative p-5 sm:p-7">
-        <OrthodoxCrossIcon className="absolute -right-5 -top-5 h-32 w-32 text-primary/[0.04]" />
+        <OrthodoxCrossIcon className="absolute -right-5 -top-5 h-32 w-32 text-primary/[0.08]" />
 
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
           <div>
