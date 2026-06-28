@@ -160,13 +160,11 @@
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.13), transparent 25rem),
-      radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.09), transparent 22rem),
-      linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      radial-gradient(circle at 18% 8%, hsl(var(--primary) / 0.10), transparent 26rem),
+      radial-gradient(circle at 82% 14%, hsl(var(--accent) / 0.07), transparent 24rem),
       linear-gradient(135deg, hsl(140 40% 2%), hsl(140 30% 4%) 45%, hsl(132 28% 6%));
-    background-position: center, center, 0 0, 0 0, center;
-    background-size: auto, auto, 44px 44px, 44px 44px, auto;
+    background-position: center, center, center;
+    background-size: auto, auto, auto;
     background-attachment: fixed;
 
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
@@ -220,19 +218,15 @@
 
   html:not(.dark):not(.red-dark) body {
     background-image:
-      radial-gradient(circle at 50% -10%, hsl(43 96% 58% / 0.48), transparent 30rem),
-      radial-gradient(circle at 12% 12%, hsl(7 78% 43% / 0.22), transparent 24rem),
-      radial-gradient(circle at 88% 18%, hsl(221 72% 34% / 0.26), transparent 26rem),
-      radial-gradient(ellipse at 18% 78%, hsl(42 86% 50% / 0.26) 0 16%, transparent 17%),
-      linear-gradient(135deg, hsl(43 84% 96%), hsl(42 66% 91%) 46%, hsl(39 68% 84%));
+      radial-gradient(circle at 50% -10%, hsl(43 96% 58% / 0.30), transparent 30rem),
+      radial-gradient(circle at 88% 18%, hsl(221 72% 34% / 0.16), transparent 26rem),
+      linear-gradient(135deg, hsl(43 84% 96%), hsl(42 66% 91%) 46%, hsl(39 68% 86%));
   }
 
   html.red-dark body {
     background-image:
-      radial-gradient(circle at 18% 8%, hsl(0 78% 50% / 0.20), transparent 25rem),
-      radial-gradient(circle at 82% 14%, hsl(357 82% 44% / 0.14), transparent 22rem),
-      linear-gradient(hsl(0 78% 50% / 0.055) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(0 78% 50% / 0.055) 1px, transparent 1px),
+      radial-gradient(circle at 18% 8%, hsl(0 78% 50% / 0.14), transparent 25rem),
+      radial-gradient(circle at 82% 14%, hsl(357 82% 44% / 0.10), transparent 22rem),
       linear-gradient(135deg, hsl(0 0% 2%), hsl(0 0% 4%) 45%, hsl(0 28% 8%));
   }
 }

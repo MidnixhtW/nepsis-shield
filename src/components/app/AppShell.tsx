@@ -47,16 +47,13 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="tactical-radar-field pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_34rem),radial-gradient(circle_at_90%_8%,hsl(var(--accent)/0.10),transparent_24rem)]" />
-        <div className="radar-scope radar-scope-primary" />
-        <div className="radar-scope radar-scope-secondary" />
-        <div className="absolute inset-0 tactical-scanlines" />
-        <div className="absolute inset-x-0 top-0 h-px bg-primary/35" />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.10),transparent_32rem),radial-gradient(circle_at_90%_8%,hsl(var(--accent)/0.07),transparent_24rem)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-primary/20" />
       </div>
 
-      <div className="sticky top-0 z-30 border-b border-border/60 bg-background/88 backdrop-blur-xl supports-[backdrop-filter]:bg-background/78">
-        <div className="mx-auto w-full max-w-5xl px-4 py-2.5 sm:px-5">
+      <div className="sticky top-0 z-30 border-b border-border/45 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
+        <div className="mx-auto w-full max-w-5xl px-4 py-2 sm:px-5">
           {header}
         </div>
       </div>
@@ -64,13 +61,13 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-4 pb-[calc(5.8rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="relative z-10 mx-auto w-full max-w-5xl px-4 pt-3 pb-[calc(5.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/60 bg-background/92 px-3 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl supports-[backdrop-filter]:bg-background/82">
-        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 rounded-3xl border border-border/50 bg-card/70 p-1 shadow-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-background via-background/95 to-transparent px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-4 backdrop-blur-sm">
+        <div className="mx-auto grid max-w-lg grid-cols-6 gap-0.5 rounded-[1.35rem] border border-border/45 bg-card/90 p-1 shadow-lg shadow-black/10 backdrop-blur-xl">
           <ToggleGroup
             type="single"
             value={section}
@@ -88,21 +85,21 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-11 rounded-2xl border border-transparent bg-transparent px-1 transition-colors",
-                    "hover:bg-muted/70",
-                    "data-[state=on]:border-primary/35 data-[state=on]:bg-primary/15 data-[state=on]:shadow-sm data-[state=on]:text-foreground",
+                    "h-10 rounded-[1rem] border border-transparent bg-transparent px-0.5 transition-colors",
+                    "hover:bg-muted/60",
+                    "data-[state=on]:border-primary/25 data-[state=on]:bg-primary/10 data-[state=on]:shadow-sm data-[state=on]:text-foreground",
                   )}
                 >
-                  <div className="flex w-full flex-col items-center justify-center gap-1">
+                  <div className="flex w-full flex-col items-center justify-center gap-0.5">
                     <Icon
                       className={cn(
-                        "h-[18px] w-[18px]",
+                        "h-4 w-4",
                         active ? "text-primary" : "text-muted-foreground",
                       )}
                     />
                     <span
                       className={cn(
-                        "text-[11px] font-medium leading-none",
+                        "text-[10px] font-medium leading-none",
                         active ? "text-foreground" : "text-muted-foreground",
                       )}
                     >
@@ -117,32 +114,32 @@ export function AppShell({
           <Link
             to="/saints"
             aria-label="Open Saints"
-            className="flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary"
+            className="flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
           >
-            <Sparkles className="h-[18px] w-[18px]" />
-            <span className="text-[11px] font-medium leading-none">Saints</span>
+            <Sparkles className="h-4 w-4" />
+            <span className="text-[10px] font-medium leading-none">Saints</span>
           </Link>
 
           <button
             type="button"
             aria-label={toolsMeta.aria}
             className={cn(
-              "flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary",
-              toolsActive && "border-primary/35 bg-primary/15 text-foreground shadow-sm",
+              "flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary",
+              toolsActive && "border-primary/25 bg-primary/10 text-foreground shadow-sm",
             )}
             onClick={() => onSectionChange("learn")}
           >
-            <ToolsIcon className={cn("h-[18px] w-[18px]", toolsActive ? "text-primary" : "text-muted-foreground")} />
-            <span className={cn("text-[11px] font-medium leading-none", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
+            <ToolsIcon className={cn("h-4 w-4", toolsActive ? "text-primary" : "text-muted-foreground")} />
+            <span className={cn("text-[10px] font-medium leading-none", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
           </button>
 
           <Link
             to="/download"
             aria-label="Open install and share"
-            className="flex h-11 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/70 hover:text-primary"
+            className="flex h-10 flex-col items-center justify-center gap-0.5 rounded-[1rem] border border-transparent bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
           >
-            <Download className="h-[18px] w-[18px]" />
-            <span className="text-[11px] font-medium leading-none">Install</span>
+            <Download className="h-4 w-4" />
+            <span className="text-[10px] font-medium leading-none">Install</span>
           </Link>
         </div>
       </div>

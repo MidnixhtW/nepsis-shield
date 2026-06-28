@@ -61,20 +61,20 @@ export default function Saints() {
   const ocaSearchQuery = matchingPatronNeeds[0]?.search ?? matchingSaintNames[0]?.name ?? saintSearch;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
+    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-4 sm:pt-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+        <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Saints</p>
           <h1 className="text-2xl font-semibold tracking-tight">Lives of the Saints</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Local saint-name, patron, and prayer search with daily commemorations saved from the OCA-linked feed.
+            Search locally by saint, need, or prayer. Daily commemorations save automatically after they load.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/today">Back to app</Link>
+          <Button asChild variant="outline" size="sm" className="rounded-2xl border-border/60">
+            <Link to="/today">Back</Link>
           </Button>
-          <Button asChild className="rounded-2xl">
+          <Button asChild size="sm" className="rounded-2xl">
             <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">
               OCA Lives <ExternalLink className="ml-2 h-4 w-4" />
             </a>
@@ -82,17 +82,17 @@ export default function Saints() {
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4">
-        <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
+      <div className="mt-4 grid gap-3 sm:gap-4">
+        <Card className="rounded-3xl border-primary/20 bg-card/85 p-4 shadow-sm backdrop-blur sm:p-5">
           <div className="flex items-start gap-3">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+            <div className="hidden h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary sm:grid">
               <Search className="h-5 w-5" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Local search</p>
-              <h2 className="mt-1 text-lg font-semibold tracking-tight">Search saints, names, patrons, and prayers</h2>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight">Saints, patrons, and prayers</h2>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Search works locally across the patron guide, prayer text, and every daily saint list this device has received. Daily names are refreshed from the app’s OCA-linked daily source when that feed updates.
+                Search names, needs, and prayer text on this device.
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
                 <Input
@@ -114,14 +114,14 @@ export default function Saints() {
                 )}
               </div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
-                  {patronNeeds.length} patron needs
+                <Badge variant="outline" className="rounded-full border-border/50 bg-background/50">
+                  {patronNeeds.length} patrons
                 </Badge>
-                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
-                  {localStats.saints} saved daily saints
+                <Badge variant="outline" className="rounded-full border-border/50 bg-background/50">
+                  {localStats.saints} saints
                 </Badge>
-                <Badge variant="outline" className="rounded-full border-border/60 bg-background/60">
-                  {localStats.days} saved days
+                <Badge variant="outline" className="rounded-full border-border/50 bg-background/50">
+                  {localStats.days} days
                 </Badge>
               </div>
             </div>
@@ -129,15 +129,15 @@ export default function Saints() {
         </Card>
 
         {saintSearch ? (
-          <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+          <Card className="rounded-3xl border-border/50 bg-card/85 p-4 shadow-sm sm:p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                  Local name matches
+                  Name matches
                 </Badge>
-                <h2 className="mt-3 text-xl font-semibold tracking-tight">Saint names found on this device</h2>
+                <h2 className="mt-3 text-xl font-semibold tracking-tight">Saint names</h2>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  These results come from today’s commemorations, saved daily updates, and patron-saint names.
+                  From today, saved daily updates, and the patron guide.
                 </p>
               </div>
               <Sparkles className="h-5 w-5 text-primary" />
@@ -178,15 +178,15 @@ export default function Saints() {
           </Card>
         ) : null}
 
-        <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/15 via-card to-accent/10 p-5 shadow-sm">
+        <Card className="rounded-3xl border-primary/20 bg-card/85 p-4 shadow-sm sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                 Patron guide
               </Badge>
-              <h2 className="mt-3 text-xl font-semibold tracking-tight">Patron saints and prayers for common needs</h2>
+              <h2 className="mt-3 text-xl font-semibold tracking-tight">Patron saints and prayers</h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Find an Orthodox intercessor, pray a short prayer, and open further reading. The local search includes saint names, needs, keywords, notes, and prayer text.
+                Short prayers and Orthodox intercessors for common needs.
               </p>
             </div>
             <Star className="h-5 w-5 text-primary" />
@@ -234,7 +234,7 @@ export default function Saints() {
           </div>
         </Card>
 
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <Card className="rounded-3xl border-border/50 bg-card/85 p-4 shadow-sm sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -242,14 +242,14 @@ export default function Saints() {
                   {format(today, "MMMM d")}
                 </Badge>
                 <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-                  {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
+                  {settings.calendarMode === "julian" ? "Old" : "New"} Calendar
                 </Badge>
                 <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-                  Saved locally after load
+                  Auto-saved
                 </Badge>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                Today’s daily commemorations are added to local saint search when the feed loads.
+                Today’s commemorations are added to local search after loading.
               </p>
             </div>
             <Sparkles className="h-5 w-5 text-muted-foreground" />
@@ -289,11 +289,11 @@ export default function Saints() {
           )}
         </Card>
 
-        <Card className="rounded-3xl border-border/60 bg-muted/20 p-5 shadow-sm">
+        <Card className="rounded-3xl border-border/50 bg-muted/15 p-4 shadow-sm sm:p-5">
           <div className="flex items-start gap-3">
             <Heart className="mt-0.5 h-5 w-5 text-muted-foreground" />
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Simple Orthodox practice: “Holy [Name], pray to God for me.” Intercession is never a replacement for Christ; it is the life of the Church asking Christ for mercy together.
+              Simple practice: “Holy [Name], pray to God for me.”
             </p>
           </div>
         </Card>
