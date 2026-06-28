@@ -47,12 +47,9 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.10),transparent_32rem),radial-gradient(circle_at_90%_8%,hsl(var(--accent)/0.07),transparent_24rem)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-primary/20" />
-      </div>
+      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-48 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.06),transparent_28rem)]" />
 
-      <div className="sticky top-0 z-30 border-b border-border/45 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
+      <div className="sticky top-0 z-30 border-b border-border/35 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/85">
         <div className="mx-auto w-full max-w-5xl px-4 py-2 sm:px-5">
           {header}
         </div>
@@ -66,8 +63,8 @@ export function AppShell({
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/95 px-2 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
-        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 rounded-2xl border border-border/45 bg-card/85 p-1 shadow-lg shadow-black/10">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/35 bg-background/95 px-2 pb-[calc(0.55rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-md">
+        <div className="mx-auto grid max-w-xl grid-cols-6 gap-1 rounded-2xl bg-card/90 p-1 shadow-sm">
           <ToggleGroup
             type="single"
             value={section}
@@ -85,9 +82,9 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-12 rounded-xl border border-transparent bg-transparent px-1 transition-colors",
-                    "hover:bg-muted/60",
-                    "data-[state=on]:border-primary/25 data-[state=on]:bg-primary/10 data-[state=on]:shadow-sm data-[state=on]:text-foreground",
+                    "h-12 rounded-xl bg-transparent px-1 transition-colors",
+                    "hover:bg-muted/45",
+                    "data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
                   )}
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1">
@@ -114,7 +111,7 @@ export function AppShell({
           <Link
             to="/saints"
             aria-label="Open Saints"
-            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary"
           >
             <Sparkles className="h-[17px] w-[17px]" />
             <span className="text-[11px] font-medium leading-none">Saints</span>
@@ -124,8 +121,8 @@ export function AppShell({
             type="button"
             aria-label={toolsMeta.aria}
             className={cn(
-              "flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary",
-              toolsActive && "border-primary/25 bg-primary/10 text-foreground shadow-sm",
+              "flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary",
+              toolsActive && "bg-primary/10 text-foreground",
             )}
             onClick={() => onSectionChange("learn")}
           >
@@ -136,7 +133,7 @@ export function AppShell({
           <Link
             to="/download"
             aria-label="Open install and share"
-            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/60 hover:text-primary"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary"
           >
             <Download className="h-[17px] w-[17px]" />
             <span className="text-[11px] font-medium leading-none">Install</span>
