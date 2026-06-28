@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { fetchDailyData } from "@/lib/orthocal";
+import { findPatronNeeds } from "@/lib/patronSaints";
 import { getSettings } from "@/lib/settings";
 import { showError, showSuccess } from "@/utils/toast";
 
@@ -124,22 +125,6 @@ async function copyPrayer(label: string, prayer: string) {
   }
 }
 
-function matchesPatronNeed(item: (typeof patronNeeds)[number], query: string) {
-  const words = query
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => word.trim())
-    .filter(Boolean);
-
-  if (!words.length) return false;
-
-  const haystack = [item.need, item.saints, item.search, item.note, item.prayer]
-    .join(" ")
-    .toLowerCase();
-
-  return words.every((word) => haystack.includes(word));
-}
-
 export default function Saints() {
   const today = useMemo(() => new Date(), []);
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
@@ -153,7 +138,7 @@ export default function Saints() {
 
   const saintSearch = search.trim();
   const matchingPatronNeeds = useMemo(
-    () => (saintSearch ? patronNeeds.filter((item) => matchesPatronNeed(item, saintSearch)) : patronNeeds),
+    () => (saintSearch ? findPatronNeeds(saintSearch, patronNeeds.length) : patronNeeds),
     [saintSearch],
   );
   const ocaSearchQuery = matchingPatronNeeds.length === 1 ? matchingPatronNeeds[0].search : saintSearch;
