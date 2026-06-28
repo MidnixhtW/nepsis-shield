@@ -104,7 +104,7 @@ function MenuLinks() {
 
       <MenuSection title="Library">
         <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Role briefs and prayers" />
-        <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Daily intercession" />
+        <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
         <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
       </MenuSection>
 

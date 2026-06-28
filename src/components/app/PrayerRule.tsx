@@ -44,10 +44,10 @@ type RulePrefs = {
 type RuleProgress = Record<string, boolean>;
 
 const DEFAULT_PREFS: RulePrefs = {
-  mode: "short",
+  mode: "standard",
   includeMeals: true,
-  includeCreed: false,
-  includePsalm50: false,
+  includeCreed: true,
+  includePsalm50: true,
 };
 
 function prefsKey() {
@@ -107,26 +107,29 @@ export function PrayerRule() {
 
   const steps = useMemo(() => {
     const base = [
+      { id: "opening", label: "Opening prayers and Trisagion" },
       { id: "morning", label: "Morning prayer" },
-      { id: "readings", label: "Epistle & Gospel" },
-      { id: "rope", label: "Jesus Prayer" },
-      { id: "evening", label: "Evening prayer" },
+      { id: "readings", label: "Epistle and Gospel" },
+      { id: "rope", label: "Jesus Prayer rope" },
+      { id: "work", label: "Offer today's work to Christ" },
+      { id: "evening", label: "Evening thanksgiving and confession of sins" },
     ];
 
     const modeExtras: Array<{ id: string; label: string }> = [];
     if (prefs.mode === "standard" || prefs.mode === "long") {
-      modeExtras.push({ id: "night", label: "Before sleep" });
-      modeExtras.push({ id: "mercy", label: "Mercy or reconciliation" });
+      modeExtras.push({ id: "intercessions", label: "Intercessions for family, parish, enemies, sick, and departed" });
+      modeExtras.push({ id: "mercy", label: "One act of mercy or reconciliation" });
+      modeExtras.push({ id: "night", label: "Before sleep: Theotokos and guardian angel" });
     }
     if (prefs.mode === "long") {
-      modeExtras.push({ id: "intercessions", label: "Intercessions" });
-      modeExtras.push({ id: "silence", label: "Stillness timer" });
+      modeExtras.push({ id: "ephraim", label: "Prayer of St. Ephraim with bows" });
+      modeExtras.push({ id: "silence", label: "Five minutes of stillness before God" });
     }
 
     const extras = [] as Array<{ id: string; label: string }>;
 
     if (prefs.includePsalm50) extras.push({ id: "psalm50", label: "Psalm 50" });
-    if (prefs.includeCreed) extras.push({ id: "creed", label: "The Creed" });
+    if (prefs.includeCreed) extras.push({ id: "creed", label: "The Nicene Creed" });
     if (prefs.includeMeals) {
       extras.push({ id: "before_meals", label: "Before meals" });
       extras.push({ id: "after_meals", label: "After meals" });
@@ -137,7 +140,7 @@ export function PrayerRule() {
       label: step.label,
     }));
 
-    return [...base.slice(0, 1), ...extras, ...custom, ...base.slice(1), ...modeExtras];
+    return [base[0], ...extras, ...custom, ...base.slice(1), ...modeExtras];
   }, [prefs, rhythm.customRuleSteps]);
 
   const doneCount = steps.filter((s) => progress[s.id]).length;
@@ -153,13 +156,13 @@ export function PrayerRule() {
 
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold tracking-tight">Prayer rule</h3>
+            <h3 className="text-base font-semibold tracking-tight">Developer's Prayer Rule</h3>
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               {doneCount}/{steps.length}
             </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            Keep it small. Keep it daily.
+            A sufficient Orthodox daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.
           </p>
         </div>
         <ListChecks className="h-5 w-5 text-muted-foreground" />
@@ -171,7 +174,7 @@ export function PrayerRule() {
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <p className="text-sm font-semibold">Rule mode</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Pick a realistic rule for today. A short rule kept faithfully is better than a large rule abandoned.
+            Standard is the recommended developer's rule. Keep it with humility, and ask your priest before increasing it.
           </p>
           <ToggleGroup
             type="single"
@@ -338,8 +341,8 @@ export function PrayerRule() {
                         ),
                       );
                       const ics = createSimpleIcs({
-                        title: "Morning Prayer (Nepsis Shield)",
-                        description: "A small daily anchor: morning prayer + Scripture.",
+                        title: "Developer's Prayer Rule (Nepsis Shield)",
+                        description: "Orthodox daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.",
                         start,
                         end,
                       });

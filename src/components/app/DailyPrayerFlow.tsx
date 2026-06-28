@@ -246,10 +246,11 @@ const standardExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
 };
 
-const personalDailyPrayer: PrayerStep[] = [
+const developerPrayerRule: PrayerStep[] = [
   {
     title: "Beginning",
     body: [
+      "Stand or sit attentively. Make the sign of the Cross.",
       "In the Name of the Father, and of the Son, and of the Holy Spirit. Amen.",
       "Glory to Thee, our God, glory to Thee.",
       "O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.",
@@ -258,44 +259,81 @@ const personalDailyPrayer: PrayerStep[] = [
   {
     title: "The Trisagion Prayers",
     body: [
-      "Holy God, Holy Mighty, Holy Immortal: have mercy on us. (3 times, making the sign of the Cross each time)",
-      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever, and unto ages of ages. Amen.",
-      "O All-Holy Trinity, have mercy on us. O Lord, cleanse us from our sins. O Master, pardon our iniquities. O Holy One, visit and heal our infirmities for Thy Name's sake.",
-      "Lord, have mercy. (3 times)",
-      "Glory to the Father... now and ever...",
-      "Our Father, Who art in heaven, hallowed be Thy name... (Recite the Lord's Prayer)",
-      "For Thine is the kingdom, and the power, and the glory, of the Father, and of the Son, and of the Holy Spirit, now and ever, and unto ages of ages. Amen.",
+      "Holy God, Holy Mighty, Holy Immortal, have mercy on us. (3x)",
+      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
+      "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Thy Name's sake.",
+      "Lord, have mercy. (3x)",
+      "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
     ],
   },
   {
-    title: "I. The Ascent of Humility — Prayer of St. Ephraim",
+    title: "Psalm 50",
+    body: [
+      "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
+      "Create in me a clean heart, O God, and renew a right spirit within me. Cast me not away from Thy presence, and take not Thy Holy Spirit from me.",
+      "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
+    ],
+  },
+  {
+    title: "The Creed",
+    body: [
+      "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible.",
+      "And in one Lord Jesus Christ, the Son of God, the Only-begotten, begotten of the Father before all ages: Light of Light, true God of true God; begotten, not made; of one essence with the Father, by Whom all things were made.",
+      "Who for us men and for our salvation came down from heaven, and was incarnate of the Holy Spirit and the Virgin Mary, and became man. And He was crucified for us under Pontius Pilate, and suffered, and was buried.",
+      "And the third day He rose again, according to the Scriptures, and ascended into heaven, and sits at the right hand of the Father. And He shall come again with glory to judge the living and the dead; Whose kingdom shall have no end.",
+      "And in the Holy Spirit, the Lord, the Giver of Life, Who proceeds from the Father; Who with the Father and the Son together is worshiped and glorified; Who spoke by the prophets.",
+      "In one, holy, catholic, and apostolic Church. I acknowledge one baptism for the remission of sins. I look for the resurrection of the dead, and the life of the age to come. Amen.",
+    ],
+  },
+  {
+    title: "Prayer before work",
+    body: [
+      "O Lord Jesus Christ, Son of God, bless the work of my hands today. Make my attention sober, my decisions truthful, my speech gentle, and my craft useful to those who depend on it.",
+      "Deliver me from pride, impatience, distraction, vanity, and the love of praise. Let no work of mine harm another soul. Teach me to build with humility, diligence, and mercy. Amen.",
+    ],
+  },
+  {
+    title: "Jesus Prayer",
+    body: [
+      "Pray slowly 33 times, or as much as your rule permits:",
+      "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
+    ],
+  },
+  {
+    title: "Prayer of St. Ephraim",
     body: [
       "O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk.",
       "But give rather the spirit of chastity, humility, patience, and love to Thy servant.",
       "Yea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.",
-      "Perform a prostration or a deep bow here.",
+      "Make a prostration or deep bow if appropriate.",
     ],
   },
   {
-    title: "II. The Guard of the Mind — The Arrow Prayer for Purity",
-    body: ["Lord Jesus Christ, Son of God, have mercy on me and preserve my purity."],
-  },
-  {
-    title: "III. The Shield of Protection — Prayer to St. Michael",
+    title: "Holy Archangel Michael",
     body: [
-      "Holy Archangel Michael, Chief Commander of the Heavenly Hosts, defend us by thy prayers, shelter us under the wings of thine immaterial glory, and deliver us from all distress, for thou art the leader of the Powers on high.",
+      "Holy Archangel Michael, commander of the bodiless hosts, defend us and pray to God for us.",
+      "Guard this work from vanity, anger, confusion, and every temptation that darkens the heart. Ask the Lord to grant courage with humility, strength with mercy, and watchfulness in every duty. Amen.",
     ],
   },
   {
-    title: "IV. The Offering of Praise — It Is Truly Meet",
+    title: "Intercessions",
     body: [
-      "It is truly meet to bless thee, O Theotokos, who art ever-blessed and all-blameless, and the Mother of our God.",
-      "Greater in honor than the Cherubim, and beyond compare more glorious than the Seraphim; who without corruption gavest birth to God the Word: the true Theotokos, we magnify thee.",
+      "Remember, O Lord, my family, my parish, my clergy, my friends, my enemies, the sick, the suffering, travelers, captives, those in danger, those who have no one to pray for them, and all who have asked for my prayers.",
+      "Pray to God for me, O holy patron saint and all saints, for I fervently flee unto you who are swift helpers and intercessors for my soul.",
     ],
   },
   {
-    title: "The Dismissal",
+    title: "The Theotokos",
     body: [
+      "It is truly meet to bless thee, O Theotokos, ever-blessed and most pure, and the Mother of our God.",
+      "More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption thou gavest birth to God the Word. True Theotokos, we magnify thee.",
+    ],
+  },
+  {
+    title: "Dismissal",
+    body: [
+      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
+      "Lord, have mercy. (3x)",
       "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us and save us. Amen.",
     ],
   },
@@ -367,7 +405,7 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
 };
 
 function buildFlow(time: PrayerTime, mode: PrayerMode) {
-  if (mode === "personal") return personalDailyPrayer;
+  if (mode === "personal") return developerPrayerRule;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];
@@ -513,11 +551,11 @@ export function DailyPrayerFlow() {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold tracking-tight">Daily Prayer Flow</h2>
               <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                {mode === "personal" ? "Personal" : prayerMeta[time].label}
+                {mode === "personal" ? "Developer's Rule" : prayerMeta[time].label}
               </Badge>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Choose morning, evening, night, or your personal daily prayer and move through a calm step-by-step rule.
+              Choose morning, evening, night, or the developer's Orthodox prayer rule and move through a calm step-by-step rule.
             </p>
           </div>
           <Shield className="h-5 w-5 text-muted-foreground" />
@@ -556,7 +594,7 @@ export function DailyPrayerFlow() {
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Short for busy days, standard for normal use, longer when you have room, or personal for your daily prayer.
+                Short for busy days, standard for normal use, longer when you have room, or the developer's rule for a fuller Orthodox anchor.
               </p>
             </div>
             <ToggleGroup
@@ -573,7 +611,7 @@ export function DailyPrayerFlow() {
                 ["short", "Short"],
                 ["standard", "Standard"],
                 ["long", "Longer"],
-                ["personal", "Personal"],
+                ["personal", "Developer's Rule"],
               ].map(([value, label]) => (
                 <ToggleGroupItem
                   key={value}

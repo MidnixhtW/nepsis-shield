@@ -33,9 +33,9 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
         <div className="relative p-5">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-xs font-semibold tracking-wide text-muted-foreground">Saint</p>
+              <p className="text-xs font-semibold tracking-wide text-muted-foreground">Saints</p>
               <h3 className="mt-1 truncate text-base font-semibold tracking-tight">{saint}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">Ask their prayers today.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Ask their prayers, or find a patron by need.</p>
             </div>
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-border/60 bg-background/60 glow">
               <Sparkles className="h-5 w-5 text-primary" />
@@ -74,7 +74,7 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
               className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60"
               onClick={onOpenSaints}
             >
-              View all saints <ExternalLink className="h-4 w-4" />
+              Patron prayers <ExternalLink className="h-4 w-4" />
             </Button>
           </div>
 
