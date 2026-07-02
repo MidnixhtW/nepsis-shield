@@ -426,15 +426,13 @@
   }
 
   .sacred-surface {
-
     background:
-      radial-gradient(circle at top left, hsl(var(--primary) / 0.18), transparent 18rem),
-      radial-gradient(circle at bottom right, hsl(var(--accent) / 0.16), transparent 20rem),
-      linear-gradient(135deg, hsl(var(--card) / 0.98), hsl(var(--background) / 0.84));
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.10), transparent 18rem),
+      linear-gradient(135deg, hsl(var(--card) / 0.96), hsl(var(--background) / 0.88));
   }
 
   .ornate-card {
-    @apply relative overflow-hidden rounded-3xl border border-border/60 bg-card/90 shadow-[0_16px_55px_hsl(var(--foreground)/0.09)] backdrop-blur-xl;
+    @apply relative overflow-hidden rounded-2xl border border-border/45 bg-card/90 shadow-sm backdrop-blur-md;
   }
 
   .ornate-card::before {
@@ -442,16 +440,16 @@
     position: absolute;
     inset: 1px;
     pointer-events: none;
-    border-radius: calc(var(--radius) + 0.45rem);
-    border: 1px solid hsl(var(--primary) / 0.09);
+    border-radius: calc(var(--radius) + 0.2rem);
+    border: 1px solid hsl(var(--primary) / 0.055);
   }
 
   .icon-medallion {
-    @apply grid shrink-0 place-items-center rounded-2xl border border-primary/35 bg-primary/15 text-primary shadow-[0_14px_42px_hsl(var(--primary)/0.24)];
+    @apply grid shrink-0 place-items-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-sm;
   }
 
   .gold-hairline {
-    background: linear-gradient(90deg, transparent, hsl(var(--accent) / 0.88), hsl(var(--primary) / 0.62), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.28), transparent);
   }
 
   /* For long labels/URLs inside buttons: prevents any horizontal overflow. */
@@ -459,25 +457,23 @@
     @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
   }
 
-  /* Soft "glass" surface used on nav + hero overlays. */
+  /* Soft surface used on nav + hero overlays. */
   .glass {
-    @apply border border-border/60 bg-background/60 backdrop-blur-xl shadow-sm;
+    @apply border border-border/45 bg-background/70 backdrop-blur-md shadow-sm;
   }
 
-  /* Subtle glow for accents (kept gentle in dark mode). */
+  /* Subtle glow for accents. */
   .glow {
-    box-shadow: 0 18px 55px hsl(var(--primary) / 0.28);
+    box-shadow: 0 10px 30px hsl(var(--primary) / 0.14);
   }
 
   /* Micro-interactions */
   .card-interactive {
-    @apply transition-all duration-300 ease-out motion-reduce:transition-none;
-    will-change: transform, box-shadow;
+    @apply transition-colors duration-200 ease-out motion-reduce:transition-none;
   }
 
   .card-interactive:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 22px 70px hsl(var(--foreground) / 0.12);
+    box-shadow: 0 10px 35px hsl(var(--foreground) / 0.07);
   }
 
   .tap {

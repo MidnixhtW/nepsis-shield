@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
 import { Copy, ExternalLink, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { fetchDailyData } from "@/lib/orthocal";
-import { getLocalSaintIndexStats, searchLocalSaintLibrary, upsertDailySaints } from "@/lib/localSaintSearch";
+import { searchLocalSaintLibrary, upsertDailySaints } from "@/lib/localSaintSearch";
 import { ocaSaintSearchUrl, patronNeeds } from "@/lib/patronSaints";
 import { getSettings } from "@/lib/settings";
 import { showError, showSuccess } from "@/utils/toast";
@@ -27,7 +26,6 @@ export default function Saints() {
   const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
   const settings = useMemo(() => getSettings(), []);
   const [search, setSearch] = useState("");
-  const [localStats, setLocalStats] = useState(() => getLocalSaintIndexStats());
   const [showAllPatrons, setShowAllPatrons] = useState(false);
 
   const q = useQuery({
@@ -51,7 +49,6 @@ export default function Saints() {
   useEffect(() => {
     if (!currentDaily) return;
     upsertDailySaints(currentDaily);
-    setLocalStats(getLocalSaintIndexStats());
   }, [currentDaily]);
 
   const saintSearch = search.trim();
@@ -63,29 +60,24 @@ export default function Saints() {
   const ocaSearchQuery = matchingPatronNeeds[0]?.search ?? matchingSaintNames[0]?.name ?? saintSearch;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-4 sm:pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto w-full max-w-4xl px-3 pb-24 pt-3 sm:px-4 sm:pt-6">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Saints</p>
           <h1 className="text-2xl font-semibold tracking-tight">Lives of the Saints</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Search by saint, need, or prayer. Daily commemorations are saved locally after they load.
+            Search by saint, need, or prayer.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm" className="rounded-xl border-border/60">
-            <Link to="/today">Back</Link>
-          </Button>
-          <Button asChild size="sm" className="rounded-xl">
-            <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">
-              OCA Lives <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
-          </Button>
-        </div>
+        <Button asChild variant="outline" size="sm" className="rounded-xl border-border/60">
+          <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">
+            OCA Lives <ExternalLink className="ml-2 h-4 w-4" />
+          </a>
+        </Button>
       </div>
 
-      <div className="mt-5 grid gap-5">
-        <Card className="rounded-2xl border-primary/20 bg-card/90 p-4 shadow-sm sm:p-5">
+      <div className="mt-4 grid gap-4 sm:mt-5 sm:gap-5">
+        <Card className="rounded-2xl border-primary/15 bg-card/90 p-4 shadow-sm sm:p-5">
           <div className="flex items-start gap-3">
             <div className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary sm:grid">
               <Search className="h-5 w-5" />
@@ -115,7 +107,7 @@ export default function Saints() {
                 )}
               </div>
               <p className="mt-3 text-xs text-muted-foreground">
-                {patronNeeds.length} patron entries · {localStats.saints} saved saints · {localStats.days} saved days
+                {patronNeeds.length} patron entries · local search updates daily
               </p>
             </div>
           </div>

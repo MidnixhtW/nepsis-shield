@@ -47,10 +47,10 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-48 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.06),transparent_28rem)]" />
+      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.045),transparent_26rem)]" />
 
-      <div className="sticky top-0 z-30 border-b border-border/35 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/85">
-        <div className="mx-auto w-full max-w-screen-xl px-3 py-2 sm:px-5 lg:px-6">
+      <div className="sticky top-0 z-30 border-b border-border/25 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/88">
+        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-5">
           {header}
         </div>
       </div>
@@ -58,13 +58,13 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-screen-xl px-3 pt-3 pb-[calc(6.4rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5 lg:px-6"
+        className="water-page relative z-10 mx-auto w-full max-w-5xl px-3 pt-3 pb-[calc(6.2rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/35 bg-background/95 px-1.5 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md sm:px-2 sm:pt-2">
-        <div className="mx-auto grid w-full max-w-xl grid-cols-6 gap-0.5 rounded-2xl bg-card/90 p-1 shadow-sm sm:gap-1">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-1.5 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md sm:px-2 sm:pt-2">
+        <div className="mx-auto grid w-full max-w-lg grid-cols-6 gap-0.5 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25 sm:gap-1">
           <ToggleGroup
             type="single"
             value={section}

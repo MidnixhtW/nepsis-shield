@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import {
   BookOpen,
   Crosshair,
-  Download,
   Hand,
   HelpCircle,
   Home,
@@ -78,21 +77,6 @@ function MenuSection({ title, children }: { title: string; children: ReactNode }
 function MenuLinks() {
   return (
     <div className="grid gap-3 pb-3">
-      <SheetClose asChild>
-        <Link
-          to="/download"
-          className="group flex min-w-0 items-center gap-3 rounded-2xl border border-border/60 bg-card/60 p-3 text-left transition-colors hover:border-primary/30 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        >
-          <span className="shrink-0 text-primary">
-            <Download className="h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold tracking-tight text-foreground">Install / share</span>
-            <span className="mt-0.5 block truncate text-xs text-muted-foreground">QR, web app, APK</span>
-          </span>
-        </Link>
-      </SheetClose>
-
       <MenuSection title="Core">
         <div className="grid grid-cols-2 gap-1">
           <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
@@ -170,23 +154,20 @@ export function AppHeader() {
 
       <div className="hidden shrink-0 items-center gap-1 sm:flex">
         <ThemeToggle />
-        <Button type="button" size="sm" variant="ghost" className="rounded-2xl" onClick={startTutorial}>
-          Tutorial
-        </Button>
-        <Button asChild size="sm" variant="ghost" className="rounded-2xl">
+        <Button asChild size="sm" variant="ghost" className="rounded-xl px-3">
           <Link to="/settings">Settings</Link>
         </Button>
       </div>
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="ghost" className="h-10 w-10 rounded-2xl">
+          <Button size="icon" variant="ghost" className="h-9 w-9 rounded-xl sm:h-10 sm:w-10">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex h-dvh w-[min(22rem,92vw)] flex-col gap-0 overflow-hidden p-0">
-          <SheetHeader className="shrink-0 border-b border-border/60 px-4 pb-3 pt-5 text-left">
+        <SheetContent side="right" className="flex h-dvh w-[min(21rem,92vw)] flex-col gap-0 overflow-hidden p-0">
+          <SheetHeader className="shrink-0 border-b border-border/45 px-4 pb-3 pt-5 text-left">
             <SheetTitle>
               <button
                 type="button"
@@ -197,7 +178,7 @@ export function AppHeader() {
               </button>
             </SheetTitle>
             <SheetDescription className="text-xs leading-relaxed">
-              Prayer, reading, tools, install, and settings.
+              Prayer, reading, saints, and settings.
             </SheetDescription>
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
