@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import {
   BookOpen,
   Crosshair,
+  Download,
   Hand,
   HelpCircle,
   Home,
@@ -65,7 +66,7 @@ function MenuLink({
 
 function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="border-t border-border/60 pt-3 first:border-t-0 first:pt-0">
+    <section className="border-t border-border/45 pt-3 first:border-t-0 first:pt-0">
       <h3 className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
         {title}
       </h3>
@@ -77,7 +78,7 @@ function MenuSection({ title, children }: { title: string; children: ReactNode }
 function MenuLinks() {
   return (
     <div className="grid gap-3 pb-3">
-      <MenuSection title="Core">
+      <MenuSection title="Main">
         <div className="grid grid-cols-2 gap-1">
           <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
           <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Prayer" />
@@ -87,12 +88,15 @@ function MenuLinks() {
       </MenuSection>
 
       <MenuSection title="Library">
-        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Role briefs and prayers" />
         <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
-        <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
+        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Role briefs and prayers" />
       </MenuSection>
 
-      <MenuSection title="Settings">
+      <MenuSection title="App">
+        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app and APK" />
+        <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Accessibility and role" />
+        <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
+        <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
         <div className="px-0.5 py-1">
           <ThemeToggle variant="row" />
         </div>
@@ -111,11 +115,9 @@ function MenuLinks() {
             </span>
           </button>
         </SheetClose>
-        <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Accessibility and role" />
-        <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
       </MenuSection>
 
-      <p className="border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="border-t border-border/45 pt-3 text-xs leading-relaxed text-muted-foreground">
         Need help or want to send feedback? Use the Help button in the bottom-left corner.
       </p>
     </div>

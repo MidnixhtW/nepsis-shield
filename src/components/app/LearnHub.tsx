@@ -1,4 +1,5 @@
-import { ExternalLink, Home, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -53,6 +54,30 @@ export function LearnHub({
         icon={<Sparkles className="h-4 w-4" />}
         onAction={() => onTabChange?.("path")}
       />
+
+      <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Tool hub</p>
+            <h2 className="mt-1 text-lg font-semibold tracking-tight">Quick access</h2>
+          </div>
+          <p className="text-xs text-muted-foreground">Secondary features live here.</p>
+        </div>
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
+            <Link to="/saints"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Saints</Link>
+          </Button>
+          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
+            <Link to="/field-manual"><Crosshair className="mr-2 h-4 w-4 text-primary" /> Field Manual</Link>
+          </Button>
+          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
+            <Link to="/download"><Download className="mr-2 h-4 w-4 text-primary" /> Install / Share</Link>
+          </Button>
+          <Button asChild variant="ghost" className="h-auto justify-start rounded-xl px-3 py-3 text-left">
+            <Link to="/settings"><Settings className="mr-2 h-4 w-4 text-primary" /> Settings</Link>
+          </Button>
+        </div>
+      </Card>
 
       <Tabs
         value={tab ?? "welcome"}

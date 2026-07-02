@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { BookOpen, Search, Share2, Target } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { AppHeader } from "@/components/app/AppHeader";
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
@@ -64,6 +67,33 @@ function resumeLabel(to: SectionTarget) {
   if (to.section === "read") return "Continue reading";
   if (to.section === "learn") return "Return to tools";
   return "Return to Today";
+}
+
+function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTarget) => void; onOpenRoute: (path: string) => void }) {
+  return (
+    <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Quick actions</p>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight">Choose one next step</h2>
+        </div>
+        <div className="grid w-full gap-2 sm:w-auto sm:grid-cols-4">
+          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onNavigate({ section: "pray", tab: "counter" })}>
+            <Target className="mr-2 h-4 w-4" /> Pray
+          </Button>
+          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onNavigate({ section: "read", read: "daily" })}>
+            <BookOpen className="mr-2 h-4 w-4" /> Read
+          </Button>
+          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onOpenRoute("/saints")}>
+            <Search className="mr-2 h-4 w-4" /> Saints
+          </Button>
+          <Button type="button" variant="ghost" className="rounded-xl" onClick={() => onOpenRoute("/download")}>
+            <Share2 className="mr-2 h-4 w-4" /> Share
+          </Button>
+        </div>
+      </div>
+    </Card>
+  );
 }
 
 const Index = () => {
@@ -194,6 +224,7 @@ const Index = () => {
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
+            <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
           </div>
         ) : null}

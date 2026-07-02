@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BookOpen, Download, Hand, Home, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -27,6 +27,8 @@ export function AppShell({
   onSectionChange: (s: AppSection) => void;
   children: ReactNode;
 }) {
+  const location = useLocation();
+  const installActive = location.pathname === "/download";
   const items = useMemo(
     () =>
       (["today", "pray", "read", "learn"] as AppSection[]).map((key) =>
@@ -108,10 +110,13 @@ export function AppShell({
           <Link
             to="/download"
             aria-label="Open install and share"
-            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary"
+            className={cn(
+              "flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary",
+              installActive && "bg-primary/10 text-foreground",
+            )}
           >
-            <Download className="h-[17px] w-[17px]" />
-            <span className="text-[10px] font-medium leading-none sm:text-[11px]">Install</span>
+            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary" : "text-muted-foreground")} />
+            <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", installActive ? "text-foreground" : "text-muted-foreground")}>Install</span>
           </Link>
         </div>
       </div>

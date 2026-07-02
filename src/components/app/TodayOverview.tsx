@@ -416,9 +416,8 @@ export function TodayOverview({
         {q.isLoading ? (
           <TodayDetailsSkeleton />
         ) : q.isError ? (
-          <div className="text-sm text-destructive">
-            Couldn't load today's details. You can still open the daily source.
-
+          <div className="rounded-2xl border border-destructive/25 bg-destructive/5 p-4 text-sm leading-relaxed text-destructive">
+            Couldn’t load today’s details. You can still open the daily source or try refreshing the preview.
           </div>
         ) : q.data ? (
           <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -459,7 +458,7 @@ export function TodayOverview({
                       className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 px-3 shadow-sm hover:border-primary/40"
                       onClick={() => onOpenRoute?.("/saints")}
                     >
-                      View All Saints
+                      Open saints
                     </Button>
                   ) : null}
                 </div>
