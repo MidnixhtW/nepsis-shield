@@ -1,5 +1,6 @@
 import { ReactNode, useMemo, useState } from "react";
-import { BookOpen, Hand, Home, MoreHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import { BookOpen, Download, Hand, Home, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -59,8 +60,8 @@ export function AppShell({
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-md">
-        <div className="mx-auto grid w-full max-w-sm grid-cols-4 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-md sm:px-3">
+        <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
           <ToggleGroup
             type="single"
             value={section}
@@ -92,7 +93,7 @@ export function AppShell({
                     />
                     <span
                       className={cn(
-                        "text-[11px] font-medium leading-none",
+                        "text-[10px] font-medium leading-none sm:text-[11px]",
                         active ? "text-foreground" : "text-muted-foreground",
                       )}
                     >
@@ -103,6 +104,15 @@ export function AppShell({
               );
             })}
           </ToggleGroup>
+
+          <Link
+            to="/download"
+            aria-label="Open install and share"
+            className="flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary"
+          >
+            <Download className="h-[17px] w-[17px]" />
+            <span className="text-[10px] font-medium leading-none sm:text-[11px]">Install</span>
+          </Link>
         </div>
       </div>
     </div>
