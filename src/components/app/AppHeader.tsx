@@ -10,6 +10,7 @@ import {
   Info,
   Map,
   Menu,
+  Plus,
   Settings as SettingsIcon,
   Shield,
   Sparkles,
@@ -78,12 +79,14 @@ function MenuSection({ title, children }: { title: string; children: ReactNode }
 function MenuLinks() {
   return (
     <div className="grid gap-3 pb-3">
-      <MenuSection title="Main">
+      <MenuLink to="/today" icon={<Plus className="h-4 w-4" />} label="New Chat" description="Start fresh from Today" />
+
+      <MenuSection title="Apps">
         <div className="grid grid-cols-2 gap-1">
           <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
           <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Prayer" />
           <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" />
-          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Tools" />
+          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Hub" />
         </div>
       </MenuSection>
 
@@ -92,14 +95,17 @@ function MenuLinks() {
         <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Role briefs and prayers" />
       </MenuSection>
 
-      <MenuSection title="App">
-        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app and APK" />
+      <MenuSection title="Hub">
         <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Accessibility and role" />
+        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app and APK" />
         <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
         <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
         <div className="px-0.5 py-1">
           <ThemeToggle variant="row" />
         </div>
+      </MenuSection>
+
+      <MenuSection title="Help">
         <SheetClose asChild>
           <button
             type="button"
@@ -110,15 +116,18 @@ function MenuLinks() {
               <HelpCircle className="h-4 w-4" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate font-medium leading-tight text-foreground">Tutorial</span>
+              <span className="block truncate font-medium leading-tight text-foreground">Help</span>
               <span className="mt-0.5 block truncate text-xs text-muted-foreground">Replay onboarding</span>
             </span>
           </button>
         </SheetClose>
+        <p className="px-2.5 py-2 text-xs leading-relaxed text-muted-foreground">
+          Need help or want to send feedback? Use the Help button in the bottom-left corner.
+        </p>
       </MenuSection>
 
-      <p className="border-t border-border/45 pt-3 text-xs leading-relaxed text-muted-foreground">
-        Need help or want to send feedback? Use the Help button in the bottom-left corner.
+      <p className="border-t border-border/45 pt-3 text-center text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        Version 265
       </p>
     </div>
   );
@@ -163,9 +172,9 @@ export function AppHeader() {
 
       <Sheet>
         <SheetTrigger asChild>
-          <Button size="icon" variant="ghost" className="h-9 w-9 rounded-xl sm:h-10 sm:w-10">
+          <Button aria-label="Toggle Menu" size="icon" variant="ghost" className="h-9 w-9 rounded-xl sm:h-10 sm:w-10">
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">Toggle Menu</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="flex h-dvh w-[min(21rem,92vw)] flex-col gap-0 overflow-hidden p-0">
@@ -176,11 +185,11 @@ export function AppHeader() {
                 className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={handleSecretTap}
               >
-                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Menu
+                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Toggle Menu
               </button>
             </SheetTitle>
             <SheetDescription className="text-xs leading-relaxed">
-              Prayer, reading, saints, and settings.
+              Apps, Settings, Library, Hub, Help, and New Chat.
             </SheetDescription>
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
