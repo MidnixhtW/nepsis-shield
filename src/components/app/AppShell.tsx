@@ -1,6 +1,5 @@
 import { ReactNode, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { BookOpen, Download, Hand, Home, MoreHorizontal, Sparkles } from "lucide-react";
+import { BookOpen, Hand, Home, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -29,14 +28,11 @@ export function AppShell({
 }) {
   const items = useMemo(
     () =>
-      (["today", "pray", "read"] as AppSection[]).map((key) =>
+      (["today", "pray", "read", "learn"] as AppSection[]).map((key) =>
         [key, sectionMeta[key]] as [AppSection, (typeof sectionMeta)[AppSection]],
       ),
     [],
   );
-  const toolsMeta = sectionMeta.learn;
-  const ToolsIcon = toolsMeta.icon;
-  const toolsActive = section === "learn";
 
   return (
     <div className="relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
@@ -63,8 +59,8 @@ export function AppShell({
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-1.5 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-md sm:px-2 sm:pt-2">
-        <div className="mx-auto grid w-full max-w-lg grid-cols-6 gap-0.5 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25 sm:gap-1">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-3 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-md">
+        <div className="mx-auto grid w-full max-w-sm grid-cols-4 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
           <ToggleGroup
             type="single"
             value={section}
@@ -82,21 +78,21 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-11 rounded-xl bg-transparent px-0.5 transition-colors sm:h-12 sm:px-1",
+                    "h-12 rounded-xl bg-transparent px-1 transition-colors",
                     "hover:bg-muted/45",
                     "data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
                   )}
                 >
-                  <div className="flex w-full flex-col items-center justify-center gap-0.5 sm:gap-1">
+                  <div className="flex w-full flex-col items-center justify-center gap-1">
                     <Icon
                       className={cn(
-                        "h-4 w-4 sm:h-[17px] sm:w-[17px]",
+                        "h-[17px] w-[17px]",
                         active ? "text-primary" : "text-muted-foreground",
                       )}
                     />
                     <span
                       className={cn(
-                        "text-[10px] font-medium leading-none max-[359px]:sr-only sm:text-[11px]",
+                        "text-[11px] font-medium leading-none",
                         active ? "text-foreground" : "text-muted-foreground",
                       )}
                     >
@@ -107,37 +103,6 @@ export function AppShell({
               );
             })}
           </ToggleGroup>
-
-          <Link
-            to="/saints"
-            aria-label="Open Saints"
-            className="flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary sm:h-12 sm:gap-1 sm:px-1"
-          >
-            <Sparkles className="h-4 w-4 sm:h-[17px] sm:w-[17px]" />
-            <span className="text-[10px] font-medium leading-none max-[359px]:sr-only sm:text-[11px]">Saints</span>
-          </Link>
-
-          <button
-            type="button"
-            aria-label={toolsMeta.aria}
-            className={cn(
-              "flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary sm:h-12 sm:gap-1 sm:px-1",
-              toolsActive && "bg-primary/10 text-foreground",
-            )}
-            onClick={() => onSectionChange("learn")}
-          >
-            <ToolsIcon className={cn("h-4 w-4 sm:h-[17px] sm:w-[17px]", toolsActive ? "text-primary" : "text-muted-foreground")} />
-            <span className={cn("text-[10px] font-medium leading-none max-[359px]:sr-only sm:text-[11px]", toolsActive ? "text-foreground" : "text-muted-foreground")}>Tools</span>
-          </button>
-
-          <Link
-            to="/download"
-            aria-label="Open install and share"
-            className="flex h-11 flex-col items-center justify-center gap-0.5 rounded-xl bg-transparent px-0.5 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary sm:h-12 sm:gap-1 sm:px-1"
-          >
-            <Download className="h-4 w-4 sm:h-[17px] sm:w-[17px]" />
-            <span className="text-[10px] font-medium leading-none max-[359px]:sr-only sm:text-[11px]">Install</span>
-          </Link>
         </div>
       </div>
     </div>
