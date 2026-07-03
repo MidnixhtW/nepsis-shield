@@ -14,6 +14,12 @@
   "categories": ["lifestyle", "education", "books"],
   "icons": [
     {
+      "src": "/assets/st-michael-icon-intro.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
       "src": "/military-orthodox-cross.svg",
       "sizes": "any",
       "type": "image/svg+xml",

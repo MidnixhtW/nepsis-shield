@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   CheckCircle2,
@@ -35,7 +36,7 @@ function Step({ title, description }: { title: string; description: string }) {
   );
 }
 
-function QrDownloadCard({ qrCodeUrl }: { qrCodeUrl: string }) {
+function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; installPageUrl: string }) {
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
@@ -44,15 +45,21 @@ function QrDownloadCard({ qrCodeUrl }: { qrCodeUrl: string }) {
             <QrCode className="h-5 w-5" />
             <p className="text-xs font-semibold uppercase tracking-[0.16em]">QR code</p>
           </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to download</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to install</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            The QR code points directly to the Android APK for quick in-person sharing.
+            The QR code now opens this install page so every device can choose web install, APK download, or sharing options.
+          </p>
+          <p className="mt-3 break-all rounded-2xl border border-border/60 bg-background/50 px-3 py-2 text-xs text-muted-foreground">
+            {installPageUrl}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild className="rounded-2xl">
-              <a href={qrCodeUrl} download="nepsis-shield-download-qr.png" target="_blank" rel="noopener noreferrer">
+              <a href={qrCodeUrl} download="nepsis-shield-install-qr.png" target="_blank" rel="noopener noreferrer">
                 <DownloadIcon className="mr-2 h-4 w-4" /> Download QR
               </a>
+            </Button>
+            <Button asChild variant="outline" className="rounded-2xl border-border/60">
+              <a href={installPageUrl} target="_blank" rel="noopener noreferrer">Open install page</a>
             </Button>
             <Button asChild variant="outline" className="rounded-2xl border-border/60">
               <a href={APK_DOWNLOAD_URL}>Open APK link</a>
@@ -63,7 +70,7 @@ function QrDownloadCard({ qrCodeUrl }: { qrCodeUrl: string }) {
         <div className="mx-auto w-full max-w-64 rounded-3xl border border-border/60 bg-white p-3 shadow-sm">
           <img
             src={qrCodeUrl}
-            alt="QR code for the direct Nepsis Shield APK download"
+            alt="QR code that opens the Nepsis Shield install page"
             className="aspect-square w-full rounded-2xl"
           />
         </div>
@@ -121,7 +128,14 @@ function ApkDownloadCard() {
 }
 
 export default function Download() {
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&data=${encodeURIComponent(APK_DOWNLOAD_URL)}`;
+  const installPageUrl = useMemo(() => {
+    if (typeof window === "undefined") return "/download";
+    const url = new URL(window.location.href);
+    url.hash = "";
+    return url.toString();
+  }, []);
+
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&margin=16&data=${encodeURIComponent(installPageUrl)}`;
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
@@ -152,7 +166,7 @@ export default function Download() {
       </div>
 
       <div className="mt-5 grid gap-4">
-        <QrDownloadCard qrCodeUrl={qrCodeUrl} />
+        <QrDownloadCard qrCodeUrl={qrCodeUrl} installPageUrl={installPageUrl} />
         <PwaInstallCard />
         <ApkDownloadCard />
       </div>
@@ -171,12 +185,12 @@ export default function Download() {
 
           <div className="grid gap-3">
             <Step
-              title="QR code download"
-              description="Scan or download the QR image so someone else can start the APK download directly."
+              title="QR code install"
+              description="Scan or download the QR image so someone else opens this install page with web, APK, and sharing options."
             />
             <Step
-              title="Web download"
-              description="Use the web download button to install the browser version to your home screen where supported."
+              title="Web install"
+              description="Use the web install button when available, or follow the browser-specific Add to Home Screen steps."
             />
             <Step
               title="APK direct download"

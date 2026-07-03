@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v3";
+const CACHE_NAME = "nepsis-shield-pwa-v4";
 const APP_SHELL = [
   "/",
   "/today",
@@ -15,6 +15,7 @@ const APP_SHELL = [
   "/privacy",
   "/manifest.webmanifest",
   "/military-orthodox-cross.svg",
+  "/assets/st-michael-icon-intro.png",
   "/offline.html"
 ];
 
