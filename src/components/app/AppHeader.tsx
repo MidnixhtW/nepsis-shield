@@ -84,21 +84,21 @@ function MenuLinks() {
       <MenuSection title="Apps">
         <div className="grid grid-cols-2 gap-1">
           <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
-          <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Prayer" />
+          <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Pray" />
           <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" />
-          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Hub" />
+          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Guide" />
         </div>
       </MenuSection>
 
       <MenuSection title="Library">
+        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Duty, pressure, prayer, and recovery" />
         <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
-        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Role briefs and prayers" />
       </MenuSection>
 
-      <MenuSection title="Hub">
+      <MenuSection title="More">
         <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Accessibility and role" />
-        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app and APK" />
-        <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose and sources" />
+        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app, APK, QR, and copy" />
+        <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="Sources & Trust" description="Purpose, sources, and safety note" />
         <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
         <div className="px-0.5 py-1">
           <ThemeToggle variant="row" />

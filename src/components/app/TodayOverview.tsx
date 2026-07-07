@@ -368,11 +368,14 @@ export function TodayOverview({
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  Today’s rhythm · {format(today, "EEEE")}
+                  Daily command center · {format(today, "EEEE")}
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold tracking-tight">
                   {format(today, "MMMM d")}
                 </h2>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Prayer, Scripture, saints, fasting, and one practical next step for today.
+                </p>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
                     {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}

@@ -42,14 +42,16 @@ async function copyToClipboard(label: string, value: string) {
 }
 
 export function ShareDistributionCard() {
-  const { downloadPageUrl, webAppUrl, shareText, smsUrl, mailUrl } = useMemo(() => {
+  const { downloadPageUrl, webAppUrl, shareText, redditText, smsUrl, mailUrl } = useMemo(() => {
     const download = absoluteUrl("/download");
     const web = absoluteUrl("/today");
     const text = `Nepsis Shield is ready to install. Open this link for web install, Android APK, and QR download: ${download}`;
+    const reddit = `I built Nepsis Shield, a field-ready Orthodox prayer and watchfulness companion for daily discipline, Scripture, saints, and practical support under pressure. It is local-first, installable as a web app, and includes an Android APK/QR install page. I would appreciate blunt feedback on the onboarding, Today flow, and whether the Field Manual is useful: ${download}`;
     return {
       downloadPageUrl: download,
       webAppUrl: web,
       shareText: text,
+      redditText: reddit,
       smsUrl: `sms:?&body=${encodeURIComponent(text)}`,
       mailUrl: `mailto:?subject=${encodeURIComponent("Install Nepsis Shield")}&body=${encodeURIComponent(text)}`,
     };
@@ -83,7 +85,7 @@ export function ShareDistributionCard() {
           </div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight">Share the app</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Send one clean install link with web, APK, and QR options.
+            Send one clean install link with web, APK, QR, and a Reddit-ready feedback message.
           </p>
         </div>
         <Button type="button" className="rounded-2xl lg:shrink-0" onClick={shareInstall}>
@@ -93,7 +95,7 @@ export function ShareDistributionCard() {
 
       <Separator className="my-4" />
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Download page link", downloadPageUrl)}>
           <ClipboardCopy className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
@@ -123,6 +125,14 @@ export function ShareDistributionCard() {
           <span>
             <span className="block text-sm font-semibold">Message</span>
             <span className="mt-1 block text-xs font-normal text-muted-foreground">Copy text</span>
+          </span>
+        </Button>
+
+        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Reddit feedback post", redditText)}>
+          <Megaphone className="mr-3 h-4 w-4 shrink-0 text-primary" />
+          <span>
+            <span className="block text-sm font-semibold">Reddit copy</span>
+            <span className="mt-1 block text-xs font-normal text-muted-foreground">Feedback post</span>
           </span>
         </Button>
       </div>

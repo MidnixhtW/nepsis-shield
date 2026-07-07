@@ -40,6 +40,18 @@ export default function About() {
       </div>
 
       <div className="mt-5 grid gap-4">
+        <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-base font-semibold tracking-tight">What Nepsis Shield is</h2>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Nepsis Shield is a field-ready Orthodox companion for prayer, Scripture, saints, daily watchfulness, and practical support under pressure. It is meant to help you take one faithful next step; it is not a replacement for your priest, chaplain, clinician, therapist, emergency services, or sacramental life.
+              </p>
+            </div>
+            <Shield className="h-5 w-5 shrink-0 text-primary" />
+          </div>
+        </Card>
+
         <Card id="apk-download" className="rounded-3xl border-border/60 bg-card p-5 shadow-sm scroll-mt-24">
           <div className="flex items-start justify-between gap-4">
             <div>

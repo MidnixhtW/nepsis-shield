@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Search, Share2, Target } from "lucide-react";
+import { BookOpen, Compass, Search, Share2, ShieldCheck, Siren, Target } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,26 +70,75 @@ function resumeLabel(to: SectionTarget) {
 }
 
 function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTarget) => void; onOpenRoute: (path: string) => void }) {
+  const actions = [
+    {
+      label: "Pray",
+      helper: "Begin the daily rule.",
+      icon: <Target className="h-4 w-4" />,
+      onClick: () => onNavigate({ section: "pray", tab: "daily" }),
+    },
+    {
+      label: "Calm down",
+      helper: "Use the Jesus Prayer reset.",
+      icon: <Siren className="h-4 w-4" />,
+      onClick: () => onNavigate({ section: "pray", tab: "counter" }),
+    },
+    {
+      label: "Read Scripture",
+      helper: "Open today’s readings.",
+      icon: <BookOpen className="h-4 w-4" />,
+      onClick: () => onNavigate({ section: "read", read: "daily" }),
+    },
+    {
+      label: "Learn the faith",
+      helper: "Open the guide and path.",
+      icon: <Compass className="h-4 w-4" />,
+      onClick: () => onNavigate({ section: "learn", tab: "path" }),
+    },
+    {
+      label: "Find a saint",
+      helper: "Search patrons and intercession.",
+      icon: <Search className="h-4 w-4" />,
+      onClick: () => onOpenRoute("/saints"),
+    },
+    {
+      label: "Prepare",
+      helper: "Confession and examination.",
+      icon: <ShieldCheck className="h-4 w-4" />,
+      onClick: () => onNavigate({ section: "pray", tab: "prep" }),
+    },
+  ];
+
   return (
     <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Quick actions</p>
-          <h2 className="mt-1 text-lg font-semibold tracking-tight">Choose one next step</h2>
-        </div>
-        <div className="grid w-full gap-2 sm:w-auto sm:grid-cols-4">
-          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onNavigate({ section: "pray", tab: "counter" })}>
-            <Target className="mr-2 h-4 w-4" /> Pray
-          </Button>
-          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onNavigate({ section: "read", read: "daily" })}>
-            <BookOpen className="mr-2 h-4 w-4" /> Read
-          </Button>
-          <Button type="button" variant="outline" className="rounded-xl border-border/60 bg-background/50" onClick={() => onOpenRoute("/saints")}>
-            <Search className="mr-2 h-4 w-4" /> Saints
-          </Button>
+      <div className="grid gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">I want to...</p>
+            <h2 className="mt-1 text-lg font-semibold tracking-tight">Choose one next step</h2>
+          </div>
           <Button type="button" variant="ghost" className="rounded-xl" onClick={() => onOpenRoute("/download")}>
-            <Share2 className="mr-2 h-4 w-4" /> Share
+            <Share2 className="mr-2 h-4 w-4" /> Share / install
           </Button>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {actions.map((action) => (
+            <Button
+              key={action.label}
+              type="button"
+              variant="outline"
+              className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left"
+              onClick={action.onClick}
+            >
+              <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                {action.icon}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{action.helper}</span>
+              </span>
+            </Button>
+          ))}
         </div>
       </div>
     </Card>

@@ -76,11 +76,11 @@ export function QuickStartDialog() {
       {
         key: "today",
         label: "Today",
-        title: "Today",
-        description: "Your home base. Start here when you want one clear next step.",
+        title: "Daily command center",
+        description: "Your home base for prayer, Scripture, saints, fasting, and one practical next step.",
         icon: <Home className="h-5 w-5 text-primary" />,
         route: "/today",
-        bullets: ["Daily overview", "Resume your last activity", "Quick help and direction"],
+        bullets: ["Pray now, read today, or reset under pressure", "Daily rhythm and liturgical details", "Resume your last activity"],
       },
       {
         key: "prayer",
@@ -102,29 +102,29 @@ export function QuickStartDialog() {
       },
       {
         key: "tools",
-        label: "Tools",
-        title: "Tools",
+        label: "Guide",
+        title: "Guide",
         description: "Personal path, challenges, learning, liturgy help, audio, hymns, and parish resources.",
         icon: <Sparkles className="h-5 w-5 text-primary" />,
         route: "/learn?tab=path",
-        bullets: ["Personalized path", "Guided prayer challenges", "Guide, Q&A, liturgy, audio, and parish finder"],
+        bullets: ["Build a daily rule", "Learn the faith in small steps", "Use guide, Q&A, liturgy, audio, and parish finder"],
       },
       {
         key: "menu",
-        label: "Menu",
-        title: "Menu",
-        description: "Everything outside the daily flow lives in the top-right menu.",
+        label: "More",
+        title: "More",
+        description: "Secondary tools live in the top-right menu and More tab.",
         icon: <Menu className="h-5 w-5 text-primary" />,
-        bullets: ["Settings and theme", "Saints, Field Manual, install, privacy, about", "Replay this tutorial anytime"],
+        bullets: ["Field Manual and Saints", "Settings, install/share, privacy, and sources", "Replay this tutorial anytime"],
       },
       {
         key: "done",
         label: "Done",
         title: "You’re ready",
-        description: "Use the app in this order when you feel lost: Today → Prayer → Read → Tools → Menu.",
+        description: "When you feel lost, use this order: Today → Pray → Read → Guide → More.",
         icon: <ShieldCheck className="h-5 w-5 text-primary" />,
         route: "/today",
-        bullets: ["Start small", "Follow one next step", "Come back anytime"],
+        bullets: ["Start small", "Follow one next step", "Return to Today anytime"],
       },
     ],
     [],
@@ -189,11 +189,21 @@ export function QuickStartDialog() {
               <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
                 <Compass className="h-5 w-5 text-primary" />
               </div>
-              <DialogTitle className="text-2xl leading-tight">Want a quick start?</DialogTitle>
+              <DialogTitle className="text-2xl leading-tight">Set your first rhythm</DialogTitle>
               <DialogDescription className="pt-2 text-sm leading-relaxed">
-                Take a short tour, or build a personal path based on what you need most right now.
+                Nepsis Shield is a field-ready Orthodox companion for prayer, Scripture, watchfulness, and one faithful next step under pressure.
               </DialogDescription>
             </DialogHeader>
+
+            <div className="mt-5 rounded-3xl border border-primary/25 bg-primary/5 p-4">
+              <p className="text-sm font-semibold tracking-tight">Choose one simple goal</p>
+              <div className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Pray daily</div>
+                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Read daily</div>
+                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Build discipline</div>
+                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Find calm under stress</div>
+              </div>
+            </div>
 
             <div className="mt-5 rounded-3xl border border-border bg-muted/20 p-4">
               <p className="text-sm font-semibold tracking-tight">Choose your role</p>
@@ -224,11 +234,15 @@ export function QuickStartDialog() {
             <div className="mt-5 grid gap-2 rounded-3xl border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
               <div className="flex gap-2">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                Start on Today when you are not sure what to do next.
+              </div>
+              <div className="flex gap-2">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 The personal path recommends prayer, reading, sleep mode, or challenges.
               </div>
               <div className="flex gap-2">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                You can replay the tutorial later from the menu.
+                You can replay the tutorial later from Help in the menu.
               </div>
             </div>
 

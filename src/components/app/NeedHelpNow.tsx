@@ -62,16 +62,19 @@ export function NeedHelpNow({
   onNavigate?: (to: Target) => void;
 }) {
   return (
-    <div className="rounded-3xl border border-border/60 bg-card p-4 shadow-sm">
-      <div className="flex items-center justify-between gap-3">
+    <div className="rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-sm sm:p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold">Need help now</p>
-          <p className="text-xs text-muted-foreground">One tap. One small act.</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Need help now?</p>
+          <h2 className="mt-1 text-xl font-semibold tracking-tight">Take 60 seconds. Breathe, pray, re-center.</h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            Choose what is happening and take one small action before you react.
+          </p>
         </div>
-        <ShieldAlert className="h-5 w-5 text-primary" />
+        <ShieldAlert className="h-7 w-7 shrink-0 text-primary" />
       </div>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-3">
+      <div className="mt-4 grid gap-2 sm:grid-cols-3">
         {helpItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -79,7 +82,7 @@ export function NeedHelpNow({
               key={item.key}
               type="button"
               variant="outline"
-              className="h-auto justify-start rounded-2xl border-border/60 px-3 py-3 text-left"
+              className="h-auto justify-start rounded-2xl border-border/60 bg-background/65 px-3 py-3 text-left hover:border-primary/40"
               onClick={() => {
                 setQuickState(item.key);
                 saveGlobalResume({
