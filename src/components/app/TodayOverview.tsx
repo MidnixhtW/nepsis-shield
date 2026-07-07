@@ -85,32 +85,33 @@ function FastingBadge({
 
   return (
     <div className="grid gap-2">
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-start gap-2">
         <Badge
           variant="secondary"
           className={
-            "rounded-full px-3 py-1 text-xs font-medium " +
+            "max-w-full whitespace-normal rounded-full px-3 py-1 text-left text-xs font-medium leading-tight " +
             (isFast
               ? "bg-amber-500/12 text-amber-800 dark:text-amber-200"
               : "bg-emerald-500/12 text-emerald-800 dark:text-emerald-200")
           }
         >
-          <span className="inline-flex items-center gap-1.5">
-            {isFast ? <Leaf className="h-3.5 w-3.5" /> : <Flame className="h-3.5 w-3.5" />}
-            {description}
+          <span className="inline-flex min-w-0 max-w-full flex-wrap items-center gap-1.5">
+            {isFast ? <Leaf className="h-3.5 w-3.5 shrink-0" /> : <Flame className="h-3.5 w-3.5 shrink-0" />}
+            <span className="min-w-0 break-words">{description}</span>
           </span>
         </Badge>
         {exception ? (
-          <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+          <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-muted px-3 py-1 text-left text-xs font-medium leading-tight">
             {exception}
           </Badge>
         ) : null}
       </div>
 
-      <div className="text-xs leading-relaxed text-muted-foreground">
+      <div className="break-words text-xs leading-relaxed text-muted-foreground">
         {guidance.from ? <div>{guidance.from}</div> : null}
         <div>{guidance.allowed}</div>
       </div>
+
     </div>
   );
 }
@@ -132,20 +133,21 @@ function EssentialButton({
     <Button
       type="button"
       variant={variant}
-      className="tap h-auto min-h-14 justify-start whitespace-normal rounded-2xl border border-border/70 px-4 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70"
+      className="tap h-auto min-h-14 max-w-full justify-start whitespace-normal rounded-2xl border border-border/70 px-3 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70 sm:px-4"
       onClick={onClick}
     >
-      <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary">
+      <span className="mr-2 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary sm:mr-3">
         {icon}
       </span>
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 break-words">
         <span className="block text-sm font-semibold leading-tight">{label}</span>
         <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
           {description}
         </span>
       </span>
-      <ArrowRight className="ml-2 h-4 w-4 shrink-0 opacity-75" />
+      <ArrowRight className="ml-1 h-4 w-4 shrink-0 opacity-75 sm:ml-2" />
     </Button>
+
   );
 }
 
@@ -303,13 +305,14 @@ export function TodayOverview({
               Choose one focused path and keep the next step simple.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[500px]">
+          <div className="grid min-w-0 gap-2 sm:grid-cols-3 lg:w-[min(500px,100%)]">
             <EssentialButton
               label="Sleep"
               description="Night prayer + dim timer."
               icon={<MoonStar className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "pray", tab: "sleep" })}
             />
+
             <EssentialButton
               label="Challenges"
               description="7–14 day prayer paths."
@@ -337,13 +340,14 @@ export function TodayOverview({
               After prayer, continue with reading, reflection, or preparation.
             </p>
           </div>
-          <div className="grid gap-2 sm:grid-cols-3 lg:min-w-[500px]">
+          <div className="grid min-w-0 gap-2 sm:grid-cols-3 lg:w-[min(500px,100%)]">
             <EssentialButton
               label="Read"
               description="Today’s Scripture."
               icon={<BookOpen className="h-4 w-4" />}
               onClick={() => onNavigate?.({ section: "read", read: "daily" })}
             />
+
             <EssentialButton
               label="Reflect"
               description="Short journal note."
@@ -362,12 +366,12 @@ export function TodayOverview({
 
       <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
-      <Card className="order-first rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(18rem,1.05fr)] lg:items-start">
-          <div>
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <Card className="order-first rounded-3xl border-border/60 bg-card p-4 shadow-sm sm:p-6">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+          <div className="min-w-0">
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
+              <div className="min-w-0 break-words">
+                <p className="text-xs font-semibold uppercase leading-snug tracking-[0.1em] text-muted-foreground sm:tracking-[0.18em]">
                   Daily command center · {format(today, "EEEE")}
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold tracking-tight">
@@ -376,19 +380,20 @@ export function TodayOverview({
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   Prayer, Scripture, saints, fasting, and one practical next step for today.
                 </p>
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                <div className="mt-2 flex flex-wrap items-start gap-2">
+                  <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-muted px-3 py-1 text-left text-xs font-medium leading-tight">
                     {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
                   </Badge>
                   {q.data?.tone?.value || q.data?.tone?.description ? (
-                    <Badge variant="secondary" className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                    <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-primary/10 px-3 py-1 text-left text-xs font-medium leading-tight text-primary">
                       {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
                     </Badge>
                   ) : null}
                 </div>
               </div>
 
-              <div className="grid gap-2 sm:min-w-[210px] lg:min-w-0">
+              <div className="grid min-w-0 gap-2 sm:min-w-[210px] lg:min-w-0">
+
                 <Select
                   value={sourceOverride}
                   onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
@@ -402,11 +407,13 @@ export function TodayOverview({
                     <SelectItem value="goarch">GOARCH</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40">
-                  <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer">
-                    Open daily source <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
+                <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 max-w-full justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left leading-tight shadow-sm hover:border-primary/40">
+                  <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer" className="min-w-0">
+                    <span className="min-w-0 break-words">Open daily source</span>
+                    <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
                   </a>
                 </Button>
+
               </div>
             </div>
           </div>
@@ -444,7 +451,7 @@ export function TodayOverview({
                 <div className="mt-2 grid gap-1.5">
                   {q.data.saints.length ? (
                     q.data.saints.slice(0, 3).map((s) => (
-                      <p key={s} className="text-sm leading-relaxed">
+                      <p key={s} className="break-words text-sm leading-relaxed">
                         {s}
                       </p>
                     ))
@@ -453,6 +460,7 @@ export function TodayOverview({
                       See today's calendar commemorations.
                     </p>
                   )}
+
                   {q.data.saints.length > 3 ? (
                     <Button
                       type="button"
