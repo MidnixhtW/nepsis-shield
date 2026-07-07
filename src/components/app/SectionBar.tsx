@@ -20,17 +20,17 @@ export function SectionBar({
         className,
       )}
     >
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="text-[11px] font-semibold tracking-wide text-muted-foreground">
           {title}
         </div>
         {hint ? (
-          <div className="mt-0.5 text-sm font-semibold tracking-tight text-foreground/90">
+          <div className="mt-0.5 text-sm font-semibold leading-snug tracking-tight text-foreground/90">
             {hint}
           </div>
         ) : null}
       </div>
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {action ? <div className="min-w-0 max-w-full flex-shrink basis-full sm:basis-auto">{action}</div> : null}
     </div>
   );
 }

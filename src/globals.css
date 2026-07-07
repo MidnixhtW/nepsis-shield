@@ -152,12 +152,25 @@
     overflow-x: hidden;
   }
 
-  :where(p, a, li, h1, h2, h3, h4, h5, h6, button, span) {
+  :where(p, a, li, h1, h2, h3, h4, h5, h6, button, span, label) {
+    hyphens: auto;
     overflow-wrap: anywhere;
+    word-break: normal;
   }
 
-  :where(button, [role="button"]) {
+  :where(button, [role="button"], a, input, textarea, select) {
     max-width: 100%;
+    min-width: 0;
+  }
+
+  :where(button, [role="button"], a) > :where(span, div) {
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    :where(button, [role="button"], a) {
+      white-space: normal;
+    }
   }
 
   :where(a, button, input, textarea, select, [role="button"], [data-state]) {
@@ -470,6 +483,13 @@
   /* For long labels/URLs inside buttons: prevents any horizontal overflow. */
   .btn-wrap {
     @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
+  }
+
+  @media (max-width: 640px) {
+    :where(button, [role="button"], a).whitespace-nowrap,
+    :where(button, [role="button"], a):where(.inline-flex, .flex) {
+      white-space: normal !important;
+    }
   }
 
   /* Soft surface used on nav + hero overlays. */
