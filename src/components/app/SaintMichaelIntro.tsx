@@ -333,7 +333,7 @@ export function SaintMichaelIntro() {
 
       <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.2),transparent_29rem),linear-gradient(135deg,hsl(var(--background)),hsl(var(--muted)/0.55))]" />
       <div aria-hidden className="absolute inset-0 opacity-35 field-grid" />
-      <div aria-hidden className="absolute left-1/2 top-1/2 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 h-[min(32rem,86vmin)] w-[min(32rem,86vmin)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/20" />
       <div aria-hidden className="absolute left-[12%] top-[22%] star-drift text-primary/45">
         <Sparkles className="h-6 w-6" />
       </div>
@@ -348,24 +348,25 @@ export function SaintMichaelIntro() {
         type="button"
         variant="ghost"
         size="sm"
-        className="absolute right-4 top-4 z-10 rounded-2xl text-muted-foreground hover:text-foreground"
+        className="absolute right-3 top-[calc(env(safe-area-inset-top)+0.75rem)] z-10 rounded-2xl bg-background/45 text-muted-foreground backdrop-blur hover:text-foreground sm:right-4 sm:top-[calc(env(safe-area-inset-top)+1rem)]"
         onClick={skipIntro}
       >
         <X className="mr-2 h-4 w-4" /> Skip
       </Button>
 
-      <div className="relative grid place-items-center px-6 text-center">
-        <div className="michael-flight relative h-[20rem] w-[17rem] sm:h-[30rem] sm:w-[25rem]" aria-hidden>
+      <div className="relative z-[1] flex h-full w-full flex-col items-center justify-center gap-2 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-[calc(env(safe-area-inset-top)+3.25rem)] text-center sm:gap-4 sm:px-6">
+        <div className="michael-flight relative h-[min(40dvh,20rem)] w-[min(70vw,17rem)] max-[380px]:h-[min(36dvh,17rem)] sm:h-[min(52dvh,30rem)] sm:w-[min(78vw,25rem)]" aria-hidden>
           <div className="absolute inset-6 rounded-full bg-primary/10 blur-3xl" />
           <AnimatedSaintMichaelIcon />
         </div>
 
-        <div className="pointer-events-none absolute top-[calc(50%+10.25rem)] w-[min(34rem,calc(100vw-2rem))] rounded-3xl border border-border/60 bg-background/70 p-4 shadow-xl backdrop-blur sm:top-[calc(50%+14.25rem)]">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Holy Archangel Michael</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight">Defend us and pray to God for us.</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Entering Nepsis Shield</p>
+        <div className="pointer-events-none w-full max-w-[34rem] rounded-3xl border border-border/60 bg-background/75 p-3 shadow-xl backdrop-blur sm:p-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary sm:text-xs sm:tracking-[0.22em]">Holy Archangel Michael</p>
+          <h1 className="mt-1 text-lg font-semibold leading-tight tracking-tight min-[360px]:text-xl sm:text-2xl">Defend us and pray to God for us.</h1>
+          <p className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">Entering Nepsis Shield</p>
         </div>
       </div>
+
     </div>
   );
 }

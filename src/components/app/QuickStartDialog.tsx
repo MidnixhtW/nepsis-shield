@@ -182,22 +182,22 @@ export function QuickStartDialog() {
 
   return (
     <Dialog open={open} onOpenChange={closeDialog}>
-      <DialogContent className="rounded-3xl p-0 sm:max-w-[34rem]">
+      <DialogContent className="max-h-[calc(100dvh-1rem)] overflow-hidden rounded-3xl p-0 sm:max-w-[34rem]">
         {mode === "intro" ? (
-          <div className="rounded-3xl bg-background p-6">
-            <DialogHeader className="text-left">
-              <div className="mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <div className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-3xl bg-background p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+            <DialogHeader className="pr-6 text-left sm:pr-8">
+              <div className="mb-2 grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20 sm:mb-3 sm:h-12 sm:w-12">
                 <Compass className="h-5 w-5 text-primary" />
               </div>
-              <DialogTitle className="text-2xl leading-tight">Set your first rhythm</DialogTitle>
+              <DialogTitle className="text-xl leading-tight sm:text-2xl">Set your first rhythm</DialogTitle>
               <DialogDescription className="pt-2 text-sm leading-relaxed">
                 Nepsis Shield is a field-ready Orthodox companion for prayer, Scripture, watchfulness, and one faithful next step under pressure.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="mt-5 rounded-3xl border border-primary/25 bg-primary/5 p-4">
+            <div className="mt-4 rounded-3xl border border-primary/25 bg-primary/5 p-3 sm:mt-5 sm:p-4">
               <p className="text-sm font-semibold tracking-tight">Choose one simple goal</p>
-              <div className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
+              <div className="mt-2 grid gap-2 text-sm text-muted-foreground sm:mt-3 sm:grid-cols-2">
                 <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Pray daily</div>
                 <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Read daily</div>
                 <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Build discipline</div>
@@ -205,12 +205,13 @@ export function QuickStartDialog() {
               </div>
             </div>
 
-            <div className="mt-5 rounded-3xl border border-border bg-muted/20 p-4">
+            <div className="mt-4 rounded-3xl border border-border bg-muted/20 p-3 sm:mt-5 sm:p-4">
               <p className="text-sm font-semibold tracking-tight">Choose your role</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 This personalizes colors, field prompts, and emergency reset language.
               </p>
-              <div className="mt-3 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3">
+              <div className="mt-2 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:mt-3 sm:grid-cols-3">
+
                 {responderModeOrder.map((role) => {
                   const selected = selectedRole === role;
                   const theme = responderModeAccentClasses[role];
@@ -231,7 +232,7 @@ export function QuickStartDialog() {
               </div>
             </div>
 
-            <div className="mt-5 grid gap-2 rounded-3xl border border-border bg-muted/20 p-4 text-sm text-muted-foreground">
+            <div className="mt-4 grid gap-2 rounded-3xl border border-border bg-muted/20 p-3 text-sm text-muted-foreground sm:mt-5 sm:p-4">
               <div className="flex gap-2">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 Start on Today when you are not sure what to do next.
@@ -246,38 +247,39 @@ export function QuickStartDialog() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
-              <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
+            <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:justify-end">
+              <Button type="button" variant="ghost" className="min-h-10 rounded-2xl" onClick={finish}>
                 Skip for now
               </Button>
-              <Button type="button" variant="secondary" className="rounded-2xl" onClick={startTour}>
+              <Button type="button" variant="secondary" className="min-h-10 rounded-2xl" onClick={startTour}>
                 Tour app
               </Button>
-              <Button type="button" className="rounded-2xl" onClick={openPersonalPath}>
+              <Button type="button" className="min-h-10 rounded-2xl" onClick={openPersonalPath}>
                 Build my path
               </Button>
             </div>
           </div>
         ) : (
-          <div className="rounded-3xl bg-background p-6">
-            <DialogHeader className="text-left">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20">
+          <div className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-3xl bg-background p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+            <DialogHeader className="pr-6 text-left sm:pr-8">
+              <div className="flex items-start justify-between gap-3 sm:gap-4">
+                <div className="flex min-w-0 items-center gap-3">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20 sm:h-11 sm:w-11">
                     {step.icon}
                   </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary sm:tracking-[0.18em]">
                       {step.label}
                     </p>
-                    <DialogTitle className="mt-1 text-2xl leading-tight">{step.title}</DialogTitle>
+                    <DialogTitle className="mt-1 text-xl leading-tight sm:text-2xl">{step.title}</DialogTitle>
                   </div>
                 </div>
-                <p className="shrink-0 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
+                <p className="shrink-0 rounded-full border border-border bg-muted/40 px-2.5 py-1 text-xs font-semibold text-muted-foreground sm:px-3">
                   {stepIndex + 1}/{steps.length}
                 </p>
               </div>
               <DialogDescription className="pt-3 text-sm leading-relaxed">
+
                 {step.description}
               </DialogDescription>
             </DialogHeader>
@@ -297,8 +299,8 @@ export function QuickStartDialog() {
               ))}
             </div>
 
-            <div className="mt-5 rounded-3xl border border-border bg-muted/20 p-4">
-              <p className="mb-3 flex items-center gap-2 text-sm font-semibold">
+            <div className="mt-4 rounded-3xl border border-border bg-muted/20 p-3 sm:mt-5 sm:p-4">
+              <p className="mb-2 flex items-center gap-2 text-sm font-semibold sm:mb-3">
                 <HelpCircle className="h-4 w-4 text-primary" /> What it includes
               </p>
               <div className="grid gap-2.5">
@@ -311,31 +313,32 @@ export function QuickStartDialog() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <Button type="button" variant="ghost" className="rounded-2xl" onClick={finish}>
+            <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:items-center sm:justify-between">
+              <Button type="button" variant="ghost" className="min-h-10 rounded-2xl" onClick={finish}>
                 Skip
               </Button>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <div className="grid min-w-0 gap-2 sm:flex sm:justify-end">
                 <Button
                   type="button"
                   variant="outline"
-                  className="rounded-2xl"
+                  className="min-h-10 rounded-2xl"
                   disabled={isFirst}
                   onClick={() => setStepIndex((current) => current - 1)}
                 >
                   Back
                 </Button>
                 {step.route ? (
-                  <Button type="button" variant="secondary" className="rounded-2xl" onClick={openFeature}>
+                  <Button type="button" variant="secondary" className="min-h-10 rounded-2xl" onClick={openFeature}>
                     Open {step.label}
                   </Button>
                 ) : null}
-                <Button type="button" className="rounded-2xl" onClick={next}>
+                <Button type="button" className="min-h-10 rounded-2xl" onClick={next}>
                   {isLast ? "Finish" : "Next"}
                 </Button>
               </div>
             </div>
+
           </div>
         )}
       </DialogContent>
