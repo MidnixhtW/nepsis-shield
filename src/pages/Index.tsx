@@ -72,61 +72,6 @@ function StructuralBlueprint() {
   );
 }
 
-function HallowStyleOnboarding() {
-  const steps = [
-    {
-      title: "The Native Bell",
-      body: "Quiet your heart. Leave the noise of the world behind.",
-      accent: "amber",
-    },
-    {
-      title: "The Pilgrim's Path",
-      body: "A short spiritual diagnostic helps shape a personal rule.",
-      accent: "stone",
-    },
-    {
-      title: "The Spiritual Rule",
-      body: "Morning, midday, and night practices are gathered into one rhythm.",
-      accent: "amber",
-    },
-  ];
-
-  return (
-    <section className="space-y-6 rounded-[2rem] border border-stone-800/70 bg-stone-950/80 p-4 sm:p-6">
-      <div className="space-y-2">
-        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-amber-500/75">Onboarding</p>
-        <h2 className="text-2xl font-semibold tracking-tight text-stone-50">Enter the Sanctuary</h2>
-        <p className="max-w-2xl text-sm leading-6 text-stone-300">A premium, Orthodox duplicate of the Hallow-style flow: immersive, guided, and centered on prayer.</p>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-3">
-        {steps.map((step, index) => (
-          <div key={step.title} className="rounded-[1.6rem] border border-stone-800/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">0{index + 1}</span>
-              <span className={step.accent === "amber" ? "h-2 w-2 rounded-full bg-amber-400" : "h-2 w-2 rounded-full bg-stone-500"} />
-            </div>
-            <h3 className="mt-5 text-lg font-semibold text-stone-50">{step.title}</h3>
-            <p className="mt-2 text-sm leading-6 text-stone-300">{step.body}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="rounded-[1.8rem] border border-amber-500/15 bg-[radial-gradient(circle_at_top,rgba(217,119,6,0.18),rgba(12,10,9,0.98)_65%)] p-6">
-        <div className="max-w-2xl space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-500/75">Personalized rule</p>
-          <h3 className="text-2xl font-semibold tracking-tight text-stone-50">Morning, Midday, Night</h3>
-          <p className="text-sm leading-6 text-stone-300">Three touchpoints, beautiful typography, soft motion, and a clear save action that feels like sealing a rule of life.</p>
-        </div>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <button className="rounded-full border border-amber-500/30 bg-amber-500/10 px-5 py-3 text-sm font-semibold text-amber-100 transition-transform active:scale-[0.98]">Enter the Sanctuary</button>
-          <button className="rounded-full border border-stone-700 bg-stone-900/70 px-5 py-3 text-sm font-semibold text-stone-200 transition-transform active:scale-[0.98]">Seal this Daily Rule</button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
 type SectionTarget = {
@@ -384,7 +329,6 @@ const Index = () => {
       <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
           <div className="grid gap-4">
-            <HallowStyleOnboarding />
             <OrthodoxHero onAction={navigateTo} />
             <StructuralBlueprint />
             <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
@@ -393,14 +337,8 @@ const Index = () => {
         ) : null}
 
         {section === "pray" ? (
-          <div className="grid gap-4">
-            <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
-            <div className="rounded-[2rem] border border-stone-800/70 bg-stone-950/80 p-5 text-sm leading-6 text-stone-300">
-              The prayer experience should feel like a high-end liturgical media app: icon artwork, candlelit gradients, slow motion, transcript text, ambient mixer, and one clear play state.
-            </div>
-          </div>
+          <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
-
         {section === "read" ? (
           <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
