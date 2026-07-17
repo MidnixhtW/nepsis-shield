@@ -61,13 +61,6 @@ export function QuickStartDialog() {
   }, []);
 
   useEffect(() => {
-    const startAtSanctuary = window.location.pathname === "/";
-    if (startAtSanctuary) {
-      setMode("intro");
-    }
-  }, []);
-
-  useEffect(() => {
     function startTutorial() {
       setMode("tour");
       setStepIndex(0);

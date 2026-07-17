@@ -14,7 +14,6 @@ import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { saveGlobalResume } from "@/lib/dailyHabits";
-import { MonasticSanctuary } from "@/components/app/MonasticSanctuary";
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -196,12 +195,7 @@ const Index = () => {
     return <NotFound />;
   }
 
-  if (!params.section) {
-    return <MonasticSanctuary />;
-  }
-
   function navigateTo(to: SectionTarget) {
-
     const next = new URLSearchParams(searchParams);
 
     if ((to.section === "pray" || to.section === "learn") && to.tab) next.set("tab", to.tab);
