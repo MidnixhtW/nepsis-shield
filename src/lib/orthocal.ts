@@ -141,7 +141,6 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
   const fallbackFastingRule = getDailyFastingRule(date);
 
   const toneValue = typeof day.tone === "number" ? day.tone : undefined;
-
   const toneDesc = day.tone_desc?.trim() || undefined;
 
   return {
@@ -152,8 +151,8 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
       description: fastingDesc === "No fast" ? fallbackFastingRule.description : fastingDesc,
       exception: fastingException,
     },
-
     saints: day.saints ?? [],
+
     readings: extractPrimaryReadings(day),
     tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
     sources: {
