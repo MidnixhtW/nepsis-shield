@@ -5,6 +5,8 @@ import { OrthodoxBible } from "@/components/app/OrthodoxBible";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionBar } from "@/components/app/SectionBar";
+import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
+
 import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { showError, showSuccess } from "@/utils/toast";
 import { ReadingPlans } from "@/components/app/ReadingPlans";

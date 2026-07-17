@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
+
 import { responderModeOrder, useResponderMode, type ResponderMode } from "@/lib/responderMode";
 import { showError, showSuccess } from "@/utils/toast";
 
@@ -296,8 +298,8 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
   }
 
   return (
-    <Card className="relative overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-900/40 p-6 backdrop-blur-xl transition-all hover:border-amber-500/30 hover:shadow-[0_0_30px_rgba(217,119,6,0.05)]">
-      <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-600/10 blur-3xl" />
+    <Card className={hallowCardClass}>
+      <div className={hallowGlowClass} />
       <div className="relative z-10 p-5 sm:p-6">
 
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">

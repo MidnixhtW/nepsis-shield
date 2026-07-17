@@ -12,6 +12,8 @@ import { SleepMode } from "@/components/app/SleepMode";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionBar } from "@/components/app/SectionBar";
+import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
+
 import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { showError, showSuccess } from "@/utils/toast";
 

@@ -41,6 +41,8 @@ import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
 import { useSettings } from "@/hooks/useSettings";
 import { cn } from "@/lib/utils";
+import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
+
 import {
   responderModeAccentClasses,
   responderModeLabels,
@@ -365,8 +367,8 @@ export function TodayOverview({
 
       <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
-      <Card className="relative overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-900/40 p-6 backdrop-blur-xl transition-all hover:border-amber-500/30 hover:shadow-[0_0_30px_rgba(217,119,6,0.05)]">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-600/10 blur-3xl" />
+      <Card className={hallowCardClass}>
+        <div className={hallowGlowClass} />
 
         <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
         <div className="min-w-0">
