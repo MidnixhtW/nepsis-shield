@@ -65,6 +65,14 @@ function PathButton({
   onClick?: () => void;
   variant?: "default" | "outline";
 }) {
+  if (!onClick) {
+    return (
+      <div className="flex h-auto min-h-11 justify-start whitespace-normal rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 py-3 text-left text-sm font-semibold leading-snug text-muted-foreground">
+        <span className="min-w-0 break-words">{children}</span>
+      </div>
+    );
+  }
+
   return (
     <Button
       type="button"
@@ -140,12 +148,13 @@ export function InclusiveChristianPath({
 
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
 
-              <PathButton variant="default" onClick={() => onNavigate?.({ section: "pray", tab: "prayers" })}>
+              <PathButton variant="default" onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "prayers" }) : undefined}>
                 <Hand className="mr-2 h-4 w-4" /> Start with prayer
               </PathButton>
-              <PathButton onClick={() => onNavigate?.({ section: "learn", tab: "qa" })}>
+              <PathButton onClick={onNavigate ? () => onNavigate({ section: "learn", tab: "qa" }) : undefined}>
                 <MessageCircleQuestion className="mr-2 h-4 w-4" /> Learn Orthodoxy gently
               </PathButton>
+
             </div>
           </div>
 
@@ -263,15 +272,16 @@ export function InclusiveChristianPath({
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                <PathButton onClick={() => onNavigate?.({ section: "read", read: "plans" })}>
+                <PathButton onClick={onNavigate ? () => onNavigate({ section: "read", read: "plans" }) : undefined}>
                   <BookOpen className="mr-2 h-4 w-4" /> Reading plans
                 </PathButton>
-                <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}>
+                <PathButton onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "counter" }) : undefined}>
                   <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer
                 </PathButton>
-                <PathButton onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}>
+                <PathButton onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "journal" }) : undefined}>
                   <Heart className="mr-2 h-4 w-4" /> Reflection
                 </PathButton>
+
               </div>
             </>
           ) : null}

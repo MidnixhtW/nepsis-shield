@@ -112,7 +112,9 @@ function ApkDownloadCard() {
           {APK_DOWNLOAD_IS_DIRECT ? (
             <ApkDownloadButton className="rounded-2xl" label="Download APK" />
           ) : (
-            <Button disabled className="rounded-2xl">APK not hosted yet</Button>
+            <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 py-2 text-sm font-semibold text-muted-foreground">
+              APK not hosted yet
+            </div>
           )}
         </div>
       </div>

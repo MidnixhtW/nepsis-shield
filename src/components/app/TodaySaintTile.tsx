@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { Sparkles, ExternalLink } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -54,31 +56,45 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
           </div>
 
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <Button
-              type="button"
-              className="tap btn-wrap h-11 justify-between rounded-2xl"
-              onClick={() =>
-                window.open(
-                  `https://www.oca.org/saints/lives?search=${encodeURIComponent(saint)}`,
-                  "_blank",
-                  "noopener,noreferrer",
-                )
-              }
-              disabled={q.isLoading || q.isError}
-            >
-              Open life <ExternalLink className="h-4 w-4" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60"
-              onClick={onOpenSaints}
-            >
-              Patron prayers <ExternalLink className="h-4 w-4" />
-            </Button>
+            {q.isLoading || q.isError ? (
+              <div className="flex h-11 items-center justify-between rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 text-sm font-semibold text-muted-foreground">
+                {q.isLoading ? "Loading saint life" : "Saint life unavailable"}
+              </div>
+            ) : (
+              <Button
+                type="button"
+                className="tap btn-wrap h-11 justify-between rounded-2xl"
+                onClick={() =>
+                  window.open(
+                    `https://www.oca.org/saints/lives?search=${encodeURIComponent(saint)}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
+              >
+                Open life <ExternalLink className="h-4 w-4" />
+              </Button>
+            )}
+            {onOpenSaints ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60"
+                onClick={onOpenSaints}
+              >
+                Patron prayers <ExternalLink className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button asChild variant="outline" className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60">
+                <Link to="/saints">
+                  Patron prayers <ExternalLink className="h-4 w-4" />
+                </Link>
+              </Button>
+            )}
           </div>
 
           {q.isError ? (
+
             <p className="mt-3 text-xs text-destructive">Couldn't load saints.</p>
           ) : null}
         </div>

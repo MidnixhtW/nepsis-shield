@@ -138,13 +138,20 @@ export function PwaInstallCard() {
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
-          <Button type="button" className="rounded-2xl" disabled={installed} onClick={install}>
-            <Download className="mr-2 h-4 w-4" /> {installed ? "Installed" : installEvent ? "Install web app" : "Show install steps"}
-          </Button>
+          {installed ? (
+            <div className="inline-flex min-h-10 items-center rounded-2xl border border-primary/20 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+              <Download className="mr-2 h-4 w-4" /> Installed
+            </div>
+          ) : (
+            <Button type="button" className="rounded-2xl" onClick={install}>
+              <Download className="mr-2 h-4 w-4" /> {installEvent ? "Install web app" : "Show install steps"}
+            </Button>
+          )}
           <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={refreshOfflineCache}>
             <RefreshCw className="mr-2 h-4 w-4" /> Check offline
           </Button>
         </div>
+
       </div>
 
       <Separator className="my-4" />

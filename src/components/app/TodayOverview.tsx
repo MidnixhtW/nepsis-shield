@@ -133,13 +133,8 @@ function EssentialButton({
   onClick?: () => void;
   variant?: "default" | "outline" | "ghost";
 }) {
-  return (
-    <Button
-      type="button"
-      variant={variant}
-      className="tap h-auto min-h-14 max-w-full justify-start whitespace-normal rounded-2xl border border-border/70 px-3 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70 sm:px-4"
-      onClick={onClick}
-    >
+  const content = (
+    <>
       <span className="mr-2 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary sm:mr-3">
         {icon}
       </span>
@@ -149,9 +144,28 @@ function EssentialButton({
           {description}
         </span>
       </span>
-      <ArrowRight className="ml-1 h-4 w-4 shrink-0 opacity-75 sm:ml-2" />
-    </Button>
+      {onClick ? <ArrowRight className="ml-1 h-4 w-4 shrink-0 opacity-75 sm:ml-2" /> : null}
+    </>
+  );
 
+  if (!onClick) {
+    return (
+      <div className="flex h-auto min-h-14 max-w-full justify-start whitespace-normal rounded-2xl border border-dashed border-border/70 bg-muted/30 px-3 py-3 text-left text-muted-foreground sm:px-4">
+        {content}
+      </div>
+
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      variant={variant}
+      className="tap h-auto min-h-14 max-w-full justify-start whitespace-normal rounded-2xl border border-border/70 px-3 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70 sm:px-4"
+      onClick={onClick}
+    >
+      {content}
+    </Button>
   );
 }
 
@@ -171,11 +185,18 @@ function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void
             Your selected role now carries across Today, field mode, and the emergency reset.
           </p>
         </div>
-        <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-2xl border-border/60 bg-background/70 text-left leading-tight" onClick={onOpenFieldManual}>
-          Open field manual <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
-        </Button>
+        {onOpenFieldManual ? (
+          <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-2xl border-border/60 bg-background/70 text-left leading-tight" onClick={onOpenFieldManual}>
+            Open field manual <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
+          </Button>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border/70 bg-background/50 px-4 py-2 text-sm font-semibold text-muted-foreground">
+            Field manual unavailable
+          </div>
+        )}
       </div>
     </Card>
+
   );
 }
 
@@ -292,9 +313,11 @@ export function TodayOverview({
     }
   }
 
+  const openFieldManual = onOpenRoute ? () => onOpenRoute("/field-manual") : undefined;
+
   return (
     <div className="grid gap-6">
-      <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+      <CurrentModeCard onOpenFieldManual={openFieldManual} />
       <RuleOfVigilanceCard onNavigate={onNavigate} />
       {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
@@ -315,23 +338,26 @@ export function TodayOverview({
               label="Sleep"
               description="Night prayer + dim timer."
               icon={<MoonStar className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "pray", tab: "sleep" })}
+              onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "sleep" }) : undefined}
             />
 
             <EssentialButton
               label="Challenges"
+
               description="7–14 day prayer paths."
               icon={<CheckCircle2 className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "learn", tab: "challenges" })}
+              onClick={onNavigate ? () => onNavigate({ section: "learn", tab: "challenges" }) : undefined}
             />
             <EssentialButton
               label="My Path"
+
               description="Personalized next steps."
               icon={<Compass className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "learn", tab: "path" })}
+              onClick={onNavigate ? () => onNavigate({ section: "learn", tab: "path" }) : undefined}
             />
           </div>
         </div>
+
       </Card>
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
@@ -350,26 +376,29 @@ export function TodayOverview({
               label="Read"
               description="Today’s Scripture."
               icon={<BookOpen className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+              onClick={onNavigate ? () => onNavigate({ section: "read", read: "daily" }) : undefined}
             />
 
             <EssentialButton
               label="Reflect"
+
               description="Short journal note."
               icon={<PenLine className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+              onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "journal" }) : undefined}
             />
             <EssentialButton
               label="Prepare"
+
               description="Confession tools."
               icon={<ShieldCheck className="h-4 w-4" />}
-              onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
+              onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "prep" }) : undefined}
             />
           </div>
         </div>
+
       </Card>
 
-      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+      <DutyModeCard onOpenFieldManual={openFieldManual} />
 
       <Card className={hallowCardClass}>
         <div className={hallowGlowClass} />

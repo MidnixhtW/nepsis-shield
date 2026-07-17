@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
   Clock3,
+
   FileText,
   Minus,
   Pause,
@@ -39,14 +40,32 @@ export function MonasticAudioPlayer() {
   const [showMixer, setShowMixer] = useState(false);
   const [showText, setShowText] = useState(false);
   const [timer, setTimer] = useState("Off");
+  const pauseTrackRef = useRef(pauseTrack);
+
+  useEffect(() => {
+    pauseTrackRef.current = pauseTrack;
+  }, [pauseTrack]);
 
   useEffect(() => {
     if (currentTrack) setOpen(true);
   }, [currentTrack]);
 
+  useEffect(() => {
+    if (timer === "Off") return;
+
+    const minutes = timer === "20 min" ? 20 : 45;
+    const timeout = window.setTimeout(() => {
+      pauseTrackRef.current();
+      setTimer("Off");
+    }, minutes * 60 * 1000);
+
+    return () => window.clearTimeout(timeout);
+  }, [timer]);
+
   if (!currentTrack) return null;
 
   const activeLine = transcript[1];
+
   const activeTrackIndex = Math.max(0, sanctuaryTracks.findIndex((track) => track.id === currentTrack.id));
 
   function togglePlay() {
@@ -153,10 +172,10 @@ export function MonasticAudioPlayer() {
               <div className="mt-5 rounded-3xl bg-background/45 p-4">
                 <div className="grid gap-2 sm:grid-cols-3">
                   {ambientTracks.map((option) => {
-
                     const active = ambientTrack?.id === option.id;
                     return (
                       <button
+
                         key={option.id}
                         type="button"
                         className={cn(
@@ -179,9 +198,9 @@ export function MonasticAudioPlayer() {
                     step="0.05"
                     value={ambientVolume}
                     onChange={(event) => setAmbientVolume(Number(event.target.value))}
-
                     className="h-1 w-full accent-amber-500"
                   />
+
                   <span className="w-10 text-right text-xs text-muted-foreground">{Math.round(ambientVolume * 100)}%</span>
                 </div>
               </div>

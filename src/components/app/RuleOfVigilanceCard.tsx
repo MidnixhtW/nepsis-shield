@@ -85,13 +85,20 @@ export function RuleOfVigilanceCard({
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
-          <Button type="button" className="gold-foil mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
-            {rule.primaryAction}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          {onNavigate ? (
+            <Button type="button" className="gold-foil mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
+              {rule.primaryAction}
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          ) : (
+            <div className="mt-6 inline-flex min-h-12 items-center rounded-full border border-dashed border-border/70 bg-muted/30 px-6 text-sm font-semibold text-muted-foreground">
+              {rule.primaryAction}
+            </div>
+          )}
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
+
           <RuleRow icon={<Sun className="h-4 w-4" />} label="Morning" body={rule.morning} />
           <RuleRow icon={<Clock3 className="h-4 w-4" />} label="Midday" body={rule.midday} />
           <RuleRow icon={<MoonStar className="h-4 w-4" />} label="Evening" body={rule.evening} />

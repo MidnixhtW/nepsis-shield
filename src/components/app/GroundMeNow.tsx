@@ -135,11 +135,22 @@ export function GroundMeNow() {
                 <Button type="button" variant="outline" className="rounded-2xl" onClick={restart}>
                   <AlertTriangle className="mr-2 h-4 w-4" /> Restart
                 </Button>
-                <Button type="button" className={cn("rounded-2xl", theme.button)} onClick={next} disabled={stepIndex === steps.length - 1}>
-                  <ShieldCheck className="mr-2 h-4 w-4" /> Next
+                <Button
+                  type="button"
+                  className={cn("rounded-2xl", theme.button)}
+                  onClick={() => {
+                    if (stepIndex === steps.length - 1) {
+                      setOpen(false);
+                      return;
+                    }
+                    next();
+                  }}
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" /> {stepIndex === steps.length - 1 ? "Done" : "Next"}
                 </Button>
               </div>
             </div>
+
           </div>
         </DialogContent>
       </Dialog>

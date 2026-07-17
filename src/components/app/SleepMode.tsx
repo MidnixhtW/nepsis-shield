@@ -154,8 +154,18 @@ export function SleepMode() {
             <Button type="button" variant="outline" className="rounded-2xl" disabled={stepIndex === 0} onClick={() => setStepIndex((i) => i - 1)}>
               Back
             </Button>
-            <Button type="button" className="rounded-2xl" onClick={() => setStepIndex((i) => Math.min(steps.length - 1, i + 1))}>
-              {stepIndex === steps.length - 1 ? "Stay here" : "Next"}
+            <Button
+              type="button"
+              className="rounded-2xl"
+              onClick={() => {
+                if (stepIndex === steps.length - 1) {
+                  completeNight();
+                  return;
+                }
+                setStepIndex((i) => i + 1);
+              }}
+            >
+              {stepIndex === steps.length - 1 ? "Mark done" : "Next"}
             </Button>
           </div>
         </div>

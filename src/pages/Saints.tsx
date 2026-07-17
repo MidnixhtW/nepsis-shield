@@ -101,12 +101,13 @@ export default function Saints() {
                     </a>
                   </Button>
                 ) : (
-                  <Button type="button" disabled className="rounded-xl">
-                    Search OCA lives <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
+                  <div className="rounded-xl border border-dashed border-border/70 bg-muted/30 px-4 py-2 text-sm font-semibold text-muted-foreground">
+                    Enter a saint name to search OCA lives
+                  </div>
                 )}
               </div>
               <p className="mt-3 text-xs text-muted-foreground">
+
                 {patronNeeds.length} patron entries · local search updates daily
               </p>
             </div>

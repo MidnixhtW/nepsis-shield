@@ -715,23 +715,29 @@ export function OrthodoxBible() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant={isBookmarked ? "secondary" : "outline"}
-                    className="h-11 rounded-2xl border-border/60"
-                    onClick={() => {
-                      const ref = `${bookName} ${chapter}`;
-                      if (isBookmarked) removeBookmark(ref);
-                      else addBookmark(ref);
-                    }}
-                    disabled={!saveEnabled}
-                  >
-                    <Bookmark className="mr-2 h-4 w-4" />
-                    {saveEnabled ? (isBookmarked ? "Bookmarked" : "Bookmark") : "Bookmark (off)"}
-                  </Button>
+                  {saveEnabled ? (
+                    <Button
+                      variant={isBookmarked ? "secondary" : "outline"}
+                      className="h-11 rounded-2xl border-border/60"
+                      onClick={() => {
+                        const ref = `${bookName} ${chapter}`;
+                        if (isBookmarked) removeBookmark(ref);
+                        else addBookmark(ref);
+                      }}
+                    >
+                      <Bookmark className="mr-2 h-4 w-4" />
+                      {isBookmarked ? "Bookmarked" : "Bookmark"}
+                    </Button>
+                  ) : (
+                    <div className="inline-flex h-11 items-center rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 text-sm font-semibold text-muted-foreground">
+                      <Bookmark className="mr-2 h-4 w-4" /> Bookmark off
+                    </div>
+                  )}
 
                   <Button
                     type="button"
                     variant="outline"
+
                     className="h-11 rounded-2xl border-border/60"
                     onClick={() => {
                       const text = [

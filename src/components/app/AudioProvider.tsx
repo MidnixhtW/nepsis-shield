@@ -165,7 +165,6 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     mainAudioRef.current.onended = () => setIsPlaying(false);
 
     return () => {
-
       mainAudioRef.current?.pause();
       stopGeneratedMain();
     };

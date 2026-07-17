@@ -112,15 +112,26 @@ export function ShareDistributionCard() {
           </span>
         </Button>
 
-        <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" disabled={!APK_DOWNLOAD_IS_DIRECT} onClick={() => copyToClipboard("APK link", APK_DOWNLOAD_URL)}>
-          <QrCode className="mr-3 h-4 w-4 shrink-0 text-primary" />
-          <span>
-            <span className="block text-sm font-semibold">APK link</span>
-            <span className="mt-1 block text-xs font-normal text-muted-foreground">Android</span>
-          </span>
-        </Button>
+        {APK_DOWNLOAD_IS_DIRECT ? (
+          <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("APK link", APK_DOWNLOAD_URL)}>
+            <QrCode className="mr-3 h-4 w-4 shrink-0 text-primary" />
+            <span>
+              <span className="block text-sm font-semibold">APK link</span>
+              <span className="mt-1 block text-xs font-normal text-muted-foreground">Android</span>
+            </span>
+          </Button>
+        ) : (
+          <div className="flex h-auto items-center justify-start rounded-2xl border border-dashed border-border/70 bg-muted/30 p-3 text-left">
+            <QrCode className="mr-3 h-4 w-4 shrink-0 text-muted-foreground" />
+            <span>
+              <span className="block text-sm font-semibold text-muted-foreground">APK pending</span>
+              <span className="mt-1 block text-xs font-normal text-muted-foreground">Not hosted yet</span>
+            </span>
+          </div>
+        )}
 
         <Button type="button" variant="outline" className="h-auto justify-start rounded-2xl border-border/60 p-3 text-left" onClick={() => copyToClipboard("Share message", shareText)}>
+
           <MessageSquare className="mr-3 h-4 w-4 shrink-0 text-primary" />
           <span>
             <span className="block text-sm font-semibold">Message</span>
