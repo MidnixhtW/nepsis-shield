@@ -15,7 +15,9 @@ import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferen
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
+import { AudioProvider } from "@/components/app/AudioProvider";
 import Saints from "@/pages/Saints";
+
 import Settings from "@/pages/Settings";
 import PhilokaliaGuide from "@/pages/PhilokaliaGuide";
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
@@ -31,28 +33,30 @@ const App = () => (
     <ThemeProvider>
       <AccessibilityPreferences />
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ConnectionStatusBanner />
-          <SaintMichaelIntro />
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/privacy" element={<Privacy />} />
+        <AudioProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ConnectionStatusBanner />
+            <SaintMichaelIntro />
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/privacy" element={<Privacy />} />
 
-            <Route path="/about" element={<About />} />
-            <Route path="/download" element={<Download />} />
-            <Route path="/field-manual" element={<FieldManual />} />
-            <Route path="/release-notes" element={<ReleaseNotes />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/saints" element={<Saints />} />
-            <Route path="/philokalia" element={<PhilokaliaRoute />} />
-            <Route path="/:section" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+              <Route path="/about" element={<About />} />
+              <Route path="/download" element={<Download />} />
+              <Route path="/field-manual" element={<FieldManual />} />
+              <Route path="/release-notes" element={<ReleaseNotes />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/saints" element={<Saints />} />
+              <Route path="/philokalia" element={<PhilokaliaRoute />} />
+              <Route path="/:section" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AudioProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>
