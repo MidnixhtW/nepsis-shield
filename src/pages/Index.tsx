@@ -15,6 +15,63 @@ import { OrthodoxHero } from "@/components/app/YoungAdultHero";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 
+function StructuralBlueprint() {
+  const cards = [
+    { title: "Morning Reflection", subtitle: "Start your day with quiet stillness.", time: "8 min" },
+    { title: "Midday Reset", subtitle: "Return to prayer without friction.", time: "4 min" },
+    { title: "Evening Examen", subtitle: "Close the day in peace.", time: "10 min" },
+    { title: "Night Watch", subtitle: "A silent rule for rest.", time: "6 min" },
+  ];
+
+  return (
+    <section className="space-y-8 rounded-[2rem] border border-stone-800/70 bg-stone-950/70 p-4 shadow-[0_20px_80px_rgba(0,0,0,0.35)] sm:p-6">
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-amber-500/75">Daily Featured</p>
+          <div className="rounded-[2rem] border border-stone-800/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] p-6 sm:p-8">
+            <div className="flex min-h-[280px] flex-col justify-between gap-6 rounded-[1.6rem] bg-[radial-gradient(circle_at_top,rgba(217,119,6,0.18),rgba(12,10,9,0.96)_60%)] p-6 ring-1 ring-amber-500/10">
+              <div className="space-y-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-400">Featured today</p>
+                <h2 className="max-w-md text-3xl font-semibold tracking-tight text-stone-50 sm:text-4xl">Morning Reflection</h2>
+                <p className="max-w-sm text-sm leading-6 text-stone-300">Start your day with quiet stillness.</p>
+              </div>
+              <div className="flex items-end justify-between gap-4">
+                <div className="max-w-sm rounded-2xl border border-amber-500/15 bg-stone-950/50 p-4 backdrop-blur">
+                  <p className="text-xs uppercase tracking-[0.2em] text-amber-500/70">Rule of vigilance</p>
+                  <p className="mt-2 text-sm text-stone-300">A generous, immersive starting point that feels calm, sacred, and easy to enter.</p>
+                </div>
+                <div className="hidden rounded-full border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-200 sm:block">
+                  Gentle entry
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-amber-500/75">Recent sessions</p>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {cards.map((card) => (
+            <div
+              key={card.title}
+              className="min-h-[160px] min-w-[160px] rounded-[1.4rem] border border-stone-800/70 bg-stone-900/70 p-4 text-left shadow-sm"
+            >
+              <div className="flex h-full flex-col justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-stone-100">{card.title}</p>
+                  <p className="mt-2 text-xs leading-5 text-stone-400">{card.subtitle}</p>
+                </div>
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-amber-500/75">{card.time}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
 type SectionTarget = {
@@ -273,6 +330,7 @@ const Index = () => {
         {section === "today" ? (
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
+            <StructuralBlueprint />
             <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
           </div>
