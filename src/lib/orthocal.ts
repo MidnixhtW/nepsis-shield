@@ -1,5 +1,6 @@
 import { fetchJsonCached } from "@/lib/privacyFetch";
 import type { CalendarMode } from "@/lib/settings";
+import { getDailyFastingRule } from "@/lib/fastingRules";
 
 export type OrthocalPassage = {
   book?: string;
@@ -137,8 +138,10 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
   const fastingLevel = day.fast_level ?? 0;
   const fastingDesc = day.fast_level_desc?.trim() || "No fast";
   const fastingException = day.fast_exception_desc?.trim() || undefined;
+  const fallbackFastingRule = getDailyFastingRule(date);
 
   const toneValue = typeof day.tone === "number" ? day.tone : undefined;
+
   const toneDesc = day.tone_desc?.trim() || undefined;
 
   return {
@@ -146,9 +149,10 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
     calendarMode: mode,
     fasting: {
       level: fastingLevel,
-      description: fastingDesc,
+      description: fastingDesc === "No fast" ? fallbackFastingRule.description : fastingDesc,
       exception: fastingException,
     },
+
     saints: day.saints ?? [],
     readings: extractPrimaryReadings(day),
     tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
