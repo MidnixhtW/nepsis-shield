@@ -91,7 +91,7 @@ function MenuLinks() {
       </MenuSection>
 
       <MenuSection title="Library">
-        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Field Manual" description="Duty, pressure, prayer, and recovery" />
+        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Life & Service Guide" description="Daily life, pressure, prayer, and recovery" />
         <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
       </MenuSection>
 
@@ -158,8 +158,9 @@ export function AppHeader() {
         <div className="min-w-0">
           <h1 className="truncate text-sm font-semibold tracking-tight sm:text-base">Nepsis Shield</h1>
           <p className="truncate text-[11px] text-muted-foreground max-[359px]:hidden sm:text-xs">
-            Orthodox field companion · {format(new Date(), "EEE, MMM d")}
+            Orthodox daily companion · {format(new Date(), "EEE, MMM d")}
           </p>
+
         </div>
       </Link>
 

@@ -46,7 +46,8 @@ export function ShareDistributionCard() {
     const download = absoluteUrl("/download");
     const web = absoluteUrl("/today");
     const text = `Nepsis Shield is ready to install. Open this link for web install, Android APK, and QR download: ${download}`;
-    const reddit = `I built Nepsis Shield, a field-ready Orthodox prayer and watchfulness companion for daily discipline, Scripture, saints, and practical support under pressure. It is local-first, installable as a web app, and includes an Android APK/QR install page. I would appreciate blunt feedback on the onboarding, Today flow, and whether the Field Manual is useful: ${download}`;
+    const reddit = `I built Nepsis Shield, an Orthodox prayer and watchfulness companion for daily discipline, Scripture, saints, ordinary life, and practical support under pressure. It is local-first, installable as a web app, and includes an Android APK/QR install page. I would appreciate blunt feedback on the onboarding, Today flow, and whether the Life & Service Guide is useful: ${download}`;
+
     return {
       downloadPageUrl: download,
       webAppUrl: web,

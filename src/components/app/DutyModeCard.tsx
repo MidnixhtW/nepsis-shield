@@ -51,10 +51,10 @@ type ResponderBrief = {
 
 const responderModes: Record<ResponderMode, ResponderBrief> = {
   civilian: {
-    label: "None of these / civilian",
-    badge: "Quiet faithfulness",
+    label: "Civilian",
+    badge: "Everyday faithfulness",
     icon: Users,
-    focus: "Build watchfulness in ordinary life: family, work, study, stress, rest, and hidden obedience.",
+    focus: "Build watchfulness in ordinary life: home, work, school, family, stress, rest, and the next faithful step.",
     prayer:
       "Lord Jesus Christ, steady my heart in the ordinary duties of this day. Teach me to pray simply, act faithfully, and return to peace without fear. Amen.",
     steps: [
@@ -63,7 +63,8 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       "If stress rises, step back, pray the Jesus Prayer, and ask for help when needed.",
     ],
     reset: "After pressure: unclench your hands, thank God for one mercy, and return to one simple duty.",
-    suitedFor: ["Civilians", "Students", "Parents", "Everyday stress"],
+    suitedFor: ["Home", "Work", "School", "Everyday stress"],
+
     theme: {
       card: "candlelight-card border-primary/25 bg-gradient-to-br from-primary/12 via-card to-slate-500/10",
       orbOne: "border-primary/20 bg-primary/10",
@@ -337,11 +338,11 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
           <div>
             <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] transition-colors duration-300", theme.badge)}>
-              <Crosshair className="mr-1.5 h-3.5 w-3.5" /> Field modes
+              <Crosshair className="mr-1.5 h-3.5 w-3.5" /> Life & service modes
             </Badge>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight">Choose your field mode</h2>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight">Choose your mode</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              Role-specific prayer, focus, and reset language for public safety and service work.
+              Prayer, focus, and reset language for ordinary life, public safety, and service work.
             </p>
 
             <div className="mt-4 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
@@ -425,9 +426,10 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               </Button>
               {onOpenFieldManual ? (
                 <Button type="button" size="sm" variant="outline" className={cn("rounded-2xl", theme.modeButton)} onClick={onOpenFieldManual}>
-                  <HeartHandshake className="mr-2 h-4 w-4" /> Field manual
+                  <HeartHandshake className="mr-2 h-4 w-4" /> Life & service guide
                 </Button>
               ) : null}
+
             </div>
           </div>
         </div>

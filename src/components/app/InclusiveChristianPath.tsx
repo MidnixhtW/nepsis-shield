@@ -142,7 +142,8 @@ export function InclusiveChristianPath({
                 For those who serve, protect, heal, and keep watch.
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                A Christian prayer and formation app rooted in the Orthodox tradition for military, first responders, public safety, medical teams, chaplains, dispatchers, security, their families, and all who seek Scripture, prayer, and a steadier life in Christ.
+                A Christian prayer and formation app rooted in the Orthodox tradition for everyday believers, families, seekers, military, first responders, public safety, medical teams, chaplains, dispatchers, security, and all who seek Scripture, prayer, and a steadier life in Christ.
+
               </p>
             </div>
 

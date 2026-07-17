@@ -58,7 +58,7 @@ function practicalToolFor(item: QA) {
   }
 
   if (text.includes("fast") || text.includes("daily") || text.includes("service") || text.includes("field")) {
-    return { label: "Open field manual", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> };
+    return { label: "Open life & service guide", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> };
   }
 
   return { label: "Open prayer tools", to: "/pray?tab=prayers", icon: <Hand className="h-4 w-4" /> };

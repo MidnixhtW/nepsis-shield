@@ -54,9 +54,18 @@ type RoleSection = {
 
 const roleSections: RoleSection[] = [
   {
+    mode: "civilian",
+    icon: <UsersRound className="h-4 w-4" />,
+    title: "Civilian",
+    focus: "Ordinary life, family, work, school, stress, grief, decisions, and one faithful next step at a time.",
+    prayer: "Lord Jesus Christ, steady my heart in ordinary life. Teach me to pray simply, speak truthfully, love patiently, and do the next right thing with peace. Amen.",
+    checklist: ["Pause before reacting: breathe once and pray simply.", "Choose one faithful next step at home, work, school, or with family.", "Ask for pastoral, professional, or trusted help when burdens are too heavy."],
+  },
+  {
     mode: "military",
     icon: <Flag className="h-4 w-4" />,
     title: "Military",
+
     focus: "Mission, lawful obedience, restraint, unit care, and returning home without hardening the heart.",
     prayer: "Lord Jesus Christ, guard me in danger, steady me under orders, and keep my strength obedient to mercy, truth, and lawful duty. Protect my unit and those we are sent to defend. Amen.",
     checklist: ["Check orders, gear, buddy, and conscience.", "Obey lawful command without surrendering mercy.", "Pray for your unit by name when possible."],
@@ -194,13 +203,14 @@ export default function FieldManual() {
             <OrthodoxCrossIcon className="h-8 w-8" />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Field manual</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Life & service guide</p>
             <h1 className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-3xl font-bold tracking-tight text-transparent">
-              Orthodox Field Manual
+              Orthodox Life & Service Guide
             </h1>
             <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Role-specific prayers, checklists, and battle-rhythm practices for military, first responders, public safety, medical teams, chaplains, and families.
+              Prayers, checklists, and daily practices for ordinary life, families, military, first responders, public safety, medical teams, and chaplains.
             </p>
+
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -225,19 +235,22 @@ export default function FieldManual() {
                   <Shield className="mr-1 h-3.5 w-3.5" /> Service Orthodox rhythm
                 </Badge>
                 <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
-                  Copyable field reference
+                  Copyable daily reference
                 </Badge>
+
               </div>
               <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
                 Keep the watch. Guard the heart. Serve in Christ.
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                These are original short prayers and practical prompts for use under pressure. They support prayer and reflection; they do not replace command guidance, emergency procedures, pastoral care, or clinical support.
+                These are original short prayers and practical prompts for ordinary days and high-pressure moments. They support prayer and reflection; they do not replace emergency procedures, pastoral care, professional care, or clinical support.
+
               </p>
               <div className="my-6 h-px gold-hairline" />
               <div className="grid gap-3 md:grid-cols-3">
                 <QuickCard title="Role-specific" description="Open the section for your occupation and copy a compact brief." icon={<BookOpen className="h-5 w-5" />} />
-                <QuickCard title="Short enough for field use" description="Prayer, focus, and checklist without long reading." icon={<UsersRound className="h-5 w-5" />} />
+                <QuickCard title="Short enough for daily use" description="Prayer, focus, and checklist without long reading." icon={<UsersRound className="h-5 w-5" />} />
+
                 <QuickCard title="Care-aware" description="Prayer belongs with priest, chaplain, clinician, and trusted support when needed." icon={<Map className="h-5 w-5" />} />
               </div>
             </div>
@@ -249,9 +262,10 @@ export default function FieldManual() {
         <Card className="ornate-card p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Role sections</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight">Occupation-specific field briefs</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Use these as quick pre-shift or post-call references.</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Mode sections</p>
+              <h2 className="mt-1 text-xl font-bold tracking-tight">Life and service briefs</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Use these as quick daily, pre-shift, or post-call references.</p>
+
             </div>
             <div className="icon-medallion h-11 w-11"><Crosshair className="h-5 w-5" /></div>
           </div>
@@ -287,7 +301,8 @@ export default function FieldManual() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Ready reference</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight">Field prayers</h2>
+              <h2 className="mt-1 text-xl font-bold tracking-tight">Prayers for daily life and pressure</h2>
+
               <p className="mt-1 text-sm text-muted-foreground">Open the situation you need. Keep it simple and attentive.</p>
             </div>
             <div className="icon-medallion h-11 w-11"><OrthodoxCrossIcon className="h-6 w-6" /></div>

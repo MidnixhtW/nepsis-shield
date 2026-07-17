@@ -68,8 +68,9 @@ export function LearnHub({
             <Link to="/saints"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Saints</Link>
           </Button>
           <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
-            <Link to="/field-manual"><Crosshair className="mr-2 h-4 w-4 text-primary" /> Field Manual</Link>
+            <Link to="/field-manual"><Crosshair className="mr-2 h-4 w-4 text-primary" /> Life & Service Guide</Link>
           </Button>
+
           <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
             <Link to="/download"><Download className="mr-2 h-4 w-4 text-primary" /> Install / Share</Link>
           </Button>

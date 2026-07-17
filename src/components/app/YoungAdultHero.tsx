@@ -39,11 +39,12 @@ export function OrthodoxHero({
         <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-              Field-ready Orthodox companion
+              Orthodox companion for daily life and service
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Prayer and watchfulness for life on duty and off duty.
+              Prayer and watchfulness for ordinary days and high-pressure moments.
             </h2>
+
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Start with one simple step: pray now, read today, or use a short reset when pressure is high.
             </p>
@@ -82,8 +83,9 @@ export function OrthodoxHero({
               </div>
             </div>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Today is your command center for prayer, Scripture, saints, field tools, and one clear next step.
+              Today is your home base for prayer, Scripture, saints, practical tools, and one clear next step.
             </p>
+
           </div>
         </div>
       </div>

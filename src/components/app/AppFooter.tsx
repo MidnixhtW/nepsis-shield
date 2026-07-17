@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 
 const utilityLinks = [
   { label: "Install / share", to: "/download", icon: <Download className="h-4 w-4" /> },
-  { label: "Field Manual", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> },
+  { label: "Life & service", to: "/field-manual", icon: <Crosshair className="h-4 w-4" /> },
   { label: "About", to: "/about", icon: <Info className="h-4 w-4" /> },
   { label: "Privacy", to: "/privacy", icon: <Shield className="h-4 w-4" /> },
 ];
@@ -17,8 +17,9 @@ export function AppFooter() {
         <div className="min-w-0">
           <p className="text-sm font-semibold tracking-tight">A quiet devotional aid</p>
           <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">
-            Under the patronage of St Michael the Archangel, for military, first responders, and the wider service-and-protection community.
+            Under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
           </p>
+
           <div className="mt-3 flex items-start gap-2 rounded-xl border border-primary/15 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
             <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p>

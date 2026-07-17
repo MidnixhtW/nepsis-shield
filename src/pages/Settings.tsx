@@ -182,8 +182,9 @@ export default function Settings() {
             <div className="min-w-0 break-words">
               <h2 className="text-base font-semibold tracking-tight">Role / mode</h2>
               <p id="role-help" className="mt-1 text-sm text-muted-foreground">
-                Sets your default first-responder mode across Today, Field Manual, and Ground Me Now.
+                Sets your default life/service mode across Today, the guide, and Ground Me Now.
               </p>
+
             </div>
             <SlidersHorizontal className="h-5 w-5 shrink-0 text-muted-foreground" />
           </div>

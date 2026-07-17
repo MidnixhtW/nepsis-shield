@@ -180,20 +180,22 @@ function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void
           <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
             <Target className="mr-1.5 h-3.5 w-3.5 shrink-0" /> {responderModeShortLabels[mode]} mode active
           </Badge>
-          <h2 className="mt-3 text-xl font-semibold tracking-tight">Today is tuned for {responderModeLabels[mode]}</h2>
+          <h2 className="mt-3 text-xl font-semibold tracking-tight">Today is tuned for your {responderModeLabels[mode].toLowerCase()} mode</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-            Your selected role now carries across Today, field mode, and the emergency reset.
+            Your selected mode now carries across Today, the guide, and the emergency reset.
           </p>
+
         </div>
         {onOpenFieldManual ? (
           <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-2xl border-border/60 bg-background/70 text-left leading-tight" onClick={onOpenFieldManual}>
-            Open field manual <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
+            Open life & service guide <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
           </Button>
         ) : (
           <div className="rounded-2xl border border-dashed border-border/70 bg-background/50 px-4 py-2 text-sm font-semibold text-muted-foreground">
-            Field manual unavailable
+            Guide unavailable
           </div>
         )}
+
       </div>
     </Card>
 

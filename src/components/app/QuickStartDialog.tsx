@@ -349,7 +349,8 @@ export function QuickStartDialog() {
                       selected={selected}
                       icon={<ShieldCheck className={cn("h-5 w-5", selected ? "text-primary" : "text-muted-foreground")} />}
                       title={responderModeLabels[role]}
-                      description={role === "civilian" ? "For home, work, school, family, and everyday stress." : "Keeps field prompts and reset language aligned with your duties."}
+                      description={role === "civilian" ? "For home, work, school, family, and everyday stress." : "Keeps service prompts and reset language aligned with your duties."}
+
                       onClick={() => chooseRole(role)}
                     />
                   );
