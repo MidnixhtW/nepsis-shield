@@ -12,6 +12,7 @@ import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
 import { OrthodoxHero } from "@/components/app/YoungAdultHero";
+import { MonasticAudioPlayer } from "@/components/app/MonasticAudioPlayer";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 
@@ -110,32 +111,32 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
-      <div className="grid gap-4">
+    <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
+      <div className="grid gap-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">I want to...</p>
-            <h2 className="mt-1 text-lg font-semibold tracking-tight">Choose one next step</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Choose gently</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">One next step is enough</h2>
           </div>
-          <Button type="button" variant="ghost" className="rounded-xl" onClick={() => onOpenRoute("/download")}>
+          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground hover:text-primary" onClick={() => onOpenRoute("/download")}>
             <Share2 className="mr-2 h-4 w-4" /> Share / install
           </Button>
         </div>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {actions.map((action) => (
             <Button
               key={action.label}
               type="button"
               variant="outline"
-              className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left"
+              className="h-auto justify-start rounded-3xl border-primary/15 bg-background/45 px-4 py-4 text-left shadow-[0_14px_45px_hsl(35_91%_48%/0.06)] hover:border-primary/35 hover:bg-background/65"
               onClick={action.onClick}
             >
-              <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+              <span className="mr-3 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
                 {action.icon}
               </span>
               <span className="min-w-0">
                 <span className="block text-sm font-semibold leading-tight">{action.label}</span>
-                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{action.helper}</span>
+                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
               </span>
             </Button>
           ))}
@@ -268,9 +269,11 @@ const Index = () => {
   return (
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       <QuickStartDialog />
+      <MonasticAudioPlayer />
 
-      <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="grid gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
+
           <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
             <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />

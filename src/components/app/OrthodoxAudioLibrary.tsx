@@ -1,8 +1,9 @@
-import { ExternalLink, Headphones, Mic2, Music, Moon, Radio, ScrollText, Volume2 } from "lucide-react";
+import { ExternalLink, Headphones, Mic2, Music, Moon, PlayCircle, Radio, ScrollText, Volume2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useAudio } from "@/components/app/AudioProvider";
 
 type AudioShelf = {
   title: string;
@@ -90,24 +91,39 @@ const listeningRules = [
 ];
 
 export function OrthodoxAudioLibrary() {
+  const { playTrack } = useAudio();
+
+  function openSanctuary() {
+    playTrack({
+      id: "evening-prayer-demo",
+      title: "The Evening Prayer of St. Macarius",
+      url: "",
+      category: "prayer",
+    });
+  }
+
   return (
-    <div className="grid gap-4">
-      <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
-        <div className="relative p-5 sm:p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-blue-500/10" />
-          <div className="relative">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-                <Radio className="mr-1 h-3.5 w-3.5" /> Audio library
-              </Badge>
-              <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">
-                Chant • prayers • homilies • Scripture
-              </Badge>
+    <div className="grid gap-6">
+      <Card className="candlelight-card overflow-hidden rounded-[2rem] border p-5 sm:p-7">
+        <div className="relative">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              <Radio className="mr-1 h-3.5 w-3.5" /> Audio sanctuary
+            </Badge>
+            <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">
+              Chant • prayers • homilies • Scripture
+            </Badge>
+          </div>
+          <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Orthodox audio for the whole day</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Enter a quiet, full-screen player for guided prayer, chant, transcripts, ambient stillness, and a sleep-friendly timer.
+              </p>
             </div>
-            <h2 className="mt-4 text-2xl font-semibold tracking-tight">Orthodox audio for the whole day</h2>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              A curated, trustworthy listening hub so the app can compete with polished Catholic and Protestant audio experiences while keeping an Orthodox spirit.
-            </p>
+            <Button type="button" className="gold-foil h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={openSanctuary}>
+              <PlayCircle className="mr-2 h-5 w-5" /> Enter sanctuary
+            </Button>
           </div>
         </div>
       </Card>

@@ -1,69 +1,240 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   BookOpen,
-  CheckCircle2,
+  Check,
+  ChevronRight,
   Compass,
-  Hand,
-  HelpCircle,
-  Home,
-  Menu,
+  Flame,
+  Heart,
+  MoonStar,
   ShieldCheck,
   Sparkles,
+  Sun,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import {
   getStoredResponderMode,
-  responderModeAccentClasses,
   responderModeLabels,
   responderModeOrder,
   setStoredResponderMode,
   type ResponderMode,
 } from "@/lib/responderMode";
 
+import {
+  buildRuleOfVigilance,
+  setStoredRuleOfVigilance,
+  type RuleOfVigilance,
+  type VigilanceNeed,
+  type VigilanceRhythm,
+} from "@/lib/ruleOfVigilance";
+
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-type TutorialMode = "intro" | "tour";
+type OnboardingStep = "welcome" | "role" | "need" | "rhythm" | "rule";
 
-type TutorialStep = {
-  key: string;
-  label: string;
+type NeedOption = {
+  id: VigilanceNeed;
   title: string;
   description: string;
-  icon: ReactNode;
-  route?: string;
-  bullets: string[];
+  icon: React.ReactNode;
 };
+
+type RhythmOption = {
+  id: VigilanceRhythm;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+};
+
+const steps: OnboardingStep[] = ["welcome", "role", "need", "rhythm", "rule"];
+
+const needOptions: NeedOption[] = [
+  {
+    id: "peace",
+    title: "Peace from anxiety",
+    description: "A quiet rule for returning to prayer when the heart is restless.",
+    icon: <Heart className="h-5 w-5" />,
+  },
+  {
+    id: "discipline",
+    title: "Discipline in prayer",
+    description: "A steady rhythm that is small enough to keep and strong enough to shape the day.",
+    icon: <ShieldCheck className="h-5 w-5" />,
+  },
+  {
+    id: "anger",
+    title: "Help with anger",
+    description: "A rule for restraint, slower speech, and merciful strength under pressure.",
+    icon: <Flame className="h-5 w-5" />,
+  },
+  {
+    id: "sleep",
+    title: "Sleep and evening stillness",
+    description: "A soft descent into Compline, surrender, and rest without scrolling.",
+    icon: <MoonStar className="h-5 w-5" />,
+  },
+  {
+    id: "scripture",
+    title: "Scripture habit",
+    description: "A simple daily reading path with attention instead of hurry.",
+    icon: <BookOpen className="h-5 w-5" />,
+  },
+  {
+    id: "confession",
+    title: "Confession preparation",
+    description: "A hopeful examen that leads to truth without despair.",
+    icon: <Sparkles className="h-5 w-5" />,
+  },
+  {
+    id: "fasting",
+    title: "Fasting support",
+    description: "Embodied watchfulness with humility, patience, and practical guidance.",
+    icon: <Compass className="h-5 w-5" />,
+  },
+  {
+    id: "exploring",
+    title: "Just exploring",
+    description: "A gentle first step into prayer, reading, and Orthodox watchfulness.",
+    icon: <Sun className="h-5 w-5" />,
+  },
+];
+
+const rhythmOptions: RhythmOption[] = [
+  {
+    id: "morning",
+    title: "Morning anchor",
+    description: "Begin before the noise gathers.",
+    icon: <Sun className="h-5 w-5" />,
+  },
+  {
+    id: "midday",
+    title: "Midday return",
+    description: "Use the chotki when the day is already moving.",
+    icon: <Compass className="h-5 w-5" />,
+  },
+  {
+    id: "evening",
+    title: "Evening sanctuary",
+    description: "Let the day settle into prayer before sleep.",
+    icon: <MoonStar className="h-5 w-5" />,
+  },
+  {
+    id: "small",
+    title: "Smallest faithful step",
+    description: "A rule for busy seasons: short, honest, and repeatable.",
+    icon: <Heart className="h-5 w-5" />,
+  },
+];
+
+function StepDots({ index }: { index: number }) {
+  return (
+    <div className="flex gap-1.5" aria-label="Onboarding progress">
+      {steps.map((step, i) => (
+        <span
+          key={step}
+          className={cn(
+            "h-1.5 rounded-full transition-all",
+            i <= index ? "w-7 bg-primary" : "w-2.5 bg-primary/20",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SelectionCard({
+  selected,
+  icon,
+  title,
+  description,
+  onClick,
+}: {
+  selected: boolean;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
+        "bg-card/60 shadow-[0_18px_55px_hsl(35_91%_48%/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
+        selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
+      )}
+    >
+      <span className="pointer-events-none absolute inset-x-6 -top-10 h-20 rounded-full bg-amber-500/10 blur-3xl" />
+      <span className="relative flex items-start justify-between gap-3">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+          {icon}
+        </span>
+        <span
+          className={cn(
+            "grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all",
+            selected ? "gold-foil border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
+          )}
+        >
+          <Check className="h-4 w-4" />
+        </span>
+      </span>
+      <span className="relative mt-4 block text-base font-semibold tracking-tight">{title}</span>
+      <span className="relative mt-1 block text-sm leading-relaxed text-muted-foreground">{description}</span>
+    </button>
+  );
+}
+
+function RulePreview({ rule }: { rule: RuleOfVigilance }) {
+  const rows = [
+    ["Morning", rule.morning],
+    ["Midday", rule.midday],
+    ["Evening", rule.evening],
+    ["Under pressure", rule.underPressure],
+  ];
+
+  return (
+    <div className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your Rule of Vigilance</p>
+      <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
+      <div className="mt-6 grid gap-3">
+        {rows.map(([label, body]) => (
+          <div key={label} className="rounded-3xl bg-background/45 p-4 shadow-[inset_0_1px_0_hsl(42_92%_58%/0.10)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{label}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/90">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function QuickStartDialog() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState<TutorialMode>("intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
+  const [selectedNeed, setSelectedNeed] = useState<VigilanceNeed>("peace");
+  const [selectedRhythm, setSelectedRhythm] = useState<VigilanceRhythm>("morning");
 
   useEffect(() => {
     const done = getStoredItem<boolean>(ONBOARDING_KEY);
     if (!done) {
-      setMode("intro");
+      setStepIndex(0);
       setOpen(true);
     }
   }, []);
 
   useEffect(() => {
     function startTutorial() {
-      setMode("tour");
       setStepIndex(0);
+      setSelectedRole(getStoredResponderMode());
       setOpen(true);
     }
 
@@ -71,68 +242,11 @@ export function QuickStartDialog() {
     return () => window.removeEventListener(START_TUTORIAL_EVENT, startTutorial);
   }, []);
 
-  const steps = useMemo<TutorialStep[]>(
-    () => [
-      {
-        key: "today",
-        label: "Today",
-        title: "Daily command center",
-        description: "Your home base for prayer, Scripture, saints, fasting, and one practical next step.",
-        icon: <Home className="h-5 w-5 text-primary" />,
-        route: "/today",
-        bullets: ["Pray now, read today, or reset under pressure", "Daily rhythm and liturgical details", "Resume your last activity"],
-      },
-      {
-        key: "prayer",
-        label: "Prayer",
-        title: "Prayer",
-        description: "Daily prayer, habits, stillness, confession prep, and journal.",
-        icon: <Hand className="h-5 w-5 text-primary" />,
-        route: "/pray",
-        bullets: ["Guided daily prayer", "Prayer rule and Jesus Prayer counter", "Prep and journal tools"],
-      },
-      {
-        key: "read",
-        label: "Read",
-        title: "Read",
-        description: "Scripture, daily readings, and plans for steady reading.",
-        icon: <BookOpen className="h-5 w-5 text-primary" />,
-        route: "/read",
-        bullets: ["Daily readings", "Bible browsing", "Reading plans"],
-      },
-      {
-        key: "tools",
-        label: "Guide",
-        title: "Guide",
-        description: "Personal path, challenges, learning, liturgy help, audio, hymns, and parish resources.",
-        icon: <Sparkles className="h-5 w-5 text-primary" />,
-        route: "/learn?tab=path",
-        bullets: ["Build a daily rule", "Learn the faith in small steps", "Use guide, Q&A, liturgy, audio, and parish finder"],
-      },
-      {
-        key: "menu",
-        label: "More",
-        title: "More",
-        description: "Secondary tools live in the top-right menu and More tab.",
-        icon: <Menu className="h-5 w-5 text-primary" />,
-        bullets: ["Field Manual and Saints", "Settings, install/share, privacy, and sources", "Replay this tutorial anytime"],
-      },
-      {
-        key: "done",
-        label: "Done",
-        title: "You’re ready",
-        description: "When you feel lost, use this order: Today → Pray → Read → Guide → More.",
-        icon: <ShieldCheck className="h-5 w-5 text-primary" />,
-        route: "/today",
-        bullets: ["Start small", "Follow one next step", "Return to Today anytime"],
-      },
-    ],
-    [],
-  );
-
   const step = steps[stepIndex];
-  const isFirst = stepIndex === 0;
-  const isLast = stepIndex === steps.length - 1;
+  const rule = useMemo(
+    () => buildRuleOfVigilance({ need: selectedNeed, rhythm: selectedRhythm, role: selectedRole }),
+    [selectedNeed, selectedRhythm, selectedRole],
+  );
 
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
@@ -141,207 +255,186 @@ export function QuickStartDialog() {
 
   function finish() {
     setStoredResponderMode(selectedRole);
+    setStoredRuleOfVigilance(rule);
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
+    navigate("/today");
   }
 
-  function closeDialog(nextOpen: boolean) {
-    if (!nextOpen) finish();
-    else setOpen(true);
-  }
-
-  function startTour() {
-    setMode("tour");
-    setStepIndex(0);
-  }
-
-  function openPersonalPath() {
+  function skip() {
+    const defaultRule = buildRuleOfVigilance({ need: selectedNeed, rhythm: selectedRhythm, role: selectedRole });
     setStoredResponderMode(selectedRole);
+    setStoredRuleOfVigilance(defaultRule);
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
-    navigate("/learn?tab=path");
   }
 
   function next() {
-    if (isLast) {
-      if (step.route) navigate(step.route);
+    if (step === "rule") {
       finish();
       return;
     }
-
-    setStepIndex((current) => current + 1);
+    setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
 
-  function openFeature() {
-    if (!step.route) return;
-    setStoredResponderMode(selectedRole);
-    setStoredItem(ONBOARDING_KEY, true);
-    setOpen(false);
-    navigate(step.route);
-  }
+  if (!open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog}>
-      <DialogContent className="max-h-[calc(100dvh-1rem)] overflow-hidden rounded-3xl p-0 sm:max-w-[34rem]">
-        {mode === "intro" ? (
-          <div className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-3xl bg-background p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
-            <DialogHeader className="pr-6 text-left sm:pr-8">
-              <div className="mb-2 grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20 sm:mb-3 sm:h-12 sm:w-12">
-                <Compass className="h-5 w-5 text-primary" />
-              </div>
-              <DialogTitle className="text-xl leading-tight sm:text-2xl">Set your first rhythm</DialogTitle>
-              <DialogDescription className="pt-2 text-sm leading-relaxed">
-                Nepsis Shield is a field-ready Orthodox companion for prayer, Scripture, watchfulness, and one faithful next step under pressure.
-              </DialogDescription>
-            </DialogHeader>
+    <div
+      className="fixed inset-0 z-[70] overflow-y-auto bg-background text-foreground"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboarding-title"
+    >
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="absolute bottom-20 right-[-8rem] h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+      </div>
 
-            <div className="mt-4 rounded-3xl border border-primary/25 bg-primary/5 p-3 sm:mt-5 sm:p-4">
-              <p className="text-sm font-semibold tracking-tight">Choose one simple goal</p>
-              <div className="mt-2 grid gap-2 text-sm text-muted-foreground sm:mt-3 sm:grid-cols-2">
-                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Pray daily</div>
-                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Read daily</div>
-                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Build discipline</div>
-                <div className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /> Find calm under stress</div>
-              </div>
-            </div>
-
-            <div className="candlelight-card mt-4 rounded-3xl border p-3 sm:mt-5 sm:p-4">
-              <p className="text-sm font-semibold tracking-tight">Choose your role or path</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                This personalizes colors, field prompts, and emergency reset language. If none apply, choose the civilian option.
-              </p>
-              <div className="mt-2 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:mt-3 sm:grid-cols-3">
-
-                {responderModeOrder.map((role) => {
-                  const selected = selectedRole === role;
-                  const theme = responderModeAccentClasses[role];
-                  return (
-                    <button
-                      key={role}
-                      type="button"
-                      className={cn(
-                        "min-h-10 rounded-2xl border px-3 py-2 text-left text-xs font-semibold leading-tight transition-colors whitespace-normal break-words",
-                        selected ? theme.badge : "border-primary/15 bg-background/60 text-muted-foreground hover:border-primary/35 hover:bg-muted/50 hover:text-foreground",
-                      )}
-                      onClick={() => chooseRole(role)}
-                    >
-                      {responderModeLabels[role]}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mt-4 grid gap-2 rounded-3xl border border-border bg-muted/20 p-3 text-sm text-muted-foreground sm:mt-5 sm:p-4">
-              <div className="flex gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                Start on Today when you are not sure what to do next.
-              </div>
-              <div className="flex gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                The personal path recommends prayer, reading, sleep mode, or challenges.
-              </div>
-              <div className="flex gap-2">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                You can replay the tutorial later from Help in the menu.
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:justify-end">
-              <Button type="button" variant="ghost" className="min-h-10 rounded-2xl" onClick={finish}>
-                Skip for now
+      <div className="relative mx-auto flex min-h-dvh w-full max-w-5xl flex-col px-5 pb-32 pt-5 sm:px-8 sm:pb-36 sm:pt-8">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {stepIndex > 0 ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="rounded-full"
+                onClick={() => setStepIndex((current) => current - 1)}
+              >
+                <ArrowLeft className="h-5 w-5" />
+                <span className="sr-only">Back</span>
               </Button>
-              <Button type="button" variant="secondary" className="min-h-10 rounded-2xl" onClick={startTour}>
-                Tour app
-              </Button>
-              <Button type="button" className="min-h-10 rounded-2xl" onClick={openPersonalPath}>
-                Build my path
-              </Button>
-            </div>
+            ) : null}
+            <StepDots index={stepIndex} />
           </div>
-        ) : (
-          <div className="max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-3xl bg-background p-4 sm:max-h-[calc(100dvh-2rem)] sm:p-6">
-            <DialogHeader className="pr-6 text-left sm:pr-8">
-              <div className="flex items-start justify-between gap-3 sm:gap-4">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 ring-1 ring-primary/20 sm:h-11 sm:w-11">
-                    {step.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary sm:tracking-[0.18em]">
-                      {step.label}
-                    </p>
-                    <DialogTitle className="mt-1 text-xl leading-tight sm:text-2xl">{step.title}</DialogTitle>
-                  </div>
-                </div>
-                <p className="shrink-0 rounded-full border border-border bg-muted/40 px-2.5 py-1 text-xs font-semibold text-muted-foreground sm:px-3">
-                  {stepIndex + 1}/{steps.length}
+          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
+            Begin later
+          </Button>
+        </header>
+
+        <main className="grid flex-1 content-center gap-8 py-8 sm:py-12">
+          {step === "welcome" ? (
+            <section className="mx-auto max-w-3xl text-center">
+              <div className="mx-auto grid h-20 w-20 place-items-center rounded-[1.75rem] border border-primary/25 bg-primary/10 text-primary shadow-[0_24px_80px_hsl(35_91%_48%/0.20)]">
+                <Compass className="h-9 w-9" />
+              </div>
+              <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Nepsis Shield</p>
+              <h1 id="onboarding-title" className="mt-3 text-4xl font-semibold tracking-tight sm:text-6xl">
+                Quiet your heart. Begin with one faithful step.
+              </h1>
+              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                We’ll shape a simple Orthodox rhythm for your day: prayer, Scripture, watchfulness, and a gentle return when pressure rises.
+              </p>
+            </section>
+          ) : null}
+
+          {step === "role" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your path</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  What should the app be attentive to?
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Choose a role if it fits. If not, the civilian path keeps the language pastoral and ordinary-life focused.
                 </p>
               </div>
-              <DialogDescription className="pt-3 text-sm leading-relaxed">
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {responderModeOrder.map((role) => {
+                  const selected = selectedRole === role;
+                  return (
+                    <SelectionCard
+                      key={role}
+                      selected={selected}
+                      icon={<ShieldCheck className={cn("h-5 w-5", selected ? "text-primary" : "text-muted-foreground")} />}
+                      title={responderModeLabels[role]}
+                      description={role === "civilian" ? "For home, work, school, family, and everyday stress." : "Keeps field prompts and reset language aligned with your duties."}
+                      onClick={() => chooseRole(role)}
+                    />
+                  );
+                })}
 
-                {step.description}
-              </DialogDescription>
-            </DialogHeader>
+              </div>
+            </section>
+          ) : null}
 
-            <div className="mt-4 grid grid-cols-6 gap-1" aria-label="Tutorial progress">
-              {steps.map((item, index) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  className={cn(
-                    "h-1.5 rounded-full transition-colors",
-                    index <= stepIndex ? "bg-primary" : "bg-muted",
-                  )}
-                  onClick={() => setStepIndex(index)}
-                  aria-label={`Go to ${item.label}`}
-                />
-              ))}
-            </div>
-
-            <div className="mt-4 rounded-3xl border border-border bg-muted/20 p-3 sm:mt-5 sm:p-4">
-              <p className="mb-2 flex items-center gap-2 text-sm font-semibold sm:mb-3">
-                <HelpCircle className="h-4 w-4 text-primary" /> What it includes
-              </p>
-              <div className="grid gap-2.5">
-                {step.bullets.map((bullet) => (
-                  <div key={bullet} className="flex gap-2.5 text-sm text-muted-foreground">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    <span>{bullet}</span>
-                  </div>
+          {step === "need" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">What are you seeking?</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  Choose the place where you most need watchfulness.
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  This shapes your Rule of Vigilance. You can change it later by replaying onboarding from Help.
+                </p>
+              </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {needOptions.map((option) => (
+                  <SelectionCard
+                    key={option.id}
+                    selected={selectedNeed === option.id}
+                    icon={option.icon}
+                    title={option.title}
+                    description={option.description}
+                    onClick={() => setSelectedNeed(option.id)}
+                  />
                 ))}
               </div>
-            </div>
+            </section>
+          ) : null}
 
-            <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:items-center sm:justify-between">
-              <Button type="button" variant="ghost" className="min-h-10 rounded-2xl" onClick={finish}>
-                Skip
-              </Button>
-
-              <div className="grid min-w-0 gap-2 sm:flex sm:justify-end">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="min-h-10 rounded-2xl"
-                  disabled={isFirst}
-                  onClick={() => setStepIndex((current) => current - 1)}
-                >
-                  Back
-                </Button>
-                {step.route ? (
-                  <Button type="button" variant="secondary" className="min-h-10 rounded-2xl" onClick={openFeature}>
-                    Open {step.label}
-                  </Button>
-                ) : null}
-                <Button type="button" className="min-h-10 rounded-2xl" onClick={next}>
-                  {isLast ? "Finish" : "Next"}
-                </Button>
+          {step === "rhythm" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Daily rhythm</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  When can prayer realistically take root?
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Choose the rhythm you can actually keep. A small rule kept peacefully is a beautiful beginning.
+                </p>
               </div>
-            </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {rhythmOptions.map((option) => (
+                  <SelectionCard
+                    key={option.id}
+                    selected={selectedRhythm === option.id}
+                    icon={option.icon}
+                    title={option.title}
+                    description={option.description}
+                    onClick={() => setSelectedRhythm(option.id)}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
 
+          {step === "rule" ? (
+            <section className="mx-auto w-full max-w-4xl">
+              <RulePreview rule={rule} />
+            </section>
+          ) : null}
+        </main>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-[71] border-t border-primary/15 bg-background/80 p-4 backdrop-blur-xl sm:p-5">
+        <div className="mx-auto flex max-w-5xl items-center gap-3">
+          <div className="hidden min-w-0 flex-1 sm:block">
+            <p className="truncate text-sm font-medium text-foreground">
+              {step === "rule" ? rule.title : "Your daily rule is being shaped gently."}
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              {step === "rule" ? rule.pastoralNote : "One clear choice per screen. No pressure, no clutter."}
+            </p>
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          <Button type="button" className="gold-foil h-14 flex-1 rounded-full text-base font-bold text-primary-foreground sm:max-w-sm" onClick={next}>
+            {step === "rule" ? "Seal this Daily Rule" : "Continue"}
+            <ChevronRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }

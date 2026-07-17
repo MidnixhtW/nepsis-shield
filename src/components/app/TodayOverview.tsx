@@ -35,8 +35,10 @@ import { fetchDailyData } from "@/lib/orthocal";
 import type { AppSection } from "@/components/app/AppShell";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { TodayRhythmDashboard } from "@/components/app/TodayRhythmDashboard";
 import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
+
 import { showError, showSuccess } from "@/utils/toast";
 import { getSettings } from "@/lib/settings";
 import { useSettings } from "@/hooks/useSettings";
@@ -291,12 +293,14 @@ export function TodayOverview({
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-6">
       <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+      <RuleOfVigilanceCard onNavigate={onNavigate} />
       {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <Card className="candlelight-card rounded-3xl border p-5 sm:p-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
               Guided paths

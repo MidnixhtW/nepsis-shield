@@ -56,8 +56,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mainAudioRef.current || !currentTrack) return;
 
-    if (isPlaying) {
+    if (!currentTrack.url) {
+      mainAudioRef.current.pause();
+      return;
+    }
+
+    if (mainAudioRef.current.src !== currentTrack.url) {
       mainAudioRef.current.src = currentTrack.url;
+    }
+
+    if (isPlaying) {
       mainAudioRef.current.play().catch((err) => console.log("Audio play blocked", err));
     } else {
       mainAudioRef.current.pause();
@@ -67,9 +75,12 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!ambientAudioRef.current) return;
 
-    if (ambientTrack) {
-      ambientAudioRef.current.src = ambientTrack.url;
-      ambientAudioRef.current.volume = ambientVolume;
+    ambientAudioRef.current.volume = ambientVolume;
+
+    if (ambientTrack?.url) {
+      if (ambientAudioRef.current.src !== ambientTrack.url) {
+        ambientAudioRef.current.src = ambientTrack.url;
+      }
       ambientAudioRef.current.play().catch((err) => console.log("Ambient play blocked", err));
     } else {
       ambientAudioRef.current.pause();
