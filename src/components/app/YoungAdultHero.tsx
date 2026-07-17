@@ -17,7 +17,7 @@ function SecondaryAction({
     <Button
       type="button"
       variant="outline"
-      className="tap h-12 justify-start rounded-[1.25rem] border-0 bg-background/55 px-4 shadow-sm backdrop-blur-xl hover:bg-background/75"
+      className="tap h-11 justify-start rounded-2xl border-border/70 bg-background/70 shadow-sm hover:border-primary/40"
       onClick={onClick}
     >
       <span className="mr-2 text-primary">{icon}</span>
@@ -32,49 +32,46 @@ export function OrthodoxHero({
   onAction?: (to: { section: "today" | "pray" | "read" | "learn"; tab?: string; read?: string }) => void;
 }) {
   return (
-    <Card className="relative isolate flex min-h-[42dvh] overflow-hidden rounded-[2rem] border-0 bg-card/70 shadow-[0_28px_80px_hsl(var(--foreground)/0.12)] backdrop-blur-2xl sm:min-h-[46dvh]">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/18 via-card/80 to-accent/12" />
-      <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-primary/15 blur-3xl" />
-      <div className="absolute -bottom-24 left-4 h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
-      <OrthodoxCrossIcon className="absolute -right-8 top-8 h-48 w-48 text-primary/[0.08]" />
+    <Card className="overflow-hidden rounded-3xl border-primary/25 bg-gradient-to-br from-primary/15 via-card to-accent/10 shadow-sm">
+      <div className="relative p-5 sm:p-7">
+        <OrthodoxCrossIcon className="absolute -right-5 -top-5 h-32 w-32 text-primary/[0.08]" />
 
-      <div className="relative z-10 flex w-full flex-col justify-between p-7 sm:p-9 lg:p-10">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Field-ready Orthodox companion
-          </p>
-          <h2 className="mt-4 max-w-3xl text-4xl font-semibold leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl">
-            Prayer and watchfulness for life on duty and off duty.
-          </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Start with one simple step: pray now, read today, or use a short reset when pressure is high.
-          </p>
-        </div>
+        <div className="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              Field-ready Orthodox companion
+            </p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Prayer and watchfulness for life on duty and off duty.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Start with one simple step: pray now, read today, or use a short reset when pressure is high.
+            </p>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              type="button"
-              className="tap h-14 rounded-[1.4rem] px-6 text-base shadow-lg shadow-primary/15"
-              onClick={() => onAction?.({ section: "pray", tab: "daily" })}
-            >
-              Pray now <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <SecondaryAction
-              title="Read today"
-              icon={<BookOpen className="h-4 w-4" />}
-              onClick={() => onAction?.({ section: "read", read: "daily" })}
-            />
-            <SecondaryAction
-              title="Need help now"
-              icon={<Siren className="h-4 w-4" />}
-              onClick={() => onAction?.({ section: "pray", tab: "counter" })}
-            />
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+              <Button
+                type="button"
+                className="tap h-12 rounded-2xl px-5"
+                onClick={() => onAction?.({ section: "pray", tab: "daily" })}
+              >
+                Pray now <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <SecondaryAction
+                title="Read today"
+                icon={<BookOpen className="h-4 w-4" />}
+                onClick={() => onAction?.({ section: "read", read: "daily" })}
+              />
+              <SecondaryAction
+                title="Need help now"
+                icon={<Siren className="h-4 w-4" />}
+                onClick={() => onAction?.({ section: "pray", tab: "counter" })}
+              />
+            </div>
           </div>
 
-          <div className="rounded-[1.5rem] bg-background/55 p-4 shadow-sm backdrop-blur-xl">
+          <div className="rounded-3xl border border-border/60 bg-background/60 p-4">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[1.15rem] bg-primary/10 text-primary">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <Shield className="h-5 w-5" />
               </span>
               <div>

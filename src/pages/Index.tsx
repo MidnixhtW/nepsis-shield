@@ -110,43 +110,38 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <section className="space-y-4">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">I want to...</p>
-          <h2 className="mt-1 text-xl font-semibold tracking-tight">Choose one next step</h2>
+    <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
+      <div className="grid gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">I want to...</p>
+            <h2 className="mt-1 text-lg font-semibold tracking-tight">Choose one next step</h2>
+          </div>
+          <Button type="button" variant="ghost" className="rounded-xl" onClick={() => onOpenRoute("/download")}>
+            <Share2 className="mr-2 h-4 w-4" /> Share / install
+          </Button>
         </div>
-        <Button type="button" variant="ghost" className="rounded-[1.15rem]" onClick={() => onOpenRoute("/download")}>
-          <Share2 className="mr-2 h-4 w-4" /> Share / install
-        </Button>
-      </div>
-
-      <div className="-mx-6 overflow-x-auto px-6 pb-2">
-        <div className="flex snap-x snap-mandatory gap-4">
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {actions.map((action) => (
-            <Card
+            <Button
               key={action.label}
-              className="snap-start rounded-[1.25rem] border-0 bg-card/70 p-3 shadow-lg shadow-foreground/5 backdrop-blur-xl"
+              type="button"
+              variant="outline"
+              className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left"
+              onClick={action.onClick}
             >
-              <Button
-                type="button"
-                variant="ghost"
-                className="tap h-36 w-56 flex-col items-start justify-between rounded-2xl bg-background/45 p-4 text-left hover:bg-background/65"
-                onClick={action.onClick}
-              >
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary/10 text-primary">
-                  {action.icon}
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-base font-semibold leading-tight">{action.label}</span>
-                  <span className="mt-1 block text-sm font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
-                </span>
-              </Button>
-            </Card>
+              <span className="mr-3 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                {action.icon}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{action.helper}</span>
+              </span>
+            </Button>
           ))}
         </div>
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -274,9 +269,9 @@ const Index = () => {
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       <QuickStartDialog />
 
-      <div className="animate-in flex flex-col gap-8 fade-in slide-in-from-bottom-2 duration-500">
+      <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
-          <div className="flex flex-col gap-8">
+          <div className="grid gap-4">
             <OrthodoxHero onAction={navigateTo} />
             <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />

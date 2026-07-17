@@ -21,6 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
@@ -50,6 +51,7 @@ import {
 } from "@/lib/responderMode";
 
 function fastingGuidanceLines(description: string, exception?: string) {
+
   const raw = `${description} ${exception ?? ""}`.toLowerCase();
 
   const fastFree = raw.includes("no fast") || raw.includes("fast free");
@@ -111,44 +113,8 @@ function FastingBadge({
         {guidance.from ? <div>{guidance.from}</div> : null}
         <div>{guidance.allowed}</div>
       </div>
+
     </div>
-  );
-}
-
-function Shelf({
-  eyebrow,
-  title,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className="space-y-4">
-      <div className="px-0.5">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-          {eyebrow}
-        </p>
-        <h2 className="mt-1 text-xl font-semibold tracking-tight">{title}</h2>
-      </div>
-      <div className="-mx-6 overflow-x-auto px-6 pb-2">
-        <div className="flex snap-x snap-mandatory gap-4">{children}</div>
-      </div>
-    </section>
-  );
-}
-
-function ShelfCard({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <Card
-      className={cn(
-        "min-w-[82vw] max-w-md snap-start rounded-[1.5rem] border-0 bg-card/70 p-5 shadow-lg shadow-foreground/5 backdrop-blur-xl sm:min-w-[22rem]",
-        className,
-      )}
-    >
-      {children}
-    </Card>
   );
 }
 
@@ -157,29 +123,33 @@ function EssentialButton({
   description,
   icon,
   onClick,
+  variant = "outline",
 }: {
   label: string;
   description: string;
   icon: ReactNode;
   onClick?: () => void;
+  variant?: "default" | "outline" | "ghost";
 }) {
   return (
     <Button
       type="button"
-      variant="ghost"
-      className="tap h-36 min-w-[14rem] snap-start flex-col items-start justify-between rounded-[1.25rem] bg-card/70 p-4 text-left shadow-lg shadow-foreground/5 backdrop-blur-xl hover:bg-card/85 sm:min-w-[15rem]"
+      variant={variant}
+      className="tap h-auto min-h-14 max-w-full justify-start whitespace-normal rounded-2xl border border-border/70 px-3 py-3 text-left shadow-sm hover:border-primary/40 hover:bg-muted/70 sm:px-4"
       onClick={onClick}
     >
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+      <span className="mr-2 grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-background/60 text-primary sm:mr-3">
         {icon}
       </span>
-      <span className="min-w-0 break-words">
-        <span className="block text-base font-semibold leading-tight">{label}</span>
-        <span className="mt-1 block whitespace-normal text-sm font-normal leading-relaxed text-muted-foreground">
+      <span className="min-w-0 flex-1 break-words">
+        <span className="block text-sm font-semibold leading-tight">{label}</span>
+        <span className="mt-0.5 block whitespace-normal text-xs font-normal leading-relaxed opacity-80">
           {description}
         </span>
       </span>
+      <ArrowRight className="ml-1 h-4 w-4 shrink-0 opacity-75 sm:ml-2" />
     </Button>
+
   );
 }
 
@@ -188,18 +158,18 @@ function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void
   const theme = responderModeAccentClasses[mode];
 
   return (
-    <Card className={cn("rounded-[1.5rem] border-0 p-5 shadow-lg shadow-foreground/5 backdrop-blur-xl sm:p-6", theme.card)}>
-      <div className="flex h-full flex-col justify-between gap-5">
+    <Card className={cn("rounded-3xl p-5 shadow-sm sm:p-6", theme.card)}>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0 break-words">
-          <Badge className={cn("max-w-full whitespace-normal rounded-full border-0 px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
+          <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
             <Target className="mr-1.5 h-3.5 w-3.5 shrink-0" /> {responderModeShortLabels[mode]} mode active
           </Badge>
-          <h2 className="mt-4 text-xl font-semibold tracking-tight">Today is tuned for {responderModeLabels[mode]}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          <h2 className="mt-3 text-xl font-semibold tracking-tight">Today is tuned for {responderModeLabels[mode]}</h2>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Your selected role now carries across Today, field mode, and the emergency reset.
           </p>
         </div>
-        <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-[1.15rem] border-0 bg-background/65 text-left leading-tight shadow-sm" onClick={onOpenFieldManual}>
+        <Button type="button" variant="outline" className="h-auto whitespace-normal rounded-2xl border-border/60 bg-background/70 text-left leading-tight" onClick={onOpenFieldManual}>
           Open field manual <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
         </Button>
       </div>
@@ -209,15 +179,44 @@ function CurrentModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => void
 
 function TodayDetailsSkeleton() {
   return (
-    <div className="flex gap-4" aria-label="Loading today's details">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <ShelfCard key={index}>
-          <Skeleton className="h-3 w-24 rounded-full" />
-          <Skeleton className="mt-4 h-6 w-40 rounded-full" />
-          <Skeleton className="mt-4 h-3 w-11/12 rounded-full" />
-          <Skeleton className="mt-2 h-3 w-9/12 rounded-full" />
-        </ShelfCard>
-      ))}
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]" aria-label="Loading today's details">
+      <div className="grid gap-5">
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-20 rounded-full" />
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-8 w-36 rounded-full" />
+            <Skeleton className="h-8 w-24 rounded-full" />
+          </div>
+          <Skeleton className="h-3 w-48 rounded-full" />
+          <Skeleton className="h-3 w-40 rounded-full" />
+        </div>
+
+        <div className="space-y-3">
+          <Skeleton className="h-3 w-16 rounded-full" />
+          <div className="grid gap-2">
+            <Skeleton className="h-4 w-11/12 rounded-full" />
+            <Skeleton className="h-4 w-10/12 rounded-full" />
+            <Skeleton className="h-4 w-8/12 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid content-start gap-3">
+        <div className="rounded-3xl border border-primary/10 bg-primary/5 p-4">
+          <Skeleton className="h-4 w-28 rounded-full" />
+          <Skeleton className="mt-3 h-3 w-56 rounded-full" />
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="rounded-2xl border border-border/60 bg-background/60 p-3">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-8 w-8 rounded-xl" />
+                <Skeleton className="h-4 w-28 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -292,176 +291,207 @@ export function TodayOverview({
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <Shelf eyebrow="Context" title="Your watchfulness environment">
-        <div className="min-w-[82vw] max-w-md snap-start sm:min-w-[22rem]">
-          <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
-        </div>
-        {settings.personalization.showGroundingOnToday ? (
-          <div className="min-w-[82vw] max-w-md snap-start sm:min-w-[22rem]">
-            <GroundMeNow />
-          </div>
-        ) : null}
-        <div className="min-w-[82vw] max-w-md snap-start sm:min-w-[22rem]">
-          <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
-        </div>
-      </Shelf>
+    <div className="grid gap-4">
+      <CurrentModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+      {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
-      <Shelf eyebrow="Guided paths" title="When you do not know where to start">
-        <EssentialButton
-          label="Sleep"
-          description="Night prayer + dim timer."
-          icon={<MoonStar className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "pray", tab: "sleep" })}
-        />
-        <EssentialButton
-          label="Challenges"
-          description="7–14 day prayer paths."
-          icon={<CheckCircle2 className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "learn", tab: "challenges" })}
-        />
-        <EssentialButton
-          label="My Path"
-          description="Personalized next steps."
-          icon={<Compass className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "learn", tab: "path" })}
-        />
-        <EssentialButton
-          label="Read"
-          description="Today’s Scripture."
-          icon={<BookOpen className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "read", read: "daily" })}
-        />
-        <EssentialButton
-          label="Reflect"
-          description="Short journal note."
-          icon={<PenLine className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
-        />
-        <EssentialButton
-          label="Prepare"
-          description="Confession tools."
-          icon={<ShieldCheck className="h-4 w-4" />}
-          onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
-        />
-      </Shelf>
-
-      <Shelf eyebrow={`Daily command center · ${format(today, "EEEE")}`} title={format(today, "MMMM d")}>
-        <ShelfCard className={cn(hallowCardClass, "relative min-w-[88vw] max-w-xl")}> 
-          <div className={hallowGlowClass} />
-          <div className="relative z-10">
-            <p className="text-xs font-semibold uppercase leading-snug tracking-[0.14em] text-muted-foreground">
-              Prayer, Scripture, saints, fasting, and one practical next step for today.
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              Guided paths
             </p>
-            <div className="mt-4 flex flex-wrap items-start gap-2">
-              <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-muted px-3 py-1 text-left text-xs font-medium leading-tight">
-                {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
-              </Badge>
-              {q.data?.tone?.value || q.data?.tone?.description ? (
-                <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-primary/10 px-3 py-1 text-left text-xs font-medium leading-tight text-primary">
-                  {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
-                </Badge>
-              ) : null}
-            </div>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">When you do not know where to start</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              Choose one focused path and keep the next step simple.
+            </p>
+          </div>
+          <div className="grid min-w-0 gap-2 sm:grid-cols-3 lg:w-[min(500px,100%)]">
+            <EssentialButton
+              label="Sleep"
+              description="Night prayer + dim timer."
+              icon={<MoonStar className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "sleep" })}
+            />
 
-            <div className="mt-6 grid gap-3">
-              <Select
-                value={sourceOverride}
-                onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
-              >
-                <SelectTrigger className="h-11 rounded-[1.15rem] border-0 bg-background/60">
-                  <SelectValue placeholder="Source" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="preferred">Preferred source</SelectItem>
-                  <SelectItem value="oca">OCA</SelectItem>
-                  <SelectItem value="goarch">GOARCH</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button asChild size="sm" variant="outline" className="tap h-auto min-h-11 max-w-full justify-start whitespace-normal rounded-[1.15rem] border-0 bg-background/60 text-left leading-tight shadow-sm">
-                <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer" className="min-w-0">
-                  <span className="min-w-0 break-words">Open daily source</span>
-                  <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
-                </a>
-              </Button>
+            <EssentialButton
+              label="Challenges"
+              description="7–14 day prayer paths."
+              icon={<CheckCircle2 className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "challenges" })}
+            />
+            <EssentialButton
+              label="My Path"
+              description="Personalized next steps."
+              icon={<Compass className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "learn", tab: "path" })}
+            />
+          </div>
+        </div>
+      </Card>
+
+      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              Next steps
+            </p>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight">Choose one small action</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+              After prayer, continue with reading, reflection, or preparation.
+            </p>
+          </div>
+          <div className="grid min-w-0 gap-2 sm:grid-cols-3 lg:w-[min(500px,100%)]">
+            <EssentialButton
+              label="Read"
+              description="Today’s Scripture."
+              icon={<BookOpen className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "read", read: "daily" })}
+            />
+
+            <EssentialButton
+              label="Reflect"
+              description="Short journal note."
+              icon={<PenLine className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "journal" })}
+            />
+            <EssentialButton
+              label="Prepare"
+              description="Confession tools."
+              icon={<ShieldCheck className="h-4 w-4" />}
+              onClick={() => onNavigate?.({ section: "pray", tab: "prep" })}
+            />
+          </div>
+        </div>
+      </Card>
+
+      <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
+
+      <Card className={hallowCardClass}>
+        <div className={hallowGlowClass} />
+
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+        <div className="min-w-0">
+
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
+              <div className="min-w-0 break-words">
+                <p className="text-xs font-semibold uppercase leading-snug tracking-[0.1em] text-muted-foreground sm:tracking-[0.18em]">
+                  Daily command center · {format(today, "EEEE")}
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+                  {format(today, "MMMM d")}
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Prayer, Scripture, saints, fasting, and one practical next step for today.
+                </p>
+                <div className="mt-2 flex flex-wrap items-start gap-2">
+                  <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-muted px-3 py-1 text-left text-xs font-medium leading-tight">
+                    {settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}
+                  </Badge>
+                  {q.data?.tone?.value || q.data?.tone?.description ? (
+                    <Badge variant="secondary" className="max-w-full whitespace-normal rounded-full bg-primary/10 px-3 py-1 text-left text-xs font-medium leading-tight text-primary">
+                      {q.data.tone.value ? `Tone ${q.data.tone.value}` : q.data.tone.description}
+                    </Badge>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="grid min-w-0 gap-2 sm:min-w-[210px] lg:min-w-0">
+                <Select
+
+                  value={sourceOverride}
+                  onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
+                >
+                  <SelectTrigger className="h-10 rounded-2xl">
+                    <SelectValue placeholder="Source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="preferred">Preferred source</SelectItem>
+                    <SelectItem value="oca">OCA</SelectItem>
+                    <SelectItem value="goarch">GOARCH</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button asChild size="sm" variant="outline" className="tap h-auto min-h-9 max-w-full justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left leading-tight shadow-sm hover:border-primary/40">
+                  <a href={currentPrimaryUrl()} target="_blank" rel="noopener noreferrer" className="min-w-0">
+                    <span className="min-w-0 break-words">Open daily source</span>
+                    <ExternalLink className="ml-2 h-4 w-4 shrink-0" />
+                  </a>
+                </Button>
+
+              </div>
             </div>
           </div>
-        </ShelfCard>
 
-        <ShelfCard className="min-w-[88vw] max-w-xl">
           <TodayRhythmDashboard onNavigate={onNavigate} />
-        </ShelfCard>
+        </div>
+
+        <Separator className="my-4" />
 
         {q.isLoading ? (
           <TodayDetailsSkeleton />
         ) : q.isError ? (
-          <ShelfCard className="bg-destructive/5 text-destructive">
+          <div className="rounded-2xl border border-destructive/25 bg-destructive/5 p-4 text-sm leading-relaxed text-destructive">
             Couldn’t load today’s details. You can still open the daily source or try refreshing the preview.
-          </ShelfCard>
+          </div>
         ) : q.data ? (
-          <>
-            <ShelfCard>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Fasting
-              </p>
-              <div className="mt-3">
-                <FastingBadge
-                  description={q.data.fasting.description}
-                  exception={q.data.fasting.exception}
-                />
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+            <div className="grid gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Fasting
+                </p>
+                <div className="mt-2">
+                  <FastingBadge
+                    description={q.data.fasting.description}
+                    exception={q.data.fasting.exception}
+                  />
+                </div>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="tap mt-5 rounded-[1.15rem] border-0 bg-background/60 shadow-sm"
-                onClick={addFastingReminder}
-              >
-                <CalendarPlus className="mr-2 h-4 w-4" /> Add fasting reminder
-              </Button>
-            </ShelfCard>
 
-            <ShelfCard>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Saints
-              </p>
-              <div className="mt-3 grid gap-2">
-                {q.data.saints.length ? (
-                  q.data.saints.slice(0, 3).map((s) => (
-                    <p key={s} className="break-words text-sm leading-relaxed">
-                      {s}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Saints
+                </p>
+                <div className="mt-2 grid gap-1.5">
+                  {q.data.saints.length ? (
+                    q.data.saints.slice(0, 3).map((s) => (
+                      <p key={s} className="break-words text-sm leading-relaxed">
+                        {s}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      See today's calendar commemorations.
                     </p>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    See today's calendar commemorations.
-                  </p>
-                )}
+                  )}
 
-                {q.data.saints.length > 3 ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="tap mt-2 w-fit rounded-[1.15rem] border-0 bg-background/60 px-3 shadow-sm"
-                    onClick={() => onOpenRoute?.("/saints")}
-                  >
-                    Open saints
-                  </Button>
-                ) : null}
+                  {q.data.saints.length > 3 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="tap mt-1 w-fit rounded-2xl border-border/70 bg-background/60 px-3 shadow-sm hover:border-primary/40"
+                      onClick={() => onOpenRoute?.("/saints")}
+                    >
+                      Open saints
+                    </Button>
+                  ) : null}
+                </div>
               </div>
-            </ShelfCard>
+            </div>
 
-            <ShelfCard>
-              <p className="text-sm font-semibold">Helpful today</p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                Use these only if they match your next step.
-              </p>
-              <div className="mt-4 grid gap-2">
+            <div className="grid content-start gap-3">
+              <div className="rounded-3xl border border-primary/20 bg-primary/5 p-4">
+                <p className="text-sm font-semibold">Helpful today</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  Use these only if they match your next step.
+                </p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-[1.15rem] border-0 bg-background/60 text-left shadow-sm"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "pray", tab: "counter" })}
                 >
                   <Target className="mr-2 h-4 w-4 shrink-0" /> Jesus Prayer
@@ -469,7 +499,7 @@ export function TodayOverview({
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-[1.15rem] border-0 bg-background/60 text-left shadow-sm"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "read", read: "plans" })}
                 >
                   <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Reading Plans
@@ -477,7 +507,7 @@ export function TodayOverview({
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-[1.15rem] border-0 bg-background/60 text-left shadow-sm"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onNavigate?.({ section: "learn", tab: "liturgy" })}
                 >
                   <Church className="mr-2 h-4 w-4 shrink-0" /> Liturgy Help
@@ -485,16 +515,25 @@ export function TodayOverview({
                 <Button
                   type="button"
                   variant="outline"
-                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-[1.15rem] border-0 bg-background/60 text-left shadow-sm"
+                  className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/70 bg-background/60 text-left shadow-sm hover:border-primary/40"
                   onClick={() => onOpenRoute?.("/saints")}
                 >
                   <Sparkles className="mr-2 h-4 w-4 shrink-0" /> Saints
                 </Button>
               </div>
-            </ShelfCard>
-          </>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="tap w-fit rounded-2xl border-border/70 bg-background/60 shadow-sm hover:border-primary/40"
+                onClick={addFastingReminder}
+              >
+                <CalendarPlus className="mr-2 h-4 w-4" /> Add fasting reminder
+              </Button>
+            </div>
+          </div>
         ) : null}
-      </Shelf>
+      </Card>
     </div>
   );
 }
