@@ -46,11 +46,11 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.045),transparent_26rem)]" />
+      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-56 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.07),transparent_30rem)]" />
 
-      <div className="sticky top-0 z-30 border-b border-stone-800/60 bg-stone-950/90 backdrop-blur-xl supports-[backdrop-filter]:bg-stone-950/85">
+      <div className="sticky top-0 z-30 bg-stone-950/80 shadow-[0_18px_60px_hsl(var(--background)/0.35)] backdrop-blur-2xl supports-[backdrop-filter]:bg-stone-950/75">
 
-        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-5">
+        <div className="mx-auto w-full max-w-5xl px-6 py-3">
           {header}
         </div>
       </div>
@@ -58,14 +58,14 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-5xl px-3 pt-3 pb-[calc(6.2rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="water-page relative z-10 mx-auto w-full max-w-5xl px-6 pt-6 pb-[calc(6.8rem+env(safe-area-inset-bottom))]"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-800/60 bg-stone-950/90 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl sm:px-3">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-stone-950/80 px-4 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-18px_60px_hsl(var(--background)/0.45)] backdrop-blur-2xl">
 
-        <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
+        <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-[1.75rem] bg-card/75 p-1.5 shadow-lg shadow-foreground/5 backdrop-blur-xl">
           <ToggleGroup
             type="single"
             value={section}
