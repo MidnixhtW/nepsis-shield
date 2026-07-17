@@ -35,11 +35,11 @@ export default function TactileChotki() {
   }, [count, target]);
 
   return (
-    <div className="mx-auto max-w-sm rounded-3xl border border-stone-800 bg-stone-900/60 p-6 text-center shadow-2xl backdrop-blur-md">
-      <h3 className="font-serif text-xl font-semibold tracking-wide text-amber-500">
+    <div className="candlelight-card mx-auto max-w-sm rounded-3xl border p-6 text-center backdrop-blur-md">
+      <h3 className="font-serif text-xl font-semibold tracking-wide text-primary">
         Sacred Watchfulness
       </h3>
-      <p className="mt-1 text-xs italic text-stone-400">"Lord Jesus Christ, have mercy on me."</p>
+      <p className="mt-1 text-xs italic text-muted-foreground">"Lord Jesus Christ, have mercy on me."</p>
 
       <div className="my-5 flex justify-center space-x-2">
         {[33, 50, 100].map((t) => (
@@ -48,8 +48,8 @@ export default function TactileChotki() {
             onClick={() => setTarget(t)}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
               target === t
-                ? "border-amber-600/50 bg-amber-600/20 text-amber-400"
-                : "border-transparent text-stone-500 hover:text-stone-300"
+                ? "gold-foil border-primary/50 text-primary-foreground"
+                : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary"
             }`}
           >
             {t} Knots
@@ -58,13 +58,14 @@ export default function TactileChotki() {
       </div>
 
       <div className="relative mx-auto my-6 flex h-56 w-56 items-center justify-center">
+        <div className="absolute h-52 w-52 rounded-full bg-amber-500/10 blur-3xl" />
         <button
           onClick={handlePullKnot}
-          className="absolute flex h-36 w-36 flex-col items-center justify-center rounded-full border border-amber-500/20 bg-gradient-to-br from-stone-900 to-stone-950 shadow-inner transition-transform active:scale-95 focus:outline-none"
+          className="absolute flex h-36 w-36 flex-col items-center justify-center rounded-full border border-primary/25 bg-gradient-to-br from-card via-background to-slate-950 shadow-inner transition-transform active:scale-95 focus:outline-none"
         >
-          <span className="text-[10px] uppercase tracking-widest text-stone-500">Knots</span>
-          <span className="font-serif text-4xl font-bold text-amber-500">{count}</span>
-          <span className="mt-1 text-[9px] text-stone-400">Goal: {target}</span>
+          <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Knots</span>
+          <span className="font-serif text-4xl font-bold text-primary">{count}</span>
+          <span className="mt-1 text-[9px] text-muted-foreground">Goal: {target}</span>
         </button>
 
         {Array.from({ length: totalBeads }).map((_, i) => {
@@ -76,9 +77,11 @@ export default function TactileChotki() {
               className="absolute h-4 w-4 rounded-full transition-all duration-300"
               style={{
                 transform: `rotate(${angle}deg) translate(92px) rotate(-${angle}deg)`,
-                backgroundColor: isActive ? "#d97706" : "#44403c",
-                boxShadow: isActive ? "0 0 10px #d97706" : "none",
-                border: "2px solid #1c1917",
+                background: isActive
+                  ? "linear-gradient(135deg, #fde68a, #d97706 48%, #78350f)"
+                  : "linear-gradient(135deg, #44403c, #1c1917)",
+                boxShadow: isActive ? "0 0 16px rgba(217, 119, 6, 0.75)" : "none",
+                border: "1px solid rgba(251, 191, 36, 0.25)",
               }}
             />
           );
@@ -90,7 +93,7 @@ export default function TactileChotki() {
           setCount(0);
           setBeadIndex(0);
         }}
-        className="text-xs text-stone-500 transition-colors hover:text-stone-300"
+        className="text-xs text-muted-foreground transition-colors hover:text-primary"
       >
         Reset Prayer Rope
       </button>

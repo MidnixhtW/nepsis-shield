@@ -26,6 +26,7 @@ const groundingLines: Record<ResponderMode, string> = {
   dispatch: "Comms pause: shoulders down, voice slower, location and danger first.",
   custody: "Unit pause: settled face, fewer words, lawful order, least force needed.",
   chaplain: "Presence pause: listen first, speak softly, do not carry the whole sorrow alone.",
+  civilian: "Daily pause: breathe, soften your shoulders, pray simply, and take one faithful next step.",
 };
 
 const steps = [
@@ -33,6 +34,7 @@ const steps = [
     title: "Breathe",
     body: "Inhale for 4, hold for 2, exhale for 6. Repeat three times before deciding anything else.",
   },
+
   {
     title: "Orient",
     body: "Name five things you see, four sounds you hear, and one safe next action within reach.",

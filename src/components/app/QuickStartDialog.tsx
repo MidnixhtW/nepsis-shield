@@ -205,10 +205,10 @@ export function QuickStartDialog() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-3xl border border-border bg-muted/20 p-3 sm:mt-5 sm:p-4">
-              <p className="text-sm font-semibold tracking-tight">Choose your role</p>
+            <div className="candlelight-card mt-4 rounded-3xl border p-3 sm:mt-5 sm:p-4">
+              <p className="text-sm font-semibold tracking-tight">Choose your role or path</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                This personalizes colors, field prompts, and emergency reset language.
+                This personalizes colors, field prompts, and emergency reset language. If none apply, choose the civilian option.
               </p>
               <div className="mt-2 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:mt-3 sm:grid-cols-3">
 
@@ -221,7 +221,7 @@ export function QuickStartDialog() {
                       type="button"
                       className={cn(
                         "min-h-10 rounded-2xl border px-3 py-2 text-left text-xs font-semibold leading-tight transition-colors whitespace-normal break-words",
-                        selected ? theme.badge : "border-border/60 bg-background/60 text-muted-foreground hover:bg-muted/50",
+                        selected ? theme.badge : "border-primary/15 bg-background/60 text-muted-foreground hover:border-primary/35 hover:bg-muted/50 hover:text-foreground",
                       )}
                       onClick={() => chooseRole(role)}
                     >

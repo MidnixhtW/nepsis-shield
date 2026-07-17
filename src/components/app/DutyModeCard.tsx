@@ -50,6 +50,37 @@ type ResponderBrief = {
 };
 
 const responderModes: Record<ResponderMode, ResponderBrief> = {
+  civilian: {
+    label: "None of these / civilian",
+    badge: "Quiet faithfulness",
+    icon: Users,
+    focus: "Build watchfulness in ordinary life: family, work, study, stress, rest, and hidden obedience.",
+    prayer:
+      "Lord Jesus Christ, steady my heart in the ordinary duties of this day. Teach me to pray simply, act faithfully, and return to peace without fear. Amen.",
+    steps: [
+      "Pause before the next task: breathe once and name the next faithful action.",
+      "Keep one small prayer rule today rather than trying to fix everything at once.",
+      "If stress rises, step back, pray the Jesus Prayer, and ask for help when needed.",
+    ],
+    reset: "After pressure: unclench your hands, thank God for one mercy, and return to one simple duty.",
+    suitedFor: ["Civilians", "Students", "Parents", "Everyday stress"],
+    theme: {
+      card: "candlelight-card border-primary/25 bg-gradient-to-br from-primary/12 via-card to-slate-500/10",
+      orbOne: "border-primary/20 bg-primary/10",
+      orbTwo: "border-amber-500/20 bg-amber-500/10",
+      badge: "border-primary/35 bg-primary/12 text-amber-950 dark:text-amber-100",
+      icon: "bg-primary/12 text-amber-950 ring-1 ring-primary/30 dark:text-amber-100",
+      focus: "border-primary/20 bg-primary/10",
+      quote: "border-primary/20 bg-primary/10",
+      step: "bg-primary/10 text-amber-950 dark:text-amber-100",
+      reset: "border-primary/20 bg-primary/10 text-amber-950 dark:text-amber-100",
+      tag: "bg-primary/10 text-amber-950 dark:text-amber-100",
+      checklist: "border-primary/25 text-amber-950 dark:text-amber-100",
+      primaryButton: "gold-foil text-primary-foreground hover:brightness-110",
+      modeButton: "border-primary/20 hover:bg-primary/10 hover:text-primary",
+      modeButtonActive: "gold-foil border-primary text-primary-foreground hover:brightness-110",
+    },
+  },
   law: {
     label: "Law enforcement",
     badge: "Firm without anger",
@@ -62,6 +93,7 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       "Scan hands, exits, partners, and bystanders; do not let anger narrow your vision.",
       "Preserve dignity where possible: lawful, truthful, restrained, and accountable.",
     ],
+
     reset: "After the call: unclench your jaw, thank God for any life preserved, and name one truthful thing before replaying the scene.",
     suitedFor: ["Police", "Deputies", "Security", "Public safety"],
     theme: {

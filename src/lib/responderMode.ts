@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
-export type ResponderMode = "military" | "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
+export type ResponderMode = "civilian" | "military" | "law" | "fire" | "ems" | "dispatch" | "custody" | "chaplain";
 
-export const DEFAULT_RESPONDER_MODE: ResponderMode = "military";
+export const DEFAULT_RESPONDER_MODE: ResponderMode = "civilian";
 export const RESPONDER_MODE_STORAGE_KEY = "nepsis:responder-mode";
 export const RESPONDER_MODE_CHANGED_EVENT = "nepsis:responder-mode-changed";
 
-export const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain"];
+export const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain", "civilian"];
 
 export const responderModeLabels: Record<ResponderMode, string> = {
   military: "Military",
@@ -17,6 +17,7 @@ export const responderModeLabels: Record<ResponderMode, string> = {
   dispatch: "Dispatch / comms",
   custody: "Corrections / custody",
   chaplain: "Chaplain / peer support",
+  civilian: "None of these / civilian",
 };
 
 export const responderModeShortLabels: Record<ResponderMode, string> = {
@@ -27,6 +28,7 @@ export const responderModeShortLabels: Record<ResponderMode, string> = {
   dispatch: "Dispatch",
   custody: "Custody",
   chaplain: "Chaplain",
+  civilian: "Civilian",
 };
 
 export const responderModeAccentClasses: Record<ResponderMode, {
@@ -84,6 +86,13 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     icon: "bg-amber-500/15 text-amber-900 ring-1 ring-amber-500/35 dark:text-amber-200",
     button: "bg-amber-700 text-white hover:bg-amber-800 dark:bg-amber-400 dark:text-amber-950 dark:hover:bg-amber-300",
     soft: "border-amber-500/20 bg-amber-500/10",
+  },
+  civilian: {
+    card: "border-primary/25 bg-gradient-to-br from-primary/12 via-card to-slate-500/10 candlelight-card",
+    badge: "border-primary/35 bg-primary/12 text-amber-950 dark:text-amber-100",
+    icon: "bg-primary/12 text-amber-950 ring-1 ring-primary/30 dark:text-amber-100",
+    button: "gold-foil text-primary-foreground hover:brightness-110",
+    soft: "border-primary/20 bg-primary/10",
   },
 };
 
