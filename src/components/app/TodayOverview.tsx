@@ -227,7 +227,6 @@ function formatGoarchChapelUrl(date: Date) {
 }
 
 function buildPrimaryDailySourceUrl(settings: ReturnType<typeof getSettings>, date: Date) {
-
   if (settings.jurisdiction === "goarch") return formatGoarchChapelUrl(date);
   return "";
 }
