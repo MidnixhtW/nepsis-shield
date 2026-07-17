@@ -20,6 +20,14 @@ h1, h2, h3, .font-serif {
   box-shadow: 0 0 40px -5px rgba(217, 119, 6, 0.15);
 }
 
+/* Example of a custom "sacred" border in CSS */
+.orthodox-container {
+  border: 10px solid transparent;
+  padding: 20px;
+  border-image: url('/assets/border_frame_gold.png') 30 round;
+  background-color: rgba(28, 25, 23, 0.9); /* stone-900/90 */
+}
+
 /* Custom scrollbars for a clean, non-cluttered interface */
 ::-webkit-scrollbar {
   width: 6px;

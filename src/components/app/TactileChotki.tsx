@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
+const completePrayerTargetHaptic = async () => {
+  await Haptics.impact({ style: ImpactStyle.Heavy });
+  await new Promise((r) => setTimeout(r, 150));
+  await Haptics.impact({ style: ImpactStyle.Light });
+};
+
 const totalBeads = 12;
 
 export default function TactileChotki() {
@@ -30,7 +36,9 @@ export default function TactileChotki() {
 
   useEffect(() => {
     if (count > 0 && count % target === 0) {
-      triggerHaptic("heavy");
+      completePrayerTargetHaptic().catch(() => {
+        triggerHaptic("heavy");
+      });
     }
   }, [count, target]);
 
