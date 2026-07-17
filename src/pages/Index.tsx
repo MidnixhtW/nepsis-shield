@@ -11,7 +11,7 @@ import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
 import { TodayOverview } from "@/components/app/TodayOverview";
 import { AppFooter } from "@/components/app/AppFooter";
 import NotFound from "@/pages/NotFound";
-import { OrthodoxHero } from "@/components/app/YoungAdultHero";
+import { HallowStyleExperience } from "@/components/app/HallowStyleExperience";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 
@@ -272,9 +272,22 @@ const Index = () => {
       <div className="grid gap-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
           <div className="grid gap-4">
-            <OrthodoxHero onAction={navigateTo} />
-            <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+            <HallowStyleExperience />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="rounded-3xl border border-border/60 bg-card/90 p-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Prayer</p>
+                <p className="mt-2 text-sm text-muted-foreground">Daily prayer, rule, counter, prep, reflection, and sleep.</p>
+              </div>
+              <div className="rounded-3xl border border-border/60 bg-card/90 p-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Read</p>
+                <p className="mt-2 text-sm text-muted-foreground">Today’s readings, Bible browsing, and reading plans.</p>
+              </div>
+              <div className="rounded-3xl border border-border/60 bg-card/90 p-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Learn</p>
+                <p className="mt-2 text-sm text-muted-foreground">Guide, path, liturgy, hymns, audio, and parish resources.</p>
+              </div>
+            </div>
           </div>
         ) : null}
 
