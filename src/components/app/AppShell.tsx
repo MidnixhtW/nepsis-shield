@@ -48,7 +48,8 @@ export function AppShell({
 
       <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.045),transparent_26rem)]" />
 
-      <div className="sticky top-0 z-30 border-b border-border/25 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/88">
+      <div className="sticky top-0 z-30 border-b border-stone-800/60 bg-stone-950/90 backdrop-blur-xl supports-[backdrop-filter]:bg-stone-950/85">
+
         <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-5">
           {header}
         </div>
@@ -62,7 +63,8 @@ export function AppShell({
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/25 bg-background/96 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-md sm:px-3">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-800/60 bg-stone-950/90 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl sm:px-3">
+
         <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
           <ToggleGroup
             type="single"
