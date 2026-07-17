@@ -15,18 +15,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAudio } from "@/components/app/AudioProvider";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { ambientTracks, sanctuaryTracks } from "@/lib/audioTracks";
 
 const transcript = [
   "O Heavenly King, Comforter, Spirit of Truth, come and abide in us.",
   "Cleanse us from every stain, and save our souls, O Good One.",
   "Lord Jesus Christ, Son of God, have mercy on me.",
   "Into Thy hands, O Lord, I commend my spirit and this day.",
-];
-
-const ambientOptions = [
-  { id: "candle", title: "Beeswax candle", url: "" },
-  { id: "rain", title: "Monastic rain", url: "" },
-  { id: "ison", title: "Soft ison", url: "" },
 ];
 
 export function MonasticAudioPlayer() {
@@ -52,10 +47,16 @@ export function MonasticAudioPlayer() {
   if (!currentTrack) return null;
 
   const activeLine = transcript[1];
+  const activeTrackIndex = Math.max(0, sanctuaryTracks.findIndex((track) => track.id === currentTrack.id));
 
   function togglePlay() {
     if (isPlaying) pauseTrack();
     else playTrack(currentTrack);
+  }
+
+  function playAdjacentTrack(direction: -1 | 1) {
+    const nextIndex = (activeTrackIndex + direction + sanctuaryTracks.length) % sanctuaryTracks.length;
+    playTrack(sanctuaryTracks[nextIndex]);
   }
 
   if (!open) {
@@ -64,9 +65,9 @@ export function MonasticAudioPlayer() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="candlelight-card flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left shadow-2xl backdrop-blur-xl"
+          className="candlelight-card group flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left shadow-[0_22px_70px_hsl(35_91%_48%/0.22)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10 text-primary">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </span>
           <span className="min-w-0 flex-1">
@@ -82,6 +83,7 @@ export function MonasticAudioPlayer() {
   return (
     <div className="fixed inset-0 z-[65] overflow-y-auto bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(217,119,6,0.18)_0%,transparent_52%),radial-gradient(circle_at_70%_20%,rgba(245,158,11,0.10)_0%,transparent_30%),linear-gradient(135deg,rgba(4,8,18,1),rgba(12,10,9,1)_55%,rgba(25,18,8,1))]" />
+
       <div className="relative mx-auto flex min-h-dvh max-w-3xl flex-col px-5 py-5 sm:px-8 sm:py-8">
         <header className="flex items-center justify-between gap-3">
           <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => setOpen(false)}>
@@ -127,15 +129,17 @@ export function MonasticAudioPlayer() {
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-6">
-              <Button type="button" variant="ghost" size="icon" className="h-12 w-12 rounded-full text-muted-foreground hover:text-primary">
+              <Button type="button" variant="ghost" size="icon" className="h-12 w-12 rounded-full text-muted-foreground transition-colors hover:text-primary" onClick={() => playAdjacentTrack(-1)}>
                 <SkipBack className="h-5 w-5" />
+                <span className="sr-only">Previous sanctuary track</span>
               </Button>
-              <Button type="button" className="gold-foil h-20 w-20 rounded-full text-primary-foreground" onClick={togglePlay}>
+              <Button type="button" className="gold-foil h-20 w-20 rounded-full text-primary-foreground shadow-[0_18px_55px_hsl(35_91%_48%/0.28)] transition-transform duration-200 hover:scale-105 active:scale-95" onClick={togglePlay}>
                 {isPlaying ? <Pause className="h-9 w-9" /> : <Play className="ml-1 h-9 w-9" />}
                 <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
               </Button>
-              <Button type="button" variant="ghost" size="icon" className="h-12 w-12 rounded-full text-muted-foreground hover:text-primary">
+              <Button type="button" variant="ghost" size="icon" className="h-12 w-12 rounded-full text-muted-foreground transition-colors hover:text-primary" onClick={() => playAdjacentTrack(1)}>
                 <SkipForward className="h-5 w-5" />
+                <span className="sr-only">Next sanctuary track</span>
               </Button>
             </div>
 
@@ -148,15 +152,16 @@ export function MonasticAudioPlayer() {
             {showMixer ? (
               <div className="mt-5 rounded-3xl bg-background/45 p-4">
                 <div className="grid gap-2 sm:grid-cols-3">
-                  {ambientOptions.map((option) => {
+                  {ambientTracks.map((option) => {
+
                     const active = ambientTrack?.id === option.id;
                     return (
                       <button
                         key={option.id}
                         type="button"
                         className={cn(
-                          "rounded-2xl border px-3 py-2 text-sm font-semibold transition-colors",
-                          active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary",
+                          "rounded-2xl border px-3 py-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
+                          active ? "border-primary/50 bg-primary/15 text-primary shadow-[0_12px_35px_hsl(35_91%_48%/0.14)]" : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary",
                         )}
                         onClick={() => setAmbientTrack(active ? null : option)}
                       >
@@ -174,6 +179,7 @@ export function MonasticAudioPlayer() {
                     step="0.05"
                     value={ambientVolume}
                     onChange={(event) => setAmbientVolume(Number(event.target.value))}
+
                     className="h-1 w-full accent-amber-500"
                   />
                   <span className="w-10 text-right text-xs text-muted-foreground">{Math.round(ambientVolume * 100)}%</span>
@@ -204,8 +210,8 @@ function ToolButton({ active, icon, label, onClick }: { active: boolean; icon: R
       type="button"
       onClick={onClick}
       className={cn(
-        "flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-2 text-sm font-semibold transition-colors",
-        active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 bg-background/35 text-muted-foreground hover:border-primary/35 hover:text-primary",
+        "flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
+        active ? "border-primary/50 bg-primary/15 text-primary shadow-[0_12px_35px_hsl(35_91%_48%/0.14)]" : "border-primary/15 bg-background/35 text-muted-foreground hover:border-primary/35 hover:text-primary",
       )}
     >
       {icon}

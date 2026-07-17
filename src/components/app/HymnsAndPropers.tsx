@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
-import { ExternalLink, Music } from "lucide-react";
+import { ExternalLink, Music, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +11,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAudio } from "@/components/app/AudioProvider";
 import { useSettings } from "@/hooks/useSettings";
+import { getSanctuaryTrack } from "@/lib/audioTracks";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 
 type DailySource = "preferred" | "oca" | "goarch";
@@ -35,6 +37,7 @@ function dailySourceUrl(source: DailySource, preferredJurisdiction: string, date
 export function HymnsAndPropers() {
   const today = useMemo(() => new Date(), []);
   const { settings } = useSettings();
+  const { playTrack } = useAudio();
   const [source, setSource] = useState<DailySource>("preferred");
 
   const openUrl = useMemo(
@@ -102,17 +105,12 @@ export function HymnsAndPropers() {
             </Button>
 
             <Button
-              asChild
+              type="button"
               variant="outline"
-              className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+              className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/70"
+              onClick={() => playTrack(getSanctuaryTrack("byzantine-ison"))}
             >
-              <a
-                href="https://dcs.goarch.org/goa/dcs/dcs.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Chant Stand (AGES) <ExternalLink className="h-4 w-4" />
-              </a>
+              Play chant mode <PlayCircle className="h-4 w-4" />
             </Button>
           </div>
 
@@ -122,6 +120,7 @@ export function HymnsAndPropers() {
           </p>
         </div>
       </Card>
+
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useAudio } from "@/components/app/AudioProvider";
+import { getSanctuaryTrack } from "@/lib/audioTracks";
 
 const liturgyFlow = [
   {
@@ -13,6 +15,7 @@ const liturgyFlow = [
   {
     title: "The Little Entrance",
     cue: "The Gospel is carried in procession: Christ comes among His people through His Word.",
+
     response: "Stand attentively. Make the sign of the Cross when your parish custom does.",
   },
   {
@@ -80,11 +83,14 @@ const sourceLinks = [
 ];
 
 export function DivineLiturgyCompanion() {
+  const { playTrack } = useAudio();
+
   return (
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
         <div className="relative p-5 sm:p-6">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-amber-500/10" />
+
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
@@ -108,10 +114,8 @@ export function DivineLiturgyCompanion() {
                     Read full guide <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button asChild variant="outline" className="btn-wrap rounded-2xl border-border/60">
-                  <a href="https://dcs.goarch.org/goa/dcs/dcs.html" target="_blank" rel="noopener noreferrer">
-                    Open chant stand <Music className="ml-2 h-4 w-4" />
-                  </a>
+                <Button type="button" variant="outline" className="btn-wrap rounded-2xl border-border/60 bg-background/55 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/75" onClick={() => playTrack(getSanctuaryTrack("byzantine-ison"))}>
+                  Open chant mode <Music className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -120,6 +124,7 @@ export function DivineLiturgyCompanion() {
       </Card>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)]">
+
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>

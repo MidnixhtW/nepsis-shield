@@ -111,14 +111,14 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
+    <Card className="candlelight-card rounded-[2rem] border p-5 shadow-[0_24px_80px_hsl(35_91%_48%/0.08)] sm:p-6">
       <div className="grid gap-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Choose gently</p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight">One next step is enough</h2>
           </div>
-          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground hover:text-primary" onClick={() => onOpenRoute("/download")}>
+          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground transition-colors hover:text-primary" onClick={() => onOpenRoute("/download")}>
             <Share2 className="mr-2 h-4 w-4" /> Share / install
           </Button>
         </div>
@@ -128,10 +128,10 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
               key={action.label}
               type="button"
               variant="outline"
-              className="h-auto justify-start rounded-3xl border-primary/15 bg-background/45 px-4 py-4 text-left shadow-[0_14px_45px_hsl(35_91%_48%/0.06)] hover:border-primary/35 hover:bg-background/65"
+              className="group h-auto justify-start rounded-3xl border-primary/15 bg-background/45 px-4 py-4 text-left shadow-[0_14px_45px_hsl(35_91%_48%/0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/70 hover:shadow-[0_20px_60px_hsl(35_91%_48%/0.12)] active:scale-[0.99]"
               onClick={action.onClick}
             >
-              <span className="mr-3 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
+              <span className="mr-3 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
                 {action.icon}
               </span>
               <span className="min-w-0">
