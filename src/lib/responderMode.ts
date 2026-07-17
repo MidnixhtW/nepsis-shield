@@ -7,12 +7,13 @@ export const DEFAULT_RESPONDER_MODE: ResponderMode = "civilian";
 export const RESPONDER_MODE_STORAGE_KEY = "nepsis:responder-mode";
 export const RESPONDER_MODE_CHANGED_EVENT = "nepsis:responder-mode-changed";
 
-export const responderModeOrder: ResponderMode[] = ["civilian", "military", "law", "fire", "ems", "dispatch", "custody", "chaplain"];
+export const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain", "civilian"];
 
 export const responderModeLabels: Record<ResponderMode, string> = {
   military: "Military",
   law: "Law enforcement",
   fire: "Fire & rescue",
+
   ems: "EMS / medical",
   dispatch: "Dispatch / comms",
   custody: "Corrections / custody",
