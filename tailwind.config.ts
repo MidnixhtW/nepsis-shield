@@ -18,7 +18,24 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        serif: ["Cormorant Garamond", "serif"],
+        sans: ["Inter", "sans-serif"],
+      },
       colors: {
+        stone: {
+          950: "#0a0908",
+          900: "#141210",
+          800: "#221f1c",
+        },
+        amber: {
+          500: "#d97706",
+          600: "#b45309",
+        },
+        violet: {
+          950: "#1e112c",
+          900: "#2e1545",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -64,6 +81,8 @@ export default {
         },
       },
       borderRadius: {
+        "3xl": "1.75rem",
+        "4xl": "2.2rem",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
