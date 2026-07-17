@@ -366,8 +366,9 @@ export function TodayOverview({
       <DutyModeCard onOpenFieldManual={() => onOpenRoute?.("/field-manual")} />
 
       <Card className="order-first rounded-3xl border-border/60 bg-card p-4 shadow-sm sm:p-6">
-        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
-          <div className="min-w-0">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+        <div className="min-w-0">
+
             <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
               <div className="min-w-0 break-words">
                 <p className="text-xs font-semibold uppercase leading-snug tracking-[0.1em] text-muted-foreground sm:tracking-[0.18em]">
@@ -392,8 +393,8 @@ export function TodayOverview({
               </div>
 
               <div className="grid min-w-0 gap-2 sm:min-w-[210px] lg:min-w-0">
-
                 <Select
+
                   value={sourceOverride}
                   onValueChange={(v) => setSourceOverride(v as "preferred" | "oca" | "goarch")}
                 >
