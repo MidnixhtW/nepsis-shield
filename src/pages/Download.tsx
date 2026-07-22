@@ -70,7 +70,7 @@ function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; inst
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-64 rounded-3xl border border-border/60 bg-white p-3 shadow-sm">
+        <div className="qr-code-surface mx-auto w-full max-w-64 rounded-3xl border border-border/60 bg-white p-3 shadow-sm">
           <img
             src={qrCodeUrl}
             alt="QR code that opens the Nepsis Shield install page"

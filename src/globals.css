@@ -981,6 +981,7 @@ h1, h2, h3, .font-serif {
     --input: 41 31% 70%;
     --ring: 219 57% 31%;
     --icon-gold: 46 65% 52%;
+    --liturgical-warm: 350 55% 32%;
     --byzantine-blue: 219 57% 27%;
     --cinnabar: 350 55% 32%;
     --radius: 0.5rem;
@@ -1016,6 +1017,7 @@ h1, h2, h3, .font-serif {
     --input: 44 27% 31%;
     --ring: 46 65% 58%;
     --icon-gold: 46 65% 57%;
+    --liturgical-warm: 46 65% 66%;
     --byzantine-blue: 217 42% 31%;
     --cinnabar: 350 45% 38%;
     --radius: 0.5rem;
@@ -1160,5 +1162,169 @@ h1, h2, h3, .font-serif {
 @media (prefers-reduced-motion: reduce) {
   .water-page {
     animation: none !important;
+  }
+}
+
+/* Legacy palette guardrails: keep every routed feature within the liturgical colors. */
+@layer utilities {
+  body [class*="bg-amber-"],
+  body [class*="bg-yellow-"] {
+    background-color: hsl(var(--secondary) / 0.58) !important;
+  }
+
+  body [class*="text-amber-"],
+  body [class*="text-yellow-"] {
+    color: hsl(var(--liturgical-warm)) !important;
+  }
+
+  body [class*="border-amber-"],
+  body [class*="border-yellow-"] {
+    border-color: hsl(var(--icon-gold) / 0.58) !important;
+  }
+
+  body [class*="bg-blue-"],
+  body [class*="bg-sky-"],
+  body [class*="bg-indigo-"],
+  body [class*="bg-cyan-"],
+  body [class*="bg-emerald-"],
+  body [class*="bg-green-"],
+  body [class*="bg-teal-"],
+  body [class*="bg-lime-"] {
+    background-color: hsl(var(--primary) / 0.13) !important;
+  }
+
+  body [class*="text-blue-"],
+  body [class*="text-sky-"],
+  body [class*="text-indigo-"],
+  body [class*="text-cyan-"],
+  body [class*="text-emerald-"],
+  body [class*="text-green-"],
+  body [class*="text-teal-"],
+  body [class*="text-lime-"] {
+    color: hsl(var(--primary)) !important;
+  }
+
+  body [class*="border-blue-"],
+  body [class*="border-sky-"],
+  body [class*="border-indigo-"],
+  body [class*="border-cyan-"],
+  body [class*="border-emerald-"],
+  body [class*="border-green-"],
+  body [class*="border-teal-"],
+  body [class*="border-lime-"] {
+    border-color: hsl(var(--byzantine-blue) / 0.42) !important;
+  }
+
+  body [class*="bg-red-"],
+  body [class*="bg-rose-"],
+  body [class*="bg-orange-"],
+  body [class*="bg-pink-"] {
+    background-color: hsl(var(--accent) / 0.13) !important;
+  }
+
+  body [class*="text-red-"],
+  body [class*="text-rose-"],
+  body [class*="text-orange-"],
+  body [class*="text-pink-"] {
+    color: hsl(var(--accent)) !important;
+  }
+
+  body [class*="border-red-"],
+  body [class*="border-rose-"],
+  body [class*="border-orange-"],
+  body [class*="border-pink-"] {
+    border-color: hsl(var(--cinnabar) / 0.44) !important;
+  }
+
+  body [class*="bg-violet-"],
+  body [class*="bg-purple-"],
+  body [class*="bg-fuchsia-"] {
+    background-color: hsl(var(--secondary) / 0.48) !important;
+  }
+
+  body [class*="text-violet-"],
+  body [class*="text-purple-"],
+  body [class*="text-fuchsia-"] {
+    color: hsl(var(--primary)) !important;
+  }
+
+  body [class*="border-violet-"],
+  body [class*="border-purple-"],
+  body [class*="border-fuchsia-"] {
+    border-color: hsl(var(--border) / 0.72) !important;
+  }
+
+  body [class*="bg-slate-"],
+  body [class*="bg-zinc-"],
+  body [class*="bg-stone-"],
+  body [class*="bg-gray-"],
+  body [class*="bg-neutral-"],
+  body [class~="bg-black"],
+  body [class*="bg-black/"],
+  body [class~="bg-white"]:not(.qr-code-surface),
+  body [class*="bg-white/"] {
+    background-color: hsl(var(--card)) !important;
+  }
+
+  body [class*="text-slate-"],
+  body [class*="text-zinc-"],
+  body [class*="text-stone-"],
+  body [class*="text-gray-"],
+  body [class*="text-neutral-"],
+  body [class*="text-black"],
+  body [class*="text-white"] {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  body [class*="border-slate-"],
+  body [class*="border-zinc-"],
+  body [class*="border-stone-"],
+  body [class*="border-gray-"],
+  body [class*="border-neutral-"],
+  body [class*="border-white"],
+  body [class*="border-black"] {
+    border-color: hsl(var(--border) / 0.72) !important;
+  }
+
+  body [class*="ring-amber-"],
+  body [class*="ring-yellow-"] {
+    --tw-ring-color: hsl(var(--icon-gold) / 0.5) !important;
+  }
+
+  body [class*="ring-blue-"],
+  body [class*="ring-sky-"],
+  body [class*="ring-indigo-"],
+  body [class*="ring-cyan-"],
+  body [class*="ring-emerald-"],
+  body [class*="ring-green-"],
+  body [class*="ring-teal-"],
+  body [class*="ring-lime-"] {
+    --tw-ring-color: hsl(var(--byzantine-blue) / 0.46) !important;
+  }
+
+  body [class*="ring-red-"],
+  body [class*="ring-rose-"],
+  body [class*="ring-orange-"],
+  body [class*="ring-pink-"] {
+    --tw-ring-color: hsl(var(--cinnabar) / 0.48) !important;
+  }
+
+  body [class*="ring-slate-"],
+  body [class*="ring-zinc-"],
+  body [class*="ring-stone-"],
+  body [class*="ring-gray-"],
+  body [class*="ring-neutral-"],
+  body [class*="ring-white"],
+  body [class*="ring-black"] {
+    --tw-ring-color: hsl(var(--ring) / 0.48) !important;
+  }
+
+  body [class*="bg-gradient-"],
+  body [class*="bg-[radial-gradient"],
+  body [class*="bg-[linear-gradient"],
+  body [style*="linear-gradient"],
+  body [style*="radial-gradient"] {
+    background-image: none !important;
+    background-color: hsl(var(--card)) !important;
   }
 }

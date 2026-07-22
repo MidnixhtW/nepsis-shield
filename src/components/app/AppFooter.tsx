@@ -12,7 +12,7 @@ const utilityLinks = [
 
 export function AppFooter() {
   return (
-    <Card className="mt-4 overflow-hidden rounded-[1.6rem] border-border/35 bg-card/45 p-4 shadow-sm backdrop-blur-xl sm:p-5">
+    <Card className="mt-4 overflow-hidden rounded-lg border-border/55 bg-card/75 p-4 shadow-sm backdrop-blur-xl sm:p-5">
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center xl:justify-between">
 
         <div className="min-w-0">
@@ -23,7 +23,7 @@ export function AppFooter() {
             Under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
           </p>
 
-          <div className="mt-3 flex items-start gap-2 rounded-xl border border-primary/15 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+          <div className="mt-3 flex items-start gap-2 rounded-lg border border-[hsl(var(--icon-gold)/0.36)] bg-secondary/30 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
             <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p>
               Pastoral note: this app supports prayer and learning, but it does not replace a parish priest, chaplain, counselor, or trusted spiritual guide.
@@ -38,7 +38,7 @@ export function AppFooter() {
               asChild
               variant="outline"
               size="sm"
-              className="rounded-2xl border-border/60 bg-background/70 shadow-sm hover:border-primary/30 hover:bg-primary/10"
+              className="rounded-lg border-border/60 bg-background/70 shadow-sm hover:border-[hsl(var(--icon-gold)/0.55)] hover:bg-secondary/35"
             >
               <Link to={link.to}>
                 <span className="mr-2 text-primary">{link.icon}</span>
