@@ -151,14 +151,17 @@ export function AppHeader() {
 
   return (
     <header className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
-      <Link to="/today" className="flex min-w-0 items-center gap-2 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:gap-3">
-        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-border/70 bg-card text-primary shadow-sm sm:h-9 sm:w-9 sm:rounded-2xl">
-          <OrthodoxCrossIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+      <Link to="/today" className="group flex min-w-0 items-center gap-2.5 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:gap-3">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary via-amber-400 to-rose-400 text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.24)] transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105 sm:h-10 sm:w-10">
+          <OrthodoxCrossIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
         </div>
         <div className="min-w-0">
-          <h1 className="truncate text-sm font-semibold tracking-tight sm:text-base">Nepsis Shield</h1>
-          <p className="truncate text-[11px] text-muted-foreground max-[359px]:hidden sm:text-xs">
-            Orthodox daily companion · {format(new Date(), "EEE, MMM d")}
+          <div className="flex items-center gap-2">
+            <h1 className="truncate text-sm font-bold tracking-[-0.02em] sm:text-base">Nepsis Shield</h1>
+            <span className="hidden rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-primary md:inline-flex">Daily</span>
+          </div>
+          <p className="truncate text-[11px] font-medium text-muted-foreground max-[359px]:hidden sm:text-xs">
+            Stay rooted · {format(new Date(), "EEE, MMM d")}
           </p>
 
         </div>
@@ -166,7 +169,7 @@ export function AppHeader() {
 
       <div className="hidden shrink-0 items-center gap-1 sm:flex">
         <ThemeToggle />
-        <Button asChild size="sm" variant="ghost" className="rounded-xl px-3">
+        <Button asChild size="sm" variant="ghost" className="rounded-full px-3">
           <Link to="/settings">Settings</Link>
         </Button>
       </div>

@@ -38,7 +38,7 @@ export function AppShell({
   );
 
   return (
-    <div className="relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
+    <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
       <a
         href="#main-content"
         className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
@@ -46,11 +46,11 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-0 h-40 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.045),transparent_26rem)]" />
+      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_12%_8%,hsl(var(--primary)/0.12),transparent_24rem),radial-gradient(circle_at_90%_28%,hsl(275_80%_60%/0.08),transparent_22rem)]" />
 
-      <div className="sticky top-0 z-30 border-b border-stone-800/60 bg-stone-950/90 backdrop-blur-xl supports-[backdrop-filter]:bg-stone-950/85">
+      <div className="sticky top-0 z-30 border-b border-border/40 bg-background/75 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/65">
 
-        <div className="mx-auto w-full max-w-5xl px-3 py-2 sm:px-5">
+        <div className="mx-auto w-full max-w-5xl px-3 py-2.5 sm:px-5">
           {header}
         </div>
       </div>
@@ -58,14 +58,14 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-5xl px-3 pt-3 pb-[calc(6.2rem+env(safe-area-inset-bottom))] sm:px-5 sm:pt-5"
+        className="water-page relative z-10 mx-auto w-full max-w-5xl px-3 pb-[calc(7rem+env(safe-area-inset-bottom))] pt-3 sm:px-5 sm:pt-6"
       >
         {children}
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-stone-800/60 bg-stone-950/90 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl sm:px-3">
+      <div className="fixed inset-x-0 bottom-0 z-40 px-2 pb-[calc(0.6rem+env(safe-area-inset-bottom))] pt-3 sm:px-3">
 
-        <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-2xl bg-card/80 p-1 shadow-sm ring-1 ring-border/25">
+        <div className="mx-auto grid w-full max-w-md grid-cols-5 gap-1 rounded-[1.6rem] border border-border/60 bg-card/80 p-1.5 shadow-[0_18px_60px_hsl(var(--foreground)/0.18)] backdrop-blur-2xl">
           <ToggleGroup
             type="single"
             value={section}
@@ -83,22 +83,22 @@ export function AppShell({
                   value={key}
                   aria-label={meta.aria}
                   className={cn(
-                    "h-12 rounded-xl bg-transparent px-1 transition-colors",
-                    "hover:bg-muted/45",
-                    "data-[state=on]:bg-primary/10 data-[state=on]:text-foreground",
+                    "h-12 rounded-[1.15rem] bg-transparent px-1 transition-all duration-300",
+                    "hover:bg-muted/55",
+                    "data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.24)]",
                   )}
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1">
                     <Icon
                       className={cn(
-                        "h-[17px] w-[17px]",
-                        active ? "text-primary" : "text-muted-foreground",
+                        "h-[17px] w-[17px] transition-transform duration-300",
+                        active ? "scale-105 text-primary-foreground" : "text-muted-foreground",
                       )}
                     />
                     <span
                       className={cn(
-                        "text-[10px] font-medium leading-none sm:text-[11px]",
-                        active ? "text-foreground" : "text-muted-foreground",
+                        "text-[10px] font-semibold leading-none sm:text-[11px]",
+                        active ? "text-primary-foreground" : "text-muted-foreground",
                       )}
                     >
                       {meta.label}
@@ -113,12 +113,12 @@ export function AppShell({
             to="/download"
             aria-label="Open more options, install, and share"
             className={cn(
-              "flex h-12 flex-col items-center justify-center gap-1 rounded-xl bg-transparent px-1 text-muted-foreground transition-colors hover:bg-muted/45 hover:text-primary",
-              installActive && "bg-primary/10 text-foreground",
+              "flex h-12 flex-col items-center justify-center gap-1 rounded-[1.15rem] bg-transparent px-1 text-muted-foreground transition-all duration-300 hover:bg-muted/55 hover:text-primary",
+              installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.24)]",
             )}
           >
-            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary" : "text-muted-foreground")} />
-            <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", installActive ? "text-foreground" : "text-muted-foreground")}>More</span>
+            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
+            <span className={cn("text-[10px] font-semibold leading-none sm:text-[11px]", installActive ? "text-primary-foreground" : "text-muted-foreground")}>More</span>
           </Link>
         </div>
       </div>

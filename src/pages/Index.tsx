@@ -111,32 +111,33 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <Card className="candlelight-card rounded-[2rem] border p-5 shadow-[0_24px_80px_hsl(35_91%_48%/0.08)] sm:p-6">
+    <Card className="overflow-hidden rounded-[2rem] border-primary/15 bg-card/75 p-5 shadow-[0_24px_80px_hsl(var(--foreground)/0.07)] backdrop-blur-sm sm:p-6">
       <div className="grid gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Choose gently</p>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight">One next step is enough</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Quick picks</p>
+            <h2 className="mt-1 text-2xl font-bold tracking-[-0.03em]">What do you need right now?</h2>
+            <p className="mt-1 text-sm text-muted-foreground">No pressure. Just choose the next helpful thing.</p>
           </div>
-          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground transition-colors hover:text-primary" onClick={() => onOpenRoute("/download")}>
-            <Share2 className="mr-2 h-4 w-4" /> Share / install
+          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary" onClick={() => onOpenRoute("/download")}>
+            <Share2 className="mr-2 h-4 w-4" /> Share the app
           </Button>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {actions.map((action) => (
+        <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">
+          {actions.map((action, index) => (
             <Button
               key={action.label}
               type="button"
               variant="outline"
-              className="group h-auto justify-start rounded-3xl border-primary/15 bg-background/45 px-4 py-4 text-left shadow-[0_14px_45px_hsl(35_91%_48%/0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/70 hover:shadow-[0_20px_60px_hsl(35_91%_48%/0.12)] active:scale-[0.99]"
+              className="group h-auto min-h-28 flex-col items-start justify-between gap-5 rounded-[1.5rem] border-primary/10 bg-background/55 px-4 py-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/[0.06] hover:shadow-[0_18px_45px_hsl(var(--foreground)/0.09)] active:scale-[0.98] sm:min-h-0 sm:flex-row sm:items-center sm:justify-start sm:gap-0"
               onClick={action.onClick}
             >
-              <span className="mr-3 grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
+              <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl transition-transform duration-300 group-hover:rotate-3 group-hover:scale-110 ${index % 3 === 0 ? "bg-violet-500/15 text-violet-600 dark:text-violet-300" : index % 3 === 1 ? "bg-rose-500/15 text-rose-600 dark:text-rose-300" : "bg-sky-500/15 text-sky-600 dark:text-sky-300"}`}>
                 {action.icon}
               </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
-                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
+              <span className="min-w-0 sm:ml-3">
+                <span className="block text-sm font-bold leading-tight">{action.label}</span>
+                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground max-sm:hidden">{action.helper}</span>
               </span>
             </Button>
           ))}
@@ -274,7 +275,7 @@ const Index = () => {
       <div className="grid gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
 
-          <div className="grid gap-4">
+          <div className="grid gap-5 sm:gap-6">
             <OrthodoxHero onAction={navigateTo} />
             <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
