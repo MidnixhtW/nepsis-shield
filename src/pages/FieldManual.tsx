@@ -33,11 +33,14 @@ import {
 import { cn } from "@/lib/utils";
 import { responderModeAccentClasses, responderModeLabels, type ResponderMode } from "@/lib/responderMode";
 import { showError, showSuccess } from "@/utils/toast";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 
 type ManualEntry = {
   id: string;
   title: string;
   subtitle: string;
+
   icon: ReactNode;
   prayer: string;
   practice: string[];
@@ -196,34 +199,22 @@ function QuickCard({ title, description, icon }: { title: string; description: s
 
 export default function FieldManual() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-28 pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="icon-medallion h-14 w-14 p-2">
-            <OrthodoxCrossIcon className="h-8 w-8" />
-          </div>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-muted-foreground">Life & service guide</p>
-            <h1 className="bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-3xl font-bold tracking-tight text-transparent">
-              Orthodox Life & Service Guide
-            </h1>
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Prayers, checklists, and daily practices for ordinary life, families, military, first responders, public safety, medical teams, and chaplains.
-            </p>
+    <PageContainer width="wide">
+      <PremiumPageHeader
+        eyebrow="Life & service guide"
+        title="Orthodox Life & Service Guide"
+        description="Prayers, checklists, and daily practices for ordinary life, families, military, first responders, public safety, medical teams, and chaplains."
+        icon={<Crosshair className="h-5 w-5" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild className="rounded-2xl"><Link to="/pray?tab=prayers">Open prayer book</Link></Button>
+          </>
+        }
+      />
 
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60 bg-background/60 shadow-sm backdrop-blur">
-            <Link to="/today">Back to app</Link>
-          </Button>
-          <Button asChild className="rounded-2xl shadow-lg shadow-primary/15">
-            <Link to="/pray?tab=prayers">Open prayer book</Link>
-          </Button>
-        </div>
-      </div>
+      <div className="premium-card-stack mt-5">
 
-      <div className="mt-5 grid gap-4">
         <Card className="ornate-card">
           <div className="relative overflow-hidden sacred-surface field-grid">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/30 to-accent/15" />
@@ -363,6 +354,6 @@ export default function FieldManual() {
           </div>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }

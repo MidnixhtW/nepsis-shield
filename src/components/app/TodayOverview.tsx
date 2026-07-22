@@ -318,9 +318,10 @@ export function TodayOverview({
   const openFieldManual = onOpenRoute ? () => onOpenRoute("/field-manual") : undefined;
 
   return (
-    <div className="grid gap-6">
+    <div className="premium-card-stack">
       <CurrentModeCard onOpenFieldManual={openFieldManual} />
       <RuleOfVigilanceCard onNavigate={onNavigate} />
+
       {settings.personalization.showGroundingOnToday ? <GroundMeNow /> : null}
 
       <Card className="candlelight-card rounded-3xl border p-5 sm:p-6">
@@ -402,18 +403,20 @@ export function TodayOverview({
 
       <DutyModeCard onOpenFieldManual={openFieldManual} />
 
-      <Card className={hallowCardClass}>
+      <Card className={cn(hallowCardClass, "order-first rounded-[1.75rem] border-border/45 bg-card/70 shadow-[0_24px_80px_hsl(var(--background)/0.28)]")}>
         <div className={hallowGlowClass} />
 
-        <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+        <div className="relative grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
+
         <div className="min-w-0">
 
             <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between lg:flex-col">
               <div className="min-w-0 break-words">
-                <p className="text-xs font-semibold uppercase leading-snug tracking-[0.1em] text-muted-foreground sm:tracking-[0.18em]">
-                  Daily command center · {format(today, "EEEE")}
+                <p className="text-xs font-semibold uppercase leading-snug tracking-[0.1em] text-primary sm:tracking-[0.18em]">
+                  Daily rhythm · {format(today, "EEEE")}
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold tracking-tight">
+
                   {format(today, "MMMM d")}
                 </h2>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">

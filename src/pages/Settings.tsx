@@ -27,7 +27,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useSettings } from "@/hooks/useSettings";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
+
 import { removeStoredItem } from "@/lib/deviceStorage";
 import {
   responderModeAccentClasses,
@@ -157,26 +160,22 @@ export default function Settings() {
   const roleTheme = responderModeAccentClasses[responderMode];
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-3 pb-24 pt-6 sm:px-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">Settings</p>
-          <h1 className="text-2xl font-semibold tracking-tight">Preferences</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            These are stored locally on this device.
-          </p>
-        </div>
-        <div className="grid gap-2 sm:flex sm:flex-wrap">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/today">Back to app</Link>
-          </Button>
-          <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={reset}>
-            <RotateCcw className="mr-2 h-4 w-4" /> Reset
-          </Button>
-        </div>
-      </div>
+    <PageContainer>
+      <PremiumPageHeader
+        eyebrow="Settings"
+        title="Shape your daily rhythm"
+        description="Calendar, role, accessibility, and reminder preferences stay on this device."
+        icon={<SlidersHorizontal className="h-5 w-5" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button type="button" variant="outline" className="premium-action" onClick={reset}><RotateCcw className="mr-2 h-4 w-4" /> Reset</Button>
+          </>
+        }
+      />
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="premium-card-stack mt-5 lg:grid-cols-2">
+
         <Card className={cn("rounded-3xl p-5 shadow-sm", roleTheme.card)}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 break-words">
@@ -400,6 +399,6 @@ export default function Settings() {
           </div>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }

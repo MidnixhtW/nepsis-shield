@@ -15,16 +15,19 @@ import {
   ShieldCheck,
   Sprout,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { lockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { showError, showSuccess } from "@/utils/toast";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 
 type Message = {
+
   role: "user" | "guide";
   text: string;
 };
@@ -270,27 +273,22 @@ export default function PhilokaliaGuide() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-4 pb-24 pt-6 text-foreground">
-      <div className="mx-auto w-full max-w-6xl">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <Badge className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-primary">Hidden guide</Badge>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight">Philokalia Guide</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-              A restrained Orthodox watchfulness guide with built-in source notes from OCA catechesis and canonical Orthodox resources.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline" className="rounded-2xl border-border/60">
-              <Link to="/today"><Home className="mr-2 h-4 w-4" /> Today</Link>
-            </Button>
-            <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={hideGuide}>
-              <Lock className="mr-2 h-4 w-4" /> Hide again
-            </Button>
-          </div>
-        </div>
+    <PageContainer width="wide">
+      <PremiumPageHeader
+        eyebrow="Hidden guide"
+        title="Philokalia Guide"
+        description="A restrained Orthodox watchfulness guide with built-in source notes from OCA catechesis and canonical Orthodox resources."
+        icon={<Sprout className="h-5 w-5" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today"><Home className="mr-2 h-4 w-4" /> Today</Link></Button>
+            <Button type="button" variant="outline" className="premium-action" onClick={hideGuide}><Lock className="mr-2 h-4 w-4" /> Hide again</Button>
+          </>
+        }
+      />
 
-        <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+      <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+
           <Tabs defaultValue="ask" className="w-full">
             <TabsList className="grid h-auto w-full grid-cols-3 rounded-2xl bg-muted/30 p-1">
               <TabsTrigger value="ask" className="rounded-xl">Ask</TabsTrigger>
@@ -414,7 +412,6 @@ export default function PhilokaliaGuide() {
             </SectionCard>
           </div>
         </div>
-      </div>
-    </div>
+    </PageContainer>
   );
 }

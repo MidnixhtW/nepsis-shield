@@ -51,27 +51,28 @@ function MenuLink({
     <SheetClose asChild>
       <Link
         to={to}
-        className="group flex min-w-0 items-center gap-3 rounded-xl px-2.5 py-2 text-sm transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+        className="group flex min-w-0 items-center gap-3 rounded-2xl border border-transparent px-3 py-2.5 text-sm transition-all hover:border-border/45 hover:bg-background/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <span className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-muted/45 text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
           {icon}
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium leading-tight text-foreground">{label}</span>
-          {description ? <span className="mt-0.5 block truncate text-xs text-muted-foreground">{description}</span> : null}
+          {description ? <span className="mt-1 block truncate text-xs text-muted-foreground">{description}</span> : null}
         </span>
       </Link>
+
     </SheetClose>
   );
 }
 
 function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="border-t border-border/45 pt-3 first:border-t-0 first:pt-0">
-      <h3 className="px-2 pb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+    <section className="border-t border-border/35 pt-4 first:border-t-0 first:pt-0">
+      <h3 className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
         {title}
       </h3>
-      <div className="grid gap-0.5">{children}</div>
+      <div className="grid gap-1">{children}</div>
     </section>
   );
 }
@@ -150,56 +151,52 @@ export function AppHeader() {
   }
 
   return (
-    <header className="flex min-w-0 items-center justify-between gap-2 sm:gap-3">
-      <Link to="/today" className="group flex min-w-0 items-center gap-2.5 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:gap-3">
-        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-primary via-amber-400 to-rose-400 text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.24)] transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105 sm:h-10 sm:w-10">
-          <OrthodoxCrossIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
+    <header className="flex min-w-0 items-center justify-between gap-3">
+      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[1.1rem] border border-primary/20 bg-primary/10 text-primary shadow-[0_10px_30px_hsl(var(--primary)/0.12)] transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105">
+          <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="truncate text-sm font-bold tracking-[-0.02em] sm:text-base">Nepsis Shield</h1>
-            <span className="hidden rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-primary md:inline-flex">Daily</span>
-          </div>
-          <p className="truncate text-[11px] font-medium text-muted-foreground max-[359px]:hidden sm:text-xs">
-            Stay rooted · {format(new Date(), "EEE, MMM d")}
+          <h1 className="truncate text-sm font-semibold tracking-[-0.025em] sm:text-base">Nepsis Shield</h1>
+          <p className="truncate text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
+            Today · {format(new Date(), "EEE, MMM d")}
           </p>
-
         </div>
       </Link>
 
-      <div className="hidden shrink-0 items-center gap-1 sm:flex">
+      <div className="ml-auto hidden shrink-0 items-center gap-1 sm:flex">
         <ThemeToggle />
-        <Button asChild size="sm" variant="ghost" className="rounded-full px-3">
-          <Link to="/settings">Settings</Link>
-        </Button>
       </div>
 
       <Sheet>
+
         <SheetTrigger asChild>
-          <Button aria-label="Toggle Menu" size="icon" variant="ghost" className="h-9 w-9 rounded-xl sm:h-10 sm:w-10">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle Menu</span>
+          <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-2xl border border-border/35 bg-background/30 hover:bg-muted/45">
+            <Menu className="h-[18px] w-[18px]" />
+            <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex h-dvh w-[min(21rem,92vw)] flex-col gap-0 overflow-hidden p-0">
-          <SheetHeader className="shrink-0 border-b border-border/45 px-4 pb-3 pt-5 text-left">
+        <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-border/40 bg-card/90 p-0 backdrop-blur-2xl">
+          <SheetHeader className="shrink-0 border-b border-border/35 px-5 pb-4 pt-6 text-left">
             <SheetTitle>
               <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="inline-flex items-center gap-3 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 onClick={handleSecretTap}
               >
-                <OrthodoxCrossIcon className="h-5 w-5 text-primary" /> Toggle Menu
+                <span className="premium-icon-mark h-9 w-9 rounded-xl"><OrthodoxCrossIcon className="h-4 w-4" /></span>
+                <span>Nepsis Shield</span>
               </button>
             </SheetTitle>
             <SheetDescription className="text-xs leading-relaxed">
-              Apps, Settings, Library, Hub, Help, and New Chat.
+              Prayer, Scripture, guidance, and quiet daily tools.
             </SheetDescription>
           </SheetHeader>
-          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
             <MenuLinks />
           </div>
         </SheetContent>
+
       </Sheet>
     </header>
   );

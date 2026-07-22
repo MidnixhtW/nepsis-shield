@@ -7,9 +7,10 @@ import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
 import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
-import { SectionBar } from "@/components/app/SectionBar";
+import { SectionIntro } from "@/components/app/SectionIntro";
 import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
+
 import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
@@ -28,19 +29,15 @@ export function LearnHub({
   onHome?: () => void;
 }) {
   return (
-    <div className="grid gap-4">
-      <SectionBar
-        title="Tools"
-        hint="Personal path, challenges, guide, Q&A, liturgy, audio, hymns, parish, library"
-        action={
+    <div className="grid gap-5">
+      <SectionIntro
+        eyebrow="Learn"
+        title="Grow with steadiness."
+        description="Follow a personal path, understand Orthodox worship, and keep trusted resources close without becoming overwhelmed."
+        icon={<Sparkles className="h-4 w-4" />}
+        actions={
           onHome ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-              onClick={onHome}
-            >
+            <Button type="button" variant="outline" size="sm" className="premium-action" onClick={onHome}>
               <Home className="mr-2 h-4 w-4" /> Today
             </Button>
           ) : null
@@ -48,19 +45,21 @@ export function LearnHub({
       />
 
       <FirstStepHint
-        title="New here? Build your personal path."
+        title="Recommended: build your personal path."
+
         description="Choose what you need most and how much time you have; the app will recommend a simple starting rhythm."
         actionLabel="Open Path"
         icon={<Sparkles className="h-4 w-4" />}
         onAction={() => onTabChange?.("path")}
       />
 
-      <Card className="rounded-2xl border-border/45 bg-card/85 p-4 shadow-sm">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+      <Card className="premium-surface rounded-[1.75rem] p-4 sm:p-5">
+        <div className="relative flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Tool hub</p>
+            <p className="premium-eyebrow">Tool library</p>
             <h2 className="mt-1 text-lg font-semibold tracking-tight">Quick access</h2>
           </div>
+
           <p className="text-xs text-muted-foreground">Secondary features live here.</p>
         </div>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -85,10 +84,11 @@ export function LearnHub({
         onValueChange={(v) => onTabChange?.(v as LearnTab)}
         className="w-full"
       >
-        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 rounded-2xl bg-muted/20 p-1 sm:grid-cols-5 lg:grid-cols-10">
+        <TabsList className="premium-tabs">
           <TabsTrigger
             value="welcome"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+            className="min-h-10 rounded-xl px-3 py-2 text-xs leading-tight sm:text-sm"
+
           >
             Start
           </TabsTrigger>

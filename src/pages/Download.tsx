@@ -16,8 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import {
   APK_DOWNLOAD_HOST,
+
   APK_DOWNLOAD_IS_DIRECT,
   APK_DOWNLOAD_URL,
   APK_RELEASE_DATE,
@@ -140,34 +143,22 @@ export default function Download() {
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&margin=16&data=${encodeURIComponent(installPageUrl)}`;
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-border/60 bg-card text-primary">
-            <OrthodoxCrossIcon className="h-7 w-7" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Install
-            </p>
-            <h1 className="text-2xl font-semibold tracking-tight">Get Nepsis Shield</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              QR, web install, APK, and sharing tools.
-            </p>
-          </div>
-        </div>
+    <PageContainer>
+      <PremiumPageHeader
+        eyebrow="Install & share"
+        title="Take Nepsis Shield with you"
+        description="Install the web app, download the Android build, or share a single trusted link."
+        icon={<OrthodoxCrossIcon className="h-6 w-6" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/about">About</Link></Button>
+          </>
+        }
+      />
 
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/today">Back to app</Link>
-          </Button>
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/about">About</Link>
-          </Button>
-        </div>
-      </div>
+      <div className="premium-card-stack mt-5">
 
-      <div className="mt-5 grid gap-4">
         <QrDownloadCard qrCodeUrl={qrCodeUrl} installPageUrl={installPageUrl} />
         <PwaInstallCard />
         <ApkDownloadCard />
@@ -238,6 +229,6 @@ export default function Download() {
       <div className="mt-4">
         <ShareDistributionCard />
       </div>
-    </div>
+    </PageContainer>
   );
 }

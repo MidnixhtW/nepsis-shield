@@ -5,38 +5,29 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { RELEASE_NOTES } from "@/lib/releaseInfo";
 
 export default function ReleaseNotes() {
+
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 glow">
-            <OrthodoxCrossIcon className="h-8 w-8" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Release log
-            </p>
-            <h1 className="text-2xl font-semibold tracking-tight">Release notes</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Version history for Nepsis Shield and the Android APK track.
-            </p>
-          </div>
-        </div>
+    <PageContainer>
+      <PremiumPageHeader
+        eyebrow="Release log"
+        title="Release notes"
+        description="Version history for Nepsis Shield and the Android APK track."
+        icon={<OrthodoxCrossIcon className="h-6 w-6" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild className="rounded-2xl"><Link to="/download">Download APK</Link></Button>
+          </>
+        }
+      />
 
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/today">Back to app</Link>
-          </Button>
-          <Button asChild className="rounded-2xl">
-            <Link to="/download">Download APK</Link>
-          </Button>
-        </div>
-      </div>
+      <div className="premium-card-stack mt-5">
 
-      <div className="mt-5 grid gap-4">
         {RELEASE_NOTES.map((release) => (
           <Card key={release.version} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -70,6 +61,6 @@ export default function ReleaseNotes() {
           </Card>
         ))}
       </div>
-    </div>
+    </PageContainer>
   );
 }

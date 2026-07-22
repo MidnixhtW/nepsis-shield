@@ -17,15 +17,15 @@ export function FirstStepHint({
   onAction: () => void;
 }) {
   return (
-    <Card className="rounded-3xl border-primary/20 bg-primary/5 p-4 shadow-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <Card className="overflow-hidden rounded-[1.6rem] border-primary/15 bg-primary/[0.045] p-4 shadow-sm backdrop-blur-xl sm:p-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex min-w-0 gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-primary/15 bg-primary/[0.08] text-primary">
             {icon}
           </span>
           <div className="min-w-0">
             <p className="text-sm font-semibold">{title}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p>
           </div>
         </div>
         <Button type="button" className="tap rounded-2xl sm:shrink-0" onClick={onAction}>
@@ -33,5 +33,6 @@ export function FirstStepHint({
         </Button>
       </div>
     </Card>
+
   );
 }

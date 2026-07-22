@@ -1,5 +1,5 @@
 export const hallowCardClass =
-  "relative overflow-hidden rounded-3xl border border-stone-800/80 bg-stone-900/40 p-6 backdrop-blur-xl transition-all hover:border-amber-500/30 hover:shadow-[0_0_30px_rgba(217,119,6,0.05)]";
+  "relative overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/70 p-5 shadow-[0_22px_70px_hsl(var(--background)/0.28)] backdrop-blur-xl transition-colors hover:border-primary/20 sm:p-6";
 
 export const hallowGlowClass =
-  "pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-amber-600/10 blur-3xl";
+  "pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full bg-primary/[0.07] blur-3xl";

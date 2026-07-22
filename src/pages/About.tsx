@@ -5,42 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { APK_ARTIFACTS_URL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
 
 export default function About() {
+
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-            About
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Attribution & disclaimer</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            A Christian life and service guide for everyday faithfulness, families, military, first responders, and the wider service community.
-          </p>
+    <PageContainer>
+      <PremiumPageHeader
+        eyebrow="About"
+        title="Sources, trust, and purpose"
+        description="A Christian life and service guide for everyday faithfulness, families, military, first responders, and the wider service community."
+        icon={<Info className="h-5 w-5" />}
+        actions={
+          <>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/privacy"><Shield className="mr-2 h-4 w-4" /> Privacy</Link></Button>
+            <ApkDownloadButton className="rounded-2xl" />
+            <Button asChild className="rounded-2xl"><a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback"><Mail className="mr-2 h-4 w-4" /> Feedback</a></Button>
+          </>
+        }
+      />
 
-        </div>
+      <div className="premium-card-stack mt-5">
 
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/today">Back to app</Link>
-          </Button>
-          <Button asChild variant="outline" className="rounded-2xl border-border/60">
-            <Link to="/privacy">
-              <Shield className="mr-2 h-4 w-4" /> Privacy
-            </Link>
-          </Button>
-          <ApkDownloadButton className="rounded-2xl" />
-          <Button asChild className="rounded-2xl">
-            <a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback">
-              <Mail className="mr-2 h-4 w-4" /> Feedback
-            </a>
-          </Button>
-        </div>
-      </div>
-
-      <div className="mt-5 grid gap-4">
         <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -237,6 +226,6 @@ export default function About() {
           </p>
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }

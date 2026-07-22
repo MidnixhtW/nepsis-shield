@@ -12,11 +12,14 @@ const utilityLinks = [
 
 export function AppFooter() {
   return (
-    <Card className="mt-4 overflow-hidden rounded-2xl border-border/45 bg-card/70 p-4 shadow-sm">
+    <Card className="mt-4 overflow-hidden rounded-[1.6rem] border-border/35 bg-card/45 p-4 shadow-sm backdrop-blur-xl sm:p-5">
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center xl:justify-between">
+
         <div className="min-w-0">
-          <p className="text-sm font-semibold tracking-tight">A quiet devotional aid</p>
+          <p className="premium-eyebrow">Nepsis Shield</p>
+          <p className="mt-1 text-sm font-semibold tracking-tight">A quiet devotional aid</p>
           <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+
             Under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
           </p>
 

@@ -23,9 +23,12 @@ import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault"
 import { downloadTextFile } from "@/lib/ics";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { isStrongPassphrase, strongPassphraseMessage } from "@/lib/passphraseStrength";
 
 // Safe localStorage helpers
+
 function safeKeys(): string[] {
   try {
     return Object.keys(window.localStorage);
@@ -316,26 +319,20 @@ export default function Privacy() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-            Settings
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Privacy Center</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Control what the app stores on this device and export/import your local data.
-          </p>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-foreground">Not official:</span> This is an independent project and not an official app of the Orthodox Church in America (OCA).
-          </p>
-        </div>
-        <Button asChild variant="outline" className="rounded-2xl border-border/60">
-          <Link to="/today">Back to app</Link>
-        </Button>
-      </div>
+    <PageContainer>
+      <PremiumPageHeader
+        eyebrow="Privacy"
+        title="Your data stays in your hands"
+        description="Control what the app stores on this device, and move your local data with encrypted export and import."
+        icon={<Shield className="h-5 w-5" />}
+        actions={<Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>}
+      />
+      <p className="mx-1 mt-3 text-xs leading-relaxed text-muted-foreground">
+        <span className="font-semibold text-foreground">Independent project:</span> Nepsis Shield is not an official app of the Orthodox Church in America.
+      </p>
 
-      <div className="mt-5 grid gap-4">
+      <div className="premium-card-stack mt-5">
+
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -502,6 +499,6 @@ export default function Privacy() {
 
         </Card>
       </div>
-    </div>
+    </PageContainer>
   );
 }

@@ -2,14 +2,12 @@ import { BookOpen, Home, Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DailyReadings } from "@/components/app/DailyReadings";
 import { OrthodoxBible } from "@/components/app/OrthodoxBible";
+import { ReadingPlans } from "@/components/app/ReadingPlans";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { SectionBar } from "@/components/app/SectionBar";
-import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
-
+import { SectionIntro } from "@/components/app/SectionIntro";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { showError, showSuccess } from "@/utils/toast";
-import { ReadingPlans } from "@/components/app/ReadingPlans";
 
 export type ReadTab = "daily" | "bible" | "plans";
 
@@ -34,84 +32,52 @@ export function ReadHub({
     }
   }
 
+  const actions = (
+    <>
+      {onHome ? (
+        <Button type="button" variant="outline" size="sm" className="premium-action" onClick={onHome}>
+          <Home className="mr-2 h-4 w-4" /> Today
+        </Button>
+      ) : null}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button type="button" variant="outline" size="icon" className="premium-action h-10 w-10" onClick={copyLink}>
+            <Link2 className="h-4 w-4" />
+            <span className="sr-only">Copy link</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Copy link</TooltipContent>
+      </Tooltip>
+    </>
+  );
+
   return (
-    <div className="grid gap-4">
-      <SectionBar
-        title="Read"
-        hint="Daily readings, Bible, plans"
-        action={
-          <div className="flex gap-2">
-            {onHome ? (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-                onClick={onHome}
-              >
-                <Home className="mr-2 h-4 w-4" /> Today
-              </Button>
-            ) : null}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-                  onClick={copyLink}
-                >
-                  <Link2 className="h-4 w-4" />
-                  <span className="sr-only">Copy link</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Copy link</TooltipContent>
-            </Tooltip>
-          </div>
-        }
+    <div className="grid gap-5">
+      <SectionIntro
+        eyebrow="Scripture"
+        title="Attend to the Word."
+        description="Receive the appointed readings, browse Scripture, or follow a steady reading plan."
+        icon={<BookOpen className="h-4 w-4" />}
+        actions={actions}
       />
 
       <FirstStepHint
-        title="New here? Start with Daily readings."
-        description="Daily is the fastest route. Use Bible for browsing and Plans when you want structure."
+        title="Recommended: today’s readings."
+        description="Begin with the Church’s daily rhythm. Browse the Bible or use a plan when you want to go further."
         actionLabel="Open Daily"
         icon={<BookOpen className="h-4 w-4" />}
         onAction={() => onTabChange("daily")}
       />
 
-      <Tabs value={tab} onValueChange={(v) => onTabChange(v as ReadTab)}>
-        <TabsList className="grid h-auto w-full grid-cols-3 gap-1 rounded-2xl bg-muted/20 p-1">
-          <TabsTrigger
-            value="daily"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
-          >
-            Daily
-          </TabsTrigger>
-          <TabsTrigger
-            value="bible"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
-          >
-            Bible
-          </TabsTrigger>
-          <TabsTrigger
-            value="plans"
-            className="min-h-10 flex-col gap-1 whitespace-normal rounded-xl px-2 py-2 text-xs leading-tight sm:flex-row sm:gap-2 sm:px-3 sm:text-sm"
-          >
-            Plans
-          </TabsTrigger>
+      <Tabs value={tab} onValueChange={(value) => onTabChange(value as ReadTab)}>
+        <TabsList className="premium-tabs">
+          <TabsTrigger value="daily" className="premium-tab flex-1">Daily</TabsTrigger>
+          <TabsTrigger value="bible" className="premium-tab flex-1">Bible</TabsTrigger>
+          <TabsTrigger value="plans" className="premium-tab flex-1">Plans</TabsTrigger>
         </TabsList>
-
-        <TabsContent value="daily" className="mt-4">
-          <DailyReadings />
-        </TabsContent>
-
-        <TabsContent value="bible" className="mt-4">
-          <OrthodoxBible />
-        </TabsContent>
-
-        <TabsContent value="plans" className="mt-4">
-          <ReadingPlans />
-        </TabsContent>
+        <TabsContent value="daily" className="mt-5"><DailyReadings /></TabsContent>
+        <TabsContent value="bible" className="mt-5"><OrthodoxBible /></TabsContent>
+        <TabsContent value="plans" className="mt-5"><ReadingPlans /></TabsContent>
       </Tabs>
     </div>
   );

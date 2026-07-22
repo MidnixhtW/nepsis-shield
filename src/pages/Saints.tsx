@@ -11,8 +11,11 @@ import { searchLocalSaintLibrary, upsertDailySaints } from "@/lib/localSaintSear
 import { ocaSaintSearchUrl, patronNeeds } from "@/lib/patronSaints";
 import { getSettings } from "@/lib/settings";
 import { showError, showSuccess } from "@/utils/toast";
+import { PageContainer } from "@/components/app/PageContainer";
+import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 
 async function copyPrayer(label: string, prayer: string) {
+
   try {
     await navigator.clipboard.writeText(prayer);
     showSuccess(`${label} prayer copied.`);
@@ -60,23 +63,21 @@ export default function Saints() {
   const ocaSearchQuery = matchingPatronNeeds[0]?.search ?? matchingSaintNames[0]?.name ?? saintSearch;
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-3 pb-24 pt-3 sm:px-4 sm:pt-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Saints</p>
-          <h1 className="text-2xl font-semibold tracking-tight">Lives of the Saints</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Search by saint, need, or prayer.
-          </p>
-        </div>
-        <Button asChild variant="outline" size="sm" className="rounded-xl border-border/60">
-          <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">
-            OCA Lives <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
-      </div>
+    <PageContainer width="compact">
+      <PremiumPageHeader
+        eyebrow="Saints"
+        title="Lives of the Saints"
+        description="Search by saint, need, or prayer, and keep the Church’s living witness close."
+        icon={<Search className="h-5 w-5" />}
+        actions={
+          <Button asChild variant="outline" size="sm" className="premium-action">
+            <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">OCA Lives <ExternalLink className="ml-2 h-4 w-4" /></a>
+          </Button>
+        }
+      />
 
-      <div className="mt-4 grid gap-4 sm:mt-5 sm:gap-5">
+      <div className="premium-card-stack mt-5">
+
         <Card className="rounded-2xl border-primary/15 bg-card/90 p-4 shadow-sm sm:p-5">
           <div className="flex items-start gap-3">
             <div className="hidden h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary sm:grid">
@@ -270,6 +271,6 @@ export default function Saints() {
           Simple practice: “Holy [Name], pray to God for me.”
         </p>
       </div>
-    </div>
+    </PageContainer>
   );
 }
