@@ -41,15 +41,15 @@ export function AppShell({
   );
 
   return (
-    <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-zinc-950 text-zinc-50">
+    <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
       <a
         href="#main-content"
-        className="sr-only fixed left-3 top-3 z-50 rounded-lg bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-950 focus:not-sr-only"
+        className="sr-only fixed left-3 top-3 z-50 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm focus:not-sr-only"
       >
         Skip to content
       </a>
 
-      <div className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-xl">
+      <div className="sticky top-0 z-30 border-b border-border/50 bg-background/90 backdrop-blur-xl">
         <div className="mx-auto w-full max-w-6xl px-4 py-3 sm:px-6 lg:px-8">{header}</div>
       </div>
 
@@ -58,12 +58,12 @@ export function AppShell({
         tabIndex={-1}
         className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-8 sm:px-6 lg:px-8 lg:pt-12"
       >
-        <ByzantineDivider className="mb-8 hidden lg:flex" />
+        <ByzantineDivider className="mb-10 hidden lg:flex" />
         {children}
       </main>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950/90 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
-        <div className="pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-2xl border border-zinc-800 bg-zinc-900/90 p-1.5">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border/45 bg-background/90 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
+        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-lg border border-border/60 bg-card/95 p-1.5 shadow-lg">
           <ToggleGroup
             type="single"
             value={section}
@@ -81,11 +81,11 @@ export function AppShell({
                   key={key}
                   value={key}
                   aria-label={meta.aria}
-                  className="h-12 rounded-lg bg-transparent px-1 text-zinc-400 transition-all duration-200 ease-in-out hover:bg-zinc-800 hover:text-zinc-50 data-[state=on]:bg-zinc-50 data-[state=on]:text-zinc-950"
+                  className="h-12 rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1.5">
-                    <Icon className={cn("h-[17px] w-[17px]", active ? "text-zinc-950" : "text-zinc-400")} />
-                    <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", active ? "text-zinc-950" : "text-zinc-400")}>
+                    <Icon className={cn("h-[17px] w-[17px]", active ? "text-primary-foreground" : "text-muted-foreground")} />
+                    <span className={cn("text-[10px] font-semibold leading-none sm:text-[11px]", active ? "text-primary-foreground" : "text-muted-foreground")}>
                       {meta.label}
                     </span>
                   </div>
@@ -98,12 +98,12 @@ export function AppShell({
             to="/download"
             aria-label="Open more options, install, and share"
             className={cn(
-              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-lg px-1 text-zinc-400 transition-all duration-200 ease-in-out hover:bg-zinc-800 hover:text-zinc-50",
-              installActive && "bg-zinc-50 text-zinc-950",
+              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-lg px-1 text-muted-foreground hover:bg-muted hover:text-foreground",
+              installActive && "bg-primary text-primary-foreground",
             )}
           >
-            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-zinc-950" : "text-zinc-400")} />
-            <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", installActive ? "text-zinc-950" : "text-zinc-400")}>
+            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
+            <span className={cn("text-[10px] font-semibold leading-none sm:text-[11px]", installActive ? "text-primary-foreground" : "text-muted-foreground")}>
               More
             </span>
           </Link>

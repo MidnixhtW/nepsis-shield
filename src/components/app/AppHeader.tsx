@@ -49,14 +49,14 @@ function MenuLink({
     <SheetClose asChild>
       <Link
         to={to}
-        className="group flex min-w-0 items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-sm transition-all duration-200 ease-in-out hover:border-zinc-700 hover:bg-zinc-800/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+        className="group flex min-w-0 items-center gap-3 rounded-lg border border-transparent px-3 py-2.5 text-sm hover:border-border hover:bg-muted/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-zinc-800/50 text-zinc-400 transition-colors group-hover:text-zinc-50">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[hsl(var(--icon-gold)/0.35)] bg-secondary/35 text-primary group-hover:border-[hsl(var(--icon-gold)/0.62)]">
           {icon}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium leading-tight text-zinc-50">{label}</span>
-          {description ? <span className="mt-1 block truncate text-xs text-zinc-400">{description}</span> : null}
+          <span className="block truncate font-semibold leading-tight text-foreground">{label}</span>
+          {description ? <span className="mt-1 block truncate text-xs text-muted-foreground">{description}</span> : null}
         </span>
       </Link>
 
@@ -106,10 +106,10 @@ function MenuLinks() {
         <SheetClose asChild>
           <button
             type="button"
-            className="group flex min-w-0 items-center gap-3 rounded-xl px-2.5 py-2 text-left text-sm transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="group flex min-w-0 items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             onClick={startTutorial}
           >
-            <span className="shrink-0 text-muted-foreground transition-colors group-hover:text-primary">
+            <span className="shrink-0 text-muted-foreground group-hover:text-primary">
               <HelpCircle className="h-4 w-4" />
             </span>
             <span className="min-w-0 flex-1">
@@ -148,13 +148,13 @@ export function AppHeader() {
 
   return (
     <header className="flex min-w-0 items-center justify-between gap-3">
-      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300">
-        <div className="premium-icon-mark h-10 w-10 transition-transform duration-200 group-hover:scale-105">
+      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <div className="premium-icon-mark h-10 w-10 group-hover:scale-[1.03]">
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold tracking-tight text-zinc-50 sm:text-base">Nepsis Shield</p>
-          <p className="truncate text-[10px] font-medium uppercase tracking-[0.14em] text-zinc-400 max-[340px]:hidden sm:text-[11px]">
+          <p className="truncate font-serif text-sm font-semibold tracking-wide text-foreground sm:text-base">Nepsis Shield</p>
+          <p className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
             Today · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
@@ -163,18 +163,18 @@ export function AppHeader() {
       <Sheet>
 
         <SheetTrigger asChild>
-          <Button aria-label="Open menu" size="icon" variant="ghost" className="ml-auto h-10 w-10 rounded-lg border border-zinc-800 bg-zinc-900/50 text-zinc-50 hover:bg-zinc-800 hover:text-zinc-50">
+          <Button aria-label="Open menu" size="icon" variant="ghost" className="ml-auto h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary">
             <Menu className="h-[18px] w-[18px]" />
             <span className="sr-only">Open menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-zinc-800 bg-zinc-950 p-0 backdrop-blur-xl">
-          <SheetHeader className="orthodox-drawer-header shrink-0 border-b border-zinc-800 px-5 pb-5 pt-7 text-left">
+        <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0 backdrop-blur-xl">
+          <SheetHeader className="orthodox-drawer-header shrink-0 border-b border-border px-5 pb-5 pt-7 text-left">
             <SheetTitle>
 
               <button
                 type="button"
-                className="inline-flex items-center gap-3 rounded-lg text-left text-zinc-50 outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+                className="inline-flex items-center gap-3 rounded-lg text-left text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={handleSecretTap}
               >
                 <span className="premium-icon-mark h-9 w-9"><OrthodoxCrossIcon className="h-4 w-4" /></span>

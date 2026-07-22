@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Share2, ShieldCheck } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { AppHeader } from "@/components/app/AppHeader";
 
@@ -111,21 +112,21 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     {
       label: "Prepare",
       helper: "Confession and examination.",
-      icon: <ShieldCheck className="h-4 w-4" />,
+      icon: <OrthodoxCrossIcon className="h-4 w-4" />,
       onClick: () => onNavigate({ section: "pray", tab: "prep" }),
     },
   ];
 
   return (
-    <PremiumSurface className="rounded-2xl border-zinc-800 bg-zinc-900/50 p-6">
+    <PremiumSurface className="rounded-lg border-border bg-card p-6">
       <div className="grid gap-6">
         <div>
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">Quick actions</p>
-            <ChurchDomeIcon className="h-5 w-5 text-zinc-500" />
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Quick actions</p>
+            <ChurchDomeIcon className="h-5 w-5 text-[hsl(var(--icon-gold))]" />
           </div>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50">Choose one next step.</h2>
-          <p className="mt-2 text-sm leading-relaxed text-zinc-400">A focused rhythm for the day.</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-wide text-foreground">Choose one next step.</h2>
+          <p className="mt-2 text-sm leading-7 text-muted-foreground">A focused rhythm for the day.</p>
         </div>
 
         <ByzantineDivider />
@@ -136,15 +137,15 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
               key={action.label}
               type="button"
               variant="outline"
-              className="group h-auto w-full justify-start rounded-lg border-zinc-700 bg-zinc-800/40 px-3 py-3 text-left text-zinc-50 shadow-none transition-all duration-200 ease-in-out hover:bg-zinc-700 hover:text-zinc-50"
+              className="group h-auto w-full justify-start rounded-lg border-border bg-background/45 px-3 py-3 text-left text-foreground shadow-none hover:bg-muted hover:text-foreground"
               onClick={action.onClick}
             >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-300">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[hsl(var(--icon-gold)/0.46)] bg-secondary/45 text-primary">
                 {action.icon}
               </span>
               <span className="ml-3 min-w-0">
-                <span className="block text-sm font-medium leading-tight">{action.label}</span>
-                <span className="mt-1 block text-xs font-normal leading-relaxed text-zinc-400">{action.helper}</span>
+                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
+                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
               </span>
             </Button>
           ))}
@@ -153,7 +154,7 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
         <Button
           type="button"
           variant="ghost"
-          className="justify-start rounded-lg px-0 text-sm text-zinc-400 hover:bg-transparent hover:text-zinc-50"
+          className="justify-start rounded-lg px-0 text-sm text-muted-foreground hover:bg-transparent hover:text-primary"
           onClick={() => onOpenRoute("/download")}
         >
           <Share2 className="mr-2 h-4 w-4" strokeWidth={1.75} /> Share the app
@@ -288,7 +289,7 @@ const Index = () => {
       <QuickStartDialog />
       <MonasticAudioPlayer />
 
-      <div className="grid gap-12 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="grid gap-12 animate-in fade-in duration-500">
         {section === "today" ? (
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)]">
             <div className="grid gap-8">

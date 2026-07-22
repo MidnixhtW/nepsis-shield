@@ -1,31 +1,38 @@
 import * as React from "react";
-import { useEffect } from "react";
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-const APP_THEMES = ["dark", "light", "red-dark"];
+type LiturgicalMode = "liturgy" | "vespers";
 
-function ThemeClassSync() {
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "red-dark") root.classList.add("dark");
-  }, [theme]);
-
-  return null;
+function modeForHour(hour: number): LiturgicalMode {
+  return hour >= 18 || hour < 6 ? "vespers" : "liturgy";
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mode, setMode] = useState<LiturgicalMode>(() => modeForHour(new Date().getHours()));
+
+  useEffect(() => {
+    function syncMode() {
+      const nextMode = modeForHour(new Date().getHours());
+      setMode(nextMode);
+      document.documentElement.classList.remove("red-dark");
+      document.documentElement.dataset.liturgicalMode = nextMode;
+    }
+
+    syncMode();
+    const interval = window.setInterval(syncMode, 5 * 60 * 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="dark"
+      forcedTheme={mode === "vespers" ? "dark" : "light"}
       enableSystem={false}
-      disableTransitionOnChange
-      storageKey="ortho-companion:theme"
-      themes={APP_THEMES}
+      storageKey="ortho-companion:liturgical-mode"
+      themes={["light", "dark"]}
     >
-      <ThemeClassSync />
       {children}
     </NextThemesProvider>
   );

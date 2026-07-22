@@ -3,12 +3,12 @@ import { cn } from "@/lib/utils";
 
 export function ByzantineDivider({ className }: { className?: string }) {
   return (
-    <div aria-hidden="true" className={cn("flex items-center gap-3 text-zinc-600", className)}>
-      <span className="h-px flex-1 bg-zinc-800" />
-      <span className="grid h-7 w-7 place-items-center rounded-full border border-zinc-800 bg-zinc-900">
+    <div aria-hidden="true" className={cn("flex items-center gap-3 text-[hsl(var(--icon-gold))]", className)}>
+      <span className="h-px flex-1 bg-[hsl(var(--icon-gold)/0.34)]" />
+      <span className="grid h-7 w-7 place-items-center rounded-full border border-[hsl(var(--icon-gold)/0.5)] bg-card shadow-sm">
         <OrthodoxCrossIcon className="h-3 w-3" />
       </span>
-      <span className="h-px flex-1 bg-zinc-800" />
+      <span className="h-px flex-1 bg-[hsl(var(--icon-gold)/0.34)]" />
     </div>
   );
 }
@@ -18,11 +18,11 @@ export function ByzantineApse({ className }: { className?: string }) {
     <div
       aria-hidden="true"
       className={cn(
-        "relative mx-auto aspect-[4/5] w-full max-w-56 overflow-hidden rounded-b-2xl rounded-t-[999px] border border-zinc-800 bg-zinc-950/45 p-4 text-zinc-500",
+        "relative mx-auto aspect-[4/5] w-full max-w-56 overflow-hidden rounded-b-lg rounded-t-[999px] border border-[hsl(var(--icon-gold)/0.5)] bg-card/55 p-4 text-[hsl(var(--byzantine-blue))] shadow-sm",
         className,
       )}
     >
-      <div className="absolute inset-2 rounded-b-xl rounded-t-[999px] border border-zinc-800/80" />
+      <div className="absolute inset-2 rounded-b-md rounded-t-[999px] border border-[hsl(var(--icon-gold)/0.28)]" />
       <svg viewBox="0 0 220 280" fill="none" className="relative h-full w-full" role="presentation">
         <path d="M34 246V111C34 62 68 27 110 27s76 35 76 84v135" stroke="currentColor" strokeWidth="1.5" />
         <path d="M51 246V116c0-39 26-70 59-70s59 31 59 70v130" stroke="currentColor" strokeWidth="1" opacity=".55" />
