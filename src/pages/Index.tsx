@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Compass, Search, Share2, ShieldCheck, Siren, Target } from "lucide-react";
+import { BookOpen, Search, Share2, ShieldCheck } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { CenserIcon, ChurchDomeIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { AppHeader } from "@/components/app/AppHeader";
+
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { PremiumSurface } from "@/components/app/PremiumSurface";
 import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
@@ -76,15 +78,16 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     {
       label: "Pray",
       helper: "Begin the daily rule.",
-      icon: <Target className="h-4 w-4" />,
+      icon: <CenserIcon className="h-4 w-4" />,
       onClick: () => onNavigate({ section: "pray", tab: "daily" }),
     },
     {
-      label: "Calm down",
+      label: "Be still",
       helper: "Use the Jesus Prayer reset.",
-      icon: <Siren className="h-4 w-4" />,
+      icon: <VigilLampIcon className="h-4 w-4" />,
       onClick: () => onNavigate({ section: "pray", tab: "counter" }),
     },
+
     {
       label: "Read Scripture",
       helper: "Open today’s readings.",
@@ -94,9 +97,10 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     {
       label: "Learn the faith",
       helper: "Open the guide and path.",
-      icon: <Compass className="h-4 w-4" />,
+      icon: <ChurchDomeIcon className="h-4 w-4" />,
       onClick: () => onNavigate({ section: "learn", tab: "path" }),
     },
+
     {
       label: "Find a saint",
       helper: "Search patrons and intercession.",

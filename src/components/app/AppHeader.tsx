@@ -4,12 +4,10 @@ import {
   BookOpen,
   Crosshair,
   Download,
-  Hand,
   HelpCircle,
-  Home,
   Info,
-  Map,
   Menu,
+
   Plus,
   Settings as SettingsIcon,
   Shield,
@@ -27,8 +25,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { CenserIcon, ChurchDomeIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
+
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { showSuccess } from "@/utils/toast";
 
@@ -82,12 +82,12 @@ function MenuLinks() {
     <div className="grid gap-3 pb-3">
       <MenuLink to="/today" icon={<Plus className="h-4 w-4" />} label="New Chat" description="Start fresh from Today" />
 
-      <MenuSection title="Apps">
+      <MenuSection title="Daily rhythm">
         <div className="grid grid-cols-2 gap-1">
-          <MenuLink to="/today" icon={<Home className="h-4 w-4" />} label="Today" />
-          <MenuLink to="/pray" icon={<Hand className="h-4 w-4" />} label="Pray" />
+          <MenuLink to="/today" icon={<VigilLampIcon className="h-4 w-4" />} label="Today" />
+          <MenuLink to="/pray" icon={<CenserIcon className="h-4 w-4" />} label="Pray" />
           <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" />
-          <MenuLink to="/learn" icon={<Map className="h-4 w-4" />} label="Guide" />
+          <MenuLink to="/learn" icon={<ChurchDomeIcon className="h-4 w-4" />} label="Learn" />
         </div>
       </MenuSection>
 
@@ -153,11 +153,12 @@ export function AppHeader() {
   return (
     <header className="flex min-w-0 items-center justify-between gap-3">
       <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
-        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-[1.1rem] border border-primary/20 bg-primary/10 text-primary shadow-[0_10px_30px_hsl(var(--primary)/0.12)] transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105">
+        <div className="premium-icon-mark h-10 w-10 transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105">
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
           <h1 className="truncate text-sm font-semibold tracking-[-0.025em] sm:text-base">Nepsis Shield</h1>
+
           <p className="truncate text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
             Today · {format(new Date(), "EEE, MMM d")}
           </p>
@@ -177,8 +178,9 @@ export function AppHeader() {
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-border/40 bg-card/90 p-0 backdrop-blur-2xl">
-          <SheetHeader className="shrink-0 border-b border-border/35 px-5 pb-4 pt-6 text-left">
+          <SheetHeader className="orthodox-drawer-header shrink-0 border-b border-border/35 px-5 pb-5 pt-7 text-left">
             <SheetTitle>
+
               <button
                 type="button"
                 className="inline-flex items-center gap-3 rounded-xl text-left outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -188,10 +190,11 @@ export function AppHeader() {
                 <span>Nepsis Shield</span>
               </button>
             </SheetTitle>
-            <SheetDescription className="text-xs leading-relaxed">
-              Prayer, Scripture, guidance, and quiet daily tools.
+            <SheetDescription className="max-w-[17rem] text-xs leading-relaxed">
+              Prayer, Scripture, the saints, and a quiet Orthodox rhythm for every day.
             </SheetDescription>
           </SheetHeader>
+
           <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
             <MenuLinks />
           </div>

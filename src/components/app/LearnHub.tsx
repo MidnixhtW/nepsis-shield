@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
+import { ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
@@ -34,8 +36,9 @@ export function LearnHub({
         eyebrow="Learn"
         title="Grow with steadiness."
         description="Follow a personal path, understand Orthodox worship, and keep trusted resources close without becoming overwhelmed."
-        icon={<Sparkles className="h-4 w-4" />}
+        icon={<ChurchDomeIcon className="h-5 w-5" />}
         actions={
+
           onHome ? (
             <Button type="button" variant="outline" size="sm" className="premium-action" onClick={onHome}>
               <Home className="mr-2 h-4 w-4" /> Today

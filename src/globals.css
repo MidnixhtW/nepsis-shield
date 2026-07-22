@@ -46,87 +46,93 @@ h1, h2, h3, .font-serif {
 @layer base {
 
   :root {
-    /* Light mode: St. Michael icon palette — gold leaf, parchment, cinnabar red, and icon blue. */
-    --background: 42 62% 91%;
-    --foreground: 29 38% 14%;
+    /* Byzantine icon palette: parchment, lapis, antique gold, and cinnabar. */
+    --background: 42 54% 90%;
+    --foreground: 222 38% 13%;
 
-    --card: 43 70% 96%;
-    --card-foreground: 29 38% 14%;
+    --card: 43 62% 95%;
+    --card-foreground: 222 38% 13%;
 
-    --popover: 43 70% 96%;
-    --popover-foreground: 29 38% 14%;
+    --popover: 43 64% 96%;
+    --popover-foreground: 222 38% 13%;
 
-    --primary: 221 72% 34%;
-    --primary-foreground: 43 88% 97%;
+    --primary: 219 76% 30%;
+    --primary-foreground: 44 85% 96%;
 
-    --secondary: 40 86% 72%;
-    --secondary-foreground: 29 46% 12%;
+    --secondary: 42 81% 66%;
+    --secondary-foreground: 225 42% 12%;
 
-    --muted: 41 58% 84%;
-    --muted-foreground: 30 22% 32%;
+    --muted: 40 43% 82%;
+    --muted-foreground: 222 18% 31%;
 
-    --accent: 7 78% 43%;
-    --accent-foreground: 43 88% 97%;
+    --accent: 7 72% 40%;
+    --accent-foreground: 44 86% 96%;
 
     --destructive: 0 72% 38%;
     --destructive-foreground: 43 78% 96%;
 
-    --border: 39 52% 61%;
-    --input: 39 52% 61%;
-    --ring: 221 72% 34%;
+    --border: 41 49% 55%;
+    --input: 41 45% 58%;
+    --ring: 219 76% 34%;
 
+    --icon-gold: 42 81% 54%;
+    --byzantine-blue: 219 76% 30%;
+    --cinnabar: 7 72% 40%;
     --radius: 1.25rem;
 
-    --sidebar-background: 42 62% 91%;
-    --sidebar-foreground: 29 38% 14%;
-    --sidebar-primary: 221 72% 34%;
-    --sidebar-primary-foreground: 43 88% 97%;
-    --sidebar-accent: 40 86% 72%;
-    --sidebar-accent-foreground: 29 46% 12%;
-    --sidebar-border: 39 52% 61%;
-    --sidebar-ring: 221 72% 34%;
+    --sidebar-background: 42 54% 90%;
+    --sidebar-foreground: 222 38% 13%;
+    --sidebar-primary: 219 76% 30%;
+    --sidebar-primary-foreground: 44 85% 96%;
+    --sidebar-accent: 42 81% 66%;
+    --sidebar-accent-foreground: 225 42% 12%;
+    --sidebar-border: 41 49% 55%;
+    --sidebar-ring: 219 76% 34%;
   }
 
   .dark {
-    /* Main theme: polished gold leaf over velvety blue-stone black. */
-    --background: 225 28% 6%;
-    --foreground: 42 46% 91%;
+    /* Byzantine night: lapis-black, icon gold, and restrained cinnabar. */
+    --background: 224 38% 5%;
+    --foreground: 43 48% 91%;
 
-    --card: 224 24% 9%;
-    --card-foreground: 42 46% 91%;
+    --card: 222 34% 8%;
+    --card-foreground: 43 48% 91%;
 
-    --popover: 224 24% 8%;
-    --popover-foreground: 42 46% 91%;
+    --popover: 222 36% 7%;
+    --popover-foreground: 43 48% 91%;
 
-    --primary: 42 92% 58%;
-    --primary-foreground: 224 32% 7%;
+    --primary: 42 88% 58%;
+    --primary-foreground: 224 40% 7%;
 
-    --secondary: 222 20% 14%;
-    --secondary-foreground: 42 48% 90%;
+    --secondary: 218 46% 16%;
+    --secondary-foreground: 43 55% 91%;
 
-    --muted: 222 18% 13%;
-    --muted-foreground: 40 18% 71%;
+    --muted: 220 30% 13%;
+    --muted-foreground: 40 22% 72%;
 
-    --accent: 35 91% 48%;
-    --accent-foreground: 224 32% 7%;
+    --accent: 7 68% 46%;
+    --accent-foreground: 44 85% 96%;
 
-    --destructive: 6 76% 52%;
+    --destructive: 4 72% 50%;
     --destructive-foreground: 46 28% 92%;
 
-    --border: 42 50% 28%;
-    --input: 42 46% 25%;
-    --ring: 42 92% 64%;
+    --border: 42 47% 27%;
+    --input: 42 43% 24%;
+    --ring: 42 88% 64%;
 
+    --icon-gold: 42 88% 58%;
+    --byzantine-blue: 218 62% 34%;
+    --cinnabar: 7 68% 46%;
     --radius: 1.25rem;
 
-    --sidebar-background: 224 26% 7%;
-    --sidebar-foreground: 42 46% 91%;
-    --sidebar-primary: 42 92% 58%;
-    --sidebar-primary-foreground: 224 32% 7%;
-    --sidebar-accent: 222 20% 14%;
-    --sidebar-accent-foreground: 42 48% 90%;
-    --sidebar-border: 42 50% 28%;
-    --sidebar-ring: 42 92% 64%;
+    --sidebar-background: 224 38% 6%;
+    --sidebar-foreground: 43 48% 91%;
+    --sidebar-primary: 42 88% 58%;
+    --sidebar-primary-foreground: 224 40% 7%;
+    --sidebar-accent: 218 46% 16%;
+    --sidebar-accent-foreground: 43 55% 91%;
+    --sidebar-border: 42 47% 27%;
+    --sidebar-ring: 42 88% 64%;
   }
 
   .red-dark {
@@ -224,12 +230,13 @@ h1, h2, h3, .font-serif {
     @apply bg-background text-foreground;
     background-color: hsl(var(--background));
     background-image:
-      radial-gradient(circle at 50% -10%, hsl(42 92% 58% / 0.16), transparent 24rem),
-      radial-gradient(circle at 10% 18%, hsl(35 91% 48% / 0.12), transparent 18rem),
-      radial-gradient(circle at 88% 22%, hsl(214 40% 30% / 0.18), transparent 22rem),
-      radial-gradient(circle at 28% 78%, hsl(42 72% 48% / 0.09), transparent 18rem),
-      linear-gradient(135deg, hsl(225 34% 5%), hsl(var(--background)) 42%, hsl(220 24% 8%));
+      radial-gradient(circle at 50% -10%, hsl(var(--icon-gold) / 0.18), transparent 25rem),
+      radial-gradient(circle at 8% 22%, hsl(var(--cinnabar) / 0.1), transparent 19rem),
+      radial-gradient(circle at 90% 20%, hsl(var(--byzantine-blue) / 0.26), transparent 24rem),
+      radial-gradient(circle at 30% 82%, hsl(var(--icon-gold) / 0.07), transparent 20rem),
+      linear-gradient(135deg, hsl(225 45% 4%), hsl(var(--background)) 44%, hsl(219 38% 7%));
     background-position: center;
+
     background-size: auto;
     background-attachment: fixed;
 
@@ -291,13 +298,12 @@ h1, h2, h3, .font-serif {
 
   html:not(.dark):not(.red-dark) body {
     background-image:
-      linear-gradient(90deg, transparent 0 48%, hsl(213 82% 42% / 0.055) 49% 51%, transparent 52% 100%),
-      radial-gradient(ellipse at 12% 20%, hsl(86 18% 42% / 0.095) 0 15%, transparent 16%),
-      radial-gradient(ellipse at 78% 18%, hsl(38 24% 54% / 0.09) 0 14%, transparent 15%),
-      radial-gradient(ellipse at 34% 76%, hsl(105 16% 35% / 0.08) 0 13%, transparent 14%),
-      radial-gradient(ellipse at 88% 72%, hsl(221 20% 42% / 0.065) 0 16%, transparent 17%),
-      radial-gradient(circle at 50% -10%, hsl(43 96% 58% / 0.14), transparent 28rem),
-      linear-gradient(180deg, hsl(43 84% 96%), hsl(42 62% 91%));
+      linear-gradient(90deg, transparent 0 49%, hsl(var(--byzantine-blue) / 0.035) 50%, transparent 51% 100%),
+      radial-gradient(circle at 10% 18%, hsl(var(--cinnabar) / 0.08), transparent 18rem),
+      radial-gradient(circle at 88% 20%, hsl(var(--byzantine-blue) / 0.14), transparent 24rem),
+      radial-gradient(circle at 32% 78%, hsl(var(--icon-gold) / 0.1), transparent 20rem),
+      radial-gradient(circle at 50% -10%, hsl(var(--icon-gold) / 0.18), transparent 28rem),
+      linear-gradient(180deg, hsl(44 72% 95%), hsl(var(--background)));
   }
 
   html.red-dark body {
@@ -680,17 +686,56 @@ h1, h2, h3, .font-serif {
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(circle at 50% -8%, hsl(var(--primary) / 0.11), transparent 30rem),
-      radial-gradient(circle at 92% 38%, hsl(var(--accent) / 0.055), transparent 26rem);
+      radial-gradient(circle at 50% -8%, hsl(var(--byzantine-blue) / 0.18), transparent 30rem),
+      radial-gradient(circle at 92% 38%, hsl(var(--cinnabar) / 0.075), transparent 26rem),
+      radial-gradient(circle at 8% 78%, hsl(var(--icon-gold) / 0.07), transparent 20rem);
+  }
+
+  .premium-page::after {
+    content: "✣";
+    position: fixed;
+    right: 3vw;
+    bottom: 8rem;
+    z-index: -1;
+    pointer-events: none;
+    color: hsl(var(--icon-gold) / 0.045);
+    font-family: Georgia, serif;
+    font-size: min(42vw, 28rem);
+    line-height: 1;
+    transform: rotate(8deg);
   }
 
   .premium-page-header,
   .section-intro {
-    @apply flex flex-col gap-4 rounded-[1.75rem] border border-border/45 bg-card/[0.55] p-4 shadow-sm backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-5;
+    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/[0.65] p-4 shadow-sm backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-5;
     box-shadow:
+      inset 0 1px 0 hsl(var(--icon-gold) / 0.14),
+      0 22px 70px hsl(var(--background) / 0.3);
+  }
 
-      inset 0 1px 0 hsl(var(--foreground) / 0.045),
-      0 22px 70px hsl(var(--background) / 0.28);
+  .premium-page-header::before,
+  .section-intro::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(90deg, hsl(var(--card) / 0.96) 0%, hsl(var(--card) / 0.84) 48%, hsl(var(--card) / 0.38) 100%),
+      url('/assets/orthodox-header-panorama.png') right center / cover no-repeat;
+    opacity: 0.92;
+  }
+
+  .premium-page-header::after,
+  .section-intro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    border-top: 1px solid hsl(var(--icon-gold) / 0.28);
+    background:
+      linear-gradient(90deg, hsl(var(--byzantine-blue) / 0.08), transparent 34%),
+      linear-gradient(270deg, hsl(var(--cinnabar) / 0.08), transparent 25%);
   }
 
   .premium-eyebrow {
@@ -699,13 +744,28 @@ h1, h2, h3, .font-serif {
   }
 
   .premium-icon-mark {
-    @apply grid h-11 w-11 shrink-0 place-items-center rounded-[1.1rem] border border-primary/20 bg-primary/10 text-primary;
+    @apply relative grid h-11 w-11 shrink-0 place-items-center rounded-[1.1rem] border text-primary;
+    border-color: hsl(var(--icon-gold) / 0.38);
+
+    background:
+      radial-gradient(circle at 35% 25%, hsl(var(--icon-gold) / 0.26), transparent 46%),
+      linear-gradient(145deg, hsl(var(--byzantine-blue) / 0.24), hsl(var(--card) / 0.82));
     box-shadow:
-      inset 0 1px 0 hsl(var(--foreground) / 0.06),
-      0 12px 34px hsl(var(--primary) / 0.12);
+      inset 0 1px 0 hsl(var(--icon-gold) / 0.24),
+      0 12px 34px hsl(var(--byzantine-blue) / 0.16);
+  }
+
+  .premium-icon-mark::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    border: 1px solid hsl(var(--icon-gold) / 0.12);
+    border-radius: inherit;
   }
 
   .premium-surface,
+
   .premium-page > .grid > [class*="rounded-3xl"],
   .premium-page > .grid > [class*="rounded-2xl"] {
     border-color: hsl(var(--border) / 0.48);
@@ -718,27 +778,62 @@ h1, h2, h3, .font-serif {
   }
 
   .premium-surface {
-    @apply relative overflow-hidden rounded-[1.75rem] border p-5 sm:p-6;
+    @apply relative isolate overflow-hidden rounded-[1.75rem] border p-5 sm:p-6;
   }
 
   .premium-surface::before {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: -1;
     pointer-events: none;
-    background: linear-gradient(115deg, hsl(var(--primary) / 0.04), transparent 38%);
+    background:
+      linear-gradient(100deg, hsl(var(--card) / 0.18) 20%, hsl(var(--card) / 0.9) 78%),
+      url('/assets/orthodox-header-panorama.png') right center / auto 100% no-repeat;
+    opacity: 0.2;
+  }
+
+  .premium-surface::after {
+    content: "✣";
+    position: absolute;
+    right: 1.25rem;
+    top: 0.8rem;
+    z-index: -1;
+    color: hsl(var(--icon-gold) / 0.08);
+    font-family: Georgia, serif;
+    font-size: 4.5rem;
+    line-height: 1;
   }
 
   .premium-hero-shell {
-    @apply relative overflow-hidden rounded-[2rem] border border-primary/20 text-white;
+
+    @apply relative overflow-hidden rounded-[2rem] border text-white;
     isolation: isolate;
-    background:
-      radial-gradient(circle at 78% 18%, hsl(42 82% 52% / 0.15), transparent 24rem),
-      radial-gradient(circle at 8% 100%, hsl(214 52% 33% / 0.18), transparent 25rem),
-      linear-gradient(145deg, hsl(225 35% 8%), hsl(222 30% 10%) 52%, hsl(228 28% 8%));
+    border-color: hsl(var(--icon-gold) / 0.36);
+    background: linear-gradient(145deg, hsl(224 54% 7%), hsl(218 48% 13%) 58%, hsl(7 42% 12%));
     box-shadow:
-      inset 0 1px 0 hsl(42 80% 84% / 0.1),
-      0 34px 100px hsl(225 60% 3% / 0.4);
+      inset 0 1px 0 hsl(var(--icon-gold) / 0.22),
+      0 34px 100px hsl(225 60% 3% / 0.48);
+  }
+
+  .premium-hero-image {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(0.92) contrast(1.05);
+  }
+
+  .premium-hero-veil {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(90deg, hsl(225 52% 5% / 0.98) 0%, hsl(223 47% 7% / 0.92) 40%, hsl(220 42% 8% / 0.5) 70%, hsl(7 40% 8% / 0.3) 100%),
+      linear-gradient(0deg, hsl(225 52% 5% / 0.7), transparent 60%);
   }
 
   .premium-hero-aura {
@@ -749,12 +844,37 @@ h1, h2, h3, .font-serif {
     height: 22rem;
     width: 22rem;
     border-radius: 9999px;
-    background: hsl(42 88% 58% / 0.1);
+    background: hsl(var(--icon-gold) / 0.16);
     filter: blur(52px);
+  }
+
+  .orthodox-drawer-header {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, hsl(var(--card) / 0.97), hsl(var(--card) / 0.7)),
+      url('/assets/orthodox-header-panorama.png') center / cover no-repeat;
+  }
+
+  .orthodox-drawer-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, hsl(var(--byzantine-blue) / 0.1), hsl(var(--cinnabar) / 0.06));
+  }
+
+  .orthodox-nav-frame {
+    background:
+      linear-gradient(145deg, hsl(var(--card) / 0.84), hsl(var(--byzantine-blue) / 0.12)),
+      hsl(var(--card) / 0.74);
+    border-color: hsl(var(--icon-gold) / 0.26);
   }
 
   .premium-tabs {
     @apply flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-[1.35rem] border border-border/40 bg-muted/25 p-1.5;
+
     scrollbar-width: none;
     box-shadow: inset 0 1px 8px hsl(var(--background) / 0.18);
   }
@@ -817,5 +937,21 @@ h1, h2, h3, .font-serif {
   html.a11y-high-contrast .premium-tabs {
     border-width: 2px;
     backdrop-filter: none;
+  }
+
+  html.a11y-high-contrast .premium-page-header::before,
+  html.a11y-high-contrast .section-intro::before,
+  html.a11y-high-contrast .premium-surface::before {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .premium-hero-image {
+      object-position: 62% center;
+    }
+
+    .premium-hero-veil {
+      background: linear-gradient(90deg, hsl(225 52% 5% / 0.96), hsl(223 47% 7% / 0.76));
+    }
   }
 }

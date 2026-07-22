@@ -1,6 +1,7 @@
-import { ArrowRight, BookOpen, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { PremiumHeroShell } from "@/components/app/PremiumHeroShell";
 
 export function OrthodoxHero({
@@ -14,11 +15,12 @@ export function OrthodoxHero({
 
       <div className="relative grid gap-8 p-5 sm:p-8 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-end lg:p-10">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.055] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/90 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5" /> A quiet place to begin
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-blue-950/35 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/90 backdrop-blur-md">
+            <VigilLampIcon className="h-3.5 w-3.5" /> An Orthodox place to begin
           </div>
 
           <h2 className="mt-6 max-w-2xl text-4xl font-semibold leading-[1.02] tracking-[-0.05em] sm:text-5xl lg:text-[3.5rem]">
+
             Return to what is essential.
           </h2>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/65 sm:text-base">

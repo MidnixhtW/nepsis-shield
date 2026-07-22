@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { cn } from "@/lib/utils";
 
 export function SectionIntro({
+
   eyebrow,
   title,
   description,
@@ -18,8 +20,11 @@ export function SectionIntro({
 }) {
   return (
     <section className={cn("section-intro", className)}>
+      <OrthodoxCrossIcon className="pointer-events-none absolute -right-4 -top-6 h-24 w-24 rotate-6 text-primary/[0.07]" />
       <div className="flex min-w-0 items-start gap-3">
+
         {icon ? <span className="premium-icon-mark h-10 w-10 rounded-2xl">{icon}</span> : null}
+
         <div className="min-w-0">
           {eyebrow ? <p className="premium-eyebrow">{eyebrow}</p> : null}
           <h2 className="mt-1 text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">{title}</h2>

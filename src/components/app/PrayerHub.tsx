@@ -1,6 +1,8 @@
-import { Hand, Home, Link2 } from "lucide-react";
+import { Home, Link2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CenserIcon } from "@/components/app/OrthodoxMotifs";
 import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
+
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
 import { JesusPrayerCounter } from "@/components/app/JesusPrayerCounter";
@@ -73,7 +75,7 @@ export function PrayerHub({
         eyebrow="Prayer"
         title="Make room for stillness."
         description="Begin with the daily office, or choose a focused practice for the moment you are in."
-        icon={<Hand className="h-4 w-4" />}
+        icon={<CenserIcon className="h-5 w-5" />}
         actions={actions}
       />
 
@@ -81,8 +83,9 @@ export function PrayerHub({
         title="Recommended: begin with Daily."
         description="A simple, guided prayer flow is the clearest place to start. The other practices remain close when you need them."
         actionLabel="Open Daily"
-        icon={<Hand className="h-4 w-4" />}
+        icon={<CenserIcon className="h-4 w-4" />}
         onAction={() => onTabChange("daily")}
+
       />
 
       <Tabs value={tab} onValueChange={(value) => onTabChange(value as PrayerTab)}>

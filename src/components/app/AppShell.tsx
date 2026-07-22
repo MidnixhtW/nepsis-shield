@@ -1,6 +1,8 @@
-import { ReactNode, useMemo, useState } from "react";
+import { type ComponentType, ReactNode, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BookOpen, Compass, Download, Hand, Home } from "lucide-react";
+import { BookOpen, Download } from "lucide-react";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { CenserIcon, ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -8,12 +10,12 @@ export type AppSection = "today" | "pray" | "read" | "learn";
 
 const sectionMeta: Record<
   AppSection,
-  { label: string; icon: typeof Home; aria: string }
+  { label: string; icon: ComponentType<{ className?: string }>; aria: string }
 > = {
-  today: { label: "Today", icon: Home, aria: "Go to Today" },
-  pray: { label: "Pray", icon: Hand, aria: "Go to Prayer" },
+  today: { label: "Today", icon: OrthodoxCrossIcon, aria: "Go to Today" },
+  pray: { label: "Pray", icon: CenserIcon, aria: "Go to Prayer" },
   read: { label: "Read", icon: BookOpen, aria: "Go to Readings" },
-  learn: { label: "Learn", icon: Compass, aria: "Go to learning and tools" },
+  learn: { label: "Learn", icon: ChurchDomeIcon, aria: "Go to learning and tools" },
 };
 
 export function AppShell({
@@ -64,7 +66,7 @@ export function AppShell({
       </main>
 
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-background via-background/[0.85] to-transparent px-2 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-7 sm:px-3">
-        <div className="pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-[1.75rem] border border-border/45 bg-card/[0.72] p-1.5 shadow-[0_24px_80px_hsl(var(--background)/0.68)] backdrop-blur-2xl">
+        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-[1.75rem] border p-1.5 shadow-[0_24px_80px_hsl(var(--background)/0.68)] backdrop-blur-2xl">
 
           <ToggleGroup
             type="single"

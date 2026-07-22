@@ -19,10 +19,13 @@ export function PremiumPageHeader({
 }) {
   return (
     <header className={cn("premium-page-header", className)}>
+      <OrthodoxCrossIcon className="pointer-events-none absolute -right-5 -top-7 h-28 w-28 rotate-6 text-primary/[0.08]" />
       <div className="flex min-w-0 items-start gap-3.5 sm:gap-4">
+
         <span className="premium-icon-mark">
           {icon ?? <OrthodoxCrossIcon className="h-6 w-6" />}
         </span>
+
         <div className="min-w-0">
           <p className="premium-eyebrow">{eyebrow}</p>
           <h1 className="mt-1 text-2xl font-semibold leading-tight tracking-[-0.035em] sm:text-3xl">{title}</h1>
