@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:realistic-v1";
-const MICHAEL_IMAGE = "/assets/archangel-michael-realistic.png";
+const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:icon-v2";
+const MICHAEL_IMAGE = "/assets/archangel-michael-icon.png";
 
 export function SaintMichaelIntro() {
   const [visible, setVisible] = useState(false);
@@ -107,7 +107,7 @@ export function SaintMichaelIntro() {
           <img
             src={MICHAEL_IMAGE}
             alt=""
-            className="h-full w-full scale-[1.02] object-cover object-center"
+            className="h-full w-full object-contain object-center"
             draggable={false}
           />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,transparent_0_36%,hsl(var(--background)/0.08)_62%,hsl(var(--background)/0.36)_100%)]" />
