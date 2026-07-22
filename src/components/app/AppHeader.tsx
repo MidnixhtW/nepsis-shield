@@ -1,7 +1,6 @@
 import { type ReactNode, useRef } from "react";
 import { format } from "date-fns";
 import {
-  BookOpen,
   Crosshair,
   Download,
   HelpCircle,
@@ -11,7 +10,6 @@ import {
   Plus,
   Settings as SettingsIcon,
   Shield,
-  Sparkles,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,8 +22,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { CenserIcon, ChurchDomeIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
+import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
@@ -80,19 +79,20 @@ function MenuLinks() {
   return (
     <div className="grid gap-3 pb-3">
       <MenuLink to="/today" icon={<Plus className="h-4 w-4" />} label="New Chat" description="Start fresh from Today" />
+      <ByzantineDivider className="px-3 py-1" />
 
       <MenuSection title="Daily rhythm">
         <div className="grid grid-cols-2 gap-1">
           <MenuLink to="/today" icon={<VigilLampIcon className="h-4 w-4" />} label="Today" />
           <MenuLink to="/pray" icon={<CenserIcon className="h-4 w-4" />} label="Pray" />
-          <MenuLink to="/read" icon={<BookOpen className="h-4 w-4" />} label="Read" />
+          <MenuLink to="/read" icon={<GospelBookIcon className="h-4 w-4" />} label="Read" />
           <MenuLink to="/learn" icon={<ChurchDomeIcon className="h-4 w-4" />} label="Learn" />
         </div>
       </MenuSection>
 
       <MenuSection title="Library">
         <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Life & Service Guide" description="Daily life, pressure, prayer, and recovery" />
-        <MenuLink to="/saints" icon={<Sparkles className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
+        <MenuLink to="/saints" icon={<SaintHaloIcon className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
       </MenuSection>
 
       <MenuSection title="More">

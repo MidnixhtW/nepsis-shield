@@ -31,3 +31,23 @@ export function VigilLampIcon({ className, ...props }: MotifProps) {
     </svg>
   );
 }
+
+export function GospelBookIcon({ className, ...props }: MotifProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      <path d="M5.5 4.5A2.5 2.5 0 0 1 8 2h10.5v18H8a2.5 2.5 0 0 0-2.5 2V4.5Zm0 0V22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12.8 7v8M10.2 9.5h5.2M11 12h3.6" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function SaintHaloIcon({ className, ...props }: MotifProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      <circle cx="12" cy="8.2" r="5.2" stroke="currentColor" strokeWidth="1.25" opacity=".65" />
+      <circle cx="12" cy="9" r="2.8" stroke="currentColor" strokeWidth="1.45" />
+      <path d="M5.5 21c.5-4.5 2.7-7 6.5-7s6 2.5 6.5 7M8.2 17.2 12 20l3.8-2.8" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 3V1.8M7.4 4.3l-.9-.9M16.6 4.3l.9-.9" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" opacity=".65" />
+    </svg>
+  );
+}

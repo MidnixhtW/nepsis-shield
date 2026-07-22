@@ -1,8 +1,9 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BookOpen, Download } from "lucide-react";
+import { Download } from "lucide-react";
+import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { CenserIcon, ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
+import { CenserIcon, ChurchDomeIcon, GospelBookIcon } from "@/components/app/OrthodoxMotifs";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
@@ -14,7 +15,7 @@ const sectionMeta: Record<
 > = {
   today: { label: "Today", icon: OrthodoxCrossIcon, aria: "Go to Today" },
   pray: { label: "Pray", icon: CenserIcon, aria: "Go to Prayer" },
-  read: { label: "Read", icon: BookOpen, aria: "Go to Readings" },
+  read: { label: "Read", icon: GospelBookIcon, aria: "Go to Readings" },
   learn: { label: "Learn", icon: ChurchDomeIcon, aria: "Go to learning and tools" },
 };
 
@@ -57,6 +58,7 @@ export function AppShell({
         tabIndex={-1}
         className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-8 sm:px-6 lg:px-8 lg:pt-12"
       >
+        <ByzantineDivider className="mb-8 hidden lg:flex" />
         {children}
       </main>
 

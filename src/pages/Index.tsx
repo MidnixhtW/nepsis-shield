@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Search, Share2, ShieldCheck } from "lucide-react";
+import { Share2, ShieldCheck } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { CenserIcon, ChurchDomeIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
+import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
+import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";
@@ -91,7 +92,7 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     {
       label: "Read Scripture",
       helper: "Open today’s readings.",
-      icon: <BookOpen className="h-4 w-4" />,
+      icon: <GospelBookIcon className="h-4 w-4" />,
       onClick: () => onNavigate({ section: "read", read: "daily" }),
     },
     {
@@ -104,7 +105,7 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     {
       label: "Find a saint",
       helper: "Search patrons and intercession.",
-      icon: <Search className="h-4 w-4" />,
+      icon: <SaintHaloIcon className="h-4 w-4" />,
       onClick: () => onOpenRoute("/saints"),
     },
     {
@@ -119,10 +120,15 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
     <PremiumSurface className="rounded-2xl border-zinc-800 bg-zinc-900/50 p-6">
       <div className="grid gap-6">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">Quick actions</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">Quick actions</p>
+            <ChurchDomeIcon className="h-5 w-5 text-zinc-500" />
+          </div>
           <h2 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50">Choose one next step.</h2>
           <p className="mt-2 text-sm leading-relaxed text-zinc-400">A focused rhythm for the day.</p>
         </div>
+
+        <ByzantineDivider />
 
         <div className="grid gap-2">
           {actions.map((action) => (
