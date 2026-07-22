@@ -116,39 +116,42 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <PremiumSurface>
-      <div className="relative grid gap-5">
-        <div className="flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="premium-eyebrow">Quick actions</p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-[-0.035em]">What do you need right now?</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Choose one clear next step. Nothing more is required.</p>
-          </div>
-
-          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary" onClick={() => onOpenRoute("/download")}>
-            <Share2 className="mr-2 h-4 w-4" /> Share the app
-          </Button>
+    <PremiumSurface className="rounded-2xl border-zinc-800 bg-zinc-900/50 p-6">
+      <div className="grid gap-6">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-400">Quick actions</p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight text-zinc-50">Choose one next step.</h2>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-400">A focused rhythm for the day.</p>
         </div>
-        <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">
+
+        <div className="grid gap-2">
           {actions.map((action) => (
             <Button
               key={action.label}
               type="button"
-
               variant="outline"
-              className="group h-auto min-h-24 flex-col items-start justify-between gap-4 rounded-[1.35rem] border-border/45 bg-background/35 px-4 py-4 text-left shadow-none transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:bg-primary/[0.055] active:scale-[0.98] sm:min-h-0 sm:flex-row sm:items-center sm:justify-start sm:gap-0"
+              className="group h-auto w-full justify-start rounded-lg border-zinc-700 bg-zinc-800/40 px-3 py-3 text-left text-zinc-50 shadow-none transition-all duration-200 ease-in-out hover:bg-zinc-700 hover:text-zinc-50"
               onClick={action.onClick}
             >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-primary/15 bg-primary/[0.08] text-primary transition-transform duration-300 group-hover:scale-105">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-300">
                 {action.icon}
               </span>
-              <span className="min-w-0 sm:ml-3">
-                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
-                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground max-sm:hidden">{action.helper}</span>
+              <span className="ml-3 min-w-0">
+                <span className="block text-sm font-medium leading-tight">{action.label}</span>
+                <span className="mt-1 block text-xs font-normal leading-relaxed text-zinc-400">{action.helper}</span>
               </span>
             </Button>
           ))}
         </div>
+
+        <Button
+          type="button"
+          variant="ghost"
+          className="justify-start rounded-lg px-0 text-sm text-zinc-400 hover:bg-transparent hover:text-zinc-50"
+          onClick={() => onOpenRoute("/download")}
+        >
+          <Share2 className="mr-2 h-4 w-4" strokeWidth={1.75} /> Share the app
+        </Button>
       </div>
     </PremiumSurface>
   );
@@ -279,12 +282,16 @@ const Index = () => {
       <QuickStartDialog />
       <MonasticAudioPlayer />
 
-      <div className="grid gap-7 animate-in fade-in slide-in-from-bottom-2 duration-500">
+      <div className="grid gap-12 animate-in fade-in slide-in-from-bottom-2 duration-500">
         {section === "today" ? (
-          <div className="grid gap-5 sm:gap-7">
-            <OrthodoxHero onAction={navigateTo} />
-            <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-            <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)]">
+            <div className="grid gap-8">
+              <OrthodoxHero onAction={navigateTo} />
+              <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+            </div>
+            <aside className="lg:sticky lg:top-24">
+              <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+            </aside>
           </div>
         ) : null}
 

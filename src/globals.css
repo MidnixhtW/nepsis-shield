@@ -955,3 +955,131 @@ h1, h2, h3, .font-serif {
     }
   }
 }
+
+/* Monochrome showcase theme */
+@layer base {
+  :root,
+  .dark,
+  .red-dark {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 6% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 6% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 10% 4%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 4% 16%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 240 4% 24%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 0 0% 83%;
+    --icon-gold: 240 5% 65%;
+    --byzantine-blue: 240 4% 16%;
+    --cinnabar: 240 4% 16%;
+    --radius: 1rem;
+    --sidebar-background: 240 10% 4%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 10% 4%;
+    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 4% 16%;
+    --sidebar-ring: 0 0% 83%;
+  }
+
+  body {
+    background-color: #09090b !important;
+    background-image: none !important;
+    color: #fafafa;
+  }
+
+  ::selection {
+    background: rgb(63 63 70);
+    color: #fafafa;
+  }
+
+  html.a11y-high-contrast {
+    --background: 240 10% 4%;
+    --foreground: 0 0% 100%;
+    --muted-foreground: 0 0% 86%;
+    --border: 0 0% 64%;
+    --ring: 0 0% 100%;
+  }
+}
+
+@layer components {
+  .premium-page::before,
+  .premium-page::after,
+  .premium-page-header::before,
+  .premium-page-header::after,
+  .section-intro::before,
+  .section-intro::after,
+  .premium-surface::before,
+  .premium-surface::after,
+  .premium-icon-mark::after {
+    display: none !important;
+  }
+
+  .premium-page-header,
+  .section-intro,
+  .premium-surface,
+  .premium-page > .grid > [class*="rounded-3xl"],
+  .premium-page > .grid > [class*="rounded-2xl"],
+  .dark .premium-page-header,
+  .dark .section-intro,
+  .dark .premium-surface,
+  .dark .premium-page > .grid > [class*="rounded-3xl"],
+  .dark .premium-page > .grid > [class*="rounded-2xl"] {
+    border: 1px solid rgb(39 39 42) !important;
+    border-radius: 1rem !important;
+    background: rgb(24 24 27 / 0.5) !important;
+    box-shadow: none !important;
+    backdrop-filter: none;
+  }
+
+  .premium-surface {
+    padding: 1.5rem;
+  }
+
+  .premium-icon-mark {
+    border: 1px solid rgb(63 63 70) !important;
+    border-radius: 0.5rem !important;
+    background: rgb(39 39 42 / 0.55) !important;
+    box-shadow: none !important;
+    color: rgb(212 212 216) !important;
+  }
+
+  .premium-hero-shell,
+  .orthodox-drawer-header,
+  .orthodox-nav-frame,
+  .premium-tabs {
+    border-color: rgb(39 39 42) !important;
+    background: rgb(24 24 27 / 0.72) !important;
+    box-shadow: none !important;
+  }
+
+  .premium-hero-veil,
+  .premium-hero-aura,
+  .orthodox-drawer-header::after {
+    display: none !important;
+  }
+
+  .ocp-camo,
+  .field-grid,
+  .tactical-radar-field {
+    background-image: none !important;
+  }
+
+  .dark .shadow-sm,
+  .premium-card-stack > [class*="rounded-3xl"],
+  .premium-card-stack > [class*="rounded-2xl"] {
+    box-shadow: none !important;
+  }
+}

@@ -1,4 +1,4 @@
-import { type ComponentType, ReactNode, useMemo, useState } from "react";
+import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BookOpen, Download } from "lucide-react";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
@@ -19,7 +19,6 @@ const sectionMeta: Record<
 };
 
 export function AppShell({
-
   header,
   section,
   onSectionChange,
@@ -34,78 +33,57 @@ export function AppShell({
   const installActive = location.pathname === "/download";
   const items = useMemo(
     () =>
-      (["today", "pray", "read", "learn"] as AppSection[]).map((key) =>
-        [key, sectionMeta[key]] as [AppSection, (typeof sectionMeta)[AppSection]],
+      (["today", "pray", "read", "learn"] as AppSection[]).map(
+        (key) => [key, sectionMeta[key]] as [AppSection, (typeof sectionMeta)[AppSection]],
       ),
     [],
   );
 
   return (
-    <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
+    <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-zinc-950 text-zinc-50">
       <a
         href="#main-content"
-        className="sr-only fixed left-3 top-3 z-50 rounded-2xl bg-background px-4 py-2 text-sm font-semibold shadow-lg ring-2 ring-primary focus:not-sr-only"
+        className="sr-only fixed left-3 top-3 z-50 rounded-lg bg-zinc-50 px-4 py-2 text-sm font-medium text-zinc-950 focus:not-sr-only"
       >
         Skip to content
       </a>
 
-      <div aria-hidden className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_50%_-8%,hsl(var(--primary)/0.1),transparent_30rem),radial-gradient(circle_at_95%_46%,hsl(var(--accent)/0.045),transparent_26rem)]" />
-
-      <div className="sticky top-0 z-30 border-b border-border/30 bg-background/70 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/55">
-        <div className="mx-auto w-full max-w-5xl px-3 py-2.5 sm:px-5 sm:py-3">
-          {header}
-        </div>
+      <div className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-xl">
+        <div className="mx-auto w-full max-w-6xl px-4 py-3 sm:px-6 lg:px-8">{header}</div>
       </div>
 
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-5xl px-3 pb-[calc(7.75rem+env(safe-area-inset-bottom))] pt-4 sm:px-5 sm:pt-7"
+        className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-8 sm:px-6 lg:px-8 lg:pt-12"
       >
         {children}
       </main>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-background via-background/[0.85] to-transparent px-2 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-7 sm:px-3">
-        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-[1.75rem] border p-1.5 shadow-[0_24px_80px_hsl(var(--background)/0.68)] backdrop-blur-2xl">
-
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950/90 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
+        <div className="pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-2xl border border-zinc-800 bg-zinc-900/90 p-1.5">
           <ToggleGroup
             type="single"
-
             value={section}
-            onValueChange={(v) => {
-              if (v) onSectionChange(v as AppSection);
+            onValueChange={(value) => {
+              if (value) onSectionChange(value as AppSection);
             }}
             className="contents"
           >
             {items.map(([key, meta]) => {
               const Icon = meta.icon;
               const active = section === key;
+
               return (
                 <ToggleGroupItem
                   key={key}
                   value={key}
                   aria-label={meta.aria}
-                  className={cn(
-                    "h-12 rounded-[1.2rem] bg-transparent px-1 transition-all duration-300",
-                    "hover:bg-muted/45",
-                    "data-[state=on]:bg-primary/[0.12] data-[state=on]:text-primary data-[state=on]:shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.16),0_8px_24px_hsl(var(--background)/0.24)]",
-                  )}
+                  className="h-12 rounded-lg bg-transparent px-1 text-zinc-400 transition-all duration-200 ease-in-out hover:bg-zinc-800 hover:text-zinc-50 data-[state=on]:bg-zinc-50 data-[state=on]:text-zinc-950"
                 >
-
                   <div className="flex w-full flex-col items-center justify-center gap-1.5">
-                    <Icon
-                      className={cn(
-                        "h-[17px] w-[17px] transition-transform duration-300",
-                        active ? "scale-105 text-primary" : "text-muted-foreground",
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        "text-[10px] font-semibold leading-none tracking-tight sm:text-[11px]",
-                        active ? "text-primary" : "text-muted-foreground",
-                      )}
-                    >
-
+                    <Icon className={cn("h-[17px] w-[17px]", active ? "text-zinc-950" : "text-zinc-400")} />
+                    <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", active ? "text-zinc-950" : "text-zinc-400")}>
                       {meta.label}
                     </span>
                   </div>
@@ -118,14 +96,14 @@ export function AppShell({
             to="/download"
             aria-label="Open more options, install, and share"
             className={cn(
-              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-[1.2rem] bg-transparent px-1 text-muted-foreground transition-all duration-300 hover:bg-muted/45 hover:text-primary",
-              installActive && "bg-primary/[0.12] text-primary shadow-[inset_0_0_0_1px_hsl(var(--primary)/0.16),0_8px_24px_hsl(var(--background)/0.24)]",
+              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-lg px-1 text-zinc-400 transition-all duration-200 ease-in-out hover:bg-zinc-800 hover:text-zinc-50",
+              installActive && "bg-zinc-50 text-zinc-950",
             )}
           >
-
-            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary" : "text-muted-foreground")} />
-            <span className={cn("text-[10px] font-semibold leading-none tracking-tight sm:text-[11px]", installActive ? "text-primary" : "text-muted-foreground")}>More</span>
-
+            <Download className={cn("h-[17px] w-[17px]", installActive ? "text-zinc-950" : "text-zinc-400")} />
+            <span className={cn("text-[10px] font-medium leading-none sm:text-[11px]", installActive ? "text-zinc-950" : "text-zinc-400")}>
+              More
+            </span>
           </Link>
         </div>
       </div>
