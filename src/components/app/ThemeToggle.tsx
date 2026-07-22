@@ -1,33 +1,7 @@
 import { useEffect, useState } from "react";
-import { Moon, Shield, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-
-type AppTheme = "dark" | "light" | "red-dark";
-
-const themeOrder: AppTheme[] = ["dark", "light", "red-dark"];
-
-const themeMeta: Record<AppTheme, { label: string; next: string; icon: typeof Shield }> = {
-  dark: {
-    label: "Deployed green",
-    next: "Switch to St Michael light",
-    icon: Shield,
-  },
-  light: {
-    label: "St Michael light",
-    next: "Switch to red dark",
-    icon: Sun,
-  },
-  "red-dark": {
-    label: "Red dark",
-    next: "Switch to deployed green",
-    icon: Moon,
-  },
-};
-
-function normalizeTheme(theme: string | undefined): AppTheme {
-  return theme === "light" || theme === "red-dark" ? theme : "dark";
-}
 
 export function ThemeToggle({
   variant = "icon",
@@ -39,26 +13,22 @@ export function ThemeToggle({
 
   useEffect(() => setMounted(true), []);
 
-  const currentTheme = normalizeTheme(mounted ? theme : "dark");
-  const currentIndex = themeOrder.indexOf(currentTheme);
-  const nextTheme = themeOrder[(currentIndex + 1) % themeOrder.length];
-  const meta = themeMeta[currentTheme];
-  const Icon = meta.icon;
-
-  function cycleTheme() {
-    setTheme(nextTheme);
-  }
+  const isDark = mounted && theme === "dark";
+  const nextTheme = isDark ? "light" : "dark";
+  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+  const Icon = isDark ? Sun : Moon;
 
   if (variant === "row") {
     return (
       <Button
         type="button"
         variant="outline"
-        className="h-11 justify-start rounded-2xl border-border/60"
-        onClick={cycleTheme}
+        className="h-11 w-full justify-start rounded-lg border-border/60 bg-background/55"
+        onClick={() => setTheme(nextTheme)}
+        aria-label={label}
       >
-        <Icon className="mr-2 h-4 w-4" />
-        {meta.label}
+        <Icon className="mr-2 h-4 w-4 text-[hsl(var(--icon-gold))]" />
+        {isDark ? "Light mode" : "Dark mode"}
       </Button>
     );
   }
@@ -67,13 +37,13 @@ export function ThemeToggle({
     <Button
       type="button"
       size="icon"
-      variant="outline"
-      className="h-10 w-10 rounded-2xl border-border/60 bg-background/60"
-      onClick={cycleTheme}
-      aria-label={meta.next}
-      title={`${meta.label} · ${meta.next}`}
+      variant="ghost"
+      className="h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary"
+      onClick={() => setTheme(nextTheme)}
+      aria-label={label}
+      title={label}
     >
-      <Icon className="h-5 w-5" />
+      <Icon className="h-[18px] w-[18px]" />
     </Button>
   );
 }

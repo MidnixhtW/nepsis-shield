@@ -26,6 +26,7 @@ import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { showSuccess } from "@/utils/toast";
@@ -160,14 +161,16 @@ export function AppHeader() {
         </div>
       </Link>
 
-      <Sheet>
+      <div className="ml-auto flex shrink-0 items-center gap-2">
+        <ThemeToggle />
 
-        <SheetTrigger asChild>
-          <Button aria-label="Open menu" size="icon" variant="ghost" className="ml-auto h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary">
-            <Menu className="h-[18px] w-[18px]" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </SheetTrigger>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary">
+              <Menu className="h-[18px] w-[18px]" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </SheetTrigger>
         <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0 backdrop-blur-xl">
           <SheetHeader className="orthodox-drawer-header shrink-0 border-b border-border px-5 pb-5 pt-7 text-left">
             <SheetTitle>
@@ -186,12 +189,12 @@ export function AppHeader() {
             </SheetDescription>
           </SheetHeader>
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
-            <MenuLinks />
-          </div>
-        </SheetContent>
-
-      </Sheet>
+            <div className="min-h-0 flex-1 overflow-y-auto px-3 py-4">
+              <MenuLinks />
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }

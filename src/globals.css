@@ -956,10 +956,9 @@ h1, h2, h3, .font-serif {
   }
 }
 
-/* Liturgical day and evening theme */
+/* Liturgical light and dark theme */
 @layer base {
   :root,
-  :root[data-liturgical-mode="liturgy"],
   .light {
     --background: 42 31% 94%;
     --foreground: 30 5% 16%;
@@ -995,7 +994,6 @@ h1, h2, h3, .font-serif {
     --sidebar-ring: 219 57% 31%;
   }
 
-  :root[data-liturgical-mode="vespers"],
   .dark {
     --background: 220 10% 11%;
     --foreground: 42 30% 90%;
@@ -1123,7 +1121,7 @@ h1, h2, h3, .font-serif {
     color: hsl(var(--byzantine-blue)) !important;
   }
 
-  :root[data-liturgical-mode="vespers"] .premium-icon-mark {
+  .dark .premium-icon-mark {
     color: hsl(var(--icon-gold)) !important;
   }
 
