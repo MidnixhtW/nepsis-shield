@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ORTHODOX_ICONOGRAPHY } from "@/lib/orthodoxIconography";
 
-const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:icon-v2";
-const MICHAEL_IMAGE = "/assets/archangel-michael-icon.png";
+const INTRO_KEY = "nepsis-shield:st-michael-intro-seen:historic-icon-v1";
 
 export function SaintMichaelIntro() {
   const [visible, setVisible] = useState(false);
@@ -103,18 +103,29 @@ export function SaintMichaelIntro() {
       </Button>
 
       <div className="relative z-[1] flex h-full w-full flex-col items-center justify-center gap-2 px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-[calc(env(safe-area-inset-top)+3.25rem)] text-center sm:gap-4 sm:px-6">
-        <div className="michael-realistic relative h-[min(48dvh,30rem)] w-[min(78vw,24rem)] overflow-hidden rounded-[2rem] border border-primary/25 bg-card/50 shadow-2xl shadow-primary/15 max-[380px]:h-[min(42dvh,24rem)] sm:h-[min(56dvh,34rem)] sm:w-[min(72vw,27rem)]" aria-hidden>
+        <figure className="michael-realistic relative h-[min(48dvh,30rem)] w-[min(78vw,24rem)] overflow-hidden rounded-[2rem] border border-primary/25 bg-card/50 shadow-2xl shadow-primary/15 max-[380px]:h-[min(42dvh,24rem)] sm:h-[min(56dvh,34rem)] sm:w-[min(72vw,27rem)]">
           <img
-            src={MICHAEL_IMAGE}
-            alt=""
+            src={ORTHODOX_ICONOGRAPHY.saintMichael.imageUrl}
+            alt={ORTHODOX_ICONOGRAPHY.saintMichael.alt}
             className="h-full w-full object-contain object-center"
             draggable={false}
           />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,transparent_0_36%,hsl(var(--background)/0.08)_62%,hsl(var(--background)/0.36)_100%)]" />
           <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-primary/20" />
-        </div>
+          <figcaption className="absolute inset-x-0 bottom-0 bg-background/88 px-3 py-2 text-[10px] text-muted-foreground backdrop-blur-sm">
+            <a
+              href={ORTHODOX_ICONOGRAPHY.saintMichael.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-primary/40 underline-offset-2 hover:text-foreground"
+            >
+              {ORTHODOX_ICONOGRAPHY.saintMichael.credit}
+            </a>
+          </figcaption>
+        </figure>
 
         <div className="pointer-events-none w-full max-w-[34rem] rounded-3xl border border-border/60 bg-background/78 p-3 shadow-xl backdrop-blur-md sm:p-4">
+
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-primary sm:text-xs sm:tracking-[0.22em]">Holy Archangel Michael</p>
           <h1 className="mt-1 text-lg font-semibold leading-tight tracking-tight min-[360px]:text-xl sm:text-2xl">Defend us and pray to God for us.</h1>
           <p className="mt-1 text-xs text-muted-foreground sm:mt-2 sm:text-sm">Entering Nepsis Shield</p>

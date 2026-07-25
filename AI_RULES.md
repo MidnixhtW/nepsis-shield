@@ -10,6 +10,7 @@
 - UPDATE the main page to include the new components. OTHERWISE, the user can NOT see any components!
 - ALWAYS try to use the shadcn/ui library.
 - Tailwind CSS: always use Tailwind CSS for styling components. Utilize Tailwind classes extensively for layout, spacing, colors, and other design aspects.
+- Never use AI-generated icons or religious artwork. Use verified historic/public-domain Orthodox iconography or established icon libraries for UI symbols.
 
 Available packages and libraries:
 

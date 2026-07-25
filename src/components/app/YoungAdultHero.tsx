@@ -2,12 +2,14 @@ import { ArrowRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { GospelBookIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
+import { ORTHODOX_ICONOGRAPHY } from "@/lib/orthodoxIconography";
 
 export function OrthodoxHero({
   onAction,
 }: {
   onAction?: (to: { section: "today" | "pray" | "read" | "learn"; tab?: string; read?: string }) => void;
 }) {
+
   return (
     <section className="orthodox-hero relative overflow-hidden rounded-lg border border-border bg-card p-6 text-center shadow-sm sm:p-8 lg:p-10">
       <div className="mx-auto max-w-3xl">
@@ -24,16 +26,24 @@ export function OrthodoxHero({
 
         <figure className="icon-window mx-auto mt-8 max-w-2xl rounded-lg border border-border bg-background/45 p-2 shadow-sm">
           <img
-            src="/assets/byzantine-deesis.png"
-            alt="Byzantine-inspired Deesis composition with Christ, the Theotokos, and Saint John the Forerunner"
+            src={ORTHODOX_ICONOGRAPHY.deesis.imageUrl}
+            alt={ORTHODOX_ICONOGRAPHY.deesis.alt}
             className="h-auto w-full rounded-md object-contain"
           />
           <figcaption className="px-3 pb-1 pt-3 text-xs leading-relaxed text-muted-foreground">
-            A Byzantine-inspired Deesis: Christ at the center, with the Theotokos and the Forerunner in prayer.
+            <a
+              href={ORTHODOX_ICONOGRAPHY.deesis.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="underline decoration-primary/40 underline-offset-2 hover:text-foreground"
+            >
+              {ORTHODOX_ICONOGRAPHY.deesis.credit}
+            </a>
           </figcaption>
         </figure>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap">
+
           <Button
             type="button"
             className="h-12 rounded-lg px-5 font-semibold shadow-sm"

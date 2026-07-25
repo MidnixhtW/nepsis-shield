@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v4";
+const CACHE_NAME = "nepsis-shield-pwa-v5";
 const APP_SHELL = [
   "/",
   "/today",
@@ -12,14 +12,16 @@ const APP_SHELL = [
   "/download",
   "/release-notes",
   "/about",
+
   "/privacy",
   "/manifest.webmanifest",
   "/military-orthodox-cross.svg",
-  "/assets/st-michael-icon-intro.png",
+  "/favicon.ico",
   "/offline.html"
 ];
 
 self.addEventListener("install", (event) => {
+
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()),
   );
