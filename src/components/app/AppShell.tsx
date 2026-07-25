@@ -49,21 +49,22 @@ export function AppShell({
         Skip to content
       </a>
 
-      <div className="sticky top-0 z-30 border-b border-border/50 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto w-full max-w-6xl px-4 py-3 sm:px-6 lg:px-8">{header}</div>
+      <div className="sticky top-0 z-30 border-b border-border/45 bg-background/75 shadow-[0_10px_35px_hsl(232_60%_2%/0.1)] backdrop-blur-2xl">
+        <div className="mx-auto w-full max-w-6xl px-4 py-3.5 sm:px-6 lg:px-8">{header}</div>
       </div>
 
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-8 sm:px-6 lg:px-8 lg:pt-12"
+        className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10"
       >
-        <ByzantineDivider className="mb-10 hidden lg:flex" />
+        <ByzantineDivider className="mb-8 hidden opacity-55 lg:flex" />
         {children}
       </main>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border/45 bg-background/90 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
-        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-lg border border-border/60 bg-card/95 p-1.5 shadow-lg">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border/35 bg-background/72 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-2xl">
+        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-[1.2rem] border border-border/60 bg-card/80 p-1.5 shadow-xl">
+
           <ToggleGroup
             type="single"
             value={section}
@@ -81,15 +82,16 @@ export function AppShell({
                   key={key}
                   value={key}
                   aria-label={meta.aria}
-                  className="h-12 rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                  className="h-12 rounded-xl bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.22)]"
                 >
                   <div className="flex w-full flex-col items-center justify-center gap-1.5">
                     <Icon className={cn("h-[17px] w-[17px]", active ? "text-primary-foreground" : "text-muted-foreground")} />
-                    <span className={cn("text-[10px] font-semibold leading-none sm:text-[11px]", active ? "text-primary-foreground" : "text-muted-foreground")}>
+                    <span className={cn("text-[10px] font-bold leading-none sm:text-[11px]", active ? "text-primary-foreground" : "text-muted-foreground")}>
                       {meta.label}
                     </span>
                   </div>
                 </ToggleGroupItem>
+
               );
             })}
           </ToggleGroup>
@@ -98,15 +100,16 @@ export function AppShell({
             to="/download"
             aria-label="Open more options, install, and share"
             className={cn(
-              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-lg px-1 text-muted-foreground hover:bg-muted hover:text-foreground",
-              installActive && "bg-primary text-primary-foreground",
+              "flex h-12 flex-col items-center justify-center gap-1.5 rounded-xl px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+              installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
             )}
           >
             <Download className={cn("h-[17px] w-[17px]", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
-            <span className={cn("text-[10px] font-semibold leading-none sm:text-[11px]", installActive ? "text-primary-foreground" : "text-muted-foreground")}>
+            <span className={cn("text-[10px] font-bold leading-none sm:text-[11px]", installActive ? "text-primary-foreground" : "text-muted-foreground")}>
               More
             </span>
           </Link>
+
         </div>
       </div>
     </div>

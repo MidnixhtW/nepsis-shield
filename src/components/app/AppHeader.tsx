@@ -149,13 +149,13 @@ export function AppHeader() {
 
   return (
     <header className="flex min-w-0 items-center justify-between gap-3">
-      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <div className="premium-icon-mark h-10 w-10 group-hover:scale-[1.03]">
+      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <div className="premium-icon-mark h-10 w-10 transition-transform group-hover:scale-[1.04]">
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="truncate font-serif text-sm font-semibold tracking-wide text-foreground sm:text-base">Nepsis Shield</p>
-          <p className="truncate text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
+          <p className="truncate font-serif text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:text-base">Nepsis Shield</p>
+          <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
             Today · {format(new Date(), "EEE, MMM d")}
           </p>
         </div>
@@ -166,8 +166,9 @@ export function AppHeader() {
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary">
+            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-xl border border-border/70 bg-card/60 text-foreground shadow-sm backdrop-blur hover:border-primary/35 hover:bg-muted/80 hover:text-primary">
               <Menu className="h-[18px] w-[18px]" />
+
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>

@@ -23,10 +23,11 @@ export function ThemeToggle({
       <Button
         type="button"
         variant="outline"
-        className="h-11 w-full justify-start rounded-lg border-border/60 bg-background/55"
+        className="h-11 w-full justify-start rounded-xl border-border/60 bg-background/45 font-semibold backdrop-blur hover:border-primary/30 hover:bg-muted/70"
         onClick={() => setTheme(nextTheme)}
         aria-label={label}
       >
+
         <Icon className="mr-2 h-4 w-4 text-[hsl(var(--icon-gold))]" />
         {isDark ? "Light mode" : "Dark mode"}
       </Button>
@@ -38,11 +39,12 @@ export function ThemeToggle({
       type="button"
       size="icon"
       variant="ghost"
-      className="h-10 w-10 rounded-lg border border-border bg-card/65 text-foreground shadow-sm hover:bg-muted hover:text-primary"
+      className="h-10 w-10 rounded-xl border border-border/70 bg-card/60 text-foreground shadow-sm backdrop-blur hover:border-primary/35 hover:bg-muted/80 hover:text-primary"
       onClick={() => setTheme(nextTheme)}
       aria-label={label}
       title={label}
     >
+
       <Icon className="h-[18px] w-[18px]" />
     </Button>
   );

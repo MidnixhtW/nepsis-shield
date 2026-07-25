@@ -118,14 +118,14 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
   ];
 
   return (
-    <PremiumSurface className="rounded-lg border-border bg-card p-6">
+    <PremiumSurface className="rounded-[1.5rem] border-border bg-card p-6">
       <div className="grid gap-6">
         <div>
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Quick actions</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Quick actions</p>
             <ChurchDomeIcon className="h-5 w-5 text-[hsl(var(--icon-gold))]" />
           </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-wide text-foreground">Choose one next step.</h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-foreground">Choose one next step.</h2>
           <p className="mt-2 text-sm leading-7 text-muted-foreground">A focused rhythm for the day.</p>
         </div>
 
@@ -137,12 +137,13 @@ function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTar
               key={action.label}
               type="button"
               variant="outline"
-              className="group h-auto w-full justify-start rounded-lg border-border bg-background/45 px-3 py-3 text-left text-foreground shadow-none hover:bg-muted hover:text-foreground"
+              className="group h-auto w-full justify-start rounded-xl border-border/65 bg-background/35 px-3 py-3 text-left text-foreground shadow-none hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted/70 hover:text-foreground hover:shadow-sm"
               onClick={action.onClick}
             >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[hsl(var(--icon-gold)/0.46)] bg-secondary/45 text-primary">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[hsl(var(--icon-gold)/0.34)] bg-secondary/55 text-primary transition-transform group-hover:scale-105">
                 {action.icon}
               </span>
+
               <span className="ml-3 min-w-0">
                 <span className="block text-sm font-semibold leading-tight">{action.label}</span>
                 <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
@@ -289,10 +290,10 @@ const Index = () => {
       <QuickStartDialog />
       <MonasticAudioPlayer />
 
-      <div className="grid gap-12 animate-in fade-in duration-500">
+      <div className="grid gap-10 animate-in fade-in duration-500 sm:gap-12">
         {section === "today" ? (
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)]">
-            <div className="grid gap-8">
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)] lg:gap-8">
+            <div className="grid gap-6 sm:gap-8">
               <OrthodoxHero onAction={navigateTo} />
               <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             </div>
@@ -300,6 +301,7 @@ const Index = () => {
               <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             </aside>
           </div>
+
         ) : null}
 
         {section === "pray" ? (
