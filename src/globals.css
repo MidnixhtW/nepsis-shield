@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,13 +7,14 @@
 body {
   background-color: #071008;
   color: #dce8da;
-  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Barlow', ui-sans-serif, system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
 h1, h2, h3, .font-serif {
-  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
-  font-weight: 800;
+  font-family: 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.015em;
 }
 
 .candle-glow {
@@ -21,6 +22,7 @@ h1, h2, h3, .font-serif {
 }
 
 .orthodox-container {
+
   border: 1px solid rgba(105, 235, 82, 0.34);
   padding: 20px;
   box-shadow: inset 3px 0 0 rgba(105, 235, 82, 0.42);
@@ -1479,9 +1481,9 @@ h1, h2, h3, .font-serif {
     background-position: center;
     background-size: auto, auto, 44px 44px, 44px 44px, auto;
     color: hsl(var(--foreground));
-    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-family: "Barlow", ui-sans-serif, system-ui, -apple-system, sans-serif;
     line-height: 1.55;
-    letter-spacing: 0;
+    letter-spacing: 0.006em;
   }
 
   h1,
@@ -1489,9 +1491,13 @@ h1, h2, h3, .font-serif {
   h3,
   h4,
   .font-serif {
-    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.018em;
+    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.015em;
+  }
+
+  :where(button, [role="button"], nav, .premium-eyebrow) {
+    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
   }
 
   ::-webkit-scrollbar-track {
@@ -1499,6 +1505,7 @@ h1, h2, h3, .font-serif {
   }
 
   ::-webkit-scrollbar-thumb {
+
     background: hsl(var(--primary) / 0.32);
     border-radius: 2px;
   }
