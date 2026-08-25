@@ -1,24 +1,35 @@
 import * as React from "react";
 import { useEffect } from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+
+export const APP_THEMES = ["dark", "red-dark", "blue-cream"] as const;
+export type AppTheme = (typeof APP_THEMES)[number];
+
+function ThemeClassSync() {
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    document.documentElement.classList.toggle(
+      "dark",
+      theme === "dark" || theme === "red-dark",
+    );
+  }, [theme]);
+
+  return null;
+}
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove("light", "red-dark");
-    root.classList.add("dark");
-    root.removeAttribute("data-liturgical-mode");
-  }, []);
-
   return (
     <NextThemesProvider
       attribute="class"
       defaultTheme="dark"
-      forcedTheme="dark"
       enableSystem={false}
+      enableColorScheme={false}
+      disableTransitionOnChange
       storageKey="ortho-companion:tactical-appearance"
-      themes={["dark"]}
+      themes={[...APP_THEMES]}
     >
+      <ThemeClassSync />
       {children}
     </NextThemesProvider>
   );

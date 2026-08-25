@@ -1741,3 +1741,221 @@ h1, h2, h3, .font-serif {
     }
   }
 }
+
+/* Alternate tactical palettes share the same field-interface structure. */
+@layer base {
+  .red-dark {
+    color-scheme: dark;
+    --background: 0 0% 3%;
+    --foreground: 0 8% 92%;
+    --card: 0 8% 7%;
+
+    --card-foreground: 0 8% 92%;
+    --popover: 0 10% 6%;
+    --popover-foreground: 0 8% 92%;
+    --primary: 356 76% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 28% 13%;
+    --secondary-foreground: 0 8% 92%;
+    --muted: 0 14% 12%;
+    --muted-foreground: 0 5% 66%;
+    --accent: 2 86% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 8 92% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 356 46% 25%;
+    --input: 356 46% 25%;
+    --ring: 356 76% 52%;
+    --icon-gold: 356 76% 52%;
+    --liturgical-warm: 2 86% 58%;
+    --byzantine-blue: 356 66% 43%;
+    --cinnabar: 2 86% 58%;
+    --success: 142 52% 48%;
+    --sidebar-background: 0 0% 4%;
+    --sidebar-foreground: 0 8% 92%;
+    --sidebar-primary: 356 76% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 28% 13%;
+    --sidebar-accent-foreground: 0 8% 92%;
+    --sidebar-border: 356 46% 25%;
+    --sidebar-ring: 356 76% 52%;
+  }
+
+  .blue-cream {
+    color-scheme: light;
+    --background: 42 48% 91%;
+    --foreground: 217 48% 15%;
+    --card: 42 58% 96%;
+
+    --card-foreground: 217 48% 15%;
+    --popover: 42 62% 97%;
+    --popover-foreground: 217 48% 15%;
+    --primary: 214 68% 38%;
+    --primary-foreground: 43 72% 97%;
+    --secondary: 41 37% 83%;
+    --secondary-foreground: 217 48% 15%;
+    --muted: 42 28% 84%;
+    --muted-foreground: 217 24% 36%;
+    --accent: 208 78% 45%;
+    --accent-foreground: 43 72% 97%;
+    --destructive: 0 64% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 31% 57%;
+    --input: 214 31% 57%;
+    --ring: 214 68% 38%;
+    --icon-gold: 214 68% 38%;
+    --liturgical-warm: 32 58% 38%;
+    --byzantine-blue: 214 68% 38%;
+    --cinnabar: 0 64% 43%;
+    --success: 151 48% 32%;
+    --sidebar-background: 42 48% 92%;
+    --sidebar-foreground: 217 48% 15%;
+    --sidebar-primary: 214 68% 38%;
+    --sidebar-primary-foreground: 43 72% 97%;
+    --sidebar-accent: 41 37% 83%;
+    --sidebar-accent-foreground: 217 48% 15%;
+    --sidebar-border: 214 31% 57%;
+    --sidebar-ring: 214 68% 38%;
+  }
+
+  html.red-dark body {
+    background-color: hsl(var(--background)) !important;
+    background-image:
+      radial-gradient(circle at 72% 18%, hsl(var(--primary) / 0.14), transparent 26rem),
+      linear-gradient(hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.04) 1px, transparent 1px),
+      linear-gradient(145deg, hsl(0 0% 1%), hsl(0 10% 4%) 55%, hsl(356 24% 5%)) !important;
+    background-size: auto, 44px 44px, 44px 44px, auto;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  html.blue-cream body {
+    background-color: hsl(var(--background)) !important;
+    background-image:
+      radial-gradient(circle at 78% 14%, hsl(var(--primary) / 0.16), transparent 28rem),
+      radial-gradient(circle at 12% 72%, hsl(32 58% 38% / 0.07), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(145deg, hsl(43 64% 97%), hsl(var(--background)) 52%, hsl(39 40% 86%)) !important;
+    background-size: auto, auto, 44px 44px, 44px 44px, auto;
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+@layer components {
+  .red-dark .premium-page-header,
+  .red-dark .section-intro,
+  .red-dark .premium-surface,
+  .red-dark .orthodox-hero,
+  .red-dark .candlelight-card,
+  .red-dark .orthodox-drawer-header,
+  .red-dark .orthodox-nav-frame,
+  .red-dark .premium-tabs,
+  .red-dark .glass,
+  .red-dark .ornate-card {
+    background: linear-gradient(145deg, hsl(var(--card) / 0.96), hsl(var(--background) / 0.9)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--primary) / 0.08),
+      0 18px 50px hsl(0 80% 1% / 0.46) !important;
+  }
+
+  .blue-cream .premium-page-header,
+  .blue-cream .section-intro,
+  .blue-cream .premium-surface,
+  .blue-cream .orthodox-hero,
+  .blue-cream .candlelight-card,
+  .blue-cream .orthodox-drawer-header,
+  .blue-cream .orthodox-nav-frame,
+  .blue-cream .premium-tabs,
+  .blue-cream .glass,
+  .blue-cream .ornate-card {
+    background: linear-gradient(145deg, hsl(var(--card) / 0.98), hsl(var(--background) / 0.9)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.55),
+      0 16px 44px hsl(215 45% 22% / 0.13) !important;
+  }
+
+  .red-dark .premium-hero-shell {
+    background: hsl(0 8% 3%) !important;
+    box-shadow: 0 26px 80px hsl(0 80% 1% / 0.58) !important;
+  }
+
+  .red-dark .premium-hero-veil {
+    background:
+      linear-gradient(90deg, hsl(0 8% 2% / 0.98), hsl(0 18% 5% / 0.9) 50%, hsl(356 35% 8% / 0.48)),
+      repeating-linear-gradient(0deg, transparent 0 6px, hsl(var(--primary) / 0.03) 7px 8px) !important;
+  }
+
+  .blue-cream .premium-hero-shell {
+    background: hsl(216 48% 12%) !important;
+    box-shadow: 0 24px 70px hsl(215 48% 18% / 0.28) !important;
+  }
+
+  .blue-cream .premium-hero-veil {
+    background:
+      linear-gradient(90deg, hsl(217 52% 10% / 0.97), hsl(215 46% 14% / 0.84) 52%, hsl(211 42% 18% / 0.34)),
+      repeating-linear-gradient(0deg, transparent 0 6px, hsl(43 72% 97% / 0.025) 7px 8px) !important;
+  }
+}
+
+@layer utilities {
+  .red-dark .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.16), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.08), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(0 0% 1% / 0.99), hsl(356 24% 5% / 0.98)) !important;
+    background-size: auto, auto, 42px 42px, 42px 42px, auto !important;
+  }
+
+  .blue-cream .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.14), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.07), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(43 64% 97% / 0.99), hsl(42 48% 91% / 0.98)) !important;
+    background-size: auto, auto, 42px 42px, 42px 42px, auto !important;
+  }
+
+  .red-dark .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(2 86% 59%), hsl(354 72% 43%)) !important;
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.18) !important;
+  }
+
+  .blue-cream .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(209 76% 49%), hsl(218 68% 34%)) !important;
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.16) !important;
+  }
+
+  .red-dark .gold-foil {
+    background-image: linear-gradient(135deg, hsl(2 86% 59%), hsl(354 72% 43%)) !important;
+  }
+
+  .blue-cream .gold-foil {
+    background-image: linear-gradient(135deg, hsl(209 76% 49%), hsl(218 68% 34%)) !important;
+  }
+
+  .red-dark .candle-glow {
+    box-shadow: 0 0 40px -8px hsl(var(--primary) / 0.18) !important;
+  }
+
+  .blue-cream .candle-glow {
+    box-shadow: 0 0 40px -8px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .red-dark .orthodox-container,
+  .blue-cream .orthodox-container {
+    border-color: hsl(var(--primary) / 0.34) !important;
+    background-color: hsl(var(--card) / 0.94) !important;
+    box-shadow: inset 3px 0 0 hsl(var(--primary) / 0.42) !important;
+  }
+
+  .red-dark ::-webkit-scrollbar-thumb,
+  .blue-cream ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.42) !important;
+  }
+}

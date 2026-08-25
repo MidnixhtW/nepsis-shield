@@ -56,12 +56,13 @@ export function AppShell({
         <div className="absolute inset-x-0 top-0 h-px bg-primary/35" />
       </div>
 
-      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(110_70%_1%/0.42)] backdrop-blur-xl">
+      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(var(--primary)/0.12)] backdrop-blur-xl">
         <div className="mx-auto w-full max-w-6xl px-4 py-3.5 sm:px-6 lg:px-8">{header}</div>
       </div>
 
       <main
         id="main-content"
+
         tabIndex={-1}
         className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10"
       >

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { cn } from "@/lib/utils";
 
 export function PremiumPageHeader({
@@ -10,7 +11,6 @@ export function PremiumPageHeader({
   actions,
   className,
 }: {
-
   eyebrow: string;
   title: string;
   description?: string;
@@ -22,7 +22,6 @@ export function PremiumPageHeader({
     <header className={cn("premium-page-header", className)}>
       <OrthodoxCrossIcon className="pointer-events-none absolute -right-5 -top-7 h-28 w-28 rotate-6 text-primary/[0.08]" />
       <div className="flex min-w-0 items-start gap-3.5 sm:gap-4">
-
         <span className="premium-icon-mark">
           {icon ?? <OrthodoxCrossIcon className="h-6 w-6" />}
         </span>
@@ -33,11 +32,12 @@ export function PremiumPageHeader({
           {description ? <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">{description}</p> : null}
         </div>
       </div>
-      {actions ? (
-        <div className="flex max-w-full flex-wrap gap-2 sm:justify-end">
-          {actions}
-        </div>
-      ) : null}
+
+      <div className="flex max-w-full flex-wrap gap-2 sm:justify-end">
+        {actions}
+        <ThemeToggle />
+      </div>
     </header>
+
   );
 }
