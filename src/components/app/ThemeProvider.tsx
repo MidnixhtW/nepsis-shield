@@ -5,7 +5,8 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove("red-dark");
+    root.classList.remove("light", "red-dark");
+    root.classList.add("dark");
     root.removeAttribute("data-liturgical-mode");
   }, []);
 
@@ -13,9 +14,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     <NextThemesProvider
       attribute="class"
       defaultTheme="dark"
+      forcedTheme="dark"
       enableSystem={false}
-      storageKey="ortho-companion:appearance-v2"
-      themes={["light", "dark"]}
+      storageKey="ortho-companion:tactical-appearance"
+      themes={["dark"]}
     >
       {children}
     </NextThemesProvider>

@@ -5,43 +5,40 @@
 @tailwind utilities;
 
 body {
-  background-color: #f4f1ea;
-  color: #2c2a28;
-  font-family: 'Lora', Georgia, serif;
+  background-color: #071008;
+  color: #dce8da;
+  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
 
 h1, h2, h3, .font-serif {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
 }
 
-/* Custom glow effect simulating warm beeswax candle flame */
 .candle-glow {
-  box-shadow: 0 0 40px -5px rgba(217, 119, 6, 0.15);
+  box-shadow: 0 0 40px -8px rgba(105, 235, 82, 0.16);
 }
 
-/* Example of a custom "sacred" border in CSS */
 .orthodox-container {
-  border: 1px solid rgba(212, 175, 55, 0.55);
+  border: 1px solid rgba(105, 235, 82, 0.34);
   padding: 20px;
-  box-shadow: inset 0 0 0 4px rgba(212, 175, 55, 0.08);
-  background-color: rgba(28, 25, 23, 0.9); /* stone-900/90 */
+  box-shadow: inset 3px 0 0 rgba(105, 235, 82, 0.42);
+  background-color: rgba(7, 16, 8, 0.92);
 }
-
-/* Custom scrollbars for a clean, non-cluttered interface */
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0a09;
+  background: #050b06;
 }
 ::-webkit-scrollbar-thumb {
-  background: #292524;
-  border-radius: 10px;
+  background: #28572b;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #44403c;
+  background: #397c3d;
 }
 
 @layer base {
@@ -1426,5 +1423,314 @@ h1, h2, h3, .font-serif {
   body [class*="ring-white"],
   body [class*="ring-black"] {
     --tw-ring-color: hsl(var(--ring) / 0.48) !important;
+  }
+}
+
+/* Restored field theme: dark-green command interface with a live sonar scope. */
+@layer base {
+  :root,
+  .light,
+  .dark {
+    --background: 108 36% 4%;
+    --foreground: 101 24% 88%;
+    --card: 106 31% 7%;
+    --card-foreground: 101 24% 88%;
+    --popover: 106 34% 6%;
+    --popover-foreground: 101 24% 88%;
+    --primary: 102 76% 55%;
+    --primary-foreground: 110 54% 3%;
+    --secondary: 102 24% 13%;
+    --secondary-foreground: 100 29% 91%;
+    --muted: 104 20% 12%;
+    --muted-foreground: 101 15% 65%;
+    --accent: 42 88% 55%;
+    --accent-foreground: 108 44% 4%;
+    --destructive: 4 74% 50%;
+    --destructive-foreground: 46 28% 94%;
+    --border: 103 39% 23%;
+    --input: 103 39% 23%;
+    --ring: 102 76% 55%;
+    --icon-gold: 42 88% 55%;
+    --liturgical-warm: 42 88% 55%;
+    --byzantine-blue: 102 56% 40%;
+    --cinnabar: 4 74% 50%;
+    --success: 102 76% 55%;
+    --radius: 0.5rem;
+    --sidebar-background: 108 36% 5%;
+    --sidebar-foreground: 101 24% 88%;
+    --sidebar-primary: 102 76% 55%;
+    --sidebar-primary-foreground: 110 54% 3%;
+    --sidebar-accent: 102 24% 13%;
+    --sidebar-accent-foreground: 100 29% 91%;
+    --sidebar-border: 103 39% 23%;
+    --sidebar-ring: 102 76% 55%;
+  }
+
+  body,
+  html:not(.dark):not(.red-dark) body,
+  .dark body {
+    background-color: hsl(var(--background)) !important;
+    background-image:
+      radial-gradient(circle at 72% 18%, hsl(var(--primary) / 0.11), transparent 26rem),
+      radial-gradient(circle at 14% 74%, hsl(var(--accent) / 0.045), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(145deg, hsl(112 46% 2%), hsl(106 34% 4%) 52%, hsl(98 24% 6%)) !important;
+    background-position: center;
+    background-size: auto, auto, 44px 44px, 44px 44px, auto;
+    color: hsl(var(--foreground));
+    font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-serif {
+    font-family: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(108 36% 3%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.32);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.48);
+  }
+}
+
+@layer components {
+  .youth-app-shell {
+    background: transparent !important;
+  }
+
+  .youth-app-shell::before {
+    opacity: 0.32;
+    background-image:
+      linear-gradient(90deg, transparent 0 49.9%, hsl(var(--primary) / 0.045) 50%, transparent 50.1%),
+      repeating-linear-gradient(0deg, transparent 0 8px, hsl(var(--primary) / 0.022) 9px 10px);
+    background-size: 100% 100%, auto;
+    mask-image: linear-gradient(to bottom, black, transparent 78%);
+  }
+
+  .premium-page::before {
+    background:
+      linear-gradient(hsl(var(--primary) / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.035) 1px, transparent 1px),
+      radial-gradient(circle at 88% 8%, hsl(var(--primary) / 0.1), transparent 24rem) !important;
+    background-size: 38px 38px, 38px 38px, auto !important;
+  }
+
+  .premium-page::after {
+    content: "" !important;
+    display: block !important;
+    position: fixed;
+    right: -9rem;
+    bottom: -11rem;
+    z-index: -1;
+    width: min(74vw, 34rem);
+    aspect-ratio: 1;
+    border: 1px solid hsl(var(--primary) / 0.2);
+    border-radius: 9999px;
+    background:
+      conic-gradient(from 0deg, transparent 0 82%, hsl(var(--primary) / 0.14) 94%, transparent 100%),
+      repeating-radial-gradient(circle, transparent 0 4.2rem, hsl(var(--primary) / 0.09) 4.25rem 4.3rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px);
+    background-size: auto, auto, 50% 50%, 50% 50%;
+    box-shadow: inset 0 0 3rem hsl(var(--primary) / 0.06), 0 0 3rem hsl(var(--primary) / 0.07);
+    opacity: 0.58;
+    animation: radar-sweep 12s linear infinite;
+  }
+
+  :where(.youth-app-shell, .premium-page) .rounded-3xl,
+  :where(.youth-app-shell, .premium-page) .rounded-2xl {
+    border-radius: 0.7rem !important;
+  }
+
+  :where(.youth-app-shell, .premium-page) .rounded-xl {
+    border-radius: 0.5rem !important;
+  }
+
+  .premium-page-header,
+  .section-intro,
+  .premium-surface,
+  .orthodox-hero,
+
+  .premium-page > .grid > [class*="rounded-3xl"],
+  .premium-page > .grid > [class*="rounded-2xl"],
+  .dark .premium-page-header,
+  .dark .section-intro,
+  .dark .premium-surface,
+  .dark .orthodox-hero,
+  .dark .premium-page > .grid > [class*="rounded-3xl"],
+  .dark .premium-page > .grid > [class*="rounded-2xl"] {
+    border: 1px solid hsl(var(--primary) / 0.24) !important;
+    border-radius: 0.65rem !important;
+    background:
+      linear-gradient(135deg, hsl(var(--card) / 0.96), hsl(var(--background) / 0.88)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--primary) / 0.07),
+      0 18px 48px hsl(112 70% 1% / 0.34) !important;
+    backdrop-filter: blur(14px);
+  }
+
+  .premium-page-header,
+  .section-intro {
+    border-left: 3px solid hsl(var(--primary) / 0.65) !important;
+  }
+
+  .premium-eyebrow {
+    color: hsl(var(--primary)) !important;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+  }
+
+  .premium-icon-mark {
+    border: 1px solid hsl(var(--primary) / 0.38) !important;
+    border-radius: 0.4rem !important;
+    background:
+      linear-gradient(145deg, hsl(var(--primary) / 0.14), hsl(var(--card) / 0.9)) !important;
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.05),
+      0 0 24px hsl(var(--primary) / 0.08) !important;
+    color: hsl(var(--primary)) !important;
+  }
+
+  .premium-hero-shell {
+    border: 1px solid hsl(var(--primary) / 0.35) !important;
+    border-radius: 0.75rem !important;
+    background: hsl(108 40% 3%) !important;
+    box-shadow: 0 26px 80px hsl(112 80% 1% / 0.52) !important;
+  }
+
+  .premium-hero-veil {
+    background:
+      linear-gradient(90deg, hsl(110 52% 2% / 0.98), hsl(106 42% 4% / 0.9) 50%, hsl(104 32% 5% / 0.5)),
+      repeating-linear-gradient(0deg, transparent 0 6px, hsl(var(--primary) / 0.025) 7px 8px) !important;
+  }
+
+  .premium-hero-aura {
+    background: hsl(var(--primary) / 0.14) !important;
+  }
+
+  .candlelight-card,
+  .orthodox-drawer-header,
+  .orthodox-nav-frame,
+  .premium-tabs,
+  .glass,
+  .ornate-card,
+  .dark .glass,
+  .dark .ornate-card {
+    border-color: hsl(var(--primary) / 0.24) !important;
+    background:
+      linear-gradient(145deg, hsl(var(--card) / 0.94), hsl(var(--background) / 0.84)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--primary) / 0.06),
+      0 16px 45px hsl(112 70% 1% / 0.32) !important;
+  }
+
+  .orthodox-nav-frame,
+  .premium-tabs {
+    border-radius: 0.55rem !important;
+  }
+
+  .premium-tab,
+  .premium-tabs > [role="tab"] {
+    border-radius: 0.35rem !important;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+  }
+
+  .premium-tab[data-state="active"],
+  .premium-tabs > [role="tab"][data-state="active"] {
+    color: hsl(var(--primary-foreground)) !important;
+    background: hsl(var(--primary)) !important;
+    box-shadow: 0 0 22px hsl(var(--primary) / 0.18) !important;
+  }
+}
+
+@layer utilities {
+  .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.14), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.07), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(112 52% 2% / 0.99), hsl(105 38% 5% / 0.98)) !important;
+    background-size: auto, auto, 42px 42px, 42px 42px, auto !important;
+  }
+
+  .tactical-radar-field::before {
+    opacity: 0.56;
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(var(--primary) / 0.08) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(var(--primary) / 0.07) 55%, transparent 56% 100%) !important;
+  }
+
+  .tactical-radar-field::after {
+    background:
+      radial-gradient(circle at 20% 32%, hsl(var(--primary) / 0.82) 0 1px, transparent 2px),
+      radial-gradient(circle at 72% 48%, hsl(var(--primary) / 0.6) 0 1px, transparent 2px),
+      radial-gradient(circle at 58% 78%, hsl(var(--accent) / 0.6) 0 1px, transparent 2px),
+      radial-gradient(circle at 86% 22%, hsl(var(--primary) / 0.5) 0 1px, transparent 2px) !important;
+    background-size: 460px 460px, 520px 520px, 580px 580px, 620px 620px !important;
+  }
+
+  .radar-scope {
+    opacity: 0.62;
+    border-color: hsl(var(--primary) / 0.26);
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.07),
+      0 0 52px hsl(var(--primary) / 0.12),
+      inset 0 0 50px hsl(var(--primary) / 0.08);
+  }
+
+  .tactical-scanlines {
+    opacity: 0.68;
+  }
+
+  .dark .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(104 84% 62%), hsl(102 76% 50%)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(96 92% 82% / 0.3),
+      0 8px 24px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .gold-foil {
+    background-image: linear-gradient(135deg, hsl(104 84% 62%), hsl(102 76% 50%)) !important;
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .field-grid {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      radial-gradient(circle at 72% 28%, hsl(var(--primary) / 0.1), transparent 18rem) !important;
+    background-size: 32px 32px, 32px 32px, auto !important;
+  }
+
+  .ocp-camo {
+    background-image:
+      radial-gradient(ellipse at 14% 26%, hsl(91 22% 30% / 0.2) 0 16%, transparent 17%),
+      radial-gradient(ellipse at 76% 20%, hsl(70 20% 22% / 0.18) 0 14%, transparent 15%),
+      radial-gradient(ellipse at 34% 72%, hsl(108 18% 18% / 0.2) 0 13%, transparent 14%),
+      radial-gradient(ellipse at 88% 76%, hsl(42 24% 25% / 0.1) 0 16%, transparent 17%) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .premium-page::after {
+      animation: none;
+    }
   }
 }

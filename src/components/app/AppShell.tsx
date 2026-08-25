@@ -44,12 +44,19 @@ export function AppShell({
     <div className="youth-app-shell relative min-h-dvh min-w-0 overflow-x-clip bg-background text-foreground">
       <a
         href="#main-content"
-        className="sr-only fixed left-3 top-3 z-50 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm focus:not-sr-only"
+        className="sr-only fixed left-3 top-3 z-50 rounded-sm bg-primary px-4 py-2 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-sm focus:not-sr-only"
       >
         Skip to content
       </a>
 
-      <div className="sticky top-0 z-30 border-b border-border/45 bg-background/75 shadow-[0_10px_35px_hsl(232_60%_2%/0.1)] backdrop-blur-2xl">
+      <div aria-hidden className="tactical-radar-field pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="radar-scope radar-scope-primary" />
+        <div className="radar-scope radar-scope-secondary" />
+        <div className="tactical-scanlines absolute inset-0" />
+        <div className="absolute inset-x-0 top-0 h-px bg-primary/35" />
+      </div>
+
+      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(110_70%_1%/0.42)] backdrop-blur-xl">
         <div className="mx-auto w-full max-w-6xl px-4 py-3.5 sm:px-6 lg:px-8">{header}</div>
       </div>
 
@@ -58,12 +65,12 @@ export function AppShell({
         tabIndex={-1}
         className="water-page relative z-10 mx-auto w-full max-w-6xl px-4 pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pt-10"
       >
-        <ByzantineDivider className="mb-8 hidden opacity-55 lg:flex" />
+        <ByzantineDivider className="mb-8 hidden opacity-45 lg:flex" />
         {children}
       </main>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border/35 bg-background/72 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-2xl">
-        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-[1.2rem] border border-border/60 bg-card/80 p-1.5 shadow-xl">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-primary/25 bg-background/88 px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl">
+        <div className="orthodox-nav-frame pointer-events-auto mx-auto grid w-full max-w-[29rem] grid-cols-5 gap-1 rounded-md border border-primary/25 bg-card/90 p-1.5 shadow-xl">
 
           <ToggleGroup
             type="single"

@@ -26,7 +26,6 @@ import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
-import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { showSuccess } from "@/utils/toast";
@@ -162,16 +161,15 @@ export function AppHeader() {
       </Link>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        <ThemeToggle />
-
         <Sheet>
           <SheetTrigger asChild>
-            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-xl border border-border/70 bg-card/60 text-foreground shadow-sm backdrop-blur hover:border-primary/35 hover:bg-muted/80 hover:text-primary">
+            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-md border border-primary/30 bg-card/75 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary">
               <Menu className="h-[18px] w-[18px]" />
 
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
+
         <SheetContent side="right" className="flex h-dvh w-[min(23rem,94vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0 backdrop-blur-xl">
           <SheetHeader className="orthodox-drawer-header shrink-0 border-b border-border px-5 pb-5 pt-7 text-left">
             <SheetTitle>
