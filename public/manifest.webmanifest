@@ -10,7 +10,7 @@
   "display_override": ["standalone", "minimal-ui", "browser"],
   "background_color": "#1b2113",
   "theme_color": "#2f3a1f",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "categories": ["lifestyle", "education", "books"],
   "icons": [
     {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Share2 } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,17 +9,20 @@ import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";
 import { PremiumSurface } from "@/components/app/PremiumSurface";
-import { LearnHub, type LearnTab } from "@/components/app/LearnHub";
-
-import { PrayerHub, type PrayerTab } from "@/components/app/PrayerHub";
-import { ReadHub, type ReadTab } from "@/components/app/ReadHub";
-import { TodayOverview } from "@/components/app/TodayOverview";
+import type { LearnTab } from "@/components/app/LearnHub";
+import type { PrayerTab } from "@/components/app/PrayerHub";
+import type { ReadTab } from "@/components/app/ReadHub";
 import { AppFooter } from "@/components/app/AppFooter";
-import NotFound from "@/pages/NotFound";
-import { OrthodoxHero } from "@/components/app/YoungAdultHero";
-import { MonasticAudioPlayer } from "@/components/app/MonasticAudioPlayer";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+import NotFound from "@/pages/NotFound";
 import { saveGlobalResume } from "@/lib/dailyHabits";
+
+const LearnHub = lazy(() => import("@/components/app/LearnHub").then((module) => ({ default: module.LearnHub })));
+const PrayerHub = lazy(() => import("@/components/app/PrayerHub").then((module) => ({ default: module.PrayerHub })));
+const ReadHub = lazy(() => import("@/components/app/ReadHub").then((module) => ({ default: module.ReadHub })));
+const TodayOverview = lazy(() => import("@/components/app/TodayOverview").then((module) => ({ default: module.TodayOverview })));
+const OrthodoxHero = lazy(() => import("@/components/app/YoungAdultHero").then((module) => ({ default: module.OrthodoxHero })));
+const MonasticAudioPlayer = lazy(() => import("@/components/app/MonasticAudioPlayer").then((module) => ({ default: module.MonasticAudioPlayer })));
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
 
@@ -288,11 +291,12 @@ const Index = () => {
 
   return (
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
-      <QuickStartDialog />
-      <MonasticAudioPlayer />
+      <Suspense fallback={<PremiumSurface className="min-h-40 animate-pulse"><p className="text-sm text-muted-foreground">Loading this section…</p></PremiumSurface>}>
+        <QuickStartDialog />
+        <MonasticAudioPlayer />
 
-      <div className="grid gap-10 animate-in fade-in duration-500 sm:gap-12">
-        {section === "today" ? (
+        <div className="grid gap-10 animate-in fade-in duration-500 sm:gap-12">
+          {section === "today" ? (
           <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)] lg:gap-8">
             <div className="grid gap-6 sm:gap-8">
               <OrthodoxHero onAction={navigateTo} />
@@ -315,9 +319,9 @@ const Index = () => {
           <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
         ) : null}
 
-        <AppFooter />
-      </div>
-
+          <AppFooter />
+        </div>
+      </Suspense>
     </AppShell>
   );
 };

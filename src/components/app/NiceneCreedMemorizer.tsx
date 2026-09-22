@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronLeft, ChevronRight, Eye, EyeOff, RotateCcw, Trophy } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Eye, EyeOff, FileDown, RotateCcw, Trophy } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -104,6 +115,24 @@ export function NiceneCreedMemorizer() {
     setChecked(true);
     setProgress((current) => ({ ...current, bestQuiz: Math.max(current.bestQuiz, score) }));
     if (score === 100) markLineComplete();
+  };
+
+  const exportProgress = () => {
+    const payload = {
+      format: "nepsis-shield-nicene-creed-progress",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      completedSections: progress.completedLines,
+      bestFillInScore: progress.bestQuiz,
+    };
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `nicene-creed-progress-${payload.exportedAt.slice(0, 10)}.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
   };
 
   const resetProgress = () => {
@@ -237,11 +266,32 @@ export function NiceneCreedMemorizer() {
 
       <Card className="rounded-2xl border-border/60 bg-card p-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary"><Trophy className="h-4 w-4" /></span>
-            <div><p className="text-sm font-semibold">Best fill-in score: {progress.bestQuiz}%</p><p className="text-xs text-muted-foreground">Progress is saved automatically on this device.</p></div>
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Trophy className="h-4 w-4" /></span>
+            <div className="min-w-0"><p className="text-sm font-semibold">Best fill-in score: {progress.bestQuiz}%</p><p className="text-xs text-muted-foreground">Progress is saved automatically on this device.</p></div>
           </div>
-          <Button variant="ghost" size="sm" onClick={resetProgress}><RotateCcw className="mr-2 h-4 w-4" />Reset progress</Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={exportProgress}>
+              <FileDown className="mr-2 h-4 w-4" />Export progress
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="sm"><RotateCcw className="mr-2 h-4 w-4" />Reset progress</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="w-[calc(100%_-_2rem)] rounded-2xl sm:max-w-md">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Reset Creed progress?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This removes every mastered section and your best fill-in score from this device. Export first if you want a record.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Keep progress</AlertDialogCancel>
+                  <AlertDialogAction onClick={resetProgress}>Reset progress</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </Card>
     </div>

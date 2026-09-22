@@ -9,6 +9,13 @@ const viewportCases = [
   { name: "iphone-landscape", width: 844, height: 390 },
 ] as const;
 
+const primaryRoutes = [
+  { name: "today", path: "/today" },
+  { name: "pray", path: "/pray?tab=daily" },
+  { name: "read", path: "/read?read=daily" },
+  { name: "learn", path: "/learn?tab=creed" },
+] as const;
+
 async function expectNoHorizontalOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
@@ -20,13 +27,29 @@ async function expectNoHorizontalOverflow(page: Page) {
 }
 
 for (const viewport of viewportCases) {
-  test(`${viewport.name} keeps primary layouts within the viewport`, async ({ page }, testInfo) => {
+  test(`${viewport.name} keeps the Learn experience within the viewport`, async ({ page, browserName }, testInfo) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    await page.goto("/learn", { waitUntil: "domcontentloaded" });
+    await page.goto("/learn?tab=creed", { waitUntil: "domcontentloaded" });
     await expect(page.locator("#main-content")).toBeVisible();
     await expectNoHorizontalOverflow(page);
-    await page.screenshot({ path: testInfo.outputPath(`${viewport.name}.png`), fullPage: true });
+    if (browserName === "chromium") {
+      await page.screenshot({ path: testInfo.outputPath(`${viewport.name}-learn.png`), fullPage: true, animations: "disabled" });
+    }
   });
+}
+
+for (const route of primaryRoutes) {
+  for (const viewport of [
+    { name: "mobile", width: 375, height: 812 },
+    { name: "desktop", width: 1024, height: 768 },
+  ]) {
+    test(`${route.name} is reflow-safe on ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto(route.path, { waitUntil: "domcontentloaded" });
+      await expect(page.locator("#main-content")).toBeVisible();
+      await expectNoHorizontalOverflow(page);
+    });
+  }
 }
 
 test("1024px desktop header navigation does not collide", async ({ page }) => {
@@ -70,7 +93,7 @@ test("large-text accessibility mode remains reflow-safe", async ({ page }) => {
     }));
   });
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/learn", { waitUntil: "domcontentloaded" });
+  await page.goto("/learn?tab=creed", { waitUntil: "domcontentloaded" });
   await expect(page.locator("html")).toHaveClass(/a11y-large-text/);
   await expectNoHorizontalOverflow(page);
 });
@@ -90,11 +113,9 @@ test("long Learn tabs scroll and keep the focused tab visible", async ({ page })
 
   const lastTab = tabList.getByRole("tab").last();
   await lastTab.focus();
-  await expect.poll(async () => {
-    return lastTab.evaluate((tab) => {
-      const tabRect = tab.getBoundingClientRect();
-      const listRect = tab.parentElement!.getBoundingClientRect();
-      return tabRect.left >= listRect.left - 1 && tabRect.right <= listRect.right + 1;
-    });
-  }).toBe(true);
+  await expect.poll(async () => lastTab.evaluate((tab) => {
+    const tabRect = tab.getBoundingClientRect();
+    const listRect = tab.parentElement!.getBoundingClientRect();
+    return tabRect.left >= listRect.left - 1 && tabRect.right <= listRect.right + 1;
+  })).toBe(true);
 });
