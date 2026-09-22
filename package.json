@@ -9,6 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test:responsive": "playwright test tests/responsive.spec.ts",
     "android:apply-icon": "node scripts/apply-android-ocp-icon.mjs",
     "android:patch-build": "node scripts/patch-android-build.mjs",
     "cap:add:android": "capacitor add android",
@@ -74,6 +75,7 @@
   "devDependencies": {
     "@capacitor/cli": "^8.3.4",
     "@eslint/js": "^9.9.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.5.5",
     "@types/react": "^19.2.8",
