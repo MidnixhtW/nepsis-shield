@@ -125,7 +125,7 @@ export function AppShell({
       <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(var(--primary)/0.12)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center gap-6 pb-3.5 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(0.875rem,env(safe-area-inset-top))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8">
           <div className="min-w-0 flex-1">{header}</div>
-          <div className="hidden shrink-0 lg:block">
+          <div className="hidden shrink-0 min-[1120px]:block">
             <ShellNavigation section={section} items={items} installActive={installActive} onSectionChange={onSectionChange} desktop />
           </div>
         </div>
@@ -134,13 +134,13 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-6xl pb-[calc(7.5rem+env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-6 sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pt-8 lg:px-8 lg:pb-12 lg:pt-10"
+        className="water-page relative z-10 mx-auto w-full max-w-6xl pb-[calc(7.5rem+env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-5 sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pt-7 lg:px-8 lg:pt-9 min-[1120px]:pb-12"
       >
         <ByzantineDivider className="mb-8 hidden opacity-45 lg:flex" />
         {children}
       </main>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-primary/25 bg-background/88 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-2 backdrop-blur-xl lg:hidden">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-primary/25 bg-background/88 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-2 backdrop-blur-xl min-[1120px]:hidden">
         <div className="pointer-events-auto mx-auto w-full max-w-[29rem]">
           <ShellNavigation section={section} items={items} installActive={installActive} onSectionChange={onSectionChange} />
         </div>

@@ -32,7 +32,7 @@ export function LearnHub({
   onHome?: () => void;
 }) {
   return (
-    <div className="grid gap-5">
+    <div className="grid min-w-0 gap-4 sm:gap-5 lg:gap-6">
       <SectionIntro
         eyebrow="Learn"
         title="Grow with steadiness."
@@ -57,8 +57,8 @@ export function LearnHub({
         onAction={() => onTabChange?.("path")}
       />
 
-      <Card className="premium-surface rounded-[1.75rem] p-4 sm:p-5">
-        <div className="relative flex flex-wrap items-end justify-between gap-3">
+      <Card className="premium-surface rounded-[1.35rem] p-4 sm:rounded-[1.75rem] sm:p-5 lg:p-6">
+        <div className="relative flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
           <div>
             <p className="premium-eyebrow">Tool library</p>
             <h2 className="mt-1 text-lg font-semibold tracking-tight">Quick access</h2>

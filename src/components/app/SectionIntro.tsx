@@ -31,7 +31,7 @@ export function SectionIntro({
           {description ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p> : null}
         </div>
       </div>
-      {actions ? <div className="flex max-w-full flex-wrap gap-2">{actions}</div> : null}
+      {actions ? <div className="flex w-full max-w-full flex-wrap gap-2 lg:w-auto lg:shrink-0 lg:justify-end">{actions}</div> : null}
     </section>
   );
 }

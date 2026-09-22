@@ -52,16 +52,22 @@ for (const route of primaryRoutes) {
   }
 }
 
-test("1024px desktop header navigation does not collide", async ({ page }) => {
+test("1024px tablet-width header stays uncluttered", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/today", { waitUntil: "domcontentloaded" });
+
+  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeHidden();
+  await expect(page.getByRole("navigation", { name: "Mobile primary navigation" })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+});
+
+test("desktop navigation does not collide at its first breakpoint", async ({ page }) => {
+  await page.setViewportSize({ width: 1120, height: 800 });
   await page.goto("/today", { waitUntil: "domcontentloaded" });
 
   const appHeader = page.locator("header").first();
   const desktopNav = page.getByRole("navigation", { name: "Primary navigation" });
-  const mobileNav = page.getByRole("navigation", { name: "Mobile primary navigation" });
   await expect(desktopNav).toBeVisible();
-  await expect(mobileNav).toBeHidden();
-
   const [headerBox, navBox] = await Promise.all([appHeader.boundingBox(), desktopNav.boundingBox()]);
   expect(headerBox).not.toBeNull();
   expect(navBox).not.toBeNull();

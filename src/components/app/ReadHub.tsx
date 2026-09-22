@@ -52,7 +52,7 @@ export function ReadHub({
   );
 
   return (
-    <div className="grid gap-5">
+    <div className="grid min-w-0 gap-4 sm:gap-5 lg:gap-6">
       <SectionIntro
         eyebrow="Scripture"
         title="Attend to the Word."
@@ -75,9 +75,9 @@ export function ReadHub({
           <TabsTrigger value="bible" className="premium-tab flex-1">Bible</TabsTrigger>
           <TabsTrigger value="plans" className="premium-tab flex-1">Plans</TabsTrigger>
         </TabsList>
-        <TabsContent value="daily" className="mt-5"><DailyReadings /></TabsContent>
-        <TabsContent value="bible" className="mt-5"><OrthodoxBible /></TabsContent>
-        <TabsContent value="plans" className="mt-5"><ReadingPlans /></TabsContent>
+        <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyReadings /></TabsContent>
+        <TabsContent value="bible" className="mt-4 sm:mt-5"><OrthodoxBible /></TabsContent>
+        <TabsContent value="plans" className="mt-4 sm:mt-5"><ReadingPlans /></TabsContent>
       </Tabs>
     </div>
   );

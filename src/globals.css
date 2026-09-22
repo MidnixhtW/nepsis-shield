@@ -707,7 +707,7 @@ h1, h2, h3, .font-serif {
 
   .premium-page-header,
   .section-intro {
-    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/[0.65] p-4 shadow-sm backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:p-5;
+    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/[0.65] p-4 shadow-sm backdrop-blur-xl sm:p-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-6;
     box-shadow:
       inset 0 1px 0 hsl(var(--icon-gold) / 0.14),
       0 22px 70px hsl(var(--background) / 0.3);
@@ -777,7 +777,7 @@ h1, h2, h3, .font-serif {
   }
 
   .premium-surface {
-    @apply relative isolate overflow-hidden rounded-[1.75rem] border p-5 sm:p-6;
+    @apply relative isolate overflow-hidden rounded-[1.75rem] border p-4 sm:p-5 lg:p-6;
   }
 
   .premium-surface::before {
@@ -870,7 +870,7 @@ h1, h2, h3, .font-serif {
   }
 
   .premium-tabs {
-    @apply flex h-auto w-full justify-start gap-1 overflow-x-auto rounded-[1.35rem] border border-border/40 bg-muted/25 p-1.5;
+    @apply flex h-auto w-full scroll-px-2 justify-start gap-1 overflow-x-auto rounded-[1.35rem] border border-border/40 bg-muted/25 p-1.5 sm:gap-1.5;
 
     scrollbar-width: none;
     box-shadow: inset 0 1px 8px hsl(var(--background) / 0.18);
@@ -881,11 +881,11 @@ h1, h2, h3, .font-serif {
   }
 
   .premium-tab {
-    @apply min-h-10 shrink-0 whitespace-nowrap rounded-[1rem] px-4 py-2 text-xs font-medium text-muted-foreground shadow-none sm:text-sm;
+    @apply min-h-10 shrink-0 whitespace-nowrap rounded-[1rem] px-3 py-2 text-xs font-medium text-muted-foreground shadow-none sm:px-4 sm:text-sm;
   }
 
   .premium-tabs > [role="tab"] {
-    @apply min-h-10 shrink-0 whitespace-nowrap rounded-[1rem] px-4 py-2 text-xs font-medium text-muted-foreground shadow-none sm:text-sm;
+    @apply min-h-10 shrink-0 whitespace-nowrap rounded-[1rem] px-3 py-2 text-xs font-medium text-muted-foreground shadow-none sm:px-4 sm:text-sm;
   }
 
   .premium-tab[data-state="active"],
@@ -1255,7 +1255,7 @@ h1, h2, h3, .font-serif {
     }
 
     .premium-surface {
-      padding: 1.15rem;
+      padding: 1rem;
     }
   }
 }

@@ -33,7 +33,7 @@ export function PremiumPageHeader({
         </div>
       </div>
 
-      <div className="flex max-w-full flex-wrap gap-2 sm:justify-end">
+      <div className="flex w-full max-w-full flex-wrap gap-2 lg:w-auto lg:shrink-0 lg:justify-end">
         {actions}
         <ThemeToggle />
       </div>

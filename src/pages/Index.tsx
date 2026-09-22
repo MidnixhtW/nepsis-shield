@@ -291,33 +291,38 @@ const Index = () => {
 
   return (
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
-      <Suspense fallback={<PremiumSurface className="min-h-40 animate-pulse"><p className="text-sm text-muted-foreground">Loading this section…</p></PremiumSurface>}>
+      <Suspense
+        fallback={
+          <PremiumSurface className="grid min-h-40 place-items-center animate-pulse">
+            <p className="text-sm text-muted-foreground">Loading this section…</p>
+          </PremiumSurface>
+        }
+      >
         <QuickStartDialog />
         <MonasticAudioPlayer />
 
-        <div className="grid gap-10 animate-in fade-in duration-500 sm:gap-12">
+        <div className="grid gap-8 animate-in fade-in duration-500 sm:gap-10 lg:gap-12">
           {section === "today" ? (
-          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)] lg:gap-8">
-            <div className="grid gap-6 sm:gap-8">
-              <OrthodoxHero onAction={navigateTo} />
-              <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+            <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)] lg:gap-8">
+              <div className="grid gap-5 sm:gap-6 lg:gap-8">
+                <OrthodoxHero onAction={navigateTo} />
+                <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+              </div>
+              <aside className="lg:sticky lg:top-24">
+                <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
+              </aside>
             </div>
-            <aside className="lg:sticky lg:top-24">
-              <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-            </aside>
-          </div>
+          ) : null}
 
-        ) : null}
-
-        {section === "pray" ? (
-          <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
-        ) : null}
-        {section === "read" ? (
-          <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
-        ) : null}
-        {section === "learn" ? (
-          <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
-        ) : null}
+          {section === "pray" ? (
+            <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
+          ) : null}
+          {section === "read" ? (
+            <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
+          ) : null}
+          {section === "learn" ? (
+            <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
+          ) : null}
 
           <AppFooter />
         </div>

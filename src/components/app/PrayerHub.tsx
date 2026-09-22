@@ -70,7 +70,7 @@ export function PrayerHub({
   );
 
   return (
-    <div className="grid gap-5">
+    <div className="grid min-w-0 gap-4 sm:gap-5 lg:gap-6">
       <SectionIntro
         eyebrow="Prayer"
         title="Make room for stillness."
@@ -97,17 +97,17 @@ export function PrayerHub({
           ))}
         </TabsList>
 
-        <TabsContent value="daily" className="mt-5"><DailyPrayerFlow /></TabsContent>
-        <TabsContent value="rule" className="mt-5"><PrayerRule /></TabsContent>
-        <TabsContent value="prayers" className="mt-5"><PrayerBook showRule={false} /></TabsContent>
-        <TabsContent value="counter" className="mt-5">
-          <div className="grid gap-4"><JesusPrayerCounter /><StillnessTimer /></div>
+        <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyPrayerFlow /></TabsContent>
+        <TabsContent value="rule" className="mt-4 sm:mt-5"><PrayerRule /></TabsContent>
+        <TabsContent value="prayers" className="mt-4 sm:mt-5"><PrayerBook showRule={false} /></TabsContent>
+        <TabsContent value="counter" className="mt-4 sm:mt-5">
+          <div className="grid gap-4 sm:gap-5"><JesusPrayerCounter /><StillnessTimer /></div>
         </TabsContent>
-        <TabsContent value="prep" className="mt-5">
-          <div className="grid gap-4"><PreparationChecklist /><ConfessionPrep /></div>
+        <TabsContent value="prep" className="mt-4 sm:mt-5">
+          <div className="grid gap-4 sm:gap-5"><PreparationChecklist /><ConfessionPrep /></div>
         </TabsContent>
-        <TabsContent value="journal" className="mt-5"><DailyReflection /></TabsContent>
-        <TabsContent value="sleep" className="mt-5"><SleepMode /></TabsContent>
+        <TabsContent value="journal" className="mt-4 sm:mt-5"><DailyReflection /></TabsContent>
+        <TabsContent value="sleep" className="mt-4 sm:mt-5"><SleepMode /></TabsContent>
       </Tabs>
     </div>
   );
