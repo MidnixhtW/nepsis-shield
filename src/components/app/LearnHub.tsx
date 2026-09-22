@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
+import { BookOpenCheck, Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
 import { ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,9 @@ import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
+import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
 
-export type LearnTab = "welcome" | "path" | "challenges" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
+export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
 
 export function LearnHub({
   tab,
@@ -66,6 +67,9 @@ export function LearnHub({
           <p className="text-xs text-muted-foreground">Secondary features live here.</p>
         </div>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <Button type="button" variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left" onClick={() => onTabChange?.("creed")}>
+            <BookOpenCheck className="mr-2 h-4 w-4 text-primary" /> Memorize the Creed
+          </Button>
           <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
             <Link to="/saints"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Saints</Link>
           </Button>
@@ -106,6 +110,12 @@ export function LearnHub({
             className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
           >
             Challenges
+          </TabsTrigger>
+          <TabsTrigger
+            value="creed"
+            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
+          >
+            Creed
           </TabsTrigger>
           <TabsTrigger
             value="guide"
@@ -161,6 +171,10 @@ export function LearnHub({
 
         <TabsContent value="challenges" className="mt-4">
           <PrayerChallenges />
+        </TabsContent>
+
+        <TabsContent value="creed" className="mt-4">
+          <NiceneCreedMemorizer />
         </TabsContent>
 
         <TabsContent value="guide" className="mt-4">
