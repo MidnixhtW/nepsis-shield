@@ -66,9 +66,9 @@ export function LearnHub({
 
           <p className="text-xs text-muted-foreground">Secondary features live here.</p>
         </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-3">
-          <Button type="button" variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left" onClick={() => onTabChange?.("creed")}>
-            <BookOpenCheck className="mr-2 h-4 w-4 text-primary" /> Memorize the Creed
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+          <Button type="button" variant="outline" className="h-auto min-w-0 justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left" onClick={() => onTabChange?.("creed")}>
+            <BookOpenCheck className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">Memorize the Creed</span>
           </Button>
           <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
             <Link to="/saints"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Saints</Link>

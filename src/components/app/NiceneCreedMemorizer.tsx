@@ -112,12 +112,12 @@ export function NiceneCreedMemorizer() {
   };
 
   return (
-    <div className="grid gap-4">
-      <Card className="premium-surface overflow-hidden rounded-[1.75rem] p-5 sm:p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="max-w-2xl">
+    <div className="grid min-w-0 gap-4">
+      <Card className="premium-surface overflow-hidden rounded-[1.5rem] p-4 sm:rounded-[1.75rem] sm:p-6">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:justify-between">
+          <div className="min-w-0 max-w-2xl">
             <p className="premium-eyebrow">The Symbol of Faith</p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight">Nicene Creed Memorizer</h2>
+            <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">Nicene Creed Memorizer</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               Learn the Orthodox liturgical text gradually. Practice one section at a time, without rushing.
             </p>
@@ -140,9 +140,9 @@ export function NiceneCreedMemorizer() {
           <TabsTrigger value="recite" className="min-h-10 rounded-xl px-3 text-xs sm:text-sm">Recite</TabsTrigger>
         </TabsList>
 
-        <Card className="mt-4 rounded-[1.75rem] border-border/60 bg-card p-5 shadow-sm sm:p-6">
+        <Card className="mt-4 min-w-0 rounded-[1.5rem] border-border/60 bg-card p-4 shadow-sm sm:rounded-[1.75rem] sm:p-6">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <div>
+            <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Section {lineIndex + 1} of {CREED_LINES.length}</p>
               <p className="mt-1 text-sm text-muted-foreground">
                 {progress.completedLines.includes(lineIndex) ? "Marked as mastered" : "Still practicing"}
@@ -158,9 +158,9 @@ export function NiceneCreedMemorizer() {
             </div>
           </div>
 
-          <TabsContent value="hide" className="mt-0 grid gap-5">
-            <div className="rounded-2xl border border-border/60 bg-background/45 p-5">
-              <p className="font-serif text-lg leading-9 text-foreground sm:text-xl">
+          <TabsContent value="hide" className="mt-0 min-w-0 grid gap-5">
+            <div className="min-w-0 rounded-2xl border border-border/60 bg-background/45 p-4 sm:p-5">
+              <p className="font-serif text-base leading-8 text-foreground sm:text-xl sm:leading-9">
                 {currentWords.map((word, index) => (
                   <span key={`${word}-${index}`} className={cn(wordScore(word, index, lineIndex) < hidePercent && "text-muted-foreground")}>
                     {wordScore(word, index, lineIndex) < hidePercent ? hiddenWord(word) : word}{" "}
@@ -182,9 +182,9 @@ export function NiceneCreedMemorizer() {
             </div>
           </TabsContent>
 
-          <TabsContent value="quiz" className="mt-0 grid gap-5">
+          <TabsContent value="quiz" className="mt-0 min-w-0 grid gap-5">
             <p className="text-sm text-muted-foreground">Type each missing word, then check your answers.</p>
-            <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-3 rounded-2xl border border-border/60 bg-background/45 p-5 font-serif text-lg leading-9 sm:text-xl">
+            <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-3 rounded-2xl border border-border/60 bg-background/45 p-4 font-serif text-base leading-8 sm:p-5 sm:text-xl sm:leading-9">
               {currentWords.map((word, index) => {
                 if (!blanks.includes(index)) return <span key={`${word}-${index}`}>{word}</span>;
                 const correct = normalize(answers[index] ?? "") === normalize(word);
@@ -193,7 +193,7 @@ export function NiceneCreedMemorizer() {
                     key={`${word}-${index}`}
                     value={answers[index] ?? ""}
                     onChange={(event) => { setAnswers((current) => ({ ...current, [index]: event.target.value })); setChecked(false); }}
-                    className={cn("inline-flex h-9 w-28 rounded-lg px-2 font-sans text-sm", checked && (correct ? "border-emerald-600 bg-emerald-500/10" : "border-destructive bg-destructive/10"))}
+                    className={cn("inline-flex h-9 w-24 rounded-lg px-2 font-sans text-sm sm:w-28", checked && (correct ? "border-emerald-600 bg-emerald-500/10" : "border-destructive bg-destructive/10"))}
                     aria-label={`Missing word ${blanks.indexOf(index) + 1}`}
                     autoCapitalize="none"
                   />

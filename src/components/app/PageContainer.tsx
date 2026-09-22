@@ -17,7 +17,13 @@ export function PageContainer({
   width?: keyof typeof widths;
 }) {
   return (
-    <main className={cn("premium-page mx-auto min-h-dvh w-full px-3 pb-28 pt-4 sm:px-5 sm:pt-7", widths[width], className)}>
+    <main
+      className={cn(
+        "premium-page mx-auto min-h-dvh w-full px-4 pb-[calc(2.5rem+env(safe-area-inset-bottom))] pt-5 sm:px-6 sm:pb-12 sm:pt-8 lg:px-8 lg:pt-10",
+        widths[width],
+        className,
+      )}
+    >
       {children}
     </main>
   );

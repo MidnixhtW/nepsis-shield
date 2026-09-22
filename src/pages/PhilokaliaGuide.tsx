@@ -287,16 +287,16 @@ export default function PhilokaliaGuide() {
         }
       />
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
+      <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
 
-          <Tabs defaultValue="ask" className="w-full">
-            <TabsList className="grid h-auto w-full grid-cols-3 rounded-2xl bg-muted/30 p-1">
-              <TabsTrigger value="ask" className="rounded-xl">Ask</TabsTrigger>
-              <TabsTrigger value="sources" className="rounded-xl">Sources</TabsTrigger>
-              <TabsTrigger value="rule" className="rounded-xl">Rule</TabsTrigger>
+          <Tabs defaultValue="ask" className="min-w-0 w-full">
+            <TabsList className="premium-tabs">
+              <TabsTrigger value="ask" className="premium-tab flex-1">Ask</TabsTrigger>
+              <TabsTrigger value="sources" className="premium-tab flex-1">Sources</TabsTrigger>
+              <TabsTrigger value="rule" className="premium-tab flex-1">Rule</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="ask" className="mt-4">
+            <TabsContent value="ask" className="mt-4 min-w-0">
               <div className="grid gap-4">
                 <SectionCard title="Ask Philokalia Guide" icon={<Sprout className="h-4 w-4" />}>
                   <div className="grid max-h-[26rem] gap-3 overflow-y-auto pr-1">

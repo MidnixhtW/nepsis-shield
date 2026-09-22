@@ -119,18 +119,18 @@ export function MonasticAudioPlayer() {
           </Button>
         </header>
 
-        <main className="flex flex-1 flex-col items-center justify-center gap-8 py-8">
-          <div className="relative mt-4">
-            <div className="absolute -inset-12 rounded-full bg-amber-500/20 blur-3xl" />
-            <div className="absolute -inset-4 animate-pulse rounded-full border border-primary/20 shadow-[0_0_80px_hsl(42_92%_58%/0.22)]" />
-            <div className="relative grid h-64 w-64 place-items-center rounded-full border border-primary/35 bg-[radial-gradient(circle_at_50%_35%,hsl(42_92%_58%/0.18),transparent_48%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))] shadow-[inset_0_1px_0_hsl(42_92%_76%/0.24),0_30px_100px_hsl(35_91%_48%/0.18)] sm:h-72 sm:w-72">
-              <div className="grid h-40 w-40 place-items-center rounded-full border border-primary/25 bg-background/70 text-primary shadow-inner">
-                <OrthodoxCrossIcon className="h-20 w-20" />
+        <main className="flex flex-1 flex-col items-center justify-center gap-6 py-6 sm:gap-8 sm:py-8">
+          <div className="relative mt-2 sm:mt-4">
+            <div className="absolute -inset-8 rounded-full bg-amber-500/20 blur-3xl sm:-inset-12" />
+            <div className="absolute -inset-3 animate-pulse rounded-full border border-primary/20 shadow-[0_0_80px_hsl(42_92%_58%/0.22)] sm:-inset-4" />
+            <div className="relative grid h-[min(16rem,68vw)] w-[min(16rem,68vw)] place-items-center rounded-full border border-primary/35 bg-[radial-gradient(circle_at_50%_35%,hsl(42_92%_58%/0.18),transparent_48%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))] shadow-[inset_0_1px_0_hsl(42_92%_76%/0.24),0_30px_100px_hsl(35_91%_48%/0.18)] sm:h-72 sm:w-72">
+              <div className="grid h-[62%] w-[62%] place-items-center rounded-full border border-primary/25 bg-background/70 text-primary shadow-inner">
+                <OrthodoxCrossIcon className="h-16 w-16 sm:h-20 sm:w-20" />
               </div>
             </div>
           </div>
 
-          <section className="w-full text-center">
+          <section className="min-w-0 w-full text-center">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Now praying</p>
             <h1 className="mx-auto mt-3 max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl">{currentTrack.title}</h1>
             <p className="mx-auto mt-5 max-w-md text-lg italic leading-relaxed text-foreground/80">“{activeLine}”</p>
@@ -162,7 +162,7 @@ export function MonasticAudioPlayer() {
               </Button>
             </div>
 
-            <div className="mt-6 grid grid-cols-3 gap-2">
+            <div className="mt-6 grid grid-cols-1 gap-2 min-[360px]:grid-cols-3">
               <ToolButton active={showMixer} icon={<SlidersHorizontal className="h-4 w-4" />} label="Ambient" onClick={() => setShowMixer((v) => !v)} />
               <ToolButton active={showText} icon={<FileText className="h-4 w-4" />} label="Text" onClick={() => setShowText((v) => !v)} />
               <ToolButton active={timer !== "Off"} icon={<Clock3 className="h-4 w-4" />} label={timer} onClick={() => setTimer((current) => (current === "Off" ? "20 min" : current === "20 min" ? "45 min" : "Off"))} />
