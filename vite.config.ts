@@ -38,19 +38,5 @@ export default defineConfig(() => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (!id.includes("node_modules")) return undefined;
-            if (id.includes("react-dom") || id.includes("react-router") || /node_modules[\\/]react[\\/]/.test(id)) return "react-vendor";
-            if (id.includes("@radix-ui")) return "ui-vendor";
-            if (id.includes("@tanstack")) return "data-vendor";
-            if (id.includes("recharts") || id.includes("d3-")) return "charts-vendor";
-            return "vendor";
-          },
-        },
-      },
-    },
   };
 });
