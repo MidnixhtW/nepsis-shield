@@ -3,6 +3,16 @@ import { expect, test } from "@playwright/test";
 
 const STORAGE_KEY = "orthodox-app:nicene-creed-progress:v1";
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "onboarding:quickstart_done",
+      JSON.stringify({ __wrapped: 1, v: true, ts: Date.now() }),
+    );
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+});
+
 test("Creed mastery persists after reload", async ({ page }) => {
   await page.goto("/learn?tab=creed", { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "I know this section" }).click();

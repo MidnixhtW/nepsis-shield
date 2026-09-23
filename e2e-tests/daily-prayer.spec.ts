@@ -2,7 +2,10 @@ import { expect, test } from "@playwright/test";
 
 test("complete the guided daily prayer flow", async ({ page }) => {
   await page.addInitScript(() => {
-    localStorage.clear();
+    if (!sessionStorage.getItem("daily-prayer-test-initialized")) {
+      localStorage.clear();
+      sessionStorage.setItem("daily-prayer-test-initialized", "true");
+    }
     localStorage.setItem(
       "onboarding:quickstart_done",
       JSON.stringify({ __wrapped: 1, v: true, ts: Date.now() }),
@@ -30,6 +33,7 @@ test("complete the guided daily prayer flow", async ({ page }) => {
 
   await expect(page.getByText("Prayer marked complete for today.")).toBeVisible();
   await expect(page.getByText("Complete", { exact: true })).toBeVisible();
+  await expect(page.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "100");
 
   const storedRhythm = await page.evaluate(() => {
     const raw = localStorage.getItem("daily_rhythm:v1");
@@ -39,4 +43,8 @@ test("complete the guided daily prayer flow", async ({ page }) => {
   expect(Object.values(storedRhythm?.v?.records ?? {}).some(
     (record) => (record as { habits?: { prayer?: boolean } }).habits?.prayer === true,
   )).toBe(true);
+
+  await page.reload();
+  await expect(page.getByText("Complete", { exact: true })).toBeVisible();
+  await expect(page.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "100");
 });

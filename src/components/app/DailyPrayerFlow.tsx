@@ -37,6 +37,7 @@ import {
   getPrayerResume,
   markPrayerComplete,
   savePrayerResume,
+  useDailyRhythm,
 } from "@/lib/dailyHabits";
 import { fetchDailyData } from "@/lib/orthocal";
 import { useSettings } from "@/hooks/useSettings";
@@ -573,9 +574,11 @@ export function DailyPrayerFlow() {
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
   const [reminders, setReminders] = useState<ReminderPrefs>(DEFAULT_REMINDERS);
   const [hydrated, setHydrated] = useState(false);
+  const rhythm = useDailyRhythm();
 
   useEffect(() => {
-    const saved = getStoredItem<{ mode?: PrayerMode; readerPrefs?: ReaderPrefs }>(FLOW_PREFS_KEY);
+    const saved = getStoredItem<{ time?: PrayerTime; mode?: PrayerMode; readerPrefs?: ReaderPrefs }>(FLOW_PREFS_KEY);
+    if (saved?.time) setTime(saved.time);
     if (saved?.mode) setMode(saved.mode);
     if (saved?.readerPrefs) setReaderPrefs({ ...DEFAULT_READER_PREFS, ...saved.readerPrefs });
 
@@ -598,16 +601,19 @@ export function DailyPrayerFlow() {
   }, []);
 
   useEffect(() => {
-    setStoredItem(FLOW_PREFS_KEY, { mode, readerPrefs });
-  }, [mode, readerPrefs]);
+    if (!hydrated) return;
+    setStoredItem(FLOW_PREFS_KEY, { time, mode, readerPrefs });
+  }, [hydrated, mode, readerPrefs, time]);
 
   useEffect(() => {
+    if (!hydrated) return;
     setStoredItem(REMINDER_PREFS_KEY, reminders);
-  }, [reminders]);
+  }, [hydrated, reminders]);
 
   const steps = useMemo(() => buildFlow(time, mode), [time, mode]);
   const progressKey = `${format(new Date(), "yyyy-MM-dd")}:${time}:${mode}`;
-  const done = !!completed[progressKey];
+  const storedPrayerKey = mode === "personal" ? "personal" : time;
+  const done = completed[progressKey] ?? !!rhythm.today.prayers[storedPrayerKey];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
   const flowStage = done ? 2 : stepIndex === 0 ? 0 : 1;
