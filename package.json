@@ -16,7 +16,8 @@
     "android:patch-build": "node scripts/patch-android-build.mjs",
     "cap:add:android": "capacitor add android",
     "cap:sync": "capacitor sync android",
-    "cap:open": "capacitor open android"
+    "cap:open": "capacitor open android",
+    "test": "playwright test --config playwright-dyad.config.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.4",
