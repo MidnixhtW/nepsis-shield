@@ -13,7 +13,6 @@ import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
 import { ScrollToTop } from "@/components/app/ScrollToTop";
-import { SaintMichaelIntro } from "@/components/app/SaintMichaelIntro";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
 import Saints from "@/pages/Saints";
@@ -38,7 +37,6 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <ConnectionStatusBanner />
-            <SaintMichaelIntro />
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
