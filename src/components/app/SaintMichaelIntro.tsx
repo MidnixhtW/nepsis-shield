@@ -13,7 +13,20 @@ export function SaintMichaelIntro() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion || window.sessionStorage.getItem(INTRO_KEY)) return;
 
-    setVisible(true);
+    const icon = new Image();
+    icon.onload = () => setVisible(true);
+    icon.onerror = () => window.sessionStorage.setItem(INTRO_KEY, "true");
+    icon.src = ORTHODOX_ICONOGRAPHY.saintMichael.imageUrl;
+
+    return () => {
+      icon.onload = null;
+      icon.onerror = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!visible) return;
+
     const leaveTimer = window.setTimeout(() => setLeaving(true), 3600);
     const hideTimer = window.setTimeout(() => {
       window.sessionStorage.setItem(INTRO_KEY, "true");
@@ -24,7 +37,7 @@ export function SaintMichaelIntro() {
       window.clearTimeout(leaveTimer);
       window.clearTimeout(hideTimer);
     };
-  }, []);
+  }, [visible]);
 
   function skipIntro() {
     window.sessionStorage.setItem(INTRO_KEY, "true");
