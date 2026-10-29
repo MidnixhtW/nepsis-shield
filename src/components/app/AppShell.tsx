@@ -38,7 +38,7 @@ function ShellNavigation({
     <nav
       aria-label={desktop ? "Primary navigation" : "Mobile primary navigation"}
       className={cn(
-        "orthodox-nav-frame grid w-full grid-cols-5 gap-1 border border-primary/25 bg-card/90 p-1.5 shadow-xl",
+        "orthodox-nav-frame mx-auto grid w-full grid-cols-5 items-center gap-1 border border-primary/25 bg-card/90 p-1.5 shadow-xl",
         desktop ? "max-w-[34rem] rounded-xl" : "max-w-[29rem] rounded-md",
       )}
     >
@@ -57,7 +57,7 @@ function ShellNavigation({
               value={key}
               aria-label={meta.aria}
               className={cn(
-                "rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
+                "w-full justify-center whitespace-nowrap rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
                 desktop ? "h-10" : "h-12",
               )}
             >
@@ -76,7 +76,7 @@ function ShellNavigation({
         to="/download"
         aria-label="Open more options, install, and share"
         className={cn(
-          "flex items-center justify-center rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+          "flex w-full items-center justify-center whitespace-nowrap rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
           desktop ? "h-10 flex-row gap-2 text-xs" : "h-12 flex-col gap-1.5 text-[10px] sm:text-[11px]",
           installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
         )}
@@ -125,7 +125,7 @@ export function AppShell({
       <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(var(--primary)/0.12)] backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center gap-6 pb-3.5 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(0.875rem,env(safe-area-inset-top))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8">
           <div className="min-w-0 flex-1">{header}</div>
-          <div className="hidden shrink-0 min-[1120px]:block">
+          <div className="hidden w-[34rem] shrink-0 min-[1120px]:block">
             <ShellNavigation section={section} items={items} installActive={installActive} onSectionChange={onSectionChange} desktop />
           </div>
         </div>

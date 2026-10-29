@@ -333,9 +333,9 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
   return (
     <Card className={hallowCardClass}>
       <div className={hallowGlowClass} />
-      <div className="relative z-10 p-5 sm:p-6">
+      <div className="relative z-10">
 
-        <div className="relative grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+        <div className="relative grid grid-cols-[repeat(auto-fit,minmax(min(100%,22rem),1fr))] items-start gap-5">
           <div>
             <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] transition-colors duration-300", theme.badge)}>
               <Crosshair className="mr-1.5 h-3.5 w-3.5" /> Life & service modes
@@ -345,7 +345,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
               Prayer, focus, and reset language for ordinary life, public safety, and service work.
             </p>
 
-            <div className="mt-4 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-2">
               {responderModeOrder.map((key) => {
                 const item = responderModes[key];
                 const ItemIcon = item.icon;

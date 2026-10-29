@@ -198,8 +198,8 @@ h1, h2, h3, .font-serif {
   }
 
   :where(p, a, li, h1, h2, h3, h4, h5, h6, button, span, label) {
-    hyphens: auto;
-    overflow-wrap: anywhere;
+    hyphens: manual;
+    overflow-wrap: break-word;
     word-break: normal;
   }
 
@@ -527,13 +527,6 @@ h1, h2, h3, .font-serif {
 
   .btn-wrap {
     @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
-  }
-
-  @media (max-width: 640px) {
-    :where(button, [role="button"], a).whitespace-nowrap,
-    :where(button, [role="button"], a):where(.inline-flex, .flex) {
-      white-space: normal !important;
-    }
   }
 
   .glass {

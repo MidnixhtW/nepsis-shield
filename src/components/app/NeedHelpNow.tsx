@@ -96,7 +96,7 @@ export function NeedHelpNow({
               }}
             >
               <Icon className="mr-2 h-4 w-4 shrink-0 text-primary" />
-              <span className="min-w-0 break-words">
+              <span className="min-w-0 flex-1 break-words">
                 <span className="block text-sm font-semibold leading-tight">{item.label}</span>
                 <span className="block text-xs font-normal leading-snug text-muted-foreground">{item.line}</span>
               </span>
