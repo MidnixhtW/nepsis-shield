@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionIntro } from "@/components/app/SectionIntro";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
+import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { showError, showSuccess } from "@/utils/toast";
 
 export type PrayerTab = "daily" | "rule" | "prayers" | "counter" | "prep" | "journal" | "sleep";
@@ -101,7 +102,7 @@ export function PrayerHub({
         <TabsContent value="rule" className="mt-4 sm:mt-5"><PrayerRule /></TabsContent>
         <TabsContent value="prayers" className="mt-4 sm:mt-5"><PrayerBook showRule={false} /></TabsContent>
         <TabsContent value="counter" className="mt-4 sm:mt-5">
-          <div className="grid gap-4 sm:gap-5"><JesusPrayerCounter /><StillnessTimer /></div>
+          <div className="grid gap-4 sm:gap-5"><GroundMeNow /><JesusPrayerCounter /><StillnessTimer /></div>
         </TabsContent>
         <TabsContent value="prep" className="mt-4 sm:mt-5">
           <div className="grid gap-4 sm:gap-5"><PreparationChecklist /><ConfessionPrep /></div>

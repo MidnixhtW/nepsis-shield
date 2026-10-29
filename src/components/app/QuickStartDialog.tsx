@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -201,7 +202,7 @@ function RulePreview({ rule }: { rule: RuleOfVigilance }) {
   return (
     <div className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your Rule of Vigilance</p>
-      <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
+      <h2 id="onboarding-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
       <div className="mt-6 grid gap-3">
         {rows.map(([label, body]) => (
@@ -215,21 +216,41 @@ function RulePreview({ rule }: { rule: RuleOfVigilance }) {
   );
 }
 
-export function QuickStartDialog() {
+const roleDescriptions: Record<ResponderMode, string> = {
+  military: "Mission with restraint",
+  law: "Firm without anger",
+  fire: "Courage with crew discipline",
+  ems: "Clinical calm",
+  dispatch: "Voice in the storm",
+  custody: "Order with restraint",
+  chaplain: "Presence before answers",
+  civilian: "Everyday faithfulness",
+};
+
+export function QuickStartDialog({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => !getStoredItem<boolean>(ONBOARDING_KEY));
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const [selectedNeed, setSelectedNeed] = useState<VigilanceNeed>("peace");
   const [selectedRhythm, setSelectedRhythm] = useState<VigilanceRhythm>("morning");
+  const scrollArea = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const done = getStoredItem<boolean>(ONBOARDING_KEY);
-    if (!done) {
-      setStepIndex(0);
-      setOpen(true);
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [open]);
+
+  useEffect(() => {
+    scrollArea.current?.scrollTo(0, 0);
+    const heading = scrollArea.current?.querySelector<HTMLElement>("h1, h2");
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
     }
-  }, []);
+  }, [stepIndex]);
 
   useEffect(() => {
     function startTutorial() {
@@ -277,22 +298,24 @@ export function QuickStartDialog() {
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
 
-  if (!open) return null;
+  if (!open) return <>{children}</>;
 
   return (
-    <div
-      className="fixed inset-0 z-[70] overflow-y-auto bg-background text-foreground"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="onboarding-title"
-    >
-      <div className="pointer-events-none fixed inset-0">
+    <Dialog.Root open={open} onOpenChange={(nextOpen) => { if (!nextOpen) skip(); }}>
+      <Dialog.Portal>
+        <Dialog.Content
+          className="fixed inset-0 z-[70] flex h-dvh flex-col overflow-hidden bg-background text-foreground outline-none"
+          aria-describedby={undefined}
+          onInteractOutside={(event) => event.preventDefault()}
+        >
+          <Dialog.Title className="sr-only">Set up your daily rule · Step {stepIndex + 1} of {steps.length}</Dialog.Title>
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-amber-500/20 blur-3xl" />
         <div className="absolute bottom-20 right-[-8rem] h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex min-h-dvh w-full max-w-5xl flex-col px-5 pb-32 pt-5 sm:px-8 sm:pb-36 sm:pt-8">
-        <header className="flex items-center justify-between gap-4">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
+        <header className="flex shrink-0 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             {stepIndex > 0 ? (
               <Button
@@ -313,7 +336,8 @@ export function QuickStartDialog() {
           </Button>
         </header>
 
-        <main className="grid flex-1 content-center gap-8 py-8 sm:py-12">
+        <div ref={scrollArea} className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-6 sm:py-8">
+          <div className={cn("grid min-h-full gap-6", step === "welcome" ? "content-center" : "content-start")}>
           {step === "welcome" ? (
             <section className="mx-auto max-w-3xl text-center">
               <div className="mx-auto grid h-20 w-20 place-items-center rounded-[1.75rem] border border-primary/25 bg-primary/10 text-primary shadow-[0_24px_80px_hsl(35_91%_48%/0.20)]">
@@ -349,7 +373,7 @@ export function QuickStartDialog() {
                       selected={selected}
                       icon={<ShieldCheck className={cn("h-5 w-5", selected ? "text-primary" : "text-muted-foreground")} />}
                       title={responderModeLabels[role]}
-                      description={role === "civilian" ? "For home, work, school, family, and everyday stress." : "Keeps service prompts and reset language aligned with your duties."}
+                      description={roleDescriptions[role]}
 
                       onClick={() => chooseRole(role)}
                     />
@@ -417,10 +441,11 @@ export function QuickStartDialog() {
               <RulePreview rule={rule} />
             </section>
           ) : null}
-        </main>
+          </div>
+        </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 z-[71] border-t border-primary/15 bg-background/80 p-4 backdrop-blur-xl sm:p-5">
+      <div className="relative z-[71] shrink-0 border-t border-primary/15 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <div className="hidden min-w-0 flex-1 sm:block">
             <p className="truncate text-sm font-medium text-foreground">
@@ -436,6 +461,8 @@ export function QuickStartDialog() {
           </Button>
         </div>
       </div>
-    </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

@@ -1,10 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { Share2 } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";
@@ -77,96 +72,6 @@ function resumeLabel(to: SectionTarget) {
   if (to.section === "read") return "Continue reading";
   if (to.section === "learn") return "Return to tools";
   return "Return to Today";
-}
-
-function QuickActions({ onNavigate, onOpenRoute }: { onNavigate: (to: SectionTarget) => void; onOpenRoute: (path: string) => void }) {
-  const actions = [
-    {
-      label: "Pray",
-      helper: "Begin the daily rule.",
-      icon: <CenserIcon className="h-4 w-4" />,
-      onClick: () => onNavigate({ section: "pray", tab: "daily" }),
-    },
-    {
-      label: "Be still",
-      helper: "Use the Jesus Prayer reset.",
-      icon: <VigilLampIcon className="h-4 w-4" />,
-      onClick: () => onNavigate({ section: "pray", tab: "counter" }),
-    },
-
-    {
-      label: "Read Scripture",
-      helper: "Open today’s readings.",
-      icon: <GospelBookIcon className="h-4 w-4" />,
-      onClick: () => onNavigate({ section: "read", read: "daily" }),
-    },
-    {
-      label: "Learn the faith",
-      helper: "Open the guide and path.",
-      icon: <ChurchDomeIcon className="h-4 w-4" />,
-      onClick: () => onNavigate({ section: "learn", tab: "path" }),
-    },
-
-    {
-      label: "Find a saint",
-      helper: "Search patrons and intercession.",
-      icon: <SaintHaloIcon className="h-4 w-4" />,
-      onClick: () => onOpenRoute("/saints"),
-    },
-    {
-      label: "Prepare",
-      helper: "Confession and examination.",
-      icon: <OrthodoxCrossIcon className="h-4 w-4" />,
-      onClick: () => onNavigate({ section: "pray", tab: "prep" }),
-    },
-  ];
-
-  return (
-    <PremiumSurface className="rounded-[1.5rem] border-border bg-card p-6">
-      <div className="grid gap-6">
-        <div>
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">Quick actions</p>
-            <ChurchDomeIcon className="h-5 w-5 text-[hsl(var(--icon-gold))]" />
-          </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.035em] text-foreground">Choose one next step.</h2>
-          <p className="mt-2 text-sm leading-7 text-muted-foreground">A focused rhythm for the day.</p>
-        </div>
-
-        <ByzantineDivider />
-
-        <div className="grid gap-2">
-          {actions.map((action) => (
-            <Button
-              key={action.label}
-              type="button"
-              variant="outline"
-              className="group h-auto w-full justify-start rounded-xl border-border/65 bg-background/35 px-3 py-3 text-left text-foreground shadow-none hover:-translate-y-0.5 hover:border-primary/30 hover:bg-muted/70 hover:text-foreground hover:shadow-sm"
-              onClick={action.onClick}
-            >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[hsl(var(--icon-gold)/0.34)] bg-secondary/55 text-primary transition-transform group-hover:scale-105">
-                {action.icon}
-              </span>
-
-              <span className="ml-3 min-w-0">
-                <span className="block text-sm font-semibold leading-tight">{action.label}</span>
-                <span className="mt-1 block text-xs font-normal leading-relaxed text-muted-foreground">{action.helper}</span>
-              </span>
-            </Button>
-          ))}
-        </div>
-
-        <Button
-          type="button"
-          variant="ghost"
-          className="justify-start rounded-lg px-0 text-sm text-muted-foreground hover:bg-transparent hover:text-primary"
-          onClick={() => onOpenRoute("/download")}
-        >
-          <Share2 className="mr-2 h-4 w-4" strokeWidth={1.75} /> Share the app
-        </Button>
-      </div>
-    </PremiumSurface>
-  );
 }
 
 const Index = () => {
@@ -290,6 +195,7 @@ const Index = () => {
   }
 
   return (
+    <QuickStartDialog>
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       <Suspense
         fallback={
@@ -298,19 +204,13 @@ const Index = () => {
           </PremiumSurface>
         }
       >
-        <QuickStartDialog />
         <MonasticAudioPlayer />
 
         <div className="grid gap-8 animate-in fade-in duration-500 sm:gap-10 lg:gap-12">
           {section === "today" ? (
-            <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(18rem,3fr)] lg:gap-8">
-              <div className="grid gap-5 sm:gap-6 lg:gap-8">
-                <OrthodoxHero onAction={navigateTo} />
-                <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-              </div>
-              <aside className="lg:sticky lg:top-24">
-                <QuickActions onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
-              </aside>
+            <div className="mx-auto grid w-full max-w-4xl gap-5 sm:gap-6">
+              <OrthodoxHero />
+              <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             </div>
           ) : null}
 
@@ -328,6 +228,7 @@ const Index = () => {
         </div>
       </Suspense>
     </AppShell>
+    </QuickStartDialog>
   );
 };
 

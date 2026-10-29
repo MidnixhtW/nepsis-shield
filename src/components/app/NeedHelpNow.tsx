@@ -1,5 +1,6 @@
 import { BookOpen, Flame, Heart, MoonStar, ShieldAlert, Wind } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CrisisResources } from "@/components/app/CrisisResources";
 import type { AppSection } from "@/components/app/AppShell";
 import { saveGlobalResume, setQuickState, type QuickStateKey } from "@/lib/dailyHabits";
 
@@ -104,6 +105,7 @@ export function NeedHelpNow({
           );
         })}
       </div>
+      <CrisisResources />
     </div>
   );
 }

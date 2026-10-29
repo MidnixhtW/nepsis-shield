@@ -19,6 +19,7 @@ import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
+import { DutyModeCard } from "@/components/app/DutyModeCard";
 
 export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
 
@@ -178,7 +179,10 @@ export function LearnHub({
         </TabsContent>
 
         <TabsContent value="guide" className="mt-4">
-          <OrthodoxDailyGuide />
+          <div className="grid gap-5">
+            <DutyModeCard />
+            <OrthodoxDailyGuide />
+          </div>
         </TabsContent>
 
         <TabsContent value="qa" className="mt-4">

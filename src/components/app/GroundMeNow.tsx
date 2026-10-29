@@ -3,6 +3,7 @@ import { AlertTriangle, CheckCircle2, HeartPulse, ShieldCheck, TimerReset } from
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CrisisResources } from "@/components/app/CrisisResources";
 import {
   Dialog,
   DialogContent,
@@ -80,15 +81,16 @@ export function GroundMeNow() {
             </p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row lg:shrink-0">
-            <Button type="button" className={cn("h-auto whitespace-normal rounded-2xl text-left leading-tight", theme.button)} onClick={() => setOpen(true)}>
+            <Button type="button" className={cn("h-auto whitespace-normal rounded-2xl text-left leading-tight", theme.button)} onClick={() => { setStepIndex(0); setOpen(true); }}>
               <TimerReset className="mr-2 h-4 w-4 shrink-0" /> Start 60-second reset
             </Button>
           </div>
         </div>
+        <CrisisResources />
       </Card>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="rounded-3xl p-0 sm:max-w-[32rem]">
+        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-3xl p-0 sm:max-w-[32rem]">
           <div className={cn("rounded-3xl p-6", theme.card)}>
             <DialogHeader className="text-left">
               <div className="flex items-start gap-3">
@@ -97,7 +99,7 @@ export function GroundMeNow() {
                 </span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    Ground Me Now · {progress}
+                    Ground Me Now · Step {progress}
                   </p>
                   <DialogTitle className="mt-1 text-2xl leading-tight">{current.title}</DialogTitle>
                 </div>
@@ -110,8 +112,9 @@ export function GroundMeNow() {
             <div className={cn("mt-5 rounded-3xl border p-5 text-lg leading-relaxed", theme.soft)}>
               {current.body}
             </div>
+            <CrisisResources />
 
-            <div className="mt-4 grid gap-2">
+            <div className="mt-4 grid grid-cols-2 gap-2" aria-label="Four reset steps">
               {steps.map((step, index) => (
                 <button
                   key={step.title}
@@ -120,16 +123,17 @@ export function GroundMeNow() {
                     "flex items-center gap-2 rounded-2xl border px-3 py-2 text-left text-sm transition-colors",
                     index === stepIndex ? theme.badge : "border-border/60 bg-background/50 text-muted-foreground hover:bg-muted/40",
                   )}
+                  aria-current={index === stepIndex ? "step" : undefined}
                   onClick={() => setStepIndex(index)}
                 >
-                  <CheckCircle2 className="h-4 w-4" /> {step.title}
+                  <CheckCircle2 className="h-4 w-4" /> {index + 1}. {step.title}
                 </button>
               ))}
             </div>
 
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-between">
               <Button type="button" variant="outline" className="rounded-2xl" onClick={() => setOpen(false)}>
-                Close
+                Exit reset
               </Button>
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button type="button" variant="outline" className="rounded-2xl" onClick={restart}>
