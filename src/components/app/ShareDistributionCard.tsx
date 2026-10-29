@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { APK_DOWNLOAD_IS_DIRECT, APK_DOWNLOAD_URL } from "@/lib/apkDownload";
+import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 import { showError, showSuccess } from "@/utils/toast";
 
 function absoluteUrl(path: string) {
-  if (typeof window === "undefined") return path;
-  return new URL(path, window.location.origin).toString();
+  return new URL(path, PUBLIC_SITE_URL).toString();
 }
 
 async function copyToClipboard(label: string, value: string) {

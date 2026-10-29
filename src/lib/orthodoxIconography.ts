@@ -7,8 +7,7 @@ export const ORTHODOX_ICONOGRAPHY = {
     credit: "13th-century Sinai icon · Wikimedia Commons",
   },
   deesis: {
-    imageUrl:
-      "https://commons.wikimedia.org/wiki/Special:Redirect/file/Deesis%2C_Christ_between_Mary_and_John_the_Baptist%2C_Crete%2C_Late_Byzantine%2C_early_1500s%2C_tempera_and_gold_leaf_on_wood_panel_-_Princeton_University_Art_Museum_-_DSC06702.jpg?width=1200",
+    imageUrl: "/assets/cretan-deesis.svg",
     sourceUrl:
       "https://commons.wikimedia.org/wiki/File:Deesis,_Christ_between_Mary_and_John_the_Baptist,_Crete,_Late_Byzantine,_early_1500s,_tempera_and_gold_leaf_on_wood_panel_-_Princeton_University_Art_Museum_-_DSC06702.jpg",
     alt: "Late Byzantine Deesis icon of Christ between the Theotokos and Saint John the Baptist, painted in Crete in the early sixteenth century",

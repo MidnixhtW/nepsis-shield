@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { INSTALL_PAGE_URL } from "@/lib/publicSite";
 import { Link } from "react-router-dom";
 import {
   CheckCircle2,
@@ -133,13 +133,7 @@ function ApkDownloadCard() {
 }
 
 export default function Download() {
-  const installPageUrl = useMemo(() => {
-    if (typeof window === "undefined") return "/download";
-    const url = new URL(window.location.href);
-    url.hash = "";
-    return url.toString();
-  }, []);
-
+  const installPageUrl = INSTALL_PAGE_URL;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&margin=16&data=${encodeURIComponent(installPageUrl)}`;
 
   return (
