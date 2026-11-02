@@ -1,5 +1,5 @@
 export const APK_REPOSITORY_STORAGE_KEY = "ortho-companion:apk-github-repository";
-export const DEFAULT_APK_GITHUB_REPOSITORY = "MidnixhtW/swift-zebra-sprint";
+export const DEFAULT_APK_GITHUB_REPOSITORY = "MidnixhtW/nepsis-shield";
 
 export function normalizeGitHubRepository(value: string) {
   const trimmed = value.trim();

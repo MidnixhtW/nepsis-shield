@@ -53,7 +53,7 @@ Signing secrets for release builds:
 
 The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. By default, the app points to this repository's rolling APK release:
 
-- `MidnixhtW/swift-zebra-sprint`
+- `MidnixhtW/nepsis-shield`
 
 Configure these optional deployment variables only when overriding the default APK source:
 

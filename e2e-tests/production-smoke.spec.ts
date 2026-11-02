@@ -9,7 +9,7 @@ test("production deployment renders the application", async ({ page }) => {
     failedRequests.push(`${request.url()}: ${request.failure()?.errorText ?? "request failed"}`);
   });
 
-  await page.goto("https://ortho-companion.vercel.app/", { waitUntil: "load" });
+  await page.goto("https://www.nepsisshield.com/", { waitUntil: "load" });
 
   await expect(pageErrors, pageErrors.join("\n")).toEqual([]);
   await expect(
