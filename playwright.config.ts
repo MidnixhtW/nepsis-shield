@@ -6,7 +6,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
+  // On GitHub Actions, the github reporter turns each failure into an annotation on the commit.
+  reporter: process.env.CI
+    ? [["list"], ["github"], ["html", { outputFolder: "playwright-report", open: "never" }]]
+    : [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
   expect: {
     timeout: 10_000,
   },
