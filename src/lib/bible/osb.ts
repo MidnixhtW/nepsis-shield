@@ -1,6 +1,6 @@
 import type { BibleBook } from "@/lib/bible/books";
 
-export type BaseTranslation = "nkjv" | "lxx" | "web";
+export type BaseTranslation = "nkjv" | "lxx" | "web" | "kjv";
 export type BibleApiTranslation = BaseTranslation | "dra" | "en-engbrent";
 
 export function translationForBook(

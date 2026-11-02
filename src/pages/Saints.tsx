@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Copy, ExternalLink, Search } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { fetchDailyData } from "@/lib/orthocal";
 import { searchLocalSaintLibrary, upsertDailySaints } from "@/lib/localSaintSearch";
 import { ocaSaintSearchUrl, patronNeeds } from "@/lib/patronSaints";
-import { getSettings } from "@/lib/settings";
 import { showError, showSuccess } from "@/utils/toast";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
@@ -25,16 +24,10 @@ async function copyPrayer(label: string, prayer: string) {
 }
 
 export default function Saints() {
-  const today = useMemo(() => new Date(), []);
-  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
-  const settings = useMemo(() => getSettings(), []);
+  const { today, settings, query: q, retry } = useDailyCalendar();
+  const dayKey = format(today, "yyyy-MM-dd");
   const [search, setSearch] = useState("");
   const [showAllPatrons, setShowAllPatrons] = useState(false);
-
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, dayKey],
-    queryFn: () => fetchDailyData(today, settings.calendarMode),
-  });
 
   const currentDaily = useMemo(
     () =>
@@ -71,12 +64,13 @@ export default function Saints() {
         icon={<Search className="h-5 w-5" />}
         actions={
           <Button asChild variant="outline" size="sm" className="premium-action">
-            <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer">OCA Lives <ExternalLink className="ml-2 h-4 w-4" /></a>
+            <a href="https://www.oca.org/saints/lives" target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>OCA Lives <ExternalLink className="ml-2 h-4 w-4" /></a>
           </Button>
         }
       />
 
       <div className="premium-card-stack mt-5">
+        <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
 
         <Card className="rounded-2xl border-primary/15 bg-card/90 p-4 shadow-sm sm:p-5">
           <div className="flex items-start gap-3">
@@ -90,6 +84,7 @@ export default function Saints() {
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
                 <Input
+                  aria-label="Search saints by need, name, or prayer"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Search by need, name, or prayer…"
@@ -97,7 +92,7 @@ export default function Saints() {
                 />
                 {saintSearch ? (
                   <Button asChild className="rounded-xl">
-                    <a href={ocaSaintSearchUrl(ocaSearchQuery)} target="_blank" rel="noopener noreferrer">
+                    <a href={ocaSaintSearchUrl(ocaSearchQuery)} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                       Search OCA lives <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
@@ -136,7 +131,7 @@ export default function Saints() {
                     variant="outline"
                     className="btn-wrap h-auto min-h-12 justify-between rounded-xl border-border/60 bg-background/45 py-3"
                   >
-                    <a href={ocaSaintSearchUrl(item.name)} target="_blank" rel="noopener noreferrer">
+                    <a href={ocaSaintSearchUrl(item.name)} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                       <span className="min-w-0 text-left">
                         <span className="block font-medium">{item.name}</span>
                         <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
@@ -185,7 +180,7 @@ export default function Saints() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {visiblePatronNeeds.map((item) => (
                 <details key={item.need} className="group rounded-xl border border-border/50 bg-background/45 p-3 shadow-sm sm:p-4">
-                  <summary className="cursor-pointer list-none">
+                  <summary className="cursor-pointer list-none rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold tracking-tight text-foreground">{item.need}</p>
@@ -203,7 +198,7 @@ export default function Saints() {
                         <Copy className="mr-2 h-4 w-4" /> Copy prayer
                       </Button>
                       <Button asChild variant="ghost" size="sm" className="rounded-xl">
-                        <a href={ocaSaintSearchUrl(item.search)} target="_blank" rel="noopener noreferrer">
+                        <a href={ocaSaintSearchUrl(item.search)} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                           Read life <ExternalLink className="ml-2 h-4 w-4" />
                         </a>
                       </Button>
@@ -254,7 +249,7 @@ export default function Saints() {
                     variant="ghost"
                     className="btn-wrap h-auto min-h-11 justify-between rounded-xl px-3 py-2"
                   >
-                    <a href={ocaSaintSearchUrl(s)} target="_blank" rel="noopener noreferrer">
+                    <a href={ocaSaintSearchUrl(s)} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                       <span className="font-medium">{s}</span>
                       <ExternalLink className="h-4 w-4" />
                     </a>

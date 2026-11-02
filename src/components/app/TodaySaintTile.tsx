@@ -1,15 +1,12 @@
-import { useMemo } from "react";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
-import { Sparkles, ExternalLink } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { fetchDailyData } from "@/lib/orthocal";
-import { useSettings } from "@/hooks/useSettings";
 
 function pickSaint(saints: string[]) {
   const cleaned = saints.map((s) => s.trim()).filter(Boolean);
@@ -17,14 +14,7 @@ function pickSaint(saints: string[]) {
 }
 
 export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) {
-  const today = useMemo(() => new Date(), []);
-  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
-  const { settings } = useSettings();
-
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, dayKey],
-    queryFn: () => fetchDailyData(today, settings.calendarMode),
-  });
+  const { today, settings, query: q, retry } = useDailyCalendar();
 
   const saint = pickSaint(q.data?.saints ?? []);
 
@@ -61,18 +51,10 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
                 {q.isLoading ? "Loading saint life" : "Saint life unavailable"}
               </div>
             ) : (
-              <Button
-                type="button"
-                className="tap btn-wrap h-11 justify-between rounded-2xl"
-                onClick={() =>
-                  window.open(
-                    `https://www.oca.org/saints/lives?search=${encodeURIComponent(saint)}`,
-                    "_blank",
-                    "noopener,noreferrer",
-                  )
-                }
-              >
-                Open life <ExternalLink className="h-4 w-4" />
+              <Button asChild className="tap btn-wrap h-11 justify-between rounded-2xl">
+                <a href={`https://www.oca.org/saints/lives?search=${encodeURIComponent(saint)}`} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
+                  Open life <ExternalLink aria-hidden="true" className="h-4 w-4" />
+                </a>
               </Button>
             )}
             {onOpenSaints ? (
@@ -82,21 +64,18 @@ export function TodaySaintTile({ onOpenSaints }: { onOpenSaints?: () => void }) 
                 className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60"
                 onClick={onOpenSaints}
               >
-                Patron prayers <ExternalLink className="h-4 w-4" />
+                Patron prayers <ArrowRight aria-hidden="true" className="h-4 w-4" />
               </Button>
             ) : (
               <Button asChild variant="outline" className="tap h-11 justify-between rounded-2xl border-border/60 bg-background/60">
                 <Link to="/saints">
-                  Patron prayers <ExternalLink className="h-4 w-4" />
+                  Patron prayers <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </Button>
             )}
           </div>
 
-          {q.isError ? (
-
-            <p className="mt-3 text-xs text-destructive">Couldn't load saints.</p>
-          ) : null}
+          <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
         </div>
       </div>
     </Card>

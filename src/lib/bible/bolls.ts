@@ -44,7 +44,10 @@ export async function fetchBollsBooks(slug: string): Promise<BollsBook[]> {
           key: `cache:bolls:books:${slug}`,
           ttlMs: 1000 * 60 * 60 * 24 * 30, // 30d (stable)
         },
-      ),
+      ).catch((error) => {
+        booksCache.delete(slug);
+        throw error;
+      }),
     );
   }
   return booksCache.get(slug)!;

@@ -18,9 +18,14 @@ export function createSimpleIcs(opts: {
   description?: string;
   start: Date;
   end: Date;
+  dailyReminder?: boolean;
 }) {
   const uid = `${Math.random().toString(16).slice(2)}@orthocompanion`;
   const dtstamp = toIcsDate(new Date());
+  // Floating local times keep recurring prayer reminders at the chosen hour through DST.
+  const eventDate = (date: Date) => opts.dailyReminder
+    ? `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}${String(date.getMinutes()).padStart(2, "0")}${String(date.getSeconds()).padStart(2, "0")}`
+    : toIcsDate(date);
 
   const lines = [
     "BEGIN:VCALENDAR",
@@ -30,10 +35,11 @@ export function createSimpleIcs(opts: {
     "BEGIN:VEVENT",
     `UID:${uid}`,
     `DTSTAMP:${dtstamp}`,
-    `DTSTART:${toIcsDate(opts.start)}`,
-    `DTEND:${toIcsDate(opts.end)}`,
+    `DTSTART:${eventDate(opts.start)}`,
+    `DTEND:${eventDate(opts.end)}`,
     `SUMMARY:${escapeText(opts.title)}`,
     opts.description ? `DESCRIPTION:${escapeText(opts.description)}` : null,
+    ...(opts.dailyReminder ? ["RRULE:FREQ=DAILY", "BEGIN:VALARM", "ACTION:DISPLAY", "TRIGGER:PT0M", `DESCRIPTION:${escapeText(opts.title)}`, "END:VALARM"] : []),
     "END:VEVENT",
     "END:VCALENDAR",
   ].filter(Boolean);

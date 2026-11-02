@@ -5,83 +5,63 @@ type CacheEntry<T> = {
   data: T;
 };
 
-function now() {
-  return Date.now();
-}
+type CacheOptions = {
+  key: string;
+  ttlMs: number;
+  forceRefresh?: boolean;
+  staleIfError?: boolean;
+  onCacheUsed?: (savedAt: number, stale: boolean) => void;
+};
 
-function safeSessionGet(key: string): string | null {
+function readCache<T>(key: string): CacheEntry<T> | null {
   try {
-    return window.sessionStorage.getItem(key);
+    const raw = window.sessionStorage.getItem(key);
+    if (!raw) return null;
+    const entry = JSON.parse(raw) as Partial<CacheEntry<T>>;
+    if (entry?.v !== 1 || typeof entry.ts !== "number" || typeof entry.ttlMs !== "number" || entry.data == null) return null;
+    return entry as CacheEntry<T>;
   } catch {
     return null;
   }
-}
-
-function safeSessionSet(key: string, value: string) {
-  try {
-    window.sessionStorage.setItem(key, value);
-  } catch {
-    // ignore (disabled / quota)
-  }
-}
-
-function safeJsonParse(raw: string | null): unknown {
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-function readCache<T>(key: string): T | null {
-  const parsed = safeJsonParse(safeSessionGet(key));
-  if (
-    typeof parsed !== "object" ||
-    parsed === null ||
-    (parsed as { v?: unknown }).v !== 1
-  ) {
-    return null;
-  }
-
-  const entry = parsed as Partial<CacheEntry<T>>;
-  if (typeof entry.ts !== "number" || typeof entry.ttlMs !== "number") {
-    return null;
-  }
-
-  if (entry.ts + entry.ttlMs <= now()) return null;
-  return (entry.data ?? null) as T | null;
 }
 
 function writeCache<T>(key: string, data: T, ttlMs: number) {
-  const entry: CacheEntry<T> = { v: 1, ts: now(), ttlMs, data };
-  safeSessionSet(key, JSON.stringify(entry));
+  try {
+    const entry: CacheEntry<T> = { v: 1, ts: Date.now(), ttlMs, data };
+    window.sessionStorage.setItem(key, JSON.stringify(entry));
+  } catch {
+    // Storage may be disabled or full.
+  }
 }
 
 export async function fetchJsonCached<T>(
   url: string,
   opts?: RequestInit,
-  cache?: { key: string; ttlMs: number },
+  cache?: CacheOptions,
 ): Promise<T> {
-  if (cache) {
-    const cached = readCache<T>(cache.key);
-    if (cached !== null) return cached;
+  const cached = cache ? readCache<T>(cache.key) : null;
+  if (cached && !cache?.forceRefresh && cached.ts + cached.ttlMs > Date.now()) {
+    cache?.onCacheUsed?.(cached.ts, false);
+    return cached.data;
   }
 
-  const res = await fetch(url, {
-    ...opts,
-    // Privacy: avoid leaking the app URL as a referrer to third parties.
-    referrerPolicy: "no-referrer",
-  });
-
-  if (!res.ok) throw new Error(`Request failed (${res.status})`);
-
-  const ct = res.headers.get("content-type") || "";
-  if (!ct.includes("application/json")) {
-    throw new Error("Unexpected content type");
+  try {
+    const res = await fetch(url, {
+      ...opts,
+      // Avoid leaking the app URL as a referrer to third parties.
+      referrerPolicy: "no-referrer",
+    });
+    if (!res.ok) throw new Error(`Request failed (${res.status})`);
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.includes("application/json")) throw new Error("Unexpected content type");
+    const data = (await res.json()) as T;
+    if (cache) writeCache(cache.key, data, cache.ttlMs);
+    return data;
+  } catch (error) {
+    if (cache?.staleIfError && cached) {
+      cache.onCacheUsed?.(cached.ts, true);
+      return cached.data;
+    }
+    throw error;
   }
-
-  const data = (await res.json()) as T;
-  if (cache) writeCache(cache.key, data, cache.ttlMs);
-  return data;
 }

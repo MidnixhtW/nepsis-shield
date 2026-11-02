@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
 import {
   ExternalLink,
@@ -23,7 +24,6 @@ import { Separator } from "@/components/ui/separator";
 
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { fetchDailyData } from "@/lib/orthocal";
 import {
   cleanupStoredByPrefix,
   clearStoredByPrefix,
@@ -36,7 +36,6 @@ import { decryptString, encryptString } from "@/lib/cryptoVault";
 import { isStrongPassphrase, strongPassphraseMessage } from "@/lib/passphraseStrength";
 import { showError, showSuccess } from "@/utils/toast";
 import { PassphraseMeter } from "@/components/app/PassphraseMeter";
-import { getSettings } from "@/lib/settings";
 
 function keyForDay(dayKey: string) {
   return `reflection:${dayKey}`;
@@ -51,15 +50,9 @@ const NOTE_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 type StoredNote = string | { enc: 1; blob: EncryptedBlob };
 
 export function DailyReflection() {
-
-  const today = useMemo(() => new Date(), []);
-  const settings = useMemo(() => getSettings(), []);
-  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
-
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, dayKey],
-    queryFn: () => fetchDailyData(today),
-  });
+  const { today, query: q, retry } = useDailyCalendar();
+  // Keep an open journal attached to its original day when the calendar rolls over.
+  const [dayKey] = useState(() => format(today, "yyyy-MM-dd"));
 
   const [note, setNote] = useState("");
   const [saveEnabled, setSaveEnabled] = useState(false);
@@ -207,7 +200,8 @@ export function DailyReflection() {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Reflection</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              One prompt + a few honest sentences.
+              One prompt + a few honest sentences. Journal date: {dayKey}.
+              {dayKey !== format(today, "yyyy-MM-dd") ? " Your open note stays on this date; reopen Reflection to start today’s note." : ""}
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -219,11 +213,10 @@ export function DailyReflection() {
         </div>
 
         <Separator className="my-4" />
+        <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
 
         {q.isLoading ? (
           <div className="text-sm text-muted-foreground">Loading today…</div>
-        ) : q.isError ? (
-          <div className="text-sm text-destructive">Couldn't load today's prompt.</div>
         ) : q.data ? (
           <div className="grid gap-4">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
@@ -253,7 +246,7 @@ export function DailyReflection() {
                           <p className="text-sm font-medium">Save on this device (encrypted)</p>
                           <p className="text-xs text-amber-900/70">Off by default. Always encrypted when enabled.</p>
                         </div>
-                        <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+                        <Switch aria-label="Save reflection encrypted on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2">
@@ -290,6 +283,7 @@ export function DailyReflection() {
                             <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-900/60" />
                             <Input
                               type="password"
+                              aria-label="Reflection encryption passphrase"
                               value={passphrase}
                               onChange={(e) => setPassphrase(e.target.value)}
                               placeholder="Enter a strong passphrase"
@@ -323,6 +317,7 @@ export function DailyReflection() {
                 Journal
               </p>
               <Textarea
+                aria-label={`Reflection journal for ${dayKey}`}
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Two or three honest sentences is enough."
@@ -342,7 +337,7 @@ export function DailyReflection() {
               <div className="text-xs text-muted-foreground">Source: OCA daily page.</div>
               <div className="flex gap-2">
                 <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                  <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
+                  <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                     Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>

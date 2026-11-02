@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { format } from "date-fns";
 import { ExternalLink, Music, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,7 +36,7 @@ function dailySourceUrl(source: DailySource, preferredJurisdiction: string, date
 }
 
 export function HymnsAndPropers() {
-  const today = useMemo(() => new Date(), []);
+  const today = useCurrentDay();
   const { settings } = useSettings();
   const { playTrack } = useAudio();
   const [source, setSource] = useState<DailySource>("preferred");
@@ -71,7 +72,7 @@ export function HymnsAndPropers() {
             <div className="grid gap-2 sm:justify-items-end">
               <p className="text-xs font-semibold tracking-wide text-muted-foreground">Daily source</p>
               <Select value={source} onValueChange={(v) => setSource(v as DailySource)}>
-                <SelectTrigger className="h-10 w-full rounded-2xl sm:w-[220px]">
+                <SelectTrigger aria-label="Daily hymn source" className="h-10 w-full rounded-2xl sm:w-[220px]">
                   <SelectValue placeholder="Choose" />
                 </SelectTrigger>
                 <SelectContent>
@@ -84,7 +85,7 @@ export function HymnsAndPropers() {
           </div>
 
           <Button asChild className="btn-wrap rounded-2xl">
-            <a href={openUrl} target="_blank" rel="noopener noreferrer">
+            <a href={openUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
               Open daily texts <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>
@@ -99,7 +100,7 @@ export function HymnsAndPropers() {
                 href="https://www.oca.org/saints/troparia"
                 target="_blank"
                 rel="noopener noreferrer"
-              >
+              ><span className="sr-only"> (opens in a new tab) </span>
                 Troparia & Kontakia (OCA) <ExternalLink className="h-4 w-4" />
               </a>
             </Button>

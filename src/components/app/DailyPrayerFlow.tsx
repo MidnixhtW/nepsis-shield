@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { useCurrentDay } from "@/hooks/useCurrentDay";
+import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
 import {
   Bell,
@@ -39,8 +42,6 @@ import {
   savePrayerResume,
   useDailyRhythm,
 } from "@/lib/dailyHabits";
-import { fetchDailyData } from "@/lib/orthocal";
-import { useSettings } from "@/hooks/useSettings";
 import { showError, showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
@@ -439,14 +440,7 @@ function fastingLabel(description: string, exception?: string) {
 }
 
 function BeginTodayCalendar() {
-  const today = useMemo(() => new Date(), []);
-  const dayKey = useMemo(() => format(today, "yyyy-MM-dd"), [today]);
-  const { settings } = useSettings();
-
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, dayKey],
-    queryFn: () => fetchDailyData(today, settings.calendarMode),
-  });
+  const { today, query: q, retry } = useDailyCalendar();
 
   if (q.isLoading) {
     return (
@@ -456,12 +450,8 @@ function BeginTodayCalendar() {
     );
   }
 
-  if (q.isError || !q.data) {
-    return (
-      <div className="rounded-3xl border border-border/60 bg-card p-5 text-sm leading-relaxed text-muted-foreground shadow-sm">
-        Today’s fasting and saints could not be loaded. Keep your parish calendar and priest as your guide.
-      </div>
-    );
+  if (!q.data) {
+    return <DailyContentStatus date={today} failed={true} refreshing={q.isFetching} onRetry={retry} />;
   }
 
   const saints = q.data.saints.slice(0, 4);
@@ -469,6 +459,7 @@ function BeginTodayCalendar() {
 
   return (
     <Card className="overflow-hidden rounded-3xl border-primary/20 bg-card shadow-sm">
+      <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
       <div className="border-b border-border/60 bg-primary/5 px-5 py-4">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Before you begin</p>
         <h3 className="mt-1 text-lg font-semibold tracking-tight">Today in the Church</h3>
@@ -519,15 +510,11 @@ function BeginTodayCalendar() {
                   variant="outline"
                   size="sm"
                   className="mt-3 h-auto min-h-9 rounded-2xl border-border/60 bg-background/60 text-xs"
-                  onClick={() =>
-                    window.open(
-                      `https://www.oca.org/saints/lives?search=${encodeURIComponent(firstSaint)}`,
-                      "_blank",
-                      "noopener,noreferrer",
-                    )
-                  }
+                  asChild
                 >
-                  Read first life <ExternalLink className="ml-2 h-3.5 w-3.5" />
+                  <a href={`https://www.oca.org/saints/lives?search=${encodeURIComponent(firstSaint)}`} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
+                    Read first life <ExternalLink aria-hidden="true" className="ml-2 h-3.5 w-3.5" />
+                  </a>
                 </Button>
               ) : null}
             </div>
@@ -549,6 +536,7 @@ function PrayerFlowSteps({ current }: { current: number }) {
         return (
           <div
             key={item}
+            aria-current={active ? "step" : undefined}
             className={
               "rounded-2xl border px-3 py-2 text-center text-xs font-semibold transition-colors " +
               (active
@@ -574,6 +562,12 @@ export function DailyPrayerFlow() {
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
   const [reminders, setReminders] = useState<ReminderPrefs>(DEFAULT_REMINDERS);
   const [hydrated, setHydrated] = useState(false);
+  const [reminderBusy, setReminderBusy] = useState<PrayerTime | null>(null);
+  const [downloaded, setDownloaded] = useState<Partial<Record<PrayerTime, string>>>({});
+  const reminderStatus = usePrayerReminderStatus();
+  const today = useCurrentDay();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusNextStep = useRef(false);
   const rhythm = useDailyRhythm();
 
   useEffect(() => {
@@ -611,12 +605,18 @@ export function DailyPrayerFlow() {
   }, [hydrated, reminders]);
 
   const steps = useMemo(() => buildFlow(time, mode), [time, mode]);
-  const progressKey = `${format(new Date(), "yyyy-MM-dd")}:${time}:${mode}`;
+  const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
   const storedPrayerKey = mode === "personal" ? "personal" : time;
   const done = completed[progressKey] ?? !!rhythm.today.prayers[storedPrayerKey];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
   const flowStage = done ? 2 : stepIndex === 0 ? 0 : 1;
+
+  useEffect(() => {
+    if (!focusNextStep.current) return;
+    headingRef.current?.focus();
+    focusNextStep.current = false;
+  }, [stepIndex, done, progressKey]);
 
   useEffect(() => {
     if (!hydrated || done) return;
@@ -634,12 +634,25 @@ export function DailyPrayerFlow() {
     setStepIndex(0);
   }
 
-  function updateReminder(nextTime: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
-    setReminders((prev) => ({ ...prev, [nextTime]: { ...prev[nextTime], ...patch } }));
-
+  async function updateReminder(nextTime: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
+    if (patch.time !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(patch.time)) return;
     if (patch.enabled === false) {
-      void cancelSystemPrayerReminder(nextTime);
+      setReminderBusy(nextTime);
+      try {
+        const result = await cancelSystemPrayerReminder(nextTime);
+        if (!result.ok && !isNativeReminderUnavailable(result)) {
+          showError("Could not cancel the native reminder. It may still be scheduled.");
+          return;
+        }
+        await reminderStatus.refresh();
+      } catch {
+        showError("Could not cancel the native reminder. It may still be scheduled.");
+        return;
+      } finally {
+        setReminderBusy(null);
+      }
     }
+    setReminders((prev) => ({ ...prev, [nextTime]: { ...prev[nextTime], ...patch } }));
   }
 
   function downloadCalendarReminder(nextTime: PrayerTime) {
@@ -648,14 +661,17 @@ export function DailyPrayerFlow() {
     const label = prayerMeta[nextTime].label;
     const ics = createSimpleIcs({
       title: `${label} Prayer (Nepsis Shield)`,
-      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} rule. This calendar item is created locally from your reminder preference.`,
+      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} rule. This daily calendar reminder is created locally from your reminder preference.`,
       start,
       end,
+      dailyReminder: true,
     });
     downloadTextFile(`${nextTime}-prayer-reminder.ics`, ics, "text/calendar");
+    setDownloaded((previous) => ({ ...previous, [nextTime]: reminder.time }));
   }
 
   async function syncReminderToSystem(nextTime: PrayerTime) {
+    setReminderBusy(nextTime);
     try {
       const reminder = reminders[nextTime];
       const label = prayerMeta[nextTime].label;
@@ -666,7 +682,8 @@ export function DailyPrayerFlow() {
       });
 
       if (result.ok) {
-        showSuccess(`${label} prayer reminder added to system notifications.`);
+        await reminderStatus.refresh();
+        showSuccess(`${label} prayer reminder scheduled daily at ${reminder.time}.`);
         return;
       }
 
@@ -677,13 +694,15 @@ export function DailyPrayerFlow() {
 
       if (isNativeReminderUnavailable(result)) {
         downloadCalendarReminder(nextTime);
-        showSuccess(`${label} calendar reminder downloaded for your system calendar.`);
+        showSuccess(`${label} calendar file downloaded. Import it into your calendar to activate the daily reminder.`);
         return;
       }
 
       showError("Couldn't add the system reminder.");
     } catch {
       showError("Couldn't add the system reminder.");
+    } finally {
+      setReminderBusy(null);
     }
   }
 
@@ -717,6 +736,7 @@ export function DailyPrayerFlow() {
             <button
               key={key}
               type="button"
+              aria-pressed={time === key}
               className={
                 "tap rounded-2xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " +
                 (time === key
@@ -748,6 +768,7 @@ export function DailyPrayerFlow() {
             </div>
             <ToggleGroup
               type="single"
+              aria-label="Prayer rule length"
               value={mode}
               onValueChange={(value) => {
                 if (!value) return;
@@ -780,6 +801,7 @@ export function DailyPrayerFlow() {
                 <Eye className="h-4 w-4 text-primary" /> Focus
               </span>
               <Switch
+                aria-label="Focus prayer reading"
                 checked={readerPrefs.focus}
                 onCheckedChange={(checked) => setReaderPrefs((p) => ({ ...p, focus: checked }))}
               />
@@ -789,6 +811,7 @@ export function DailyPrayerFlow() {
                 <Type className="h-4 w-4 text-primary" /> Large text
               </span>
               <Switch
+                aria-label="Large prayer text"
                 checked={readerPrefs.largeText}
                 onCheckedChange={(checked) => setReaderPrefs((p) => ({ ...p, largeText: checked }))}
               />
@@ -798,6 +821,7 @@ export function DailyPrayerFlow() {
                 <Moon className="h-4 w-4 text-primary" /> Night
               </span>
               <Switch
+                aria-label="Night prayer reading"
                 checked={readerPrefs.night}
                 onCheckedChange={(checked) => setReaderPrefs((p) => ({ ...p, night: checked }))}
               />
@@ -823,7 +847,7 @@ export function DailyPrayerFlow() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Step {stepIndex + 1} of {steps.length}
             </p>
-            <h3 className="mt-1 text-2xl font-semibold tracking-tight">{current.title}</h3>
+            <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
           </div>
           {done ? (
             <Badge className="w-fit rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">
@@ -833,7 +857,7 @@ export function DailyPrayerFlow() {
         </div>
 
         <div className="my-4">
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} aria-label="Prayer progress" aria-valuetext={done ? "Prayer complete" : `Step ${stepIndex + 1} of ${steps.length}`} className="h-2" />
         </div>
 
         <div
@@ -865,7 +889,10 @@ export function DailyPrayerFlow() {
               type="button"
               variant="outline"
               className="rounded-2xl border-border/60"
-              onClick={() => setStepIndex((i) => Math.max(0, i - 1))}
+              onClick={() => {
+                focusNextStep.current = true;
+                setStepIndex((i) => Math.max(0, i - 1));
+              }}
               disabled={stepIndex === 0}
             >
               <ChevronLeft className="mr-2 h-4 w-4" /> Back
@@ -874,6 +901,7 @@ export function DailyPrayerFlow() {
               type="button"
               className="rounded-2xl"
               onClick={() => {
+                focusNextStep.current = true;
                 if (stepIndex >= steps.length - 1) {
                   setCompleted((prev) => ({ ...prev, [progressKey]: true }));
                   markPrayerComplete(mode === "personal" ? "personal" : time, mode);
@@ -903,12 +931,12 @@ export function DailyPrayerFlow() {
         </div>
       </Card>
 
-      <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+      <Card id="prayer-reminders" className="scroll-mt-24 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="text-lg font-semibold tracking-tight">Prayer reminders</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Save your preferred times and connect them to native system notifications in the app. In a browser, this falls back to a calendar reminder file.
+              Turning a preference on does not schedule it: select Sync to schedule native notifications. In a browser, Sync downloads a daily calendar file; import it and check alerts in your calendar app. Turn a preference off to cancel its native reminder. Imported calendar events must be removed in your calendar app.
             </p>
           </div>
           <Bell className="h-5 w-5 text-muted-foreground" />
@@ -919,13 +947,15 @@ export function DailyPrayerFlow() {
             <div key={key} className="grid gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
               <div className="flex items-center gap-3">
                 <Switch
-                  checked={reminders[key].enabled}
-                  onCheckedChange={(checked) => updateReminder(key, { enabled: checked })}
+                  aria-label={`${prayerMeta[key].label} reminder preference`}
+                  checked={reminders[key].enabled || Boolean(reminderStatus.scheduled[key])}
+                  disabled={reminderBusy !== null || reminderStatus.checking}
+                  onCheckedChange={(checked) => void updateReminder(key, { enabled: checked })}
                 />
                 <div>
                   <p className="text-sm font-semibold">{prayerMeta[key].label} prayer</p>
-                  <p className="text-xs text-muted-foreground">
-                    {reminders[key].enabled ? `System reminder time: ${reminders[key].time}` : "System reminder off"}
+                  <p role="status" className="text-xs text-muted-foreground">
+                    {reminderStatus.checking ? "Checking native schedule…" : reminderStatus.error ? "Native schedule could not be verified" : reminderStatus.scheduled[key] ? `Native reminder scheduled${reminderStatus.scheduled[key]?.time ? ` at ${reminderStatus.scheduled[key]?.time}` : ""}${reminderStatus.scheduled[key]?.time !== reminders[key].time ? " · Sync to apply this preferred time" : ""}` : downloaded[key] ? `Calendar file downloaded for ${downloaded[key]} · import required, schedule unconfirmed` : reminders[key].enabled ? "Preference on · not scheduled yet" : "Preference off · no native reminder scheduled"}
                   </p>
                 </div>
               </div>
@@ -933,18 +963,20 @@ export function DailyPrayerFlow() {
                 <input
                   type="time"
                   value={reminders[key].time}
-                  onChange={(event) => updateReminder(key, { time: event.target.value })}
-                  className="h-10 rounded-2xl border border-input bg-background px-3 text-sm"
+                  disabled={reminderBusy !== null}
+                  onChange={(event) => void updateReminder(key, { time: event.target.value })}
+                  className="h-10 rounded-2xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   aria-label={`${prayerMeta[key].label} reminder time`}
                 />
                 <Button
                   type="button"
                   variant="outline"
                   className="rounded-2xl border-border/60"
+                  aria-label={`Sync ${prayerMeta[key].label.toLowerCase()} prayer reminder`}
                   onClick={() => void syncReminderToSystem(key)}
-                  disabled={!reminders[key].enabled}
+                  disabled={(!reminders[key].enabled && !reminderStatus.scheduled[key]) || reminderBusy !== null}
                 >
-                  <CalendarPlus className="mr-2 h-4 w-4" /> Sync
+                  <CalendarPlus className="mr-2 h-4 w-4" /> {reminderBusy === key ? "Updating…" : "Sync"}
                 </Button>
               </div>
             </div>

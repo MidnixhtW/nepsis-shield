@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { BookOpen, CalendarDays, CheckCircle2, Play, RotateCcw } from "lucide-react";
@@ -44,11 +45,15 @@ function weeklyPsalterPortion(date: Date) {
     7: [19, 20],
   };
   const ks = schedule[dow] ?? [1];
-  return `Kathismata ${ks.join(", ")}`;
+  // Equivalent whole-Psalm boundaries in Hebrew/KJV numbering, not LXX numbering.
+  const boundaries = [1, 9, 18, 25, 33, 38, 47, 56, 65, 71, 78, 86, 92, 102, 106, 110, 119, 120, 135, 144, 151];
+  const first = boundaries[ks[0] - 1];
+  const last = boundaries[ks[ks.length - 1]] - 1;
+  return { label: `Kathismata ${ks.join(", ")} · Psalms ${first}–${last} (KJV numbering)`, ref: `Psalms ${first}-${last}` };
 }
 
 const GOSPEL_CHAPTERS: Array<{ ref: string }> = [
-  ...Array.from({ length: 21 }, (_, i) => ({ ref: `Matthew ${i + 1}` })),
+  ...Array.from({ length: 28 }, (_, i) => ({ ref: `Matthew ${i + 1}` })),
   ...Array.from({ length: 16 }, (_, i) => ({ ref: `Mark ${i + 1}` })),
   ...Array.from({ length: 24 }, (_, i) => ({ ref: `Luke ${i + 1}` })),
   ...Array.from({ length: 21 }, (_, i) => ({ ref: `John ${i + 1}` })),
@@ -63,8 +68,21 @@ function daysBetween(startIso: string, now: Date) {
 
 export function ReadingPlans() {
   const navigate = useNavigate();
-  const today = useMemo(() => new Date(), []);
+  const today = useCurrentDay();
   const todayIso = useMemo(() => dayKey(today), [today]);
+  const [completion, setCompletion] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    function load() {
+      setCompletion({
+        psalter: Boolean(getStoredItem<boolean>(doneKey("psalter", todayIso))),
+        gospels: Boolean(getStoredItem<boolean>(doneKey("gospels", todayIso))),
+      });
+    }
+    load();
+    window.addEventListener("storage", load);
+    return () => window.removeEventListener("storage", load);
+  }, [todayIso]);
 
   const [gospelStart, setGospelStart] = useState<string | null>(
     getStoredItem<string>(gospelStartKey()),
@@ -79,18 +97,14 @@ export function ReadingPlans() {
 
   const psalterToday = weeklyPsalterPortion(today);
 
-  const psalterDone = Boolean(getStoredItem<boolean>(doneKey("psalter", todayIso)));
-  const gospelsDone = Boolean(getStoredItem<boolean>(doneKey("gospels", todayIso)));
-
   const plans: PlanCard[] = [
     {
       id: "psalter",
       title: "Psalter (weekly kathismata)",
       description:
-        "A simple weekly rhythm. If you miss a day, just continue with peace.",
-      todayLabel: psalterToday,
-      // We don't have kathismata mapping in the public API; open Psalms as a jumping-off point.
-      refToOpen: "Psalm 1",
+        "A simple weekly rhythm. Opens the equivalent Psalms in KJV numbering; your liturgical Psalter may use LXX numbering. If you miss a day, just continue with peace.",
+      todayLabel: psalterToday.label,
+      refToOpen: psalterToday.ref,
     },
     {
       id: "gospels",
@@ -104,10 +118,11 @@ export function ReadingPlans() {
 
   function setDone(planId: string, done: boolean) {
     setStoredItem(doneKey(planId, todayIso), done, { ttlMs: 1000 * 60 * 60 * 24 * 60 });
+    setCompletion((previous) => ({ ...previous, [planId]: done }));
   }
 
-  function openRef(ref: string) {
-    navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}`);
+  function openRef(ref: string, planId: string) {
+    navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}${planId === "psalter" ? "&base=kjv" : ""}`);
   }
 
   return (
@@ -145,7 +160,7 @@ export function ReadingPlans() {
           </div>
 
           {plans.map((p) => {
-            const done = p.id === "psalter" ? psalterDone : gospelsDone;
+            const done = completion[p.id] ?? false;
             return (
               <div
                 key={p.id}
@@ -171,15 +186,17 @@ export function ReadingPlans() {
                     <Button
                       type="button"
                       className="h-10 rounded-2xl"
-                      onClick={() => openRef(p.refToOpen)}
+                      aria-label={`Open ${p.todayLabel}`}
+                      onClick={() => openRef(p.refToOpen, p.id)}
                     >
                       <Play className="mr-2 h-4 w-4" /> Open
                     </Button>
 
                     <label className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Checkbox
+                        aria-label={`Mark ${p.title} done for today`}
                         checked={done}
-                        onCheckedChange={(v) => setDone(p.id, Boolean(v))}
+                        onCheckedChange={(v) => setDone(p.id, v === true)}
                       />
                       Mark done
                     </label>

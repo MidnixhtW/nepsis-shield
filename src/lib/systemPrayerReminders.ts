@@ -1,23 +1,9 @@
 import { Capacitor } from "@capacitor/core";
+import { LocalNotifications, type LocalNotificationsPlugin } from "@capacitor/local-notifications";
 
 export type SystemReminderResult =
   | { ok: true; native: true }
   | { ok: false; native: false; reason: "not-native" | "plugin-missing" | "permission-denied" | "failed" };
-
-type LocalNotificationsPlugin = {
-  checkPermissions: () => Promise<{ display: string }>;
-  requestPermissions: () => Promise<{ display: string }>;
-  cancel: (opts: { notifications: Array<{ id: number }> }) => Promise<void>;
-  schedule: (opts: {
-    notifications: Array<{
-      id: number;
-      title: string;
-      body: string;
-      schedule: { at: Date; every: "day" };
-      smallIcon?: string;
-    }>;
-  }) => Promise<void>;
-};
 
 const REMINDER_IDS = {
   morning: 7101,
@@ -38,15 +24,23 @@ function nextReminderDate(time: string) {
 }
 
 async function getLocalNotifications(): Promise<LocalNotificationsPlugin | null> {
-  if (!Capacitor.isNativePlatform()) return null;
+  if (!Capacitor.isNativePlatform() || !Capacitor.isPluginAvailable("LocalNotifications")) return null;
+  return LocalNotifications;
+}
 
-  try {
-    const pluginPackage = "@capacitor/local-notifications";
-    const mod = await import(/* @vite-ignore */ pluginPackage);
-    return mod.LocalNotifications as LocalNotificationsPlugin;
-  } catch {
-    return null;
+export type ScheduledPrayerReminders = Partial<Record<PrayerReminderKey, { time?: string }>>;
+
+export async function getScheduledPrayerReminders(): Promise<ScheduledPrayerReminders> {
+  if (!await getLocalNotifications()) return {};
+  const { notifications } = await LocalNotifications.getPending();
+  const result: ScheduledPrayerReminders = {};
+  for (const key of Object.keys(REMINDER_IDS) as PrayerReminderKey[]) {
+    const notification = notifications.find((item) => item.id === REMINDER_IDS[key]);
+    if (!notification) continue;
+    const at = notification.schedule?.at ? new Date(notification.schedule.at) : undefined;
+    result[key] = { time: at && Number.isFinite(at.getTime()) ? `${String(at.getHours()).padStart(2, "0")}:${String(at.getMinutes()).padStart(2, "0")}` : undefined };
   }
+  return result;
 }
 
 async function ensurePermission(plugin: LocalNotificationsPlugin) {
@@ -66,6 +60,7 @@ export async function scheduleSystemPrayerReminder({
   label: string;
   time: string;
 }): Promise<SystemReminderResult> {
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return { ok: false, native: false, reason: "failed" };
   const plugin = await getLocalNotifications();
   if (!plugin) {
     return {

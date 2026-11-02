@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
 import { ArrowRight, BookOpen, ExternalLink, Leaf } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -11,19 +11,13 @@ import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
-import { fetchDailyData, buildOcaDailyUrl } from "@/lib/orthocal";
-import { useSettings } from "@/hooks/useSettings";
+import { buildOcaDailyUrl } from "@/lib/orthocal";
 
 export function TodayOverview({ onNavigate, onOpenRoute }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
   onOpenRoute?: (path: string) => void;
 }) {
-  const today = useMemo(() => new Date(), []);
-  const { settings } = useSettings();
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
-    queryFn: () => fetchDailyData(today, settings.calendarMode),
-  });
+  const { today, settings, query: q, retry } = useDailyCalendar();
   const sourceUrl = settings.jurisdiction === "goarch"
     ? `https://www.goarch.org/chapel?date=${encodeURIComponent(format(today, "M/d/yyyy"))}`
     : q.data?.sources.ocaDailyUrl ?? buildOcaDailyUrl(today);
@@ -31,6 +25,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   return (
     <div className="grid gap-5 sm:gap-6">
       <RuleOfVigilanceCard onNavigate={onNavigate} />
+      <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
       <div className="grid items-start gap-5 md:grid-cols-2">
         <Card className="rounded-3xl p-5 sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Readings · {format(today, "MMMM d")}</p>
@@ -64,7 +59,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           <div className="mt-4 flex flex-wrap gap-2">
             <Button variant="outline" size="sm" className="rounded-xl" onClick={() => onOpenRoute?.("/saints")}>All saints</Button>
             <Button asChild variant="ghost" size="sm" className="rounded-xl">
-              <a href={sourceUrl} target="_blank" rel="noopener noreferrer">Daily source <ExternalLink className="ml-2 h-3.5 w-3.5" /></a>
+              <a href={sourceUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>Daily source <ExternalLink className="ml-2 h-3.5 w-3.5" /></a>
             </Button>
           </div>
         </Card>

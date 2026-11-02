@@ -27,6 +27,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { useSettings } from "@/hooks/useSettings";
+import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
@@ -65,6 +66,16 @@ export default function Settings() {
   const { settings, updateSettings, resetSettings } = useSettings();
   const [responderMode, setResponderMode] = useResponderMode();
   const [offlineReady, setOfflineReady] = useState(false);
+  const reminderStatus = usePrayerReminderStatus();
+  const [notificationBusy, setNotificationBusy] = useState(false);
+  const [permission, setPermission] = useState<NotificationPermission | "unsupported">("unsupported");
+
+  useEffect(() => {
+    const refresh = () => setPermission("Notification" in window ? Notification.permission : "unsupported");
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, []);
 
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -86,7 +97,7 @@ export default function Settings() {
   function saveLanguage(value: string) {
     if (!isLanguagePref(value)) return;
     updateSettings({ language: value });
-    toast({ title: "Language updated", description: "Link suggestions will prefer that language when available." });
+    toast({ title: "Content language updated", description: "Link suggestions will prefer that language when available. The interface remains in English." });
   }
 
   function saveResponderMode(value: string) {
@@ -98,35 +109,23 @@ export default function Settings() {
   async function setNotifications(checked: boolean) {
     if (!checked) {
       updateSettings({ reminders: { enableNotifications: false } });
-      toast({ title: "Notifications off", description: "Calendar reminder downloads are still available." });
+      toast({ title: "Browser notification preference off", description: "Native and imported calendar reminders are unchanged. Manage native reminders in Prayer." });
       return;
     }
-
-    if (!("Notification" in window)) {
-      updateSettings({ reminders: { enableNotifications: false } });
-      toast({
-        variant: "destructive",
-        title: "Notifications not supported",
-        description: "This browser cannot show notification reminders.",
-      });
-      return;
+    if (!("Notification" in window)) return;
+    setNotificationBusy(true);
+    try {
+      const next = Notification.permission === "default" ? await Notification.requestPermission() : Notification.permission;
+      setPermission(next);
+      updateSettings({ reminders: { enableNotifications: next === "granted" } });
+      toast(next === "granted"
+        ? { title: "Browser permission granted", description: "No reminder was scheduled. Open Prayer to sync a native reminder or download a calendar file." }
+        : { variant: "destructive", title: "Browser permission not granted", description: "Use a calendar download, or change notification permission in your browser settings." });
+    } catch {
+      toast({ variant: "destructive", title: "Could not request permission", description: "You can still download reminders from Prayer." });
+    } finally {
+      setNotificationBusy(false);
     }
-
-    const permission =
-      Notification.permission === "default" ? await Notification.requestPermission() : Notification.permission;
-
-    if (permission !== "granted") {
-      updateSettings({ reminders: { enableNotifications: false } });
-      toast({
-        variant: "destructive",
-        title: "Notification permission needed",
-        description: "Enable browser notifications first, or use the calendar reminder downloads.",
-      });
-      return;
-    }
-
-    updateSettings({ reminders: { enableNotifications: true } });
-    toast({ title: "Notifications enabled", description: "Reminder support is now allowed on this device." });
   }
 
   async function checkOffline() {
@@ -349,8 +348,8 @@ export default function Settings() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold tracking-tight">Language</h2>
-              <p id="language-help" className="mt-1 text-sm text-muted-foreground">For now this is used mainly for link suggestions.</p>
+              <h2 className="text-base font-semibold tracking-tight">Preferred content language</h2>
+              <p id="language-help" className="mt-1 text-sm text-muted-foreground">Prefers external content and suggested links in this language when available. This does not translate the app’s English interface.</p>
             </div>
             <Globe className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -374,8 +373,8 @@ export default function Settings() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-base font-semibold tracking-tight">Reminders (best-effort)</h2>
-              <p id="notification-help" className="mt-1 text-sm text-muted-foreground">Works only in browsers that support notifications.</p>
+              <h2 className="text-base font-semibold tracking-tight">Prayer reminders & permissions</h2>
+              <p id="notification-help" className="mt-1 text-sm text-muted-foreground">Browser permission alone does not schedule prayer reminders. Sync times in Prayer for native notifications, or import a calendar download in your browser.</p>
             </div>
             <Bell className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -383,18 +382,23 @@ export default function Settings() {
           <div className="rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <Label htmlFor="notifications" className="text-sm font-medium">Enable notifications</Label>
-                <p className="text-xs text-muted-foreground">{settings.reminders.enableNotifications ? "Allowed on this device" : "Off by default"}</p>
+                <Label htmlFor="notifications" className="text-sm font-medium">Allow browser notifications (permission only)</Label>
+                <p className="text-xs text-muted-foreground">Browser permission: {permission}. Native reminders are managed separately.</p>
               </div>
-              <Switch id="notifications" aria-describedby="notification-help" checked={settings.reminders.enableNotifications} onCheckedChange={setNotifications} />
+              <Switch id="notifications" aria-describedby="notification-help" checked={settings.reminders.enableNotifications && permission === "granted"} disabled={notificationBusy || permission === "unsupported"} onCheckedChange={setNotifications} />
             </div>
             <div className="mt-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
-              <div className="flex items-start gap-3">
-                <ShieldAlert className="mt-0.5 h-4 w-4 text-muted-foreground" />
-                <p className="text-xs text-muted-foreground">
-                  Notifications are optional. For reliable reminders, use the calendar reminder downloads on Today/Prayer Rule.
-                </p>
+              <p role="status" className="text-sm font-medium">
+                {reminderStatus.checking ? "Checking native schedules…" : reminderStatus.error ? "Could not verify native schedules." : Object.keys(reminderStatus.scheduled).length ? "Confirmed native reminders" : "No native prayer reminders scheduled"}
+              </p>
+              {!reminderStatus.checking && !reminderStatus.error ? <ul className="mt-2 grid gap-1 text-sm text-muted-foreground">
+                {Object.entries(reminderStatus.scheduled).map(([key, reminder]) => <li key={key} className="capitalize">{key}{reminder.time ? ` · ${reminder.time}` : " · scheduled"}</li>)}
+              </ul> : null}
+              <div className="mt-3 flex items-start gap-3">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                <p className="text-xs text-muted-foreground">Downloading a calendar file does not confirm it was imported. Imported events must be changed or removed in your calendar app.</p>
               </div>
+              <Button asChild variant="outline" className="mt-3 rounded-xl"><Link to="/pray?tab=daily">Manage prayer reminders</Link></Button>
             </div>
           </div>
         </Card>

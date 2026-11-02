@@ -1,6 +1,5 @@
-import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { BookOpen, ExternalLink } from "lucide-react";
 import {
   Accordion,
@@ -13,11 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchDailyData, readingText } from "@/lib/orthocal";
+import { readingText } from "@/lib/orthocal";
 import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
 import { useNavigate } from "react-router-dom";
-import { useSettings } from "@/hooks/useSettings";
 
 function ReadingsSkeleton() {
   return (
@@ -100,13 +98,7 @@ function ReadingCard({
 
 export function DailyReadings() {
   const navigate = useNavigate();
-  const today = useMemo(() => new Date(), []);
-  const { settings } = useSettings();
-
-  const q = useQuery({
-    queryKey: ["daily", settings.calendarMode, format(today, "yyyy-MM-dd")],
-    queryFn: () => fetchDailyData(today, settings.calendarMode),
-  });
+  const { today, query: q, retry } = useDailyCalendar();
 
   function openRef(ref?: string) {
     if (!ref) return;
@@ -129,11 +121,10 @@ export function DailyReadings() {
         </div>
 
         <Separator className="my-4" />
+        <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
 
         {q.isLoading ? (
           <ReadingsSkeleton />
-        ) : q.isError ? (
-          <div className="text-sm text-destructive">Couldn't load readings right now.</div>
         ) : q.data ? (
 
           <div className="grid gap-3">
@@ -223,7 +214,7 @@ export function DailyReadings() {
                 Backed up by the OCA daily readings page.
               </div>
               <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer">
+                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                   Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>

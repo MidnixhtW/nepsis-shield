@@ -38,7 +38,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Slider } from "@/components/ui/slider";
+import { ReaderFontSizeSlider } from "@/components/app/ReaderFontSizeSlider";
 import {
   getStoredItem,
   removeStoredItem,
@@ -203,28 +203,26 @@ export function OrthodoxBible() {
       ref?: string;
     }>(lastReadKey());
 
-    // If a "ref" query param exists, treat it as a deep-link into reference mode.
-    try {
-      const url = new URL(window.location.href);
-      const deepRef = url.searchParams.get("ref");
-      if (deepRef && deepRef.trim()) {
-        setTab("reference");
-        setRefInput(deepRef);
-        setRefSubmitted(deepRef);
-        // Clear the param after consuming it so it doesn't keep overriding.
-        url.searchParams.delete("ref");
-        window.history.replaceState(null, "", url.toString());
-      }
-    } catch {
-      // ignore
-    }
-
     if (last?.base) setBase(last.base);
     if (last?.bookName) setBookName(last.bookName);
     if (typeof last?.chapter === "number") setChapter(Math.max(1, last.chapter));
     if (last?.ref) {
       setRefInput(last.ref);
       setRefSubmitted(last.ref);
+    }
+
+    // Explicit deep links take precedence over the last saved reading.
+    const url = new URL(window.location.href);
+    const deepRef = url.searchParams.get("ref");
+    const deepBase = url.searchParams.get("base");
+    if (deepRef?.trim()) {
+      setTab("reference");
+      setRefInput(deepRef);
+      setRefSubmitted(deepRef);
+      if (deepBase === "kjv" || deepBase === "web" || deepBase === "nkjv" || deepBase === "lxx") setBase(deepBase);
+      url.searchParams.delete("ref");
+      url.searchParams.delete("base");
+      window.history.replaceState(window.history.state, "", url.toString());
     }
 
     const savedBookmarks = getStoredItem<BookmarkItem[]>(bookmarksKey());
@@ -260,11 +258,16 @@ export function OrthodoxBible() {
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (isInteractiveTarget(e.target)) return;
-      if (tab !== "browse") return;
-
-      if (e.key.toLowerCase() === "j") setChapter((c) => Math.max(1, c - 1));
-      if (e.key.toLowerCase() === "k") setChapter((c) => c + 1);
+      if (isInteractiveTarget(e.target) || e.altKey || e.ctrlKey || e.metaKey) return;
+      if (tab !== "browse" || !(e.target instanceof HTMLElement) || !e.target.closest("[data-bible-reader]")) return;
+      if (e.key.toLowerCase() === "j") {
+        e.preventDefault();
+        setChapter((c) => Math.max(1, c - 1));
+      }
+      if (e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setChapter((c) => c + 1);
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -321,6 +324,27 @@ export function OrthodoxBible() {
   const refQuery = useQuery({
     queryKey: ["bible", "ref", refSubmitted, base],
     queryFn: async () => {
+      const psalmRange = refSubmitted.trim().match(/^Psalms?\s+(\d+)-(\d+)$/i);
+      if (psalmRange) {
+        const first = Number(psalmRange[1]);
+        const last = Number(psalmRange[2]);
+        if (first < 1 || last > 150 || last < first) throw new Error("Invalid Psalm range");
+        const slug = bollsSlugForBase(base);
+        const id = await resolveBollsBookId(slug, ["Psalms", "Psalm"]);
+        if (!id) throw new Error("Psalms unavailable in this translation");
+        const verses: BibleApiVerse[] = [];
+        // Load in small batches rather than sending the whole daily portion at once.
+        for (let start = first; start <= last; start += 4) {
+          const chapters = Array.from({ length: Math.min(4, last - start + 1) }, (_, i) => start + i);
+          const portions = await Promise.all(chapters.map(async (chapter) => {
+            const text = await fetchBollsChapter(slug, id, chapter);
+            return text.map((verse) => ({ book_name: "Psalms", chapter, verse: verse.verse, text: verse.text }));
+          }));
+          verses.push(...portions.flat());
+        }
+        setRefSource("bolls");
+        return { reference: refSubmitted, translation_id: slug, verses } satisfies BibleApiResponse;
+      }
       try {
         const data = await fetchJsonCached<BibleApiResponse>(
           refUrl,
@@ -456,6 +480,7 @@ export function OrthodoxBible() {
               <span className="text-xs font-semibold text-muted-foreground">Base text</span>
               <ToggleGroup
                 type="single"
+                aria-label="Bible base translation"
                 value={base}
                 onValueChange={(v) => {
                   if (v) setBase(v as BaseTranslation);
@@ -508,7 +533,7 @@ export function OrthodoxBible() {
                   href="https://www.oca.org/questions/scripture/canon-of-scripture"
                   target="_blank"
                   rel="noopener noreferrer"
-                >
+                ><span className="sr-only"> (opens in a new tab) </span>
                   OCA: Canon of Scripture <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
               </Button>
@@ -530,12 +555,9 @@ export function OrthodoxBible() {
             <div className="mt-3 grid gap-3 sm:grid-cols-2 sm:items-center">
               <div className="grid gap-2">
                 <p className="text-xs font-semibold text-muted-foreground">Font size</p>
-                <Slider
-                  value={[prefs.fontSize]}
-                  min={14}
-                  max={22}
-                  step={1}
-                  onValueChange={(v) => setPrefs((p) => ({ ...p, fontSize: v[0] ?? p.fontSize }))}
+                <ReaderFontSizeSlider
+                  value={prefs.fontSize}
+                  onChange={(fontSize) => setPrefs((p) => ({ ...p, fontSize }))}
                 />
               </div>
 
@@ -543,6 +565,7 @@ export function OrthodoxBible() {
                 <p className="text-xs font-semibold text-muted-foreground">Line width</p>
                 <ToggleGroup
                   type="single"
+                  aria-label="Bible reading line width"
                   value={prefs.lineWidth}
                   onValueChange={(v) => {
                     if (!v) return;
@@ -591,7 +614,7 @@ export function OrthodoxBible() {
               <p className="text-sm font-medium">Remember on this device</p>
               <p className="text-xs text-muted-foreground">Last read auto-expires after 30 days.</p>
             </div>
-            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+            <Switch aria-label="Remember Bible reading on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
           </div>
 
           <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
@@ -599,7 +622,7 @@ export function OrthodoxBible() {
               <p className="text-sm font-medium">Memorize mode</p>
               <p className="text-xs text-muted-foreground">Hide verse numbers to focus.</p>
             </div>
-            <Switch checked={memorizeMode} onCheckedChange={setMemorizeMode} />
+            <Switch aria-label="Bible memorize mode" checked={memorizeMode} onCheckedChange={setMemorizeMode} />
           </div>
 
           {saveEnabled ? (
@@ -653,7 +676,7 @@ export function OrthodoxBible() {
                       Book
                     </p>
                     <Select value={bookName} onValueChange={setBookName}>
-                      <SelectTrigger className="h-11 rounded-2xl">
+                      <SelectTrigger aria-label="Bible book" className="h-11 rounded-2xl">
                         <SelectValue placeholder="Choose a book" />
                       </SelectTrigger>
                       <SelectContent className="max-h-[60vh]">
@@ -686,11 +709,14 @@ export function OrthodoxBible() {
                         type="button"
                         variant="outline"
                         className="h-11 w-11 rounded-2xl border-border/60 p-0"
+                        aria-label="Previous Bible chapter"
+                        disabled={chapter === 1}
                         onClick={() => setChapter((c) => Math.max(1, c - 1))}
                       >
-                        <ChevronLeft className="h-4 w-4" />
+                        <ChevronLeft aria-hidden="true" className="h-4 w-4" />
                       </Button>
                       <Input
+                        aria-label="Bible chapter number"
                         value={String(chapter)}
                         onChange={(e) => {
                           const n = Number(e.target.value);
@@ -704,13 +730,14 @@ export function OrthodoxBible() {
                         type="button"
                         variant="outline"
                         className="h-11 w-11 rounded-2xl border-border/60 p-0"
+                        aria-label="Next Bible chapter"
                         onClick={() => setChapter((c) => c + 1)}
                       >
-                        <ChevronRight className="h-4 w-4" />
+                        <ChevronRight aria-hidden="true" className="h-4 w-4" />
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">{textAvailabilityNote}</p>
-                    <p className="text-[11px] text-muted-foreground">Tip: J/K to change chapters.</p>
+                    <p className="text-[11px] text-muted-foreground">Tip: focus the reading text, then use J/K to change chapters.</p>
                   </div>
                 </div>
 
@@ -758,7 +785,7 @@ export function OrthodoxBible() {
 
                   {browseSource === "bible-api" ? (
                     <Button asChild variant="outline" className="h-11 rounded-2xl border-border/60">
-                      <a href={browseUrl} target="_blank" rel="noopener noreferrer">
+                      <a href={browseUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                         Open JSON <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
@@ -801,6 +828,7 @@ export function OrthodoxBible() {
                   <p className="text-sm text-destructive">
                     Couldn't load {bookName} {chapter} from the current public text sources.
                   </p>
+                  <Button variant="outline" className="rounded-xl" disabled={browseQuery.isFetching} onClick={() => void browseQuery.refetch()}>{browseQuery.isFetching ? "Retrying…" : "Retry chapter"}</Button>
                   <p className="text-sm text-muted-foreground">
                     If this is an Orthodox-only book, it may not be available in the dataset.
                     You can verify the Orthodox canon here:
@@ -810,7 +838,7 @@ export function OrthodoxBible() {
                       href="https://www.oca.org/questions/scripture/canon-of-scripture"
                       target="_blank"
                       rel="noopener noreferrer"
-                    >
+                    ><span className="sr-only"> (opens in a new tab) </span>
                       OCA canon explanation <ExternalLink className="ml-2 h-4 w-4" />
                     </a>
                   </Button>
@@ -818,9 +846,9 @@ export function OrthodoxBible() {
               ) : browseQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching chapter…</p>
               ) : browseVerses.length ? (
-                <div className={cn(readerClass, memorizeMode ? "space-y-4" : "space-y-3")} style={readerStyle}>
+                <div data-bible-reader tabIndex={0} aria-label={`${browseTitle} reading text; J for previous chapter, K for next chapter`} className={cn(readerClass, "rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", memorizeMode ? "space-y-4" : "space-y-3")} style={readerStyle}>
                   {browseVerses.map((v, idx) => (
-                    <p key={idx} className="text-sm leading-relaxed">
+                    <p key={idx} className="leading-relaxed">
                       {memorizeMode ? (
                         <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
@@ -858,6 +886,7 @@ export function OrthodoxBible() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
+                      aria-label="Scripture reference"
                       value={refInput}
                       onChange={(e) => setRefInput(e.target.value)}
                       placeholder="Try: John 1:1-5, Psalm 50, Tobit 1"
@@ -925,7 +954,7 @@ export function OrthodoxBible() {
                   </Button>
                   {refSource === "bible-api" ? (
                     <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                      <a href={refUrl} target="_blank" rel="noopener noreferrer">
+                      <a href={refUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
                         Open JSON <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
@@ -936,15 +965,18 @@ export function OrthodoxBible() {
               <Separator className="my-4" />
 
               {refQuery.isError ? (
-                <p className="text-sm text-destructive">
-                  Couldn't load that reference. Try "John 3:16" or use Browse.
-                </p>
+                <div className="grid gap-3">
+                  <p role="status" className="text-sm text-destructive">
+                    Couldn't load that reference. Check your connection, try another translation, or use Browse.
+                  </p>
+                  <Button variant="outline" className="w-fit rounded-xl" disabled={refQuery.isFetching} onClick={() => void refQuery.refetch()}>{refQuery.isFetching ? "Retrying…" : "Retry passage"}</Button>
+                </div>
               ) : refQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Fetching passage…</p>
               ) : (refQuery.data?.verses?.length ?? 0) ? (
                 <div className={cn(readerClass, memorizeMode ? "space-y-4" : "space-y-3")} style={readerStyle}>
                   {(refQuery.data?.verses ?? []).map((v, idx) => (
-                    <p key={idx} className="text-sm leading-relaxed">
+                    <p key={idx} className="leading-relaxed">
                       {memorizeMode ? (
                         <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
@@ -989,6 +1021,7 @@ export function OrthodoxBible() {
               <div className="grid gap-2">
                 <p className="text-xs font-semibold tracking-wide text-muted-foreground">Search</p>
                 <Input
+                  aria-label="Search Bible bookmarks"
                   value={bookmarkQuery}
                   onChange={(e) => setBookmarkQuery(e.target.value)}
                   placeholder="Filter bookmarks (e.g., John, Psalm, Tobit)"
@@ -1000,6 +1033,7 @@ export function OrthodoxBible() {
                 <p className="text-xs font-semibold tracking-wide text-muted-foreground">Sort</p>
                 <ToggleGroup
                   type="single"
+                  aria-label="Bible bookmark sort order"
                   value={bookmarkSort}
                   onValueChange={(v) => v && setBookmarkSort(v as typeof bookmarkSort)}
                   className="justify-start gap-2"
@@ -1038,6 +1072,7 @@ export function OrthodoxBible() {
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
+                        aria-label={`Open bookmark ${b.ref}`}
                         className="rounded-2xl border-border/60"
                         onClick={() => {
                           const parsed = splitBookChapter(b.ref);
@@ -1055,6 +1090,7 @@ export function OrthodoxBible() {
                       </Button>
                       <Button
                         variant="ghost"
+                        aria-label={`Remove bookmark ${b.ref}`}
                         className="rounded-2xl text-muted-foreground hover:text-foreground"
                         onClick={() =>
                           setBookmarks((prev) =>
@@ -1089,7 +1125,7 @@ export function OrthodoxBible() {
               href="https://www.oca.org/questions/scripture/canon-of-scripture"
               target="_blank"
               rel="noopener noreferrer"
-            >
+            ><span className="sr-only"> (opens in a new tab) </span>
               Open OCA canon explanation <ExternalLink className="ml-2 h-4 w-4" />
             </a>
           </Button>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 export type DailyHabitKey = "prayer" | "reading" | "reflection" | "mercy";
@@ -182,6 +183,7 @@ function buildRhythm(): DailyRhythm {
 
 export function useDailyRhythm() {
   const [version, setVersion] = useState(0);
+  const today = useCurrentDay();
 
   useEffect(() => {
     if (!canUseBrowserStorage()) return;
@@ -195,7 +197,7 @@ export function useDailyRhythm() {
     };
   }, []);
 
-  return useMemo(() => buildRhythm(), [version]);
+  return useMemo(() => buildRhythm(), [version, today]);
 }
 
 export function markHabitComplete(habit: DailyHabitKey, completed = true) {

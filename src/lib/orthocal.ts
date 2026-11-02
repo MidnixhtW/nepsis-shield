@@ -34,6 +34,7 @@ export type OrthocalDay = {
 export type DailyData = {
   date: Date;
   calendarMode: CalendarMode;
+  cache?: { savedAt: number; stale: boolean };
   fasting: {
     level: number;
     description: string;
@@ -128,11 +129,15 @@ function extractPrimaryReadings(day: OrthocalDay): {
   return { epistle, gospel, others };
 }
 
-export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian"): Promise<DailyData> {
+export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian", forceRefresh = false): Promise<DailyData> {
   const orthocalApiUrl = buildOrthocalApiUrl(date, mode);
-  const day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, undefined, {
+  let cache: DailyData["cache"];
+  const day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, { signal: AbortSignal.timeout(15000) }, {
     key: `cache:orthocal:${mode}:${orthocalApiUrl}`,
-    ttlMs: 1000 * 60 * 60 * 12, // 12h
+    ttlMs: 1000 * 60 * 60 * 12,
+    forceRefresh,
+    staleIfError: true,
+    onCacheUsed: (savedAt, stale) => { cache = { savedAt, stale }; },
   });
 
   const fastingLevel = day.fast_level ?? 0;
@@ -146,6 +151,7 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
   return {
     date,
     calendarMode: mode,
+    cache,
     fasting: {
       level: fastingLevel,
       description: fastingDesc === "No fast" ? fallbackFastingRule.description : fastingDesc,
