@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test.describe("production PWA", () => {
   test.skip(({ browserName }) => browserName !== "chromium", "Service-worker offline flow is validated in Chromium.");

@@ -1,17 +1,7 @@
 import { readFile } from "node:fs/promises";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 const STORAGE_KEY = "orthodox-app:nicene-creed-progress:v1";
-
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem(
-      "onboarding:quickstart_done",
-      JSON.stringify({ __wrapped: 1, v: true, ts: Date.now() }),
-    );
-    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
-  });
-});
 
 test("Creed mastery persists after reload", async ({ page }) => {
   await page.goto("/learn?tab=creed", { waitUntil: "domcontentloaded" });
@@ -25,7 +15,12 @@ test("Creed mastery persists after reload", async ({ page }) => {
 });
 
 test("reset requires confirmation and clears persisted progress", async ({ page }) => {
-  await page.addInitScript(([key, value]) => localStorage.setItem(key, value), [
+  // Seed only on the first load; init scripts also run on reload, which would restore the old progress.
+  await page.addInitScript(([key, value]) => {
+    if (sessionStorage.getItem("test:creed-seeded")) return;
+    localStorage.setItem(key, value);
+    sessionStorage.setItem("test:creed-seeded", "1");
+  }, [
     STORAGE_KEY,
     JSON.stringify({ completedLines: [0, 2], bestQuiz: 75 }),
   ] as const);

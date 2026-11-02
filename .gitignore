@@ -31,3 +31,6 @@ test-results
 /playwright-report/
 /playwright/.cache/
 .last-run.json
+
+# TypeScript incremental build cache
+*.tsbuildinfo

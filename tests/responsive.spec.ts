@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 const viewportCases = [
   { name: "mobile-320", width: 320, height: 568 },
@@ -56,8 +57,8 @@ test("1024px tablet-width header stays uncluttered", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 768 });
   await page.goto("/today", { waitUntil: "domcontentloaded" });
 
-  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeHidden();
-  await expect(page.getByRole("navigation", { name: "Mobile primary navigation" })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Primary navigation", exact: true })).toBeHidden();
+  await expect(page.getByRole("navigation", { name: "Mobile primary navigation", exact: true })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 });
 
@@ -66,7 +67,7 @@ test("desktop navigation does not collide at its first breakpoint", async ({ pag
   await page.goto("/today", { waitUntil: "domcontentloaded" });
 
   const appHeader = page.locator("header").first();
-  const desktopNav = page.getByRole("navigation", { name: "Primary navigation" });
+  const desktopNav = page.getByRole("navigation", { name: "Primary navigation", exact: true });
   await expect(desktopNav).toBeVisible();
   const [headerBox, navBox] = await Promise.all([appHeader.boundingBox(), desktopNav.boundingBox()]);
   expect(headerBox).not.toBeNull();
@@ -78,8 +79,8 @@ test("desktop navigation does not collide at its first breakpoint", async ({ pag
 test("200% zoom equivalent reflows to the mobile shell", async ({ page }) => {
   await page.setViewportSize({ width: 720, height: 900 });
   await page.goto("/learn", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("navigation", { name: "Mobile primary navigation" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Primary navigation" })).toBeHidden();
+  await expect(page.getByRole("navigation", { name: "Mobile primary navigation", exact: true })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "Primary navigation", exact: true })).toBeHidden();
   await expectNoHorizontalOverflow(page);
 });
 
