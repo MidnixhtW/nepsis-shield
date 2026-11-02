@@ -21,9 +21,9 @@ const themes: Array<{
 }> = [
   {
     value: "dark",
-    label: "Tactical Green",
-    description: "Night-vision field display",
-    swatch: "bg-[#69eb52]",
+    label: "Olive & Brass",
+    description: "Quiet field colors, matched to the shield",
+    swatch: "bg-[#8ea65c]",
   },
   {
     value: "red-dark",
@@ -52,7 +52,7 @@ export function ThemeToggle({
   const activeTheme = mounted && themes.some((option) => option.value === theme)
     ? (theme as AppTheme)
     : "dark";
-  const activeLabel = themes.find((option) => option.value === activeTheme)?.label ?? "Tactical Green";
+  const activeLabel = themes.find((option) => option.value === activeTheme)?.label ?? "Olive & Brass";
 
   return (
     <DropdownMenu>
