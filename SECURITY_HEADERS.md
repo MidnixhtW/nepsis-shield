@@ -1,6 +1,6 @@
 # Security headers
 
-The app handles private local notes, so every web deployment should apply the same browser security headers. `vercel.json` configures them for Vercel, and `public/_headers` provides the equivalent format for hosts such as Netlify and Cloudflare Pages.
+The app handles private local notes, so every web deployment should apply the same browser security headers. `vercel.json` configures them for Vercel, and `public/_headers` provides the equivalent format for hosts such as Netlify and Cloudflare Pages. `server.mjs` (used on Railway or any Node host) reads the `/*` block of `dist/_headers` at startup, so edit `public/_headers` and `vercel.json` together.
 
 Required headers:
 
