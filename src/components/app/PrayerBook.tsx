@@ -24,7 +24,7 @@ function PrayerBlock({ title, lines }: { title: string; lines: string[] }) {
       <p className="text-xs font-semibold tracking-wide text-muted-foreground">
         {title}
       </p>
-      <div className="mt-2 space-y-2 text-sm leading-relaxed">
+      <div className="scripture-text mt-2 space-y-2 text-base">
         {lines.map((l, idx) => (
           <p key={idx}>{l}</p>
         ))}
@@ -1081,7 +1081,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                         </div>
                       </div>
 
-                      <div className="mt-3 space-y-2 text-sm leading-relaxed">
+                      <div className="scripture-text mt-3 space-y-2 text-base">
                         {p.lines.map((l, idx) => (
                           <p key={idx}>{l}</p>
                         ))}

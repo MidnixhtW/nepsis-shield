@@ -72,7 +72,7 @@ function ReadingCard({
       </div>
 
       {text ? (
-        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+        <p className="scripture-text mt-3 whitespace-pre-wrap text-[1.05rem] text-foreground/90">
           {text}
         </p>
       ) : (

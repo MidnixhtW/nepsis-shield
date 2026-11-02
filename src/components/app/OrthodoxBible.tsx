@@ -440,7 +440,7 @@ export function OrthodoxBible() {
 
   const readerClass =
     (prefs.lineWidth === "wide" ? "max-w-none" : "max-w-3xl") +
-    " mx-auto";
+    " mx-auto scripture-text";
 
   const readerStyle = useMemo(
     () => ({ fontSize: `${prefs.fontSize}px`, lineHeight: 1.75 } as React.CSSProperties),
