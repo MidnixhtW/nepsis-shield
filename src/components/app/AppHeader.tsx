@@ -1,10 +1,11 @@
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
   Crosshair,
   Download,
   HelpCircle,
   Info,
+  LifeBuoy,
   Menu,
 
   Plus,
@@ -22,7 +23,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
+import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
@@ -121,7 +125,7 @@ function MenuLinks() {
           </button>
         </SheetClose>
         <p className="px-2.5 py-2 text-xs leading-relaxed text-muted-foreground">
-          Need help or want to send feedback? Use the Help button in the bottom-left corner.
+          Struggling right now? Tap Help at the top of any screen for quick support and the guided reset.
         </p>
       </MenuSection>
 
@@ -129,6 +133,43 @@ function MenuLinks() {
         Version 265
       </p>
     </div>
+  );
+}
+
+// Always-visible entry to the "Need help now?" choices, so nobody has to scroll Today to find them.
+function HelpNowButton() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label="Need help now"
+          className="h-10 gap-1.5 rounded-md border border-accent/45 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-accent/70 hover:bg-accent/10 hover:text-accent sm:px-3"
+        >
+          <LifeBuoy className="h-[18px] w-[18px] text-accent" />
+          <span className="text-sm font-bold">Help</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="flex h-dvh w-[min(26rem,100vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0">
+        {/* The card below shows the same heading, so the panel title is for screen readers only. */}
+        <SheetHeader className="sr-only">
+          <SheetTitle>Need help now?</SheetTitle>
+          <SheetDescription>Choose what is happening. One small step, then the next.</SheetDescription>
+        </SheetHeader>
+        <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto p-3 pt-[max(3.25rem,env(safe-area-inset-top))] sm:p-4 sm:pt-14">
+          <NeedHelpNow onChoose={() => setOpen(false)} />
+          <Accordion type="single" collapsible className="rounded-3xl border bg-card px-5">
+            <AccordionItem value="ground" className="border-0">
+              <AccordionTrigger className="text-left">Ground me now · guided reset</AccordionTrigger>
+              <AccordionContent><GroundMeNow /></AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -163,6 +204,7 @@ export function AppHeader() {
       </Link>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
+        <HelpNowButton />
         <ThemeToggle />
         <Sheet>
           <SheetTrigger asChild>

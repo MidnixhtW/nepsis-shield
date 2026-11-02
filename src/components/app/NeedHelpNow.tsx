@@ -1,4 +1,5 @@
 import { BookOpen, Flame, Heart, MoonStar, ShieldAlert, Wind } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CrisisResources } from "@/components/app/CrisisResources";
 import type { AppSection } from "@/components/app/AppShell";
@@ -57,11 +58,26 @@ const helpItems: Array<{
   },
 ];
 
+// Same URL shape Index uses, so the header's help panel can route without Today's navigator.
+function targetPath(target: Target) {
+  if (target.section === "today") return "/today";
+  const params = new URLSearchParams();
+  if (target.tab) params.set("tab", target.tab);
+  if (target.read) params.set("read", target.read);
+  const qs = params.toString();
+  return qs ? `/${target.section}?${qs}` : `/${target.section}`;
+}
+
 export function NeedHelpNow({
   onNavigate,
+  onChoose,
 }: {
   onNavigate?: (to: Target) => void;
+  /** Called after a choice is made, e.g. to close the panel that holds this card. */
+  onChoose?: () => void;
 }) {
+  const navigate = useNavigate();
+
   return (
     <div className="min-w-0 rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-sm sm:p-5">
       <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -92,7 +108,9 @@ export function NeedHelpNow({
                   helper: item.line,
                   target: item.target,
                 });
-                onNavigate?.(item.target);
+                if (onNavigate) onNavigate(item.target);
+                else navigate(targetPath(item.target));
+                onChoose?.();
               }}
             >
               <Icon className="mr-2 h-4 w-4 shrink-0 text-primary" />
