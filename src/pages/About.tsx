@@ -37,6 +37,9 @@ export default function About() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Nepsis Shield is an Orthodox companion for prayer, Scripture, saints, daily watchfulness, ordinary life, and practical support under pressure. It is meant to help you take one faithful next step; it is not a replacement for your priest, chaplain, clinician, therapist, emergency services, or sacramental life.
               </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                It is offered under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
+              </p>
 
             </div>
             <Shield className="h-5 w-5 shrink-0 text-primary" />

@@ -10,29 +10,19 @@ const utilityLinks = [
   { label: "Privacy", to: "/privacy", icon: <Shield className="h-4 w-4" /> },
 ];
 
+// Compact on every page; the full patronage, pastoral note and source list live on the About page.
 export function AppFooter() {
   return (
     <Card className="mt-4 overflow-hidden rounded-[1.25rem] border-border/55 bg-card/70 p-4 shadow-[0_18px_52px_hsl(232_45%_3%/0.14)] backdrop-blur-xl sm:p-5">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-center xl:justify-between">
+      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:justify-between">
+        <p className="flex min-w-0 items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+          <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+          <span>
+            <span className="font-semibold text-foreground">Nepsis Shield</span> supports prayer and learning; it does not replace your priest, chaplain, or counselor.
+          </span>
+        </p>
 
-        <div className="min-w-0">
-
-          <p className="premium-eyebrow">Nepsis Shield</p>
-          <p className="mt-1 text-sm font-semibold tracking-tight">A quiet devotional aid</p>
-          <p className="mt-1 max-w-3xl text-xs leading-relaxed text-muted-foreground">
-
-            Under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
-          </p>
-
-          <div className="mt-3 flex items-start gap-2 rounded-xl border border-[hsl(var(--icon-gold)/0.28)] bg-secondary/25 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
-            <HeartHandshake className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <p>
-              Pastoral note: this app supports prayer and learning, but it does not replace a parish priest, chaplain, counselor, or trusted spiritual guide.
-            </p>
-          </div>
-        </div>
-
-        <nav aria-label="Footer utility links" className="flex flex-wrap gap-2 xl:justify-end">
+        <nav aria-label="Footer utility links" className="flex flex-wrap gap-2 lg:justify-end">
           {utilityLinks.map((link) => (
             <Button
               key={link.to}
@@ -49,10 +39,6 @@ export function AppFooter() {
             </Button>
           ))}
         </nav>
-      </div>
-
-      <div className="mt-3 border-t border-border/60 pt-3 text-xs leading-relaxed text-muted-foreground">
-        Sources include OCA.org links, orthocal.info, bible-api.com, and bolls.life. Always verify pastoral or liturgical questions with your local clergy.
       </div>
     </Card>
   );

@@ -63,7 +63,7 @@ function ShellNavigation({
             >
               <div className={cn("flex w-full items-center justify-center", desktop ? "gap-2" : "flex-col gap-1.5")}>
                 <Icon className={cn("h-[17px] w-[17px] shrink-0", active ? "text-primary-foreground" : "text-muted-foreground")} />
-                <span className={cn("font-bold leading-none", desktop ? "text-xs" : "text-[10px] sm:text-[11px]", active ? "text-primary-foreground" : "text-muted-foreground")}>
+                <span className={cn("font-bold leading-none", desktop ? "text-sm" : "text-xs", active ? "text-primary-foreground" : "text-muted-foreground")}>
                   {meta.label}
                 </span>
               </div>
@@ -77,7 +77,7 @@ function ShellNavigation({
         aria-label="Open more options, install, and share"
         className={cn(
           "flex w-full items-center justify-center whitespace-nowrap rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
-          desktop ? "h-10 flex-row gap-2 text-xs" : "h-12 flex-col gap-1.5 text-[10px] sm:text-[11px]",
+          desktop ? "h-10 flex-row gap-2 text-sm" : "h-12 flex-col gap-1.5 text-xs",
           installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
         )}
       >

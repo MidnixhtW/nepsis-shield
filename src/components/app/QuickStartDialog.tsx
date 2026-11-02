@@ -340,9 +340,13 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           <div className={cn("grid min-h-full gap-6", step === "welcome" ? "content-center" : "content-start")}>
           {step === "welcome" ? (
             <section className="mx-auto max-w-3xl text-center">
-              <div className="mx-auto grid h-20 w-20 place-items-center rounded-[1.75rem] border border-primary/25 bg-primary/10 text-primary shadow-[0_24px_80px_hsl(35_91%_48%/0.20)]">
-                <Compass className="h-9 w-9" />
-              </div>
+              <img
+                src="/military-orthodox-cross.svg"
+                alt=""
+                width={112}
+                height={112}
+                className="mx-auto h-28 w-28 drop-shadow-[0_24px_48px_hsl(42_52%_40%/0.28)]"
+              />
               <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Nepsis Shield</p>
               <h1 id="onboarding-title" className="mt-3 text-4xl font-semibold tracking-tight sm:text-6xl">
                 Quiet your heart. Begin with one faithful step.
