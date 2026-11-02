@@ -1,18 +1,19 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { useCurrentDay } from "@/hooks/useCurrentDay";
-import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
 import {
   Bell,
-  CalendarPlus,
   Check,
   ChevronLeft,
   ChevronRight,
   ExternalLink,
   Eye,
   Leaf,
+  Maximize2,
   Moon,
   MoonStar,
   RotateCcw,
@@ -20,6 +21,7 @@ import {
   Sun,
   Sunset,
   Type,
+  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,13 +30,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
-import {
-  cancelSystemPrayerReminder,
-  isNativeReminderUnavailable,
-  scheduleSystemPrayerReminder,
-} from "@/lib/systemPrayerReminders";
 import {
   clearPrayerResume,
   getPrayerResume,
@@ -42,7 +38,7 @@ import {
   savePrayerResume,
   useDailyRhythm,
 } from "@/lib/dailyHabits";
-import { showError, showSuccess } from "@/utils/toast";
+import { showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
 
@@ -59,21 +55,12 @@ type ReaderPrefs = {
   night: boolean;
 };
 
-type ReminderPrefs = Record<PrayerTime, { enabled: boolean; time: string }>;
-
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
-const REMINDER_PREFS_KEY = "daily_prayer_flow:reminders";
 
 const DEFAULT_READER_PREFS: ReaderPrefs = {
   focus: false,
   largeText: false,
   night: false,
-};
-
-const DEFAULT_REMINDERS: ReminderPrefs = {
-  morning: { enabled: true, time: "07:00" },
-  evening: { enabled: true, time: "18:00" },
-  night: { enabled: false, time: "21:30" },
 };
 
 const prayerMeta: Record<PrayerTime, { label: string; icon: ReactNode; hint: string }> = {
@@ -425,16 +412,6 @@ function recommendedTime(): PrayerTime {
   return "night";
 }
 
-function makeReminderDate(time: string) {
-  const [hours, minutes] = time.split(":").map(Number);
-  const start = new Date();
-  start.setHours(hours || 0, minutes || 0, 0, 0);
-  if (start.getTime() < Date.now()) start.setDate(start.getDate() + 1);
-  const end = new Date(start);
-  end.setMinutes(end.getMinutes() + 15);
-  return { start, end };
-}
-
 function fastingLabel(description: string, exception?: string) {
   return exception ? `${description} · ${exception}` : description;
 }
@@ -560,11 +537,8 @@ export function DailyPrayerFlow() {
   const [stepIndex, setStepIndex] = useState(0);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
-  const [reminders, setReminders] = useState<ReminderPrefs>(DEFAULT_REMINDERS);
   const [hydrated, setHydrated] = useState(false);
-  const [reminderBusy, setReminderBusy] = useState<PrayerTime | null>(null);
-  const [downloaded, setDownloaded] = useState<Partial<Record<PrayerTime, string>>>({});
-  const reminderStatus = usePrayerReminderStatus();
+  const [immersive, setImmersive] = useState(false);
   const today = useCurrentDay();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusNextStep = useRef(false);
@@ -575,15 +549,6 @@ export function DailyPrayerFlow() {
     if (saved?.time) setTime(saved.time);
     if (saved?.mode) setMode(saved.mode);
     if (saved?.readerPrefs) setReaderPrefs({ ...DEFAULT_READER_PREFS, ...saved.readerPrefs });
-
-    const savedReminders = getStoredItem<Partial<ReminderPrefs>>(REMINDER_PREFS_KEY);
-    if (savedReminders) {
-      setReminders({
-        morning: { ...DEFAULT_REMINDERS.morning, ...savedReminders.morning },
-        evening: { ...DEFAULT_REMINDERS.evening, ...savedReminders.evening },
-        night: { ...DEFAULT_REMINDERS.night, ...savedReminders.night },
-      });
-    }
 
     const resume = getPrayerResume();
     if (resume) {
@@ -598,11 +563,6 @@ export function DailyPrayerFlow() {
     if (!hydrated) return;
     setStoredItem(FLOW_PREFS_KEY, { time, mode, readerPrefs });
   }, [hydrated, mode, readerPrefs, time]);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    setStoredItem(REMINDER_PREFS_KEY, reminders);
-  }, [hydrated, reminders]);
 
   const steps = useMemo(() => buildFlow(time, mode), [time, mode]);
   const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
@@ -634,77 +594,27 @@ export function DailyPrayerFlow() {
     setStepIndex(0);
   }
 
-  async function updateReminder(nextTime: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
-    if (patch.time !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(patch.time)) return;
-    if (patch.enabled === false) {
-      setReminderBusy(nextTime);
-      try {
-        const result = await cancelSystemPrayerReminder(nextTime);
-        if (!result.ok && !isNativeReminderUnavailable(result)) {
-          showError("Could not cancel the native reminder. It may still be scheduled.");
-          return;
-        }
-        await reminderStatus.refresh();
-      } catch {
-        showError("Could not cancel the native reminder. It may still be scheduled.");
-        return;
-      } finally {
-        setReminderBusy(null);
-      }
+  function goBack() {
+    focusNextStep.current = true;
+    setStepIndex((i) => Math.max(0, i - 1));
+  }
+
+  function goNext() {
+    focusNextStep.current = true;
+    if (stepIndex >= steps.length - 1) {
+      setCompleted((prev) => ({ ...prev, [progressKey]: true }));
+      markPrayerComplete(mode === "personal" ? "personal" : time, mode);
+      showSuccess("Prayer marked complete for today.");
+      setImmersive(false);
+      return;
     }
-    setReminders((prev) => ({ ...prev, [nextTime]: { ...prev[nextTime], ...patch } }));
+    // Beginning the prayer opens the distraction-free view.
+    if (stepIndex === 0) setImmersive(true);
+    setStepIndex((i) => i + 1);
   }
 
-  function downloadCalendarReminder(nextTime: PrayerTime) {
-    const reminder = reminders[nextTime];
-    const { start, end } = makeReminderDate(reminder.time);
-    const label = prayerMeta[nextTime].label;
-    const ics = createSimpleIcs({
-      title: `${label} Prayer (Nepsis Shield)`,
-      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} rule. This daily calendar reminder is created locally from your reminder preference.`,
-      start,
-      end,
-      dailyReminder: true,
-    });
-    downloadTextFile(`${nextTime}-prayer-reminder.ics`, ics, "text/calendar");
-    setDownloaded((previous) => ({ ...previous, [nextTime]: reminder.time }));
-  }
-
-  async function syncReminderToSystem(nextTime: PrayerTime) {
-    setReminderBusy(nextTime);
-    try {
-      const reminder = reminders[nextTime];
-      const label = prayerMeta[nextTime].label;
-      const result = await scheduleSystemPrayerReminder({
-        key: nextTime,
-        label,
-        time: reminder.time,
-      });
-
-      if (result.ok) {
-        await reminderStatus.refresh();
-        showSuccess(`${label} prayer reminder scheduled daily at ${reminder.time}.`);
-        return;
-      }
-
-      if ("reason" in result && result.reason === "permission-denied") {
-        showError("Notification permission was denied. Enable notifications for Nepsis Shield in system settings.");
-        return;
-      }
-
-      if (isNativeReminderUnavailable(result)) {
-        downloadCalendarReminder(nextTime);
-        showSuccess(`${label} calendar file downloaded. Import it into your calendar to activate the daily reminder.`);
-        return;
-      }
-
-      showError("Couldn't add the system reminder.");
-    } catch {
-      showError("Couldn't add the system reminder.");
-    } finally {
-      setReminderBusy(null);
-    }
-  }
+  const nextLabel = stepIndex >= steps.length - 1 ? "Mark complete" : stepIndex === 0 ? "Begin prayer" : "Next";
+  const nextIcon = stepIndex >= steps.length - 1 ? <Check className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />;
 
   return (
     <div className="grid gap-4">
@@ -849,11 +759,16 @@ export function DailyPrayerFlow() {
             </p>
             <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
           </div>
-          {done ? (
-            <Badge className="w-fit rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">
-              <Check className="mr-1 h-3.5 w-3.5" /> Complete
-            </Badge>
-          ) : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {done ? (
+              <Badge className="w-fit rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">
+                <Check className="mr-1 h-3.5 w-3.5" /> Complete
+              </Badge>
+            ) : null}
+            <Button type="button" variant="outline" size="sm" className="rounded-2xl border-border/60" onClick={() => setImmersive(true)}>
+              <Maximize2 className="mr-2 h-4 w-4" /> Full screen
+            </Button>
+          </div>
         </div>
 
         <div className="my-4">
@@ -870,7 +785,7 @@ export function DailyPrayerFlow() {
                 : "border-border/60 bg-muted/20")
           }
         >
-          <div className={(readerPrefs.largeText ? "space-y-4 text-lg" : "space-y-3 text-base") + " leading-relaxed"}>
+          <div className={"scripture-text " + (readerPrefs.largeText ? "space-y-4 text-xl" : "space-y-3 text-lg")}>
             {current.body.map((line, index) => (
               <p key={index}>{line}</p>
             ))}
@@ -889,30 +804,14 @@ export function DailyPrayerFlow() {
               type="button"
               variant="outline"
               className="rounded-2xl border-border/60"
-              onClick={() => {
-                focusNextStep.current = true;
-                setStepIndex((i) => Math.max(0, i - 1));
-              }}
+              onClick={goBack}
               disabled={stepIndex === 0}
             >
               <ChevronLeft className="mr-2 h-4 w-4" /> Back
             </Button>
-            <Button
-              type="button"
-              className="rounded-2xl"
-              onClick={() => {
-                focusNextStep.current = true;
-                if (stepIndex >= steps.length - 1) {
-                  setCompleted((prev) => ({ ...prev, [progressKey]: true }));
-                  markPrayerComplete(mode === "personal" ? "personal" : time, mode);
-                  showSuccess("Prayer marked complete for today.");
-                  return;
-                }
-                setStepIndex((i) => i + 1);
-              }}
-            >
-              {stepIndex >= steps.length - 1 ? "Mark complete" : stepIndex === 0 ? "Begin prayer" : "Next"}
-              {stepIndex >= steps.length - 1 ? <Check className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />}
+            <Button type="button" className="rounded-2xl" onClick={goNext}>
+              {nextLabel}
+              {nextIcon}
             </Button>
           </div>
           <Button
@@ -931,58 +830,63 @@ export function DailyPrayerFlow() {
         </div>
       </Card>
 
-      <Card id="prayer-reminders" className="scroll-mt-24 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-semibold tracking-tight">Prayer reminders</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Turning a preference on does not schedule it: select Sync to schedule native notifications. In a browser, Sync downloads a daily calendar file; import it and check alerts in your calendar app. Turn a preference off to cancel its native reminder. Imported calendar events must be removed in your calendar app.
-            </p>
-          </div>
-          <Bell className="h-5 w-5 text-muted-foreground" />
-        </div>
-        <Separator className="my-4" />
-        <div className="grid gap-3">
-          {(Object.keys(prayerMeta) as PrayerTime[]).map((key) => (
-            <div key={key} className="grid gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
-              <div className="flex items-center gap-3">
-                <Switch
-                  aria-label={`${prayerMeta[key].label} reminder preference`}
-                  checked={reminders[key].enabled || Boolean(reminderStatus.scheduled[key])}
-                  disabled={reminderBusy !== null || reminderStatus.checking}
-                  onCheckedChange={(checked) => void updateReminder(key, { enabled: checked })}
-                />
-                <div>
-                  <p className="text-sm font-semibold">{prayerMeta[key].label} prayer</p>
-                  <p role="status" className="text-xs text-muted-foreground">
-                    {reminderStatus.checking ? "Checking native schedule…" : reminderStatus.error ? "Native schedule could not be verified" : reminderStatus.scheduled[key] ? `Native reminder scheduled${reminderStatus.scheduled[key]?.time ? ` at ${reminderStatus.scheduled[key]?.time}` : ""}${reminderStatus.scheduled[key]?.time !== reminders[key].time ? " · Sync to apply this preferred time" : ""}` : downloaded[key] ? `Calendar file downloaded for ${downloaded[key]} · import required, schedule unconfirmed` : reminders[key].enabled ? "Preference on · not scheduled yet" : "Preference off · no native reminder scheduled"}
-                  </p>
+      <Link
+        to="/settings#prayer-reminders"
+        className="flex items-center gap-3 rounded-2xl border border-border/60 bg-card px-4 py-3 text-sm text-muted-foreground hover:border-accent/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Bell className="h-4 w-4 shrink-0 text-accent" />
+        <span className="min-w-0 flex-1">Prayer reminders are in Settings.</span>
+        <ChevronRight className="h-4 w-4 shrink-0" />
+      </Link>
+
+      {/* Distraction-free prayer: one step at a time, large text, app menus hidden. */}
+      <Dialog.Root open={immersive} onOpenChange={setImmersive}>
+        <Dialog.Portal>
+          <Dialog.Content
+            aria-describedby={undefined}
+            className={
+              "fixed inset-0 z-[70] flex h-dvh flex-col text-foreground outline-none " +
+              (readerPrefs.night ? "bg-slate-950 text-slate-100" : "bg-background")
+            }
+          >
+            <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                {mode === "personal" ? "Developer's Rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
+              </p>
+              <Dialog.Close asChild>
+                <Button type="button" variant="ghost" size="icon" className="rounded-full">
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close full-screen prayer</span>
+                </Button>
+              </Dialog.Close>
+            </header>
+            <Progress value={progress} aria-hidden className="mx-auto mt-3 h-1 w-[min(42rem,calc(100%-2.5rem))]" />
+
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              <div className="mx-auto w-full max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
+                <Dialog.Title className="text-3xl font-semibold tracking-tight sm:text-4xl">{current.title}</Dialog.Title>
+                <div className={"scripture-text mt-6 " + (readerPrefs.largeText ? "space-y-6 text-2xl" : "space-y-5 text-xl")}>
+                  {current.body.map((line, index) => (
+                    <p key={index}>{line}</p>
+                  ))}
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 sm:justify-end">
-                <input
-                  type="time"
-                  value={reminders[key].time}
-                  disabled={reminderBusy !== null}
-                  onChange={(event) => void updateReminder(key, { time: event.target.value })}
-                  className="h-10 rounded-2xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  aria-label={`${prayerMeta[key].label} reminder time`}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="rounded-2xl border-border/60"
-                  aria-label={`Sync ${prayerMeta[key].label.toLowerCase()} prayer reminder`}
-                  onClick={() => void syncReminderToSystem(key)}
-                  disabled={(!reminders[key].enabled && !reminderStatus.scheduled[key]) || reminderBusy !== null}
-                >
-                  <CalendarPlus className="mr-2 h-4 w-4" /> {reminderBusy === key ? "Updating…" : "Sync"}
+            </div>
+
+            <footer className="shrink-0 border-t border-border/50 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
+              <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-5 sm:px-8">
+                <Button type="button" variant="outline" className="h-12 rounded-2xl border-border/60 px-5" onClick={goBack} disabled={stepIndex === 0}>
+                  <ChevronLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button type="button" className="h-12 flex-1 rounded-2xl sm:flex-none sm:px-8" onClick={goNext}>
+                  {nextLabel}
+                  {nextIcon}
                 </Button>
               </div>
-            </div>
-          ))}
-        </div>
-      </Card>
+            </footer>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

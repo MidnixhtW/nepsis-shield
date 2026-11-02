@@ -28,7 +28,8 @@ export function SectionIntro({
         <div className="min-w-0">
           {eyebrow ? <p className="premium-eyebrow">{eyebrow}</p> : null}
           <h2 className="mt-1 text-2xl font-semibold tracking-[-0.035em] sm:text-3xl">{title}</h2>
-          {description ? <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p> : null}
+          {/* Phones skip the subtitle so the page's tabs and content come into view sooner. */}
+          {description ? <p className="mt-2 hidden max-w-2xl text-sm leading-relaxed text-muted-foreground sm:block">{description}</p> : null}
         </div>
       </div>
       {actions ? <div className="flex w-full max-w-full flex-wrap gap-2 lg:w-auto lg:shrink-0 lg:justify-end">{actions}</div> : null}

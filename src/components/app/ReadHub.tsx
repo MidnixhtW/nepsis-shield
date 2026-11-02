@@ -6,7 +6,6 @@ import { ReadingPlans } from "@/components/app/ReadingPlans";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionIntro } from "@/components/app/SectionIntro";
-import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { showError, showSuccess } from "@/utils/toast";
 
 export type ReadTab = "daily" | "bible" | "plans";
@@ -59,14 +58,6 @@ export function ReadHub({
         description="Receive the appointed readings, browse Scripture, or follow a steady reading plan."
         icon={<BookOpen className="h-4 w-4" />}
         actions={actions}
-      />
-
-      <FirstStepHint
-        title="Recommended: today’s readings."
-        description="Begin with the Church’s daily rhythm. Browse the Bible or use a plan when you want to go further."
-        actionLabel="Open Daily"
-        icon={<BookOpen className="h-4 w-4" />}
-        onAction={() => onTabChange("daily")}
       />
 
       <Tabs value={tab} onValueChange={(value) => onTabChange(value as ReadTab)}>

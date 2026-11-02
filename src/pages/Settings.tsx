@@ -29,6 +29,7 @@ import { toast } from "@/hooks/use-toast";
 import { useSettings } from "@/hooks/useSettings";
 import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
 import { PageContainer } from "@/components/app/PageContainer";
+import { PrayerReminders } from "@/components/app/PrayerReminders";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
 
@@ -109,7 +110,7 @@ export default function Settings() {
   async function setNotifications(checked: boolean) {
     if (!checked) {
       updateSettings({ reminders: { enableNotifications: false } });
-      toast({ title: "Browser notification preference off", description: "Native and imported calendar reminders are unchanged. Manage native reminders in Prayer." });
+      toast({ title: "Browser notification preference off", description: "Native and imported calendar reminders are unchanged. Manage them under Prayer reminders below." });
       return;
     }
     if (!("Notification" in window)) return;
@@ -119,10 +120,10 @@ export default function Settings() {
       setPermission(next);
       updateSettings({ reminders: { enableNotifications: next === "granted" } });
       toast(next === "granted"
-        ? { title: "Browser permission granted", description: "No reminder was scheduled. Open Prayer to sync a native reminder or download a calendar file." }
+        ? { title: "Browser permission granted", description: "No reminder was scheduled. Use Sync under Prayer reminders below, or download a calendar file." }
         : { variant: "destructive", title: "Browser permission not granted", description: "Use a calendar download, or change notification permission in your browser settings." });
     } catch {
-      toast({ variant: "destructive", title: "Could not request permission", description: "You can still download reminders from Prayer." });
+      toast({ variant: "destructive", title: "Could not request permission", description: "You can still download calendar reminders below." });
     } finally {
       setNotificationBusy(false);
     }
@@ -374,7 +375,7 @@ export default function Settings() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold tracking-tight">Prayer reminders & permissions</h2>
-              <p id="notification-help" className="mt-1 text-sm text-muted-foreground">Browser permission alone does not schedule prayer reminders. Sync times in Prayer for native notifications, or import a calendar download in your browser.</p>
+              <p id="notification-help" className="mt-1 text-sm text-muted-foreground">Browser permission alone does not schedule prayer reminders. Sync times below for native notifications, or import a calendar download in your browser.</p>
             </div>
             <Bell className="h-5 w-5 text-muted-foreground" />
           </div>
@@ -398,10 +399,11 @@ export default function Settings() {
                 <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
                 <p className="text-xs text-muted-foreground">Downloading a calendar file does not confirm it was imported. Imported events must be changed or removed in your calendar app.</p>
               </div>
-              <Button asChild variant="outline" className="mt-3 rounded-xl"><Link to="/pray?tab=daily">Manage prayer reminders</Link></Button>
             </div>
           </div>
         </Card>
+
+        <PrayerReminders />
       </div>
     </PageContainer>
   );

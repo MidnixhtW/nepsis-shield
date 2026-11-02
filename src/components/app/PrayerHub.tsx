@@ -14,7 +14,6 @@ import { SleepMode } from "@/components/app/SleepMode";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionIntro } from "@/components/app/SectionIntro";
-import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { showError, showSuccess } from "@/utils/toast";
 
@@ -78,15 +77,6 @@ export function PrayerHub({
         description="Begin with the daily office, or choose a focused practice for the moment you are in."
         icon={<CenserIcon className="h-5 w-5" />}
         actions={actions}
-      />
-
-      <FirstStepHint
-        title="Recommended: begin with Daily."
-        description="A simple, guided prayer flow is the clearest place to start. The other practices remain close when you need them."
-        actionLabel="Open Daily"
-        icon={<CenserIcon className="h-4 w-4" />}
-        onAction={() => onTabChange("daily")}
-
       />
 
       <Tabs value={tab} onValueChange={(value) => onTabChange(value as PrayerTab)}>
