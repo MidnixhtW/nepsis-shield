@@ -31,6 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
+import { COMMEMORATIONS_CHANGED_EVENT, commemorationStep, getCommemorations } from "@/lib/commemorations";
 import {
   clearPrayerResume,
   getPrayerResume,
@@ -564,7 +565,18 @@ export function DailyPrayerFlow() {
     setStoredItem(FLOW_PREFS_KEY, { time, mode, readerPrefs });
   }, [hydrated, mode, readerPrefs, time]);
 
-  const steps = useMemo(() => buildFlow(time, mode), [time, mode]);
+  const [names, setNames] = useState(getCommemorations);
+  useEffect(() => {
+    const refresh = () => setNames(getCommemorations());
+    window.addEventListener(COMMEMORATIONS_CHANGED_EVENT, refresh);
+    return () => window.removeEventListener(COMMEMORATIONS_CHANGED_EVENT, refresh);
+  }, []);
+  // Names from the Names tab are prayed just before the closing prayer.
+  const steps = useMemo(() => {
+    const flow = buildFlow(time, mode);
+    const remember = commemorationStep(names);
+    return remember ? [...flow.slice(0, -1), remember, flow[flow.length - 1]] : flow;
+  }, [time, mode, names]);
   const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
   const storedPrayerKey = mode === "personal" ? "personal" : time;
   const done = completed[progressKey] ?? !!rhythm.today.prayers[storedPrayerKey];

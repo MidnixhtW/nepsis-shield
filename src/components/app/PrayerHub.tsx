@@ -5,6 +5,7 @@ import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
 
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
+import { CommemorationList } from "@/components/app/CommemorationList";
 import { JesusPrayerCounter } from "@/components/app/JesusPrayerCounter";
 import { DailyReflection } from "@/components/app/DailyReflection";
 import { PreparationChecklist } from "@/components/app/PreparationChecklist";
@@ -17,12 +18,13 @@ import { SectionIntro } from "@/components/app/SectionIntro";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { showError, showSuccess } from "@/utils/toast";
 
-export type PrayerTab = "daily" | "rule" | "prayers" | "counter" | "prep" | "journal" | "sleep";
+export type PrayerTab = "daily" | "rule" | "prayers" | "names" | "counter" | "prep" | "journal" | "sleep";
 
 const prayerTabs: Array<{ value: PrayerTab; label: string }> = [
   { value: "daily", label: "Daily" },
   { value: "rule", label: "Rule" },
   { value: "prayers", label: "Prayer texts" },
+  { value: "names", label: "Names" },
   { value: "counter", label: "Stillness" },
   { value: "prep", label: "Prepare" },
   { value: "journal", label: "Journal" },
@@ -91,6 +93,7 @@ export function PrayerHub({
         <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyPrayerFlow /></TabsContent>
         <TabsContent value="rule" className="mt-4 sm:mt-5"><PrayerRule /></TabsContent>
         <TabsContent value="prayers" className="mt-4 sm:mt-5"><PrayerBook showRule={false} /></TabsContent>
+        <TabsContent value="names" className="mt-4 sm:mt-5"><CommemorationList /></TabsContent>
         <TabsContent value="counter" className="mt-4 sm:mt-5">
           <div className="grid gap-4 sm:gap-5"><GroundMeNow /><JesusPrayerCounter /><StillnessTimer /></div>
         </TabsContent>
