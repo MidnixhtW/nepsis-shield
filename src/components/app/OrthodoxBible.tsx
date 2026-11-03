@@ -15,7 +15,6 @@ import {
   Type,
   WrapText,
   Link2,
-  ArrowRight,
 } from "lucide-react";
 import { BIBLE_BOOKS, getBookByName } from "@/lib/bible/books";
 import {
@@ -48,109 +47,8 @@ import { showError, showSuccess } from "@/utils/toast";
 import { fetchJsonCached } from "@/lib/privacyFetch";
 import { fetchBollsChapter, resolveBollsBookId } from "@/lib/bible/bolls";
 import { cn } from "@/lib/utils";
-
-type BibleApiVerse = {
-  book_name?: string;
-  chapter?: number;
-  verse?: number;
-  text?: string;
-};
-
-type BibleApiResponse = {
-  reference?: string;
-  translation_id?: string;
-  translation_name?: string;
-  translation_note?: string;
-  verses?: BibleApiVerse[];
-};
-
-type BookmarkItem = {
-  ref: string; // e.g. "John 3" or "Tobit 1"
-  createdAt: number;
-  base: BaseTranslation;
-};
-
-type FallbackSource = "bible-api" | "bolls";
-
-type ReadPrefs = {
-  fontSize: number; // px
-  lineWidth: "normal" | "wide";
-};
-
-function bibleApiUrl(ref: string, translation: string) {
-  const encoded = encodeURIComponent(ref.trim());
-  return `https://bible-api.com/${encoded}?translation=${translation}`;
-}
-
-function bookmarksKey() {
-  return "bible:bookmarks";
-}
-
-function lastReadKey() {
-  return "bible:last_read";
-}
-
-function saveEnabledKey() {
-  return "privacy:bible_save";
-}
-
-const LAST_READ_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
-const BOOKMARKS_TTL_MS = 1000 * 60 * 60 * 24 * 365; // 1 year
-
-function splitBookChapter(ref: string): { bookName: string; chapter: number } | null {
-  const match = ref.match(/^(.*)\s+(\d+)\s*$/);
-  if (!match) return null;
-  return { bookName: match[1].trim(), chapter: Number(match[2]) };
-}
-
-function isInteractiveTarget(target: EventTarget | null) {
-  if (!(target instanceof HTMLElement)) return false;
-  const tag = target.tagName.toLowerCase();
-  return (
-    tag === "input" ||
-    tag === "textarea" ||
-    tag === "select" ||
-    target.isContentEditable
-  );
-}
-
-function prefsKey() {
-  return "bible:prefs";
-}
-
-function normalizeRefForBolls(ref: string): { candidates: string[]; chapter: number } | null {
-  // Accept: "John 3" or "John 3:16" or "1 Maccabees 2:1-5"; we only use the chapter.
-  const m = ref.trim().match(/^(.*)\s+(\d+)(?::\d+.*)?$/);
-  if (!m) return null;
-  const rawBook = m[1].trim();
-  const ch = Number(m[2]);
-  if (!Number.isFinite(ch) || ch <= 0) return null;
-
-  // Candidate names for Bolls book resolver: prefer API name, then display name, then a few normalizations.
-  const book = getBookByName(rawBook);
-  const candidates = book
-    ? [book.apiName ?? book.name, book.name]
-    : [rawBook];
-
-  return { candidates: Array.from(new Set(candidates)), chapter: ch };
-}
-
-function bollsSlugForBase(base: BaseTranslation) {
-  if (base === "nkjv") return "NKJV";
-  if (base === "lxx") return "LXX";
-  return base === "web" ? "WEB" : "KJV";
-}
-
-function bollsSlugForBook(bookName: string, base: BaseTranslation) {
-  // Bolls has NKJV and LXX (Brenton).
-  return bollsSlugForBase(base);
-}
-
-function sortBookmarks(items: BookmarkItem[], mode: "recent" | "alpha") {
-  const next = [...items];
-  if (mode === "recent") return next.sort((a, b) => b.createdAt - a.createdAt);
-  return next.sort((a, b) => a.ref.localeCompare(b.ref));
-}
+import { BibleBookmarksPanel } from "@/components/app/BibleBookmarksPanel";
+import { bibleApiUrl, bookmarksKey, lastReadKey, saveEnabledKey, LAST_READ_TTL_MS, BOOKMARKS_TTL_MS, splitBookChapter, isInteractiveTarget, prefsKey, normalizeRefForBolls, bollsSlugForBase, bollsSlugForBook, sortBookmarks, type BibleApiVerse, type BibleApiResponse, type BookmarkItem, type BookmarkSort, type FallbackSource, type ReadPrefs } from "@/lib/bible/reader";
 
 export function OrthodoxBible() {
   // OSB-aligned mode (book list), public text sources
@@ -174,7 +72,7 @@ export function OrthodoxBible() {
 
   // Bookmarks UX
   const [bookmarkQuery, setBookmarkQuery] = useState("");
-  const [bookmarkSort, setBookmarkSort] = useState<"recent" | "alpha">("recent");
+  const [bookmarkSort, setBookmarkSort] = useState<BookmarkSort>("recent");
 
   // Track which upstream source was used for the currently displayed passage.
   const [browseSource, setBrowseSource] = useState<FallbackSource>("bible-api");
@@ -1004,112 +902,26 @@ export function OrthodoxBible() {
         </TabsContent>
 
         <TabsContent value="bookmarks" className="mt-4">
-          <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-base font-semibold tracking-tight">Bookmarks</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {saveEnabled ? "Saved on this device." : "Saving is off (in-session only)."}
-                </p>
-              </div>
-              <Star className="h-5 w-5 text-muted-foreground" />
-            </div>
-
-            <Separator className="my-4" />
-
-            <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
-              <div className="grid gap-2">
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">Search</p>
-                <Input
-                  aria-label="Search Bible bookmarks"
-                  value={bookmarkQuery}
-                  onChange={(e) => setBookmarkQuery(e.target.value)}
-                  placeholder="Filter bookmarks (e.g., John, Psalm, Tobit)"
-                  className="h-11 rounded-2xl"
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">Sort</p>
-                <ToggleGroup
-                  type="single"
-                  aria-label="Bible bookmark sort order"
-                  value={bookmarkSort}
-                  onValueChange={(v) => v && setBookmarkSort(v as typeof bookmarkSort)}
-                  className="justify-start gap-2"
-                >
-                  <ToggleGroupItem
-                    value="recent"
-                    className="h-11 rounded-2xl border border-border/60 px-3 text-xs font-semibold data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
-                  >
-                    Recent
-                  </ToggleGroupItem>
-                  <ToggleGroupItem
-                    value="alpha"
-                    className="h-11 rounded-2xl border border-border/60 px-3 text-xs font-semibold data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
-                  >
-                    A–Z
-                  </ToggleGroupItem>
-                </ToggleGroup>
-              </div>
-            </div>
-
-            <Separator className="my-4" />
-
-            {sortedFilteredBookmarks.length ? (
-              <div className="grid gap-2">
-                {sortedFilteredBookmarks.map((b) => (
-                  <div
-                    key={`${b.base}:${b.ref}:${b.createdAt}`}
-                    className="flex flex-col justify-between gap-2 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:flex-row sm:items-center"
-                  >
-                    <div>
-                      <p className="text-sm font-semibold">{b.ref}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Base: {b.base.toUpperCase()} • {new Date(b.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        aria-label={`Open bookmark ${b.ref}`}
-                        className="rounded-2xl border-border/60"
-                        onClick={() => {
-                          const parsed = splitBookChapter(b.ref);
-                          if (parsed) {
-                            setBookName(parsed.bookName);
-                            setChapter(parsed.chapter);
-                          }
-                          setRefInput(b.ref);
-                          setRefSubmitted(b.ref);
-                          setBase(b.base);
-                          setTab("browse");
-                        }}
-                      >
-                        Open <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        aria-label={`Remove bookmark ${b.ref}`}
-                        className="rounded-2xl text-muted-foreground hover:text-foreground"
-                        onClick={() =>
-                          setBookmarks((prev) =>
-                            prev.filter((x) => !(x.ref === b.ref && x.base === b.base)),
-                          )
-                        }
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                No bookmarks yet. Bookmark a chapter from Browse.
-              </p>
-            )}
-          </Card>
+          <BibleBookmarksPanel
+            bookmarks={sortedFilteredBookmarks}
+            saveEnabled={saveEnabled}
+            query={bookmarkQuery}
+            onQueryChange={setBookmarkQuery}
+            sort={bookmarkSort}
+            onSortChange={setBookmarkSort}
+            onOpen={(b) => {
+              const parsed = splitBookChapter(b.ref);
+              if (parsed) {
+                setBookName(parsed.bookName);
+                setChapter(parsed.chapter);
+              }
+              setRefInput(b.ref);
+              setRefSubmitted(b.ref);
+              setBase(b.base);
+              setTab("browse");
+            }}
+            onRemove={(b) => setBookmarks((prev) => prev.filter((x) => !(x.ref === b.ref && x.base === b.base)))}
+          />
         </TabsContent>
       </Tabs>
 
