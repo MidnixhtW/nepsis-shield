@@ -41,16 +41,12 @@ jobs:
         run: pnpm typecheck
 
       - name: Build production app
-        env:
-          VITE_DISABLE_NITRO: "1"
         run: pnpm build
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
 
       - name: Run browser, responsive, accessibility, and offline tests
-        env:
-          VITE_DISABLE_NITRO: "1"
         run: pnpm test:e2e
 
       - name: Upload Playwright report
