@@ -4,7 +4,7 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 export type DailyHabitKey = "prayer" | "reading" | "reflection" | "mercy";
 export type PrayerTimeKey = "morning" | "evening" | "night" | "personal";
-export type PrayerModeKey = "short" | "standard" | "long" | "personal";
+export type PrayerModeKey = "short" | "standard" | "long" | "seraphim" | "personal";
 export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry";
 
 export type ResumeTarget = {

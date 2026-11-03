@@ -43,7 +43,7 @@ import { showSuccess } from "@/utils/toast";
 
 type PrayerTime = "morning" | "evening" | "night";
 
-type PrayerMode = "short" | "standard" | "long" | "personal";
+type PrayerMode = "short" | "standard" | "long" | "seraphim" | "personal";
 
 type PrayerStep = {
   title: string;
@@ -119,6 +119,52 @@ const closingPrayers: PrayerStep = {
     "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us. Amen.",
   ],
 };
+
+const creedStep: PrayerStep = {
+  title: "The Creed",
+  body: [
+    "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible.",
+    "And in one Lord Jesus Christ, the Son of God, the Only-begotten, begotten of the Father before all ages: Light of Light, true God of true God; begotten, not made; of one essence with the Father, by Whom all things were made.",
+    "Who for us men and for our salvation came down from heaven, and was incarnate of the Holy Spirit and the Virgin Mary, and became man. And He was crucified for us under Pontius Pilate, and suffered, and was buried.",
+    "And the third day He rose again, according to the Scriptures, and ascended into heaven, and sits at the right hand of the Father. And He shall come again with glory to judge the living and the dead; Whose kingdom shall have no end.",
+    "And in the Holy Spirit, the Lord, the Giver of Life, Who proceeds from the Father; Who with the Father and the Son together is worshiped and glorified; Who spoke by the prophets.",
+    "In one, holy, catholic, and apostolic Church. I acknowledge one baptism for the remission of sins. I look for the resurrection of the dead, and the life of the age to come. Amen.",
+  ],
+};
+
+// St. Seraphim of Sarov's short rule for those who cannot keep the full prayers: on rising, at midday, and before sleep.
+const seraphimRule: PrayerStep[] = [
+  commonOpening[0],
+  {
+    title: "St. Seraphim's rule",
+    body: [
+      "St. Seraphim of Sarov gave this short rule to those whose work or circumstances left no time for the full prayers. Kept faithfully, he said, it can lead to a high measure of Christian life.",
+      "Pray it on rising, at midday, and before sleep. Through the day, keep the Jesus Prayer when you can.",
+    ],
+  },
+  {
+    title: "The Lord's Prayer (3 times)",
+    body: [
+      "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
+      "Pray it three times, slowly.",
+    ],
+  },
+  {
+    title: "O Theotokos and Virgin (3 times)",
+    body: [
+      "O Theotokos and Virgin, rejoice, O Mary full of grace, the Lord is with thee. Blessed art thou among women, and blessed is the fruit of thy womb, for thou hast borne the Saviour of our souls.",
+      "Pray it three times, slowly.",
+    ],
+  },
+  creedStep,
+  {
+    title: "Close",
+    body: [
+      "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
+      "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us. Amen.",
+    ],
+  },
+];
 
 const shortFlows: Record<PrayerTime, PrayerStep[]> = {
   morning: [
@@ -269,17 +315,7 @@ const developerPrayerRule: PrayerStep[] = [
       "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
     ],
   },
-  {
-    title: "The Creed",
-    body: [
-      "I believe in one God, the Father Almighty, Maker of heaven and earth, and of all things visible and invisible.",
-      "And in one Lord Jesus Christ, the Son of God, the Only-begotten, begotten of the Father before all ages: Light of Light, true God of true God; begotten, not made; of one essence with the Father, by Whom all things were made.",
-      "Who for us men and for our salvation came down from heaven, and was incarnate of the Holy Spirit and the Virgin Mary, and became man. And He was crucified for us under Pontius Pilate, and suffered, and was buried.",
-      "And the third day He rose again, according to the Scriptures, and ascended into heaven, and sits at the right hand of the Father. And He shall come again with glory to judge the living and the dead; Whose kingdom shall have no end.",
-      "And in the Holy Spirit, the Lord, the Giver of Life, Who proceeds from the Father; Who with the Father and the Son together is worshiped and glorified; Who spoke by the prophets.",
-      "In one, holy, catholic, and apostolic Church. I acknowledge one baptism for the remission of sins. I look for the resurrection of the dead, and the life of the age to come. Amen.",
-    ],
-  },
+  creedStep,
   {
     title: "Prayer before work",
     body: [
@@ -401,6 +437,7 @@ const longExtras: Record<PrayerTime, PrayerStep[]> = {
 
 function buildFlow(time: PrayerTime, mode: PrayerMode) {
   if (mode === "personal") return developerPrayerRule;
+  if (mode === "seraphim") return seraphimRule;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];
@@ -636,7 +673,7 @@ export function DailyPrayerFlow() {
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-semibold tracking-tight">Daily Prayer Flow</h2>
               <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                {mode === "personal" ? "Developer's Rule" : prayerMeta[time].label}
+                {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : prayerMeta[time].label}
               </Badge>
             </div>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -685,7 +722,7 @@ export function DailyPrayerFlow() {
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Short for busy days, standard for normal use, longer when you have room, or the developer's rule for a fuller Orthodox anchor.
+                St. Seraphim's rule for shifts and deployments, short for busy days, standard for normal use, longer when you have room, or the developer's rule for a fuller Orthodox anchor.
               </p>
             </div>
             <ToggleGroup
@@ -700,6 +737,7 @@ export function DailyPrayerFlow() {
               className="flex-wrap justify-start gap-2"
             >
               {[
+                ["seraphim", "St. Seraphim"],
                 ["short", "Short"],
                 ["standard", "Standard"],
                 ["long", "Longer"],
@@ -863,7 +901,7 @@ export function DailyPrayerFlow() {
           >
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                {mode === "personal" ? "Developer's Rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
+                {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <Dialog.Close asChild>
                 <Button type="button" variant="ghost" size="icon" className="rounded-full">
