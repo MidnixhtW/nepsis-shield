@@ -70,11 +70,17 @@ test("desktop navigation does not collide at its first breakpoint", async ({ pag
   const desktopNav = page.getByRole("navigation", { name: "Primary navigation", exact: true });
   await expect(desktopNav).toBeVisible();
   // Poll: WebKit can briefly report no box while the shell re-renders after load.
+  // The last reading is asserted separately so a failure shows the actual measurements.
+  let last = "";
   await expect.poll(async () => {
     const [headerBox, navBox] = await Promise.all([appHeader.boundingBox(), desktopNav.boundingBox()]);
-    if (!headerBox || !navBox) return "not measured yet";
-    return headerBox.x + headerBox.width <= navBox.x ? "clear" : `overlap: header ends ${headerBox.x + headerBox.width}, nav starts ${navBox.x}`;
-  }).toBe("clear");
+    const viewport = await page.evaluate(() => `viewport ${window.innerWidth}, layout ${document.documentElement.clientWidth}`);
+    if (!headerBox || !navBox) last = `not measured (header ${!!headerBox}, nav ${!!navBox}; ${viewport})`;
+    else if (headerBox.x + headerBox.width <= navBox.x) last = "clear";
+    else last = `overlap: header ${headerBox.x}+${headerBox.width}, nav starts ${navBox.x}; ${viewport}`;
+    return last;
+  }).toBe("clear").catch(() => {});
+  expect(last).toBe("clear");
   await expectNoHorizontalOverflow(page);
 });
 
