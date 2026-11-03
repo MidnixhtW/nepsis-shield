@@ -12,18 +12,19 @@ import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
 import { ConfessionPrep } from "@/components/app/ConfessionPrep";
 import { SleepMode } from "@/components/app/SleepMode";
+import { CommunionPrep } from "@/components/app/CommunionPrep";
 import { SectionIntro } from "@/components/app/SectionIntro";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { cn } from "@/lib/utils";
 
-export type PrayerTab = "daily" | "rule" | "prayers" | "names" | "counter" | "prep" | "journal" | "sleep";
+export type PrayerTab = "daily" | "rule" | "prayers" | "names" | "counter" | "prep" | "communion" | "journal" | "sleep";
 
 // Eight practices in four groups, so the tab bar fits on a phone. Each tab value is still its own URL.
 const groups: Array<{ id: string; label: string; items: Array<{ value: PrayerTab; label: string }> }> = [
   { id: "daily", label: "Daily", items: [{ value: "daily", label: "Daily prayer" }, { value: "rule", label: "My rule" }] },
   { id: "prayers", label: "Prayers", items: [{ value: "prayers", label: "Prayer texts" }, { value: "names", label: "Names" }] },
   { id: "stillness", label: "Stillness", items: [{ value: "counter", label: "Jesus Prayer" }, { value: "sleep", label: "Sleep" }] },
-  { id: "prepare", label: "Prepare", items: [{ value: "prep", label: "Confession" }, { value: "journal", label: "Journal" }] },
+  { id: "prepare", label: "Prepare", items: [{ value: "prep", label: "Confession" }, { value: "communion", label: "Communion" }, { value: "journal", label: "Journal" }] },
 ];
 
 const content: Record<PrayerTab, ReactNode> = {
@@ -38,6 +39,7 @@ const content: Record<PrayerTab, ReactNode> = {
   prep: (
     <div className="grid gap-4 sm:gap-5"><PreparationChecklist /><ConfessionPrep /></div>
   ),
+  communion: <CommunionPrep />,
   journal: <DailyReflection />,
 };
 
