@@ -19,7 +19,7 @@ Everything here is ready to copy and upload. Regenerate the images after UI chan
 
 **Full description** (4000 characters max)
 
-> Nepsis Shield is a free Orthodox Christian companion for prayer, Scripture, the saints, and daily watchfulness, for everyday life and for those who serve and protect: military, police, fire, EMS, dispatch, corrections, and chaplains.
+> Nepsis Shield is a free Orthodox Christian companion for prayer, Scripture, the saints, and the fasts of the Church year: for students and parents, converts and lifelong Orthodox, and anyone who wants a steadier rule of prayer. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, it adds support for your work too.
 >
 > PRAY
 > • Morning, evening, and night prayers in four lengths, including St. Seraphim of Sarov's short rule for shifts and deployments
@@ -35,7 +35,10 @@ Everything here is ready to copy and upload. Regenerate the images after UI chan
 >
 > READ
 > • The day's Epistle and Gospel, the Bible, and reading plans, set in a book typeface for calm reading
-> • Today's saints and feasts, with soldier saints marked for those who serve
+> • Today's saints and feasts
+>
+> FOR THOSE WHO SERVE
+> • Choose your calling (military, police, fire, EMS, dispatch, corrections, chaplain) for role-specific prayers and resets, 24-hour time, and soldier saints marked on the calendar
 >
 > WHEN PRESSURE RISES
 > • One tap to "Help": short guided steps for anxiety, temptation, anger, exhaustion, or dryness
@@ -43,7 +46,7 @@ Everything here is ready to copy and upload. Regenerate the images after UI chan
 >
 > YOUR RULE OF LIFE
 > • A simple personal Rule of Vigilance built from what you need most
-> • The hour of prayer in the header, in 24-hour time for service roles
+> • The hour of prayer shown beside the date
 >
 > PRIVATE BY DESIGN
 > No account, no ads, and no tracking in the app. Your prayers, names, notes, and progress stay on your phone, with an optional encrypted backup.

@@ -24,7 +24,7 @@ export const themeOptions: Array<{
   {
     value: "dark",
     label: "Olive & Brass",
-    description: "Quiet field colors, matched to the shield",
+    description: "Quiet olive and brass, matched to the shield",
     swatch: "bg-[#8ea65c]",
     preview: ["#0e0f0b", "#ece4cc", "#d0b063"],
   },
@@ -38,14 +38,14 @@ export const themeOptions: Array<{
   {
     value: "red-dark",
     label: "Black & Red",
-    description: "High-alert command display",
+    description: "Deep black with crimson, for night prayer",
     swatch: "bg-[#e6333c]",
     preview: ["#080808", "#ebe8e8", "#e6333c"],
   },
   {
     value: "blue-cream",
     label: "Blue & Cream",
-    description: "Daylight operations display",
+    description: "Bright blue and cream for daytime",
     swatch: "bg-[#225ea8]",
     preview: ["#f1ead8", "#14243e", "#225ea8"],
   },

@@ -449,10 +449,10 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your path</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  What should the app be attentive to?
+                  Is there a calling the app should keep in mind?
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Choose a role if it fits. If not, the civilian path keeps the language pastoral and ordinary-life focused.
+                  Most people choose Everyday life. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, choose it here and the app adds support for your work.
                 </p>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

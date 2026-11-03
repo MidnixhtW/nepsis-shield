@@ -7,7 +7,8 @@ export const DEFAULT_RESPONDER_MODE: ResponderMode = "civilian";
 export const RESPONDER_MODE_STORAGE_KEY = "nepsis:responder-mode";
 export const RESPONDER_MODE_CHANGED_EVENT = "nepsis:responder-mode-changed";
 
-export const responderModeOrder: ResponderMode[] = ["military", "law", "fire", "ems", "dispatch", "custody", "chaplain", "civilian"];
+// Everyday life comes first: the app is for everyone, with added support for those who serve.
+export const responderModeOrder: ResponderMode[] = ["civilian", "military", "law", "fire", "ems", "dispatch", "custody", "chaplain"];
 
 export const responderModeLabels: Record<ResponderMode, string> = {
   military: "Military",
@@ -18,7 +19,7 @@ export const responderModeLabels: Record<ResponderMode, string> = {
   dispatch: "Dispatch / comms",
   custody: "Corrections / custody",
   chaplain: "Chaplain / peer support",
-  civilian: "Civilian",
+  civilian: "Everyday life",
 };
 
 export const responderModeShortLabels: Record<ResponderMode, string> = {
@@ -29,7 +30,7 @@ export const responderModeShortLabels: Record<ResponderMode, string> = {
   dispatch: "Dispatch",
   custody: "Custody",
   chaplain: "Chaplain",
-  civilian: "Civilian",
+  civilian: "Everyday",
 };
 
 export const responderModeAccentClasses: Record<ResponderMode, {

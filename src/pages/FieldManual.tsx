@@ -59,7 +59,7 @@ const roleSections: RoleSection[] = [
   {
     mode: "civilian",
     icon: <UsersRound className="h-4 w-4" />,
-    title: "Civilian",
+    title: "Everyday life",
     focus: "Ordinary life, family, work, school, stress, grief, decisions, and one faithful next step at a time.",
     prayer: "Lord Jesus Christ, steady my heart in ordinary life. Teach me to pray simply, speak truthfully, love patiently, and do the next right thing with peace. Amen.",
     checklist: ["Pause before reacting: breathe once and pray simply.", "Choose one faithful next step at home, work, school, or with family.", "Ask for pastoral, professional, or trusted help when burdens are too heavy."],

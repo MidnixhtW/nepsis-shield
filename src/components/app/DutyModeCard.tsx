@@ -51,7 +51,7 @@ type ResponderBrief = {
 
 const responderModes: Record<ResponderMode, ResponderBrief> = {
   civilian: {
-    label: "Civilian",
+    label: "Everyday life",
     badge: "Everyday faithfulness",
     icon: Users,
     focus: "Build watchfulness in ordinary life: home, work, school, family, stress, rest, and the next faithful step.",
