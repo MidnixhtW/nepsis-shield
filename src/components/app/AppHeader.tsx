@@ -27,12 +27,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
+import { ProtectionPsalm } from "@/components/app/ProtectionPsalm";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
+import { prayerHourName, useNow, usesTwentyFourHourTime } from "@/lib/prayerHours";
+import { useResponderMode } from "@/lib/responderMode";
 import { showSuccess } from "@/utils/toast";
 
 function startTutorial() {
@@ -162,9 +165,13 @@ function HelpNowButton() {
         <div className="grid min-h-0 flex-1 content-start gap-3 overflow-y-auto p-3 pt-[max(3.25rem,env(safe-area-inset-top))] sm:p-4 sm:pt-14">
           <NeedHelpNow onChoose={() => setOpen(false)} />
           <Accordion type="single" collapsible className="rounded-3xl border bg-card px-5">
-            <AccordionItem value="ground" className="border-0">
+            <AccordionItem value="ground">
               <AccordionTrigger className="text-left">Ground me now · guided reset</AccordionTrigger>
               <AccordionContent><GroundMeNow /></AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="psalm" className="border-0">
+              <AccordionTrigger className="text-left">Psalm 90 · prayer of protection</AccordionTrigger>
+              <AccordionContent><ProtectionPsalm /></AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
@@ -176,6 +183,13 @@ function HelpNowButton() {
 export function AppHeader() {
   const navigate = useNavigate();
   const secretTaps = useRef<number[]>([]);
+  const now = useNow();
+  const [role] = useResponderMode();
+  const hourName = prayerHourName(now);
+  // Service roles read the clock as 0600; everyone else sees the date with the hour of prayer.
+  const clockLine = usesTwentyFourHourTime(role)
+    ? `${format(now, "HHmm")} · ${hourName} · ${format(now, "MMM d")}`
+    : `${format(now, "EEE, MMM d")} · ${hourName}`;
 
   function handleSecretTap() {
     const now = Date.now();
@@ -197,8 +211,11 @@ export function AppHeader() {
         </div>
         <div className="min-w-0">
           <p className="truncate font-serif text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:text-base">Nepsis Shield</p>
-          <p className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground max-[340px]:hidden sm:text-[11px]">
-            Today · {format(new Date(), "EEE, MMM d")}
+          <p
+            className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground tabular-nums max-[340px]:hidden sm:text-[11px]"
+            title={`The hour of prayer: ${hourName}`}
+          >
+            {clockLine}
           </p>
         </div>
       </Link>
