@@ -32,15 +32,33 @@
     <style>
       /* Boot screen shown until React mounts and replaces #root's contents. */
       html, body { margin: 0; background: #0e0f0b; }
-      .boot-shell { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; }
+      .boot-shell { min-height: 100vh; min-height: 100dvh; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 24px; box-sizing: border-box; text-align: center; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #d9d2b4; }
       .boot-shell img { width: 88px; height: 88px; animation: boot-breathe 2.4s ease-in-out infinite; }
+      .boot-shell h1 { margin: 6px 0 0; font-size: 22px; letter-spacing: 0.04em; color: #f1e8c8; }
+      .boot-shell p { margin: 0; max-width: 30rem; font-size: 15px; line-height: 1.5; }
+      .boot-shell .boot-status { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: #c9a85e; }
+      .boot-shell nav a { color: #c9a85e; margin: 0 8px; font-size: 14px; }
       @keyframes boot-breathe { 0%, 100% { opacity: 0.55; transform: scale(0.97); } 50% { opacity: 1; transform: scale(1); } }
       @media (prefers-reduced-motion: reduce) { .boot-shell img { animation: none; } }
     </style>
+    <noscript><style>.boot-shell .boot-status { display: none; } .boot-shell img { animation: none; }</style></noscript>
   </head>
 
   <body>
-    <div id="root"><div class="boot-shell" role="status" aria-label="Loading Nepsis Shield"><img src="/military-orthodox-cross.svg" alt="" width="88" height="88" /></div></div>
+    <!-- Shown until React mounts, and all that crawlers and link readers that skip JavaScript will see. -->
+    <div id="root">
+      <div class="boot-shell">
+        <img src="/military-orthodox-cross.svg" alt="" width="88" height="88" />
+        <h1>Nepsis Shield</h1>
+        <p>An Orthodox Christian companion for prayer, Scripture, the saints, and daily watchfulness, for everyday life and for those who serve and protect.</p>
+        <p class="boot-status" role="status">Loading…</p>
+        <!-- Links only without JavaScript, so nothing here can take keyboard focus before the app mounts. -->
+        <noscript>
+          <p>Nepsis Shield needs JavaScript to run. Please turn it on in your browser to continue.</p>
+          <nav aria-label="About Nepsis Shield"><a href="/about">About</a><a href="/privacy">Privacy</a><a href="/download">Install</a></nav>
+        </noscript>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
