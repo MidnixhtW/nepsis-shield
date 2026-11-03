@@ -65,30 +65,24 @@ test("1024px tablet-width header stays uncluttered", async ({ page }) => {
 test("desktop navigation does not collide at its first breakpoint", async ({ page }) => {
   await page.setViewportSize({ width: 1120, height: 800 });
   await page.goto("/today", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("heading", { name: "Return to what is essential." })).toBeVisible();
+
+  // Browsers with classic scrollbars (Linux WebKit on CI) lose ~15px once the page is long
+  // enough to scroll, which drops the layout just under 1120px and correctly switches to the
+  // mobile menu. Widen by the scrollbar so the test checks the breakpoint itself.
+  const scrollbar = await page.evaluate(() => window.innerWidth - document.documentElement.clientWidth);
+  await page.setViewportSize({ width: 1120 + scrollbar, height: 800 });
 
   const appHeader = page.locator("header").first();
   const desktopNav = page.getByRole("navigation", { name: "Primary navigation", exact: true });
   await expect(desktopNav).toBeVisible();
-  // Poll: WebKit can briefly report no box while the shell re-renders after load.
-  // The last reading is asserted separately so a failure shows the actual measurements.
-  // Each step gets its own short limit so a failure names the step that stalled.
-  const within = <T,>(label: string, work: Promise<T>) =>
-    Promise.race([work, new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`${label} timed out`)), 3_000))]);
-  let last = "";
   await expect.poll(async () => {
-    try {
-      const headerBox = await within("header box", appHeader.boundingBox());
-      const navBox = await within("nav box", desktopNav.boundingBox());
-      const viewport = await within("page script", page.evaluate(() => `viewport ${window.innerWidth}, layout ${document.documentElement.clientWidth}`));
-      if (!headerBox || !navBox) last = `not measured (header ${!!headerBox}, nav ${!!navBox}; ${viewport})`;
-      else if (headerBox.x + headerBox.width <= navBox.x) last = "clear";
-      else last = `overlap: header ${headerBox.x}+${headerBox.width}, nav starts ${navBox.x}; ${viewport}`;
-    } catch (error) {
-      last = `${(error as Error).message} at ${page.url()}`;
-    }
-    return last;
-  }, { timeout: 15_000 }).toBe("clear").catch(() => {});
-  expect(last).toBe("clear");
+    const [headerBox, navBox] = await Promise.all([appHeader.boundingBox(), desktopNav.boundingBox()]);
+    if (!headerBox || !navBox) return "not measured yet";
+    return headerBox.x + headerBox.width <= navBox.x
+      ? "clear"
+      : `overlap: header ${headerBox.x}+${headerBox.width}, nav starts ${navBox.x}`;
+  }).toBe("clear");
   await expectNoHorizontalOverflow(page);
 });
 
