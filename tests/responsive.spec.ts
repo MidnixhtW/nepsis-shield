@@ -115,24 +115,18 @@ test("large-text accessibility mode remains reflow-safe", async ({ page }) => {
   await expectNoHorizontalOverflow(page);
 });
 
-test("long Learn tabs scroll and keep the focused tab visible", async ({ page }) => {
+test("Learn groups fit on a small phone and open their sections", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/learn", { waitUntil: "domcontentloaded" });
 
   const tabList = page.locator(".premium-tabs").first();
-  const metrics = await tabList.evaluate((element) => ({
-    clientWidth: element.clientWidth,
-    scrollWidth: element.scrollWidth,
-    overflowX: getComputedStyle(element).overflowX,
-  }));
-  expect(metrics.scrollWidth).toBeGreaterThan(metrics.clientWidth);
-  expect(metrics.overflowX).toBe("auto");
+  await expect(tabList.getByRole("tab")).toHaveText(["Start", "Faith", "Worship", "Resources"]);
+  const metrics = await tabList.evaluate((element) => ({ clientWidth: element.clientWidth, scrollWidth: element.scrollWidth }));
+  expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
 
-  const lastTab = tabList.getByRole("tab").last();
-  await lastTab.focus();
-  await expect.poll(async () => lastTab.evaluate((tab) => {
-    const tabRect = tab.getBoundingClientRect();
-    const listRect = tab.parentElement!.getBoundingClientRect();
-    return tabRect.left >= listRect.left - 1 && tabRect.right <= listRect.right + 1;
-  })).toBe(true);
+  await tabList.getByRole("tab", { name: "Faith" }).click();
+  await expect(page).toHaveURL(/tab=creed/);
+  await page.getByRole("group", { name: "Faith sections" }).getByRole("button", { name: "Q&A" }).click();
+  await expect(page).toHaveURL(/tab=qa/);
+  await expectNoHorizontalOverflow(page);
 });

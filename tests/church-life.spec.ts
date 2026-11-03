@@ -40,3 +40,26 @@ test("Prepare includes Communion preparation", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Preparing for Holy Communion" })).toBeVisible();
   await expect(page.getByText(/I believe, O Lord, and I confess that Thou art truly the Christ/)).toBeVisible();
 });
+
+test("a busy day shows two occasions and folds the rest", async ({ page }) => {
+  await page.clock.setFixedTime(new Date(2026, 11, 25, 9, 0)); // Nativity, December 25, 2026
+  await page.goto("/pray?tab=names");
+  await page.getByRole("textbox", { name: "Add a name: For the repose of" }).fill("Helen");
+  await page.getByLabel("Date of repose (optional)").fill("2026-12-23");
+  await page.getByRole("button", { name: "Add" }).last().click();
+  await page.goto("/settings");
+  await page.getByLabel("Saint", { exact: true }).fill("St. Anastasia");
+  await page.getByLabel("Feast month").selectOption("12");
+  await page.getByLabel("Day", { exact: true }).fill("25");
+  await page.getByRole("button", { name: "Save" }).click();
+
+  await page.goto("/today");
+  await expect(page.getByRole("region", { name: "Feast greeting" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Your name day" })).toBeVisible();
+  const memorials = page.getByRole("region", { name: "Remembering the departed" });
+  await expect(memorials).toBeHidden();
+  const more = page.getByRole("button", { name: /Also today · Memorial days/ });
+  await more.click();
+  await expect(memorials).toBeVisible();
+  await expect(page.getByRole("button", { name: "Show less" })).toHaveAttribute("aria-expanded", "true");
+});

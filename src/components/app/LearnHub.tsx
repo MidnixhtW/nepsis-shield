@@ -1,9 +1,9 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { BookOpenCheck, Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
 import { ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GroupedSections, type SectionGroup } from "@/components/app/GroupedSections";
 import { Button } from "@/components/ui/button";
-
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
@@ -12,7 +12,6 @@ import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
 import { SectionIntro } from "@/components/app/SectionIntro";
 import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
-
 import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { FirstStepHint } from "@/components/app/FirstStepHint";
@@ -22,6 +21,107 @@ import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 
 export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
+
+// Eleven sections in four groups, the same way Pray is laid out, so the tab bar fits on a phone.
+const groups: Array<SectionGroup<LearnTab>> = [
+  { id: "start", label: "Start", items: [{ value: "welcome", label: "Welcome" }, { value: "path", label: "My path" }, { value: "challenges", label: "Challenges" }] },
+  { id: "faith", label: "Faith", items: [{ value: "creed", label: "Creed" }, { value: "qa", label: "Q&A" }, { value: "guide", label: "Daily guide" }] },
+  { id: "worship", label: "Worship", items: [{ value: "liturgy", label: "Liturgy" }, { value: "hymns", label: "Hymns" }, { value: "audio", label: "Audio" }] },
+  { id: "resources", label: "Resources", items: [{ value: "parish", label: "Find a parish" }, { value: "library", label: "OCA library" }] },
+];
+
+const ocaLibrary = (
+  <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+
+    <h2 className="text-xl font-semibold tracking-tight">OCA library</h2>
+    <p className="mt-1 text-sm text-muted-foreground">Browse the full OCA collection.</p>
+
+    <Separator className="my-4" />
+
+    <div className="grid gap-2 sm:grid-cols-2">
+      <Button
+        asChild
+        variant="outline"
+        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      >
+        <a
+          href="https://www.oca.org/questions"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0"
+        >
+          Questions & Answers <ExternalLink className="h-4 w-4" />
+        </a>
+      </Button>
+      <Button
+        asChild
+        variant="outline"
+        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      >
+        <a
+          href="https://www.oca.org/orthodoxy/prayers"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0"
+        >
+          Prayers <ExternalLink className="h-4 w-4" />
+        </a>
+      </Button>
+      <Button
+        asChild
+        variant="outline"
+        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      >
+        <a
+          href="https://www.oca.org/orthodoxy/the-orthodox-faith"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0"
+        >
+          The Orthodox Faith <ExternalLink className="h-4 w-4" />
+        </a>
+      </Button>
+      <Button
+        asChild
+        variant="outline"
+        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
+      >
+        <a
+          href="https://www.oca.org/readings"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-w-0"
+        >
+          Daily readings <ExternalLink className="h-4 w-4" />
+        </a>
+      </Button>
+    </div>
+
+    <p className="mt-4 break-words text-xs text-muted-foreground">
+      Sources: "https://www.oca.org/questions" • "https://www.oca.org/orthodoxy/prayers" •
+      "https://www.oca.org/orthodoxy/the-orthodox-faith"
+    </p>
+  </Card>
+);
+
+const content: Record<LearnTab, ReactNode> = {
+  welcome: <InclusiveChristianPath />,
+  path: <PersonalizedPath />,
+  challenges: <PrayerChallenges />,
+  creed: <NiceneCreedMemorizer />,
+  guide: (
+    <div className="grid gap-5">
+      <DutyModeCard />
+      <OrthodoxDailyGuide />
+    </div>
+  ),
+  qa: <CatechesisQA />,
+  liturgy: <DivineLiturgyCompanion />,
+  audio: <OrthodoxAudioLibrary />,
+  hymns: <HymnsAndPropers />,
+  parish: <ParishFinder />,
+  library: ocaLibrary,
+};
 
 export function LearnHub({
   tab,
@@ -87,198 +187,7 @@ export function LearnHub({
         </div>
       </Card>
 
-      <Tabs
-        value={tab ?? "welcome"}
-        onValueChange={(v) => onTabChange?.(v as LearnTab)}
-        className="w-full"
-      >
-        <TabsList className="premium-tabs">
-          <TabsTrigger
-            value="welcome"
-            className="min-h-10 rounded-xl px-3 py-2 text-xs leading-tight sm:text-sm"
-
-          >
-            Start
-          </TabsTrigger>
-          <TabsTrigger
-            value="path"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Path
-          </TabsTrigger>
-          <TabsTrigger
-            value="challenges"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Challenges
-          </TabsTrigger>
-          <TabsTrigger
-            value="creed"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Creed
-          </TabsTrigger>
-          <TabsTrigger
-            value="guide"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Guide
-          </TabsTrigger>
-          <TabsTrigger
-            value="qa"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Q&A
-          </TabsTrigger>
-          <TabsTrigger
-            value="liturgy"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Liturgy
-          </TabsTrigger>
-          <TabsTrigger
-            value="audio"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Audio
-          </TabsTrigger>
-          <TabsTrigger
-            value="library"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Library
-          </TabsTrigger>
-          <TabsTrigger
-            value="hymns"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Hymns
-          </TabsTrigger>
-          <TabsTrigger
-            value="parish"
-            className="min-h-10 rounded-xl px-2 py-2 text-xs leading-tight sm:text-sm"
-          >
-            Parish
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="welcome" className="mt-4">
-          <InclusiveChristianPath />
-        </TabsContent>
-
-        <TabsContent value="path" className="mt-4">
-          <PersonalizedPath />
-        </TabsContent>
-
-        <TabsContent value="challenges" className="mt-4">
-          <PrayerChallenges />
-        </TabsContent>
-
-        <TabsContent value="creed" className="mt-4">
-          <NiceneCreedMemorizer />
-        </TabsContent>
-
-        <TabsContent value="guide" className="mt-4">
-          <div className="grid gap-5">
-            <DutyModeCard />
-            <OrthodoxDailyGuide />
-          </div>
-        </TabsContent>
-
-        <TabsContent value="qa" className="mt-4">
-          <CatechesisQA />
-        </TabsContent>
-
-        <TabsContent value="liturgy" className="mt-4">
-          <DivineLiturgyCompanion />
-        </TabsContent>
-
-        <TabsContent value="audio" className="mt-4">
-          <OrthodoxAudioLibrary />
-        </TabsContent>
-
-        <TabsContent value="hymns" className="mt-4">
-          <HymnsAndPropers />
-        </TabsContent>
-
-        <TabsContent value="parish" className="mt-4">
-          <ParishFinder />
-        </TabsContent>
-
-        <TabsContent value="library" className="mt-4">
-          <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-
-            <h2 className="text-xl font-semibold tracking-tight">OCA library</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Browse the full OCA collection.</p>
-
-            <Separator className="my-4" />
-
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-              >
-                <a
-                  href="https://www.oca.org/questions"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-0"
-                >
-                  Questions & Answers <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-              >
-                <a
-                  href="https://www.oca.org/orthodoxy/prayers"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-0"
-                >
-                  Prayers <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-              >
-                <a
-                  href="https://www.oca.org/orthodoxy/the-orthodox-faith"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-0"
-                >
-                  The Orthodox Faith <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-              >
-                <a
-                  href="https://www.oca.org/readings"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-0"
-                >
-                  Daily readings <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-            </div>
-
-            <p className="mt-4 break-words text-xs text-muted-foreground">
-              Sources: "https://www.oca.org/questions" • "https://www.oca.org/orthodoxy/prayers" •
-              "https://www.oca.org/orthodoxy/the-orthodox-faith"
-            </p>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      <GroupedSections groups={groups} tab={tab ?? "welcome"} onTabChange={(t) => onTabChange?.(t)} content={content} />
     </div>
   );
 }

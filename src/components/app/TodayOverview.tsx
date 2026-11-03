@@ -15,6 +15,7 @@ import { MemorialsCard } from "@/components/app/MemorialsCard";
 import { NameDayCard } from "@/components/app/NameDay";
 import { FeastGreetingCard } from "@/components/app/FeastGreetingCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { TodayMoments } from "@/components/app/TodayMoments";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { currentSeason } from "@/lib/fastingSeasons";
@@ -34,16 +35,20 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
   const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
 
-  // Two columns on desktop: the day's journey and rule on the left, help and the calendar on the right.
+  // Two columns on desktop: the day's occasions (at most two open) and the rule on the left, help and the calendar on the right.
   // On phones the columns stack in the same order as before.
   return (
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
-        <FeastGreetingCard today={today} calendar={settings.calendarMode} />
-        <NameDayCard today={today} />
-        <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
+        <TodayMoments
+          moments={[
+            { id: "feast", label: "Feast greeting", node: <FeastGreetingCard today={today} calendar={settings.calendarMode} /> },
+            { id: "nameday", label: "Name day", node: <NameDayCard today={today} /> },
+            { id: "season", label: "Fasting season", node: <SeasonJourneyCard today={today} calendar={settings.calendarMode} /> },
+            { id: "memorials", label: "Memorial days", node: <MemorialsCard today={today} /> },
+          ]}
+        />
         <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
-        <MemorialsCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">
       {/* Help lives in the top bar on every screen, so Today keeps only a short pointer and the reset. */}
