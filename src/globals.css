@@ -2001,7 +2001,8 @@ h1, h2, h3, .font-serif {
       radial-gradient(circle at 8% 82%, hsl(var(--primary) / 0.05), transparent 30rem),
       linear-gradient(160deg, hsl(78 20% 4%), hsl(72 16% 6%) 55%, hsl(66 14% 7%)) !important;
     background-size: auto !important;
-    background-attachment: fixed;
+    /* Overrides the older theme's fixed background, which makes WebKit repaint the whole page each frame. */
+    background-attachment: scroll !important;
   }
 
   :root:where(:not(.red-dark):not(.blue-cream)) ::-webkit-scrollbar-track {
