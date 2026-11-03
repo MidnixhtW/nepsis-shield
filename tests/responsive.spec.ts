@@ -71,15 +71,23 @@ test("desktop navigation does not collide at its first breakpoint", async ({ pag
   await expect(desktopNav).toBeVisible();
   // Poll: WebKit can briefly report no box while the shell re-renders after load.
   // The last reading is asserted separately so a failure shows the actual measurements.
+  // Each step gets its own short limit so a failure names the step that stalled.
+  const within = <T,>(label: string, work: Promise<T>) =>
+    Promise.race([work, new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`${label} timed out`)), 3_000))]);
   let last = "";
   await expect.poll(async () => {
-    const [headerBox, navBox] = await Promise.all([appHeader.boundingBox(), desktopNav.boundingBox()]);
-    const viewport = await page.evaluate(() => `viewport ${window.innerWidth}, layout ${document.documentElement.clientWidth}`);
-    if (!headerBox || !navBox) last = `not measured (header ${!!headerBox}, nav ${!!navBox}; ${viewport})`;
-    else if (headerBox.x + headerBox.width <= navBox.x) last = "clear";
-    else last = `overlap: header ${headerBox.x}+${headerBox.width}, nav starts ${navBox.x}; ${viewport}`;
+    try {
+      const headerBox = await within("header box", appHeader.boundingBox());
+      const navBox = await within("nav box", desktopNav.boundingBox());
+      const viewport = await within("page script", page.evaluate(() => `viewport ${window.innerWidth}, layout ${document.documentElement.clientWidth}`));
+      if (!headerBox || !navBox) last = `not measured (header ${!!headerBox}, nav ${!!navBox}; ${viewport})`;
+      else if (headerBox.x + headerBox.width <= navBox.x) last = "clear";
+      else last = `overlap: header ${headerBox.x}+${headerBox.width}, nav starts ${navBox.x}; ${viewport}`;
+    } catch (error) {
+      last = `${(error as Error).message} at ${page.url()}`;
+    }
     return last;
-  }).toBe("clear").catch(() => {});
+  }, { timeout: 15_000 }).toBe("clear").catch(() => {});
   expect(last).toBe("clear");
   await expectNoHorizontalOverflow(page);
 });
