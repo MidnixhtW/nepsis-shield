@@ -1,0 +1,155 @@
+/*
+ * Olive & Brass: the default palette, matched to the shield emblem (olive, brass gold, parchment).
+ * Scoped so "Black & Red", "Blue & Cream" and "Parchment" keep their own looks, and kept at single-class
+ * specificity so the high-contrast accessibility mode still wins.
+ * The radar, grid and scan-line backgrounds are turned off here for a quieter prayer space.
+ */
+@layer base {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) {
+    color-scheme: dark;
+    --background: 75 16% 5%;
+    --foreground: 44 36% 88%;
+    --card: 75 14% 8%;
+    --card-foreground: 44 36% 88%;
+    --popover: 75 15% 7%;
+    --popover-foreground: 44 36% 88%;
+    --primary: 80 30% 52%;
+    --primary-foreground: 75 30% 6%;
+    --secondary: 72 14% 14%;
+    --secondary-foreground: 44 30% 90%;
+    --muted: 72 12% 12%;
+    --muted-foreground: 46 14% 66%;
+    --accent: 42 52% 60%;
+    --accent-foreground: 75 30% 6%;
+    --destructive: 4 64% 52%;
+    --destructive-foreground: 44 36% 94%;
+    --border: 70 16% 20%;
+    --input: 70 16% 22%;
+    --ring: 42 52% 62%;
+    --icon-gold: 42 52% 60%;
+    --liturgical-warm: 42 52% 60%;
+    --byzantine-blue: 80 30% 42%;
+    --cinnabar: 4 64% 52%;
+    --success: 80 34% 54%;
+    --sidebar-background: 75 16% 6%;
+    --sidebar-foreground: 44 36% 88%;
+    --sidebar-primary: 80 30% 52%;
+    --sidebar-primary-foreground: 75 30% 6%;
+    --sidebar-accent: 72 14% 14%;
+    --sidebar-accent-foreground: 44 30% 90%;
+    --sidebar-border: 70 16% 20%;
+    --sidebar-ring: 42 52% 62%;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) body {
+    background-image:
+      radial-gradient(circle at 78% -4%, hsl(var(--accent) / 0.07), transparent 34rem),
+      radial-gradient(circle at 8% 82%, hsl(var(--primary) / 0.05), transparent 30rem),
+      linear-gradient(160deg, hsl(78 20% 4%), hsl(72 16% 6%) 55%, hsl(66 14% 7%)) !important;
+    background-size: auto !important;
+    /* Overrides the older theme's fixed background, which makes WebKit repaint the whole page each frame. */
+    background-attachment: scroll !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) ::-webkit-scrollbar-track {
+    background: hsl(75 16% 4%);
+  }
+}
+
+@layer components {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .youth-app-shell::before,
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-page::after {
+    display: none !important;
+    animation: none !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-page::before {
+    background: radial-gradient(circle at 88% 6%, hsl(var(--accent) / 0.06), transparent 26rem) !important;
+    background-size: auto !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(
+    .premium-page-header,
+    .section-intro,
+    .premium-surface,
+    .orthodox-hero,
+    .premium-page > .grid > [class*="rounded-3xl"],
+    .premium-page > .grid > [class*="rounded-2xl"]
+  ) {
+    border-color: hsl(var(--accent) / 0.16) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--accent) / 0.06),
+      0 18px 48px hsl(75 40% 1% / 0.36) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(.premium-page-header, .section-intro) {
+    border-left-color: hsl(var(--accent) / 0.6) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-eyebrow,
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .uppercase.text-primary {
+    color: hsl(var(--accent)) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-icon-mark {
+    border-color: hsl(var(--accent) / 0.32) !important;
+    background: linear-gradient(145deg, hsl(var(--accent) / 0.1), hsl(var(--card) / 0.9)) !important;
+    box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.04) !important;
+    color: hsl(var(--accent)) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-shell {
+    border-color: hsl(var(--accent) / 0.24) !important;
+    background: hsl(75 18% 4%) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(75 24% 3% / 0.97), hsl(75 18% 5% / 0.88) 50%, hsl(70 14% 6% / 0.5)) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-aura {
+    background: hsl(var(--accent) / 0.1) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(
+    .candlelight-card,
+    .orthodox-drawer-header,
+    .orthodox-nav-frame,
+    .premium-tabs,
+    .glass,
+    .ornate-card
+  ) {
+    border-color: hsl(var(--accent) / 0.16) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--accent) / 0.05),
+      0 16px 45px hsl(75 40% 1% / 0.34) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(.premium-tab, .premium-tabs > [role="tab"])[data-state="active"] {
+    box-shadow: none !important;
+  }
+}
+
+@layer utilities {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .tactical-radar-field {
+    display: none !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(80 32% 58%), hsl(80 30% 47%)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(60 40% 90% / 0.22),
+      0 6px 18px hsl(75 40% 2% / 0.4) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .gold-foil {
+    background-image: linear-gradient(135deg, hsl(44 62% 68%), hsl(40 52% 50%)) !important;
+    box-shadow: 0 6px 18px hsl(75 40% 2% / 0.4) !important;
+  }
+
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .field-grid {
+    background-image: radial-gradient(circle at 72% 28%, hsl(var(--accent) / 0.06), transparent 18rem) !important;
+    background-size: auto !important;
+  }
+}

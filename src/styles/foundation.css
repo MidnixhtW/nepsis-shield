@@ -1,0 +1,143 @@
+/* Foundation: page basics, resets, accessibility modes and the page-enter motion. */
+body {
+  background-color: #071008;
+  color: #dce8da;
+  font-family: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+}
+
+.candle-glow {
+  box-shadow: 0 0 40px -8px rgba(105, 235, 82, 0.16);
+}
+
+.orthodox-container {
+
+  border: 1px solid rgba(105, 235, 82, 0.34);
+  padding: 20px;
+  box-shadow: inset 3px 0 0 rgba(105, 235, 82, 0.42);
+  background-color: rgba(7, 16, 8, 0.92);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050b06;
+}
+::-webkit-scrollbar-thumb {
+  background: #28572b;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #397c3d;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    min-width: 0;
+  }
+
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  #root {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  :where(p, a, li, h1, h2, h3, h4, h5, h6, button, span, label) {
+    hyphens: manual;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  :where(button, [role="button"], a, input, textarea, select) {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  :where(button, [role="button"], a) > :where(span, div) {
+    min-width: 0;
+  }
+
+  @media (max-width: 640px) {
+    :where(button, [role="button"], a) {
+      white-space: normal;
+    }
+  }
+
+  :where(a, button, input, textarea, select, [role="button"], [data-state]) {
+    transition-property: color, background-color, border-color, opacity, box-shadow;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-attachment: fixed;
+
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html.a11y-large-text {
+    font-size: 18px;
+  }
+
+  html.a11y-high-contrast:not(.dark):not(.red-dark) {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
+    --card: 0 0% 100%;
+    --muted-foreground: 0 0% 22%;
+    --border: 0 0% 36%;
+  }
+
+  html.a11y-high-contrast body {
+    background-image: none !important;
+  }
+
+  html.a11y-high-contrast :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  html.a11y-reduce-motion *,
+  html.a11y-reduce-motion *::before,
+  html.a11y-reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .water-page {
+      animation: water-page-rise 260ms ease-out both;
+    }
+  }
+}
+
+@keyframes water-page-rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

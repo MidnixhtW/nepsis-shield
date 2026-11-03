@@ -1,0 +1,119 @@
+/* Blue & Cream: a light theme on the shared field interface. */
+@layer base {
+
+  .blue-cream {
+    color-scheme: light;
+    --background: 42 48% 91%;
+    --foreground: 217 48% 15%;
+    --card: 42 58% 96%;
+
+    --card-foreground: 217 48% 15%;
+    --popover: 42 62% 97%;
+    --popover-foreground: 217 48% 15%;
+    --primary: 214 68% 38%;
+    --primary-foreground: 43 72% 97%;
+    --secondary: 41 37% 83%;
+    --secondary-foreground: 217 48% 15%;
+    --muted: 42 28% 84%;
+    --muted-foreground: 217 24% 36%;
+    --accent: 208 78% 45%;
+    --accent-foreground: 43 72% 97%;
+    --destructive: 0 64% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 31% 57%;
+    --input: 214 31% 57%;
+    --ring: 214 68% 38%;
+    --icon-gold: 214 68% 38%;
+    --liturgical-warm: 32 58% 38%;
+    --byzantine-blue: 214 68% 38%;
+    --cinnabar: 0 64% 43%;
+    --success: 151 48% 32%;
+    --sidebar-background: 42 48% 92%;
+    --sidebar-foreground: 217 48% 15%;
+    --sidebar-primary: 214 68% 38%;
+    --sidebar-primary-foreground: 43 72% 97%;
+    --sidebar-accent: 41 37% 83%;
+    --sidebar-accent-foreground: 217 48% 15%;
+    --sidebar-border: 214 31% 57%;
+    --sidebar-ring: 214 68% 38%;
+  }
+
+  html.blue-cream body {
+    background-color: hsl(var(--background)) !important;
+    background-image:
+      radial-gradient(circle at 78% 14%, hsl(var(--primary) / 0.16), transparent 28rem),
+      radial-gradient(circle at 12% 72%, hsl(32 58% 38% / 0.07), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(145deg, hsl(43 64% 97%), hsl(var(--background)) 52%, hsl(39 40% 86%)) !important;
+    background-size: auto, auto, 44px 44px, 44px 44px, auto;
+    color: hsl(var(--foreground)) !important;
+  }
+}
+
+@layer components {
+
+  .blue-cream .premium-page-header,
+  .blue-cream .section-intro,
+  .blue-cream .premium-surface,
+  .blue-cream .orthodox-hero,
+  .blue-cream .candlelight-card,
+  .blue-cream .orthodox-drawer-header,
+  .blue-cream .orthodox-nav-frame,
+  .blue-cream .premium-tabs,
+  .blue-cream .glass,
+  .blue-cream .ornate-card {
+    background: linear-gradient(145deg, hsl(var(--card) / 0.98), hsl(var(--background) / 0.9)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(0 0% 100% / 0.55),
+      0 16px 44px hsl(215 45% 22% / 0.13) !important;
+  }
+
+  .blue-cream .premium-hero-shell {
+    background: hsl(216 48% 12%) !important;
+    box-shadow: 0 24px 70px hsl(215 48% 18% / 0.28) !important;
+  }
+
+  .blue-cream .premium-hero-veil {
+    background:
+      linear-gradient(90deg, hsl(217 52% 10% / 0.97), hsl(215 46% 14% / 0.84) 52%, hsl(211 42% 18% / 0.34)),
+      repeating-linear-gradient(0deg, transparent 0 6px, hsl(43 72% 97% / 0.025) 7px 8px) !important;
+  }
+}
+
+@layer utilities {
+
+  .blue-cream .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.14), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.07), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(43 64% 97% / 0.99), hsl(42 48% 91% / 0.98)) !important;
+    background-size: auto, auto, 42px 42px, 42px 42px, auto !important;
+  }
+
+  .blue-cream .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(209 76% 49%), hsl(218 68% 34%)) !important;
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.16) !important;
+  }
+
+  .blue-cream .gold-foil {
+    background-image: linear-gradient(135deg, hsl(209 76% 49%), hsl(218 68% 34%)) !important;
+  }
+
+  .blue-cream .candle-glow {
+    box-shadow: 0 0 40px -8px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .blue-cream .orthodox-container {
+    border-color: hsl(var(--primary) / 0.34) !important;
+    background-color: hsl(var(--card) / 0.94) !important;
+    box-shadow: inset 3px 0 0 hsl(var(--primary) / 0.42) !important;
+  }
+
+  .blue-cream ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.42) !important;
+  }
+}

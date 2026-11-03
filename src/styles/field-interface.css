@@ -1,0 +1,268 @@
+/* Field interface: the shell, radar field and card structure every theme builds on. */
+@layer base {
+  :root,
+  .light,
+  .dark {
+    /* Every theme sets its own colors; this shared corner radius is all that is left here. */
+    --radius: 0.5rem;
+  }
+
+  body,
+  html:not(.dark):not(.red-dark) body,
+  .dark body {
+    background-color: hsl(var(--background)) !important;
+    background-image:
+      radial-gradient(circle at 72% 18%, hsl(var(--primary) / 0.11), transparent 26rem),
+      radial-gradient(circle at 14% 74%, hsl(var(--accent) / 0.045), transparent 22rem),
+      linear-gradient(hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.045) 1px, transparent 1px),
+      linear-gradient(145deg, hsl(112 46% 2%), hsl(106 34% 4%) 52%, hsl(98 24% 6%)) !important;
+    background-position: center;
+    background-size: auto, auto, 44px 44px, 44px 44px, auto;
+    color: hsl(var(--foreground));
+    font-family: "Barlow", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    line-height: 1.55;
+    letter-spacing: 0.006em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-serif {
+    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.015em;
+  }
+
+  :where(button, [role="button"], nav, .premium-eyebrow) {
+    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(108 36% 3%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+
+    background: hsl(var(--primary) / 0.32);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.48);
+  }
+}
+
+@layer components {
+  .youth-app-shell {
+    background: transparent !important;
+  }
+
+  .premium-page::before {
+    background:
+      linear-gradient(hsl(var(--primary) / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.035) 1px, transparent 1px),
+      radial-gradient(circle at 88% 8%, hsl(var(--primary) / 0.1), transparent 24rem) !important;
+    background-size: 38px 38px, 38px 38px, auto !important;
+  }
+
+  .premium-page::after {
+    content: "" !important;
+    display: block !important;
+    width: min(74vw, 34rem);
+    aspect-ratio: 1;
+    border: 1px solid hsl(var(--primary) / 0.2);
+    border-radius: 9999px;
+    background:
+      conic-gradient(from 0deg, transparent 0 82%, hsl(var(--primary) / 0.14) 94%, transparent 100%),
+      repeating-radial-gradient(circle, transparent 0 4.2rem, hsl(var(--primary) / 0.09) 4.25rem 4.3rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px);
+    background-size: auto, auto, 50% 50%, 50% 50%;
+    box-shadow: inset 0 0 3rem hsl(var(--primary) / 0.06), 0 0 3rem hsl(var(--primary) / 0.07);
+    opacity: 0.58;
+    animation: radar-sweep 12s linear infinite;
+  }
+
+  :where(.youth-app-shell, .premium-page) .rounded-3xl,
+  :where(.youth-app-shell, .premium-page) .rounded-2xl {
+    border-radius: 0.7rem !important;
+  }
+
+  :where(.youth-app-shell, .premium-page) .rounded-xl {
+    border-radius: 0.5rem !important;
+  }
+
+  .premium-page-header,
+  .section-intro,
+  .premium-surface,
+  .orthodox-hero,
+
+  .premium-page > .grid > [class*="rounded-3xl"],
+  .premium-page > .grid > [class*="rounded-2xl"],
+  .dark .premium-page-header,
+  .dark .section-intro,
+  .dark .premium-surface,
+  .dark .orthodox-hero,
+  .dark .premium-page > .grid > [class*="rounded-3xl"],
+  .dark .premium-page > .grid > [class*="rounded-2xl"] {
+    border: 1px solid hsl(var(--primary) / 0.24) !important;
+    border-radius: 0.65rem !important;
+    background:
+      linear-gradient(135deg, hsl(var(--card) / 0.96), hsl(var(--background) / 0.88)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--primary) / 0.07),
+      0 18px 48px hsl(112 70% 1% / 0.34) !important;
+    backdrop-filter: blur(14px);
+  }
+
+  .premium-page-header,
+  .section-intro {
+    border-left: 3px solid hsl(var(--primary) / 0.65) !important;
+  }
+
+  .premium-eyebrow {
+    color: hsl(var(--primary)) !important;
+    font-weight: 800;
+  }
+
+  .premium-icon-mark {
+    border: 1px solid hsl(var(--primary) / 0.38) !important;
+    border-radius: 0.4rem !important;
+    background:
+      linear-gradient(145deg, hsl(var(--primary) / 0.14), hsl(var(--card) / 0.9)) !important;
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--primary) / 0.05),
+      0 0 24px hsl(var(--primary) / 0.08) !important;
+    color: hsl(var(--primary)) !important;
+  }
+
+  .premium-hero-shell {
+    border: 1px solid hsl(var(--primary) / 0.35) !important;
+    border-radius: 0.75rem !important;
+    background: hsl(108 40% 3%) !important;
+    box-shadow: 0 26px 80px hsl(112 80% 1% / 0.52) !important;
+  }
+
+  .premium-hero-veil {
+    background:
+      linear-gradient(90deg, hsl(110 52% 2% / 0.98), hsl(106 42% 4% / 0.9) 50%, hsl(104 32% 5% / 0.5)),
+      repeating-linear-gradient(0deg, transparent 0 6px, hsl(var(--primary) / 0.025) 7px 8px) !important;
+  }
+
+  .premium-hero-aura {
+    background: hsl(var(--primary) / 0.14) !important;
+  }
+
+  .candlelight-card,
+  .orthodox-drawer-header,
+  .orthodox-nav-frame,
+  .premium-tabs,
+  .glass,
+  .ornate-card,
+  .dark .glass,
+  .dark .ornate-card {
+    border-color: hsl(var(--primary) / 0.24) !important;
+    background:
+      linear-gradient(145deg, hsl(var(--card) / 0.94), hsl(var(--background) / 0.84)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--primary) / 0.06),
+      0 16px 45px hsl(112 70% 1% / 0.32) !important;
+  }
+
+  .orthodox-nav-frame,
+  .premium-tabs {
+    border-radius: 0.55rem !important;
+  }
+
+  .premium-tab,
+  .premium-tabs > [role="tab"] {
+    border-radius: 0.35rem !important;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+  }
+
+  .premium-tab[data-state="active"],
+  .premium-tabs > [role="tab"][data-state="active"] {
+    color: hsl(var(--primary-foreground)) !important;
+    background: hsl(var(--primary)) !important;
+    box-shadow: 0 0 22px hsl(var(--primary) / 0.18) !important;
+  }
+}
+
+@layer utilities {
+  .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(var(--primary) / 0.14), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(var(--accent) / 0.07), transparent 18rem),
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(112 52% 2% / 0.99), hsl(105 38% 5% / 0.98)) !important;
+    background-size: auto, auto, 42px 42px, 42px 42px, auto !important;
+  }
+
+  .tactical-radar-field::before {
+    opacity: 0.56;
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(var(--primary) / 0.08) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(var(--primary) / 0.07) 55%, transparent 56% 100%) !important;
+  }
+
+  .tactical-radar-field::after {
+    background:
+      radial-gradient(circle at 20% 32%, hsl(var(--primary) / 0.82) 0 1px, transparent 2px),
+      radial-gradient(circle at 72% 48%, hsl(var(--primary) / 0.6) 0 1px, transparent 2px),
+      radial-gradient(circle at 58% 78%, hsl(var(--accent) / 0.6) 0 1px, transparent 2px),
+      radial-gradient(circle at 86% 22%, hsl(var(--primary) / 0.5) 0 1px, transparent 2px) !important;
+    background-size: 460px 460px, 520px 520px, 580px 580px, 620px 620px !important;
+  }
+
+  .radar-scope {
+    opacity: 0.62;
+    border-color: hsl(var(--primary) / 0.26);
+    box-shadow:
+      0 0 0 1px hsl(var(--primary) / 0.07),
+      0 0 52px hsl(var(--primary) / 0.12),
+      inset 0 0 50px hsl(var(--primary) / 0.08);
+  }
+
+  .tactical-scanlines {
+    opacity: 0.68;
+  }
+
+  .dark .bg-primary {
+    background-color: hsl(var(--primary)) !important;
+    background-image: linear-gradient(135deg, hsl(104 84% 62%), hsl(102 76% 50%)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(96 92% 82% / 0.3),
+      0 8px 24px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .gold-foil {
+    background-image: linear-gradient(135deg, hsl(104 84% 62%), hsl(102 76% 50%)) !important;
+    box-shadow: 0 8px 24px hsl(var(--primary) / 0.14) !important;
+  }
+
+  .field-grid {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.055) 1px, transparent 1px),
+      radial-gradient(circle at 72% 28%, hsl(var(--primary) / 0.1), transparent 18rem) !important;
+    background-size: 32px 32px, 32px 32px, auto !important;
+  }
+
+  .ocp-camo {
+    background-image:
+      radial-gradient(ellipse at 14% 26%, hsl(91 22% 30% / 0.2) 0 16%, transparent 17%),
+      radial-gradient(ellipse at 76% 20%, hsl(70 20% 22% / 0.18) 0 14%, transparent 15%),
+      radial-gradient(ellipse at 34% 72%, hsl(108 18% 18% / 0.2) 0 13%, transparent 14%),
+      radial-gradient(ellipse at 88% 76%, hsl(42 24% 25% / 0.1) 0 16%, transparent 17%) !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .premium-page::after {
+      animation: none;
+    }
+  }
+}

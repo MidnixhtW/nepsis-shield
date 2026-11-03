@@ -1,0 +1,104 @@
+/* Refinements: text selection, transitions, page crossfade and high-contrast colors. */
+@layer base {
+
+  ::selection {
+    background: hsl(var(--primary) / 0.28);
+    color: hsl(var(--foreground));
+  }
+
+  :where(a, button, input, textarea, select, [role="button"], [data-state]) {
+    transition-duration: 220ms;
+    transition-timing-function: ease-out;
+  }
+
+  .water-page {
+    animation: contemporary-crossfade 360ms ease-out both !important;
+  }
+
+  html.a11y-high-contrast {
+    --foreground: 0 0% 100%;
+    --muted-foreground: 0 0% 86%;
+    --border: 46 80% 70%;
+    --ring: 46 90% 68%;
+  }
+}
+
+@keyframes contemporary-crossfade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer components {
+
+  .premium-page::after,
+  .premium-surface::after {
+    display: none !important;
+  }
+
+  .premium-surface {
+    padding: 1.5rem;
+  }
+
+  .dark .premium-icon-mark {
+    color: hsl(var(--icon-gold)) !important;
+  }
+
+  .premium-hero-shell {
+    border-color: hsl(var(--icon-gold) / 0.3) !important;
+  }
+
+  .premium-hero-aura {
+    display: block !important;
+  }
+
+  .orthodox-hero {
+    border-color: hsl(var(--icon-gold) / 0.24) !important;
+  }
+
+  .icon-window {
+    border-color: hsl(var(--icon-gold) / 0.42) !important;
+    border-radius: 1rem !important;
+    box-shadow:
+      0 24px 65px hsl(232 45% 3% / 0.2),
+      0 0 0 1px hsl(var(--icon-gold) / 0.08) !important;
+  }
+
+  .orthodox-drawer-header,
+  .orthodox-nav-frame,
+  .premium-tabs {
+    backdrop-filter: blur(22px);
+  }
+
+  .premium-tabs {
+    padding: 0.35rem;
+  }
+
+  .premium-card-stack > [class*="rounded-3xl"],
+  .premium-card-stack > [class*="rounded-2xl"] {
+    box-shadow: 0 18px 52px hsl(232 45% 3% / 0.15) !important;
+  }
+
+  .ocp-camo,
+  .tactical-radar-field {
+    background-image: none !important;
+  }
+
+  @media (max-width: 640px) {
+    .premium-page-header,
+    .section-intro,
+    .premium-surface,
+    .orthodox-hero {
+      border-radius: 1.1rem !important;
+    }
+
+    .premium-surface {
+      padding: 1rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .water-page {
+    animation: none !important;
+  }
+}

@@ -1,0 +1,14 @@
+/* Book-style reading face for Scripture and prayer texts; headings and controls stay in Barlow. */
+@layer components {
+  .scripture-text {
+    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    line-height: 1.75;
+    letter-spacing: 0;
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  .scripture-text :where(strong, b) {
+    font-weight: 600;
+  }
+}

@@ -1,0 +1,272 @@
+/* Surfaces: camouflage, field grid, radar scope and card textures. */
+@layer utilities {
+  .ocp-camo {
+    background-position: 0 0, 116px 24px, 42px 134px, 190px 150px;
+    background-size: 360px 300px, 380px 320px, 400px 340px, 370px 315px;
+  }
+
+  .field-grid {
+    background-position: 0 0, 116px 24px, 0 0, 0 0;
+  }
+
+  html:not(.dark):not(.red-dark) .field-grid {
+    background-image:
+      radial-gradient(ellipse at 14% 26%, hsl(43 72% 56% / 0.18) 0 16%, transparent 17%),
+      radial-gradient(ellipse at 76% 20%, hsl(221 58% 34% / 0.12) 0 14%, transparent 15%),
+      radial-gradient(ellipse at 42% 72%, hsl(6 62% 43% / 0.10) 0 13%, transparent 14%),
+      linear-gradient(hsl(221 58% 34% / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(221 58% 34% / 0.06) 1px, transparent 1px);
+    background-position: 0 0, 116px 24px, 42px 134px, 0 0, 0 0;
+    background-size: 360px 300px, 380px 320px, 400px 340px, 32px 32px, 32px 32px;
+  }
+
+  .tactical-radar-field::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    animation: tactical-map-drift 18s linear infinite;
+  }
+
+  .tactical-radar-field::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    animation: tactical-blips 5.5s ease-in-out infinite;
+  }
+
+  html:not(.dark):not(.red-dark) .tactical-radar-field {
+    background:
+      radial-gradient(circle at 50% 34%, hsl(221 72% 34% / 0.16), transparent 22rem),
+      radial-gradient(circle at 80% 76%, hsl(7 78% 43% / 0.12), transparent 18rem),
+      radial-gradient(circle at 20% 18%, hsl(43 96% 58% / 0.18), transparent 20rem),
+      linear-gradient(hsl(221 72% 34% / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(221 72% 34% / 0.05) 1px, transparent 1px),
+      linear-gradient(135deg, hsl(43 84% 96% / 0.98), hsl(42 66% 91% / 0.96));
+    background-size: auto, auto, auto, 42px 42px, 42px 42px, auto;
+  }
+
+  html:not(.dark):not(.red-dark) .tactical-radar-field::before {
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(221 72% 34% / 0.09) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(43 96% 58% / 0.11) 55%, transparent 56% 100%);
+  }
+
+  .red-dark .tactical-radar-field::before {
+    background:
+      linear-gradient(115deg, transparent 0 45%, hsl(0 78% 50% / 0.09) 50%, transparent 56% 100%),
+      radial-gradient(circle at center, transparent 0 54%, hsl(0 78% 50% / 0.07) 55%, transparent 56% 100%);
+  }
+
+  .radar-scope {
+    position: absolute;
+    width: min(82vw, 560px);
+
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--primary) / 0.22);
+    background:
+      repeating-radial-gradient(circle, transparent 0 62px, hsl(var(--primary) / 0.14) 63px 64px),
+      linear-gradient(hsl(var(--primary) / 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.09) 1px, transparent 1px),
+      radial-gradient(circle, hsl(var(--primary) / 0.05), transparent 67%);
+    background-size: auto, 50% 50%, 50% 50%, auto;
+  }
+
+  .radar-scope::before {
+    content: "";
+    position: absolute;
+    inset: 50% 50% 0 50%;
+    width: 50%;
+    height: 50%;
+    transform-origin: 0 0;
+    border-top: 2px solid hsl(var(--primary) / 0.42);
+    background: conic-gradient(from -12deg at 0 0, hsl(var(--primary) / 0.24), hsl(var(--primary) / 0.09) 22deg, transparent 48deg);
+    clip-path: polygon(0 0, 100% 0, 100% 72%, 0 0);
+    animation: radar-sweep 4.6s linear infinite;
+    filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.28));
+  }
+
+  .radar-scope::after {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 9999px;
+    background: hsl(var(--primary));
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.55);
+    transform: translate(-50%, -50%);
+  }
+
+  .radar-scope-primary {
+    right: -8rem;
+    top: 5.5rem;
+  }
+
+  .radar-scope-secondary {
+    bottom: -13rem;
+    left: -10rem;
+    width: min(76vw, 460px);
+    opacity: 0.32;
+  }
+
+  .radar-scope-secondary::before {
+    animation-duration: 6.8s;
+    animation-direction: reverse;
+  }
+
+  .tactical-scanlines {
+    background: repeating-linear-gradient(0deg, transparent 0 7px, hsl(var(--primary) / 0.032) 8px 9px);
+    mix-blend-mode: screen;
+  }
+
+  .sacred-surface {
+    background:
+      radial-gradient(circle at top left, hsl(var(--primary) / 0.10), transparent 18rem),
+      linear-gradient(135deg, hsl(var(--card) / 0.96), hsl(var(--background) / 0.88));
+  }
+
+  .ornate-card {
+    @apply relative overflow-hidden rounded-2xl border border-border/45 bg-card/90 shadow-sm backdrop-blur-md;
+  }
+
+  .ornate-card::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    pointer-events: none;
+    border-radius: calc(var(--radius) + 0.2rem);
+    border: 1px solid hsl(var(--primary) / 0.055);
+  }
+
+  .icon-medallion {
+    @apply grid shrink-0 place-items-center rounded-xl border border-primary/20 bg-primary/10 text-primary shadow-sm;
+  }
+
+  .gold-hairline {
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.28), transparent);
+  }
+
+  .btn-wrap {
+    @apply h-auto max-w-full whitespace-normal break-words text-left leading-snug;
+  }
+
+  .glass {
+    @apply border border-border/45 bg-background/70 backdrop-blur-md shadow-sm;
+  }
+
+  .glow {
+    box-shadow: 0 10px 30px hsl(var(--primary) / 0.14);
+  }
+
+  .card-interactive {
+    @apply transition-colors duration-200 ease-out motion-reduce:transition-none;
+  }
+
+  .card-interactive:hover {
+    box-shadow: 0 10px 35px hsl(var(--foreground) / 0.07);
+  }
+
+  .tap {
+    @apply transition-transform duration-150 ease-out active:scale-[0.98] motion-reduce:transition-none;
+    will-change: transform;
+  }
+
+  @keyframes radar-sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes tactical-map-drift {
+    from {
+      transform: translate3d(-2%, -1%, 0) rotate(0deg);
+    }
+    to {
+      transform: translate3d(2%, 1%, 0) rotate(360deg);
+    }
+  }
+
+  @keyframes tactical-blips {
+    0%, 100% {
+      opacity: 0.18;
+      filter: drop-shadow(0 0 2px hsl(var(--primary) / 0.45));
+    }
+    45% {
+      opacity: 0.62;
+      filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.8));
+    }
+  }
+
+  .candlelight-card {
+    position: relative;
+    overflow: hidden;
+    border-color: hsl(var(--primary) / 0.24);
+    background:
+      radial-gradient(circle at 50% -20%, hsl(42 92% 58% / 0.13), transparent 13rem),
+      linear-gradient(135deg, hsl(var(--card) / 0.92), hsl(var(--background) / 0.78));
+    box-shadow: 0 18px 60px hsl(35 91% 48% / 0.12);
+  }
+
+  .young-adult-hero {
+    background:
+      linear-gradient(120deg, hsl(229 45% 10% / 0.35), transparent 58%),
+      radial-gradient(circle at 78% 12%, hsl(275 83% 62% / 0.48), transparent 27rem),
+      radial-gradient(circle at 26% 110%, hsl(34 95% 55% / 0.34), transparent 24rem),
+      linear-gradient(135deg, hsl(229 52% 13%), hsl(239 43% 18%) 48%, hsl(270 34% 18%));
+  }
+
+  .youth-app-shell::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    background-image: radial-gradient(hsl(var(--foreground) / 0.18) 0.65px, transparent 0.65px);
+    background-size: 18px 18px;
+    mask-image: linear-gradient(to bottom, black, transparent 55%);
+  }
+
+  .dark .border-primary\/20,
+  .dark .border-primary\/25,
+  .dark .border-primary\/40,
+  .dark .ring-primary\/20 {
+    border-color: hsl(var(--primary) / 0.34);
+  }
+
+  .dark .glass,
+  .dark .ornate-card {
+    border-color: hsl(var(--primary) / 0.20);
+    background:
+      radial-gradient(circle at 50% -25%, hsl(42 92% 58% / 0.10), transparent 12rem),
+      linear-gradient(135deg, hsl(var(--card) / 0.88), hsl(var(--background) / 0.72));
+    box-shadow: 0 18px 70px hsl(35 91% 48% / 0.10);
+  }
+
+  .dark .bg-card {
+    background-color: hsl(var(--card) / 0.86);
+  }
+
+  .dark .shadow-sm {
+    box-shadow: 0 16px 48px hsl(35 91% 48% / 0.075);
+  }
+
+  .dark .border-border\/60,
+  .dark .border-border\/45,
+  .dark .border-border\/70 {
+    border-color: hsl(var(--primary) / 0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .tactical-radar-field::before,
+    .tactical-radar-field::after,
+    .radar-scope::before {
+      animation: none;
+    }
+  }
+}
