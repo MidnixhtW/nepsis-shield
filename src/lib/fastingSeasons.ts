@@ -62,13 +62,13 @@ export function orthodoxPascha(year: number) {
 }
 
 /** A fixed church date (e.g. Nov 15) as a civil date under the chosen calendar. */
-function fixedDate(year: number, month: number, day: number, calendar: ChurchCalendar) {
+export function fixedDate(year: number, month: number, day: number, calendar: ChurchCalendar) {
   const date = new Date(year, month - 1, day);
   return calendar === "julian" ? addDays(date, OLD_CALENDAR_OFFSET) : date;
 }
 
 /** The church (calendar) date for a civil day, so fixed feasts can be recognised. */
-function churchDate(civil: Date, calendar: ChurchCalendar) {
+export function churchDate(civil: Date, calendar: ChurchCalendar) {
   return calendar === "julian" ? addDays(civil, -OLD_CALENDAR_OFFSET) : dateOnly(civil);
 }
 

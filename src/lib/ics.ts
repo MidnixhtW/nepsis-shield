@@ -52,7 +52,7 @@ function toIcsDay(date: Date) {
 }
 
 /** All-day events, each with an alert at 6 PM the evening before (e.g. when a fast begins). */
-export function createAllDayEventsIcs(events: Array<{ uid: string; title: string; description?: string; date: Date }>) {
+export function createAllDayEventsIcs(events: Array<{ uid: string; title: string; description?: string; date: Date; yearly?: boolean }>) {
   const dtstamp = toIcsDate(new Date());
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nepsis Shield//EN", "CALSCALE:GREGORIAN"];
   for (const event of events) {
@@ -66,6 +66,7 @@ export function createAllDayEventsIcs(events: Array<{ uid: string; title: string
       `DTEND;VALUE=DATE:${toIcsDay(next)}`,
       `SUMMARY:${escapeText(event.title)}`,
       ...(event.description ? [`DESCRIPTION:${escapeText(event.description)}`] : []),
+      ...(event.yearly ? ["RRULE:FREQ=YEARLY"] : []),
       "BEGIN:VALARM",
       "ACTION:DISPLAY",
       "TRIGGER:-PT6H",

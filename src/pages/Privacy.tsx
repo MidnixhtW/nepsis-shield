@@ -95,6 +95,7 @@ const ALLOWED_APP_KEYS = new Set([
   "jesus_prayer_goal",
   "fasting-journeys:v1",
   "commemorations:v1",
+  "patron-saint:v1",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.

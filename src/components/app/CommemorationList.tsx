@@ -1,8 +1,11 @@
 import { useState, type FormEvent } from "react";
+import { format } from "date-fns";
 import { Plus, Printer, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { nextMemorial, parseDay } from "@/lib/memorials";
+import { cn } from "@/lib/utils";
 import {
   getCommemorations,
   setCommemorations,
@@ -29,6 +32,19 @@ const lists: Array<{ key: ListKey; title: string; printTitle: string; hint: stri
   },
 ];
 
+// "Reposed Nov 2, 2026 · next: 40th day, Fri Dec 11"
+function MemorialLine({ name, reposed, today }: { name: string; reposed: string; today: Date }) {
+  const date = parseDay(reposed);
+  if (!date) return null;
+  const next = nextMemorial(name, reposed, today);
+  return (
+    <span className="block text-xs text-accent">
+      Reposed {format(date, "MMM d, yyyy")}
+      {next ? ` · next: ${next.label}, ${format(next.date, "EEE MMM d")}` : ""}
+    </span>
+  );
+}
+
 function newId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
@@ -41,19 +57,23 @@ function NameList({
 }: {
   config: (typeof lists)[number];
   entries: CommemorationEntry[];
-  onAdd: (name: string, note: string) => void;
+  onAdd: (name: string, note: string, reposed: string) => void;
   onRemove: (id: string) => void;
 }) {
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
+  const [reposed, setReposed] = useState("");
+  const departed = config.key === "departed";
+  const today = new Date();
 
   function submit(event: FormEvent) {
     event.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
-    onAdd(trimmed.slice(0, 60), note.trim().slice(0, 80));
+    onAdd(trimmed.slice(0, 60), note.trim().slice(0, 80), departed ? reposed : "");
     setName("");
     setNote("");
+    setReposed("");
   }
 
   return (
@@ -61,9 +81,19 @@ function NameList({
       <h3 className="text-lg font-semibold tracking-tight">{config.title}</h3>
       <p className="mt-1 text-sm text-muted-foreground">{config.hint}</p>
 
-      <form onSubmit={submit} className="mt-4 grid gap-2 sm:grid-cols-[1fr_1fr_auto]">
+      <form onSubmit={submit} className={cn("mt-4 grid gap-2", departed ? "sm:grid-cols-[1fr_1fr_auto_auto]" : "sm:grid-cols-[1fr_1fr_auto]")}>
         <Input value={name} onChange={(event) => setName(event.target.value)} placeholder={config.placeholder} aria-label={`Add a name: ${config.title}`} maxLength={60} />
         <Input value={note} onChange={(event) => setNote(event.target.value)} placeholder="Note (optional), e.g. illness" aria-label="Optional note" maxLength={80} />
+        {departed ? (
+          <Input
+            type="date"
+            value={reposed}
+            max={format(today, "yyyy-MM-dd")}
+            onChange={(event) => setReposed(event.target.value)}
+            aria-label="Date of repose (optional)"
+            title="Date of repose (optional): adds the 3rd, 9th, and 40th days and anniversaries"
+          />
+        ) : null}
         <Button type="submit" className="rounded-xl" disabled={!name.trim()}>
           <Plus className="mr-1.5 h-4 w-4" /> Add
         </Button>
@@ -76,6 +106,7 @@ function NameList({
               <span className="min-w-0 flex-1">
                 <span className="scripture-text block text-base">{entry.name}</span>
                 {entry.note ? <span className="block text-xs text-muted-foreground">{entry.note}</span> : null}
+                {departed && entry.reposed ? <MemorialLine name={entry.name} reposed={entry.reposed} today={today} /> : null}
               </span>
               <Button type="button" variant="ghost" size="icon" className="h-9 w-9 shrink-0 rounded-full" aria-label={`Remove ${entry.name}`} onClick={() => onRemove(entry.id)}>
                 <Trash2 className="h-4 w-4" />
@@ -120,8 +151,11 @@ export function CommemorationList() {
           key={config.key}
           config={config}
           entries={list[config.key]}
-          onAdd={(name, note) =>
-            update({ ...list, [config.key]: [...list[config.key], { id: newId(), name, ...(note ? { note } : {}) }] })
+          onAdd={(name, note, reposed) =>
+            update({
+              ...list,
+              [config.key]: [...list[config.key], { id: newId(), name, ...(note ? { note } : {}), ...(reposed ? { reposed } : {}) }],
+            })
           }
           onRemove={(id) => update({ ...list, [config.key]: list[config.key].filter((entry) => entry.id !== id) })}
         />

@@ -114,13 +114,21 @@ export async function cancelSystemPrayerReminder(key: PrayerReminderKey): Promis
   }
 }
 
-// Fast-start reminders use their own id range so they never collide with the daily prayer reminders.
-const SEASON_REMINDER_IDS = Array.from({ length: 12 }, (_, index) => 7201 + index);
+// Each group of one-off reminders has its own id range, so groups never replace each other
+// or the daily prayer reminders.
+const ONE_OFF_REMINDER_IDS = {
+  fasts: Array.from({ length: 12 }, (_, index) => 7201 + index),
+  memorials: Array.from({ length: 30 }, (_, index) => 7301 + index),
+  nameday: Array.from({ length: 2 }, (_, index) => 7401 + index),
+} as const;
+export type OneOffReminderGroup = keyof typeof ONE_OFF_REMINDER_IDS;
 
-/** One-off notifications, e.g. the evening before each fast begins. Replaces any earlier set. */
+/** One-off notifications (e.g. the evening before each fast). Replaces that group's earlier set. */
 export async function scheduleSeasonReminders(
   reminders: Array<{ title: string; body: string; at: Date }>,
+  group: OneOffReminderGroup = "fasts",
 ): Promise<SystemReminderResult> {
+  const SEASON_REMINDER_IDS = ONE_OFF_REMINDER_IDS[group];
   const plugin = await getLocalNotifications();
   if (!plugin) {
     return { ok: false, native: false, reason: Capacitor.isNativePlatform() ? "plugin-missing" : "not-native" };

@@ -11,6 +11,9 @@ import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
 import { BackupReminderCard } from "@/components/app/BackupReminderCard";
+import { MemorialsCard } from "@/components/app/MemorialsCard";
+import { NameDayCard } from "@/components/app/NameDay";
+import { FeastGreetingCard } from "@/components/app/FeastGreetingCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
@@ -36,8 +39,11 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   return (
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
+        <FeastGreetingCard today={today} calendar={settings.calendarMode} />
+        <NameDayCard today={today} />
         <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
         <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
+        <MemorialsCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">
       {/* Help lives in the top bar on every screen, so Today keeps only a short pointer and the reset. */}

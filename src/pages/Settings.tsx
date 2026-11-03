@@ -30,6 +30,7 @@ import { useSettings } from "@/hooks/useSettings";
 import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PrayerReminders } from "@/components/app/PrayerReminders";
+import { PatronSaintSettings } from "@/components/app/NameDay";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
 
@@ -402,6 +403,8 @@ export default function Settings() {
             </div>
           </div>
         </Card>
+
+        <PatronSaintSettings />
 
         <PrayerReminders />
       </div>

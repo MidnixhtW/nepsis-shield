@@ -4,7 +4,8 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 export const COMMEMORATIONS_KEY = "commemorations:v1";
 export const COMMEMORATIONS_CHANGED_EVENT = "nepsis:commemorations-changed";
 
-export type CommemorationEntry = { id: string; name: string; note?: string };
+/** `reposed` is the date of repose ("YYYY-MM-DD"), used for the 3rd, 9th, and 40th days and anniversaries. */
+export type CommemorationEntry = { id: string; name: string; note?: string; reposed?: string };
 export type Commemorations = { living: CommemorationEntry[]; departed: CommemorationEntry[] };
 
 export function getCommemorations(): Commemorations {
