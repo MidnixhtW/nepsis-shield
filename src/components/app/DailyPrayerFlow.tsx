@@ -21,6 +21,8 @@ import {
   Sun,
   Sunset,
   Type,
+  Volume2,
+  VolumeX,
   X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -627,6 +629,23 @@ export function DailyPrayerFlow() {
     focusNextStep.current = false;
   }, [stepIndex, done, progressKey]);
 
+  // Read aloud: the device's own voice reads each step while the full-screen view is open.
+  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+  const [readingAloud, setReadingAloud] = useState(false);
+  useEffect(() => {
+    if (!canSpeak) return;
+    window.speechSynthesis.cancel();
+    if (!readingAloud || !immersive) return;
+    // "(3x)" markers are for the eye; read the words, not the count.
+    const text = [current.title, ...current.body].join(". ").replace(/\(\s*\d+x\s*\)/gi, "");
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.88;
+    window.speechSynthesis.speak(utterance);
+  }, [canSpeak, readingAloud, immersive, current]);
+  useEffect(() => {
+    if (!immersive) setReadingAloud(false);
+  }, [immersive]);
+
   useEffect(() => {
     if (!hydrated || done) return;
     savePrayerResume({
@@ -903,12 +922,29 @@ export function DailyPrayerFlow() {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                 {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
-              <Dialog.Close asChild>
-                <Button type="button" variant="ghost" size="icon" className="rounded-full">
-                  <X className="h-5 w-5" />
-                  <span className="sr-only">Close full-screen prayer</span>
-                </Button>
-              </Dialog.Close>
+              <div className="flex items-center gap-1">
+                {canSpeak ? (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    aria-pressed={readingAloud}
+                    aria-label={readingAloud ? "Stop reading" : "Read aloud"}
+                    className="rounded-full"
+                    onClick={() => setReadingAloud((on) => !on)}
+                  >
+                    {readingAloud ? <VolumeX className="h-4 w-4 sm:mr-1.5" /> : <Volume2 className="h-4 w-4 sm:mr-1.5" />}
+                    {/* Icon only on phones so the step counter stays on one line. */}
+                    <span className="hidden sm:inline">{readingAloud ? "Stop reading" : "Read aloud"}</span>
+                  </Button>
+                ) : null}
+                <Dialog.Close asChild>
+                  <Button type="button" variant="ghost" size="icon" className="rounded-full">
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">Close full-screen prayer</span>
+                  </Button>
+                </Dialog.Close>
+              </div>
             </header>
             <Progress value={progress} aria-hidden className="mx-auto mt-3 h-1 w-[min(42rem,calc(100%-2.5rem))]" />
 
