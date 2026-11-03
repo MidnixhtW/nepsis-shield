@@ -29,5 +29,5 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/today$/);
   await expect(onboarding).toBeHidden();
-  await expect(page.getByText("EMS mode active")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Rule for Steady Prayer" })).toBeVisible();
 });

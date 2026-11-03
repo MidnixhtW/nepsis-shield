@@ -18,16 +18,18 @@ test("complete the guided daily prayer flow", async ({ page }) => {
 
   await page.getByRole("button", { name: /Morning Offer the day/ }).click();
   await expect(page.getByText("Step 1 of 4")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Begin", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /: Begin$/ })).toBeVisible();
 
   await page.getByRole("button", { name: "Begin prayer" }).click();
-  await expect(page.getByRole("heading", { name: "Morning prayer" })).toBeVisible();
+  // Praying opens the full-screen reader, one step at a time.
+  const reader = page.getByRole("dialog");
+  await expect(reader.getByRole("heading", { name: "Morning prayer" })).toBeVisible();
 
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: /Jesus Prayer/ })).toBeVisible();
+  await reader.getByRole("button", { name: "Next" }).click();
+  await expect(reader.getByRole("heading", { name: /Jesus Prayer/ })).toBeVisible();
 
-  await page.getByRole("button", { name: "Next" }).click();
-  await expect(page.getByRole("heading", { name: "Close" })).toBeVisible();
+  await reader.getByRole("button", { name: "Next" }).click();
+  await expect(reader.getByRole("heading", { name: "Close", exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Mark complete" }).click();
 

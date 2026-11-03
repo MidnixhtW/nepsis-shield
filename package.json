@@ -13,7 +13,6 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "preview": "vite preview",
-    "start": "node server.mjs",
     "test:e2e": "playwright test",
     "test:responsive": "playwright test tests/responsive.spec.ts",
     "android:apply-icon": "node scripts/apply-android-ocp-icon.mjs",
