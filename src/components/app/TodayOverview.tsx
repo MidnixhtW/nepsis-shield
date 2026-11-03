@@ -10,9 +10,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
+import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
+import { currentSeason } from "@/lib/fastingSeasons";
 
 export function TodayOverview({ onNavigate, onOpenRoute }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
@@ -23,13 +25,15 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     ? `https://www.goarch.org/chapel?date=${encodeURIComponent(format(today, "M/d/yyyy"))}`
     : q.data?.sources.ocaDailyUrl ?? buildOcaDailyUrl(today);
 
+  const inSeason = currentSeason(today, settings.calendarMode) !== null;
+
   // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
   const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
 
   return (
     <div className="grid gap-5 sm:gap-6">
       <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
-      <RuleOfVigilanceCard onNavigate={onNavigate} />
+      <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
       <section aria-label="Help now" className="grid gap-3">
         <NeedHelpNow onNavigate={onNavigate} />
         <Accordion type="single" collapsible defaultValue={groundDefault} className="rounded-3xl border bg-card px-5">
@@ -39,6 +43,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           </AccordionItem>
         </Accordion>
       </section>
+      <BackupReminderCard />
       <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
       <div className="grid items-start gap-5 md:grid-cols-2">
         <Card className="rounded-3xl p-5 sm:p-6">

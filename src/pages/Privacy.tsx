@@ -18,6 +18,7 @@ import {
   hasAnyLegacyPlaintextSensitiveNotes,
   hasLegacyPlaintextSensitiveData,
 } from "@/lib/deviceStorage";
+import { recordBackup } from "@/lib/backupReminder";
 
 import { decryptJson, encryptJson, type EncryptedBlob } from "@/lib/cryptoVault";
 import { downloadTextFile } from "@/lib/ics";
@@ -67,6 +68,8 @@ const ALLOWED_PREFIXES = [
   "bible:",
   "confess:",
   "plans:",
+  "prep_checklist:",
+  "young:micro:",
 ] as const;
 
 const ALLOWED_PRIVACY_KEYS = new Set([
@@ -77,6 +80,32 @@ const ALLOWED_PRIVACY_KEYS = new Set([
   "privacy:confess_save",
 ]);
 
+// App data saved through setStoredItem (wrapped values), so a backup carries the whole rule of life.
+const ALLOWED_APP_KEYS = new Set([
+  "app:settings",
+  "onboarding:quickstart_done",
+  "nepsis:rule-of-vigilance",
+  "nepsis:responder-mode",
+  "daily_rhythm:v1",
+  "daily_prayer_flow:prefs",
+  "daily_prayer_flow:reminders",
+  "prayer-challenges:v1",
+  "personalized-path:v1",
+  "sleep-mode:v1",
+  "jesus_prayer_goal",
+  "fasting-journeys:v1",
+  "commemorations:v1",
+]);
+
+// A few keys are written as raw strings rather than wrapped values; each gets its own strict check.
+const RAW_APP_KEYS: Record<string, (raw: string) => boolean> = {
+  "orthodox-app:nicene-creed-progress:v1": (raw) => {
+    const parsed = parseJsonSafe(raw) as { completedLines?: unknown } | null;
+    return !!parsed && typeof parsed === "object" && Array.isArray(parsed.completedLines);
+  },
+  "nepsis-shield:philokalia-guide-unlocked": (raw) => raw === "true",
+  "ortho-companion:tactical-appearance": (raw) => ["dark", "red-dark", "blue-cream"].includes(raw),
+};
 // Value schema validation
 
 function parseJsonSafe(raw: string | null): unknown {
@@ -106,7 +135,7 @@ function isWrappedValue(x: unknown): x is WrappedValue {
 }
 
 function isAllowedKey(key: string): boolean {
-  if (ALLOWED_PRIVACY_KEYS.has(key)) return true;
+  if (ALLOWED_PRIVACY_KEYS.has(key) || ALLOWED_APP_KEYS.has(key) || key in RAW_APP_KEYS) return true;
   return ALLOWED_PREFIXES.some((p) => key.startsWith(p));
 }
 
@@ -133,7 +162,9 @@ function isEncryptedNoteValue(value: unknown) {
 }
 
 function isValidValueForKey(key: string, raw: string): boolean {
-  // All imported values must be wrapped objects produced by setStoredItem
+  if (key in RAW_APP_KEYS) return RAW_APP_KEYS[key](raw);
+
+  // All other imported values must be wrapped objects produced by setStoredItem
   const parsed = parseJsonSafe(raw);
   if (!isWrappedValue(parsed)) return false;
 
@@ -176,7 +207,7 @@ export default function Privacy() {
 
     const items: Record<string, string> = {};
     for (const k of safeKeys()) {
-      if (!(ALLOWED_PREFIXES.some((p) => k.startsWith(p)) || ALLOWED_PRIVACY_KEYS.has(k))) continue;
+      if (!isAllowedKey(k)) continue;
       if (hasLegacyPlaintextSensitiveData(k)) continue;
       const v = safeGetRaw(k);
 
@@ -192,6 +223,7 @@ export default function Privacy() {
         JSON.stringify({ enc: 1, blob } satisfies { enc: 1; blob: EncryptedBlob }, null, 2),
         "application/json",
       );
+      recordBackup();
       showSuccess("Encrypted export downloaded.");
     } catch {
       showError("Couldn't export.");
@@ -381,7 +413,7 @@ export default function Privacy() {
           </div>
         </Card>
 
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+        <Card id="backup" className="scroll-mt-24 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-base font-semibold tracking-tight">Encrypted export / import</h2>

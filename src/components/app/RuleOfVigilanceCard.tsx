@@ -38,9 +38,13 @@ function RuleRow({ icon, label, body }: { icon: React.ReactNode; label: string; 
 
 export function RuleOfVigilanceCard({
   onNavigate,
+  compact = false,
 }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
+  /** During a fasting season the journey leads, so the rule starts collapsed to one line. */
+  compact?: boolean;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const [storedRule, setStoredRule] = useState<RuleOfVigilance | null>(() => getStoredRuleOfVigilance());
 
   useEffect(() => {
@@ -74,6 +78,29 @@ export function RuleOfVigilanceCard({
   function begin() {
     const target: RuleTarget = rule.target ?? { section: "pray", tab: "daily" };
     onNavigate?.(target);
+  }
+
+  if (compact && !expanded) {
+    return (
+      <Card className="flex flex-wrap items-center gap-3 rounded-[1.5rem] border p-4 sm:p-5">
+        <Compass className="h-5 w-5 shrink-0 text-accent" />
+        <p className="min-w-0 flex-1 text-sm">
+          <span className="text-muted-foreground">Your rule: </span>
+          <span className="font-semibold">{rule.title}</span>
+          <span className="text-muted-foreground"> · {rule.variantLabel}</span>
+        </p>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" size="sm" className="rounded-full" aria-expanded={false} onClick={() => setExpanded(true)}>
+            Show rule
+          </Button>
+          {onNavigate ? (
+            <Button type="button" size="sm" className="rounded-full" onClick={begin}>
+              Begin <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
+      </Card>
+    );
   }
 
   return (

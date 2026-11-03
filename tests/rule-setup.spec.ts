@@ -2,6 +2,8 @@
 import { expect, test } from "@playwright/test";
 
 test("setup accepts several needs and a rule version that can be changed later", async ({ page }) => {
+  // Outside any fasting season, so Today shows the full rule card rather than its compact form.
+  await page.clock.setFixedTime(new Date(2026, 9, 1, 10, 0));
   await page.goto("/today");
   const onboarding = page.getByRole("dialog");
 
