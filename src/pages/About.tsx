@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ExternalLink, Shield, Info, BookText, BadgeCheck, Mail } from "lucide-react";
+import { ExternalLink, Shield, Info, BookText, BadgeCheck } from "lucide-react";
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -23,7 +23,6 @@ export default function About() {
             <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
             <Button asChild variant="outline" className="premium-action"><Link to="/privacy"><Shield className="mr-2 h-4 w-4" /> Privacy</Link></Button>
             <ApkDownloadButton className="rounded-2xl" />
-            <Button asChild className="rounded-2xl"><a href="mailto:feedback@example.com?subject=Ortho%20Companion%20feedback"><Mail className="mr-2 h-4 w-4" /> Feedback</a></Button>
           </>
         }
       />
