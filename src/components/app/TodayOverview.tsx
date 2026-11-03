@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
+import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
@@ -27,6 +28,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
 
   return (
     <div className="grid gap-5 sm:gap-6">
+      <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
       <RuleOfVigilanceCard onNavigate={onNavigate} />
       <section aria-label="Help now" className="grid gap-3">
         <NeedHelpNow onNavigate={onNavigate} />
