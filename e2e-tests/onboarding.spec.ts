@@ -13,6 +13,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   })).toBeVisible();
 
   await onboarding.getByRole("button", { name: "Continue" }).click();
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme (keep Olive & Brass)
   await onboarding.getByRole("button", { name: /EMS \/ medical/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar (keep New Calendar)

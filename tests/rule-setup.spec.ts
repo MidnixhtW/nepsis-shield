@@ -8,6 +8,9 @@ test("setup accepts several needs and a rule version that can be changed later",
   const onboarding = page.getByRole("dialog");
 
   await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
+  await onboarding.getByRole("button", { name: /Parchment/ }).click();
+  await expect(page.locator("html")).toHaveClass(/parchment/);
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme
   await onboarding.getByRole("button", { name: "Continue" }).click(); // role
   await onboarding.getByRole("button", { name: /Old Calendar/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar

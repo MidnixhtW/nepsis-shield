@@ -35,13 +35,15 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
+import { useTheme } from "next-themes";
 import { useSettings } from "@/hooks/useSettings";
+import { themeOptions } from "@/components/app/ThemeToggle";
 import type { CalendarMode } from "@/lib/settings";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-type OnboardingStep = "welcome" | "role" | "calendar" | "need" | "rhythm" | "rule";
+type OnboardingStep = "welcome" | "theme" | "role" | "calendar" | "need" | "rhythm" | "rule";
 
 type NeedOption = {
   id: VigilanceNeed;
@@ -57,7 +59,21 @@ type RhythmOption = {
   icon: React.ReactNode;
 };
 
-const steps: OnboardingStep[] = ["welcome", "role", "calendar", "need", "rhythm", "rule"];
+const steps: OnboardingStep[] = ["welcome", "theme", "role", "calendar", "need", "rhythm", "rule"];
+
+// A small mock screen in the theme's own colors, so the choice is visible before it is made.
+function ThemePreview({ colors }: { colors: [string, string, string] }) {
+  const [background, text, accent] = colors;
+  return (
+    <span aria-hidden className="grid h-full w-full place-items-center rounded-2xl" style={{ background }}>
+      <span className="grid gap-1">
+        <span className="block h-1 w-5 rounded-full" style={{ background: accent }} />
+        <span className="block h-1 w-6 rounded-full" style={{ background: text }} />
+        <span className="block h-1 w-4 rounded-full" style={{ background: text, opacity: 0.6 }} />
+      </span>
+    </span>
+  );
+}
 
 // Fasts, feasts, readings, and journeys all follow this choice.
 const calendarOptions: Array<{ id: CalendarMode; title: string; description: string }> = [
@@ -262,6 +278,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
+  const { theme, setTheme } = useTheme();
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
@@ -398,6 +415,32 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
                 We’ll shape a simple Orthodox rhythm for your day: prayer, Scripture, watchfulness, and a gentle return when pressure rises.
               </p>
+            </section>
+          ) : null}
+
+          {step === "theme" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Appearance</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  How should Nepsis Shield look?
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Tap one to see it now. Dark themes are easier on the eyes at night; Parchment is easiest to read in daylight. You can change it anytime from the menu, under Appearance.
+                </p>
+              </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {themeOptions.map((option) => (
+                  <SelectionCard
+                    key={option.value}
+                    selected={(theme ?? "dark") === option.value}
+                    icon={<ThemePreview colors={option.preview} />}
+                    title={option.label}
+                    description={option.description}
+                    onClick={() => setTheme(option.value)}
+                  />
+                ))}
+              </div>
             </section>
           ) : null}
 
