@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf } from "lucide-react";
+import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -16,6 +16,7 @@ import {
   type SeasonInstance,
 } from "@/lib/fastingSeasons";
 import { createAllDayEventsIcs, downloadTextFile } from "@/lib/ics";
+import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { cn } from "@/lib/utils";
 import { showError, showSuccess } from "@/utils/toast";
@@ -30,6 +31,31 @@ function fastReminders(today: Date, calendar: ChurchCalendar) {
     at.setHours(19, 0, 0, 0);
     return { season, title: `${season.name} begins tomorrow`, body: season.summary, at };
   });
+}
+
+// Invite others into the season: the phone's share sheet where available, otherwise copy the text.
+function ShareSeasonButton({ season }: { season: SeasonInstance }) {
+  async function share() {
+    const url = `${PUBLIC_SITE_URL}/today`;
+    const text = `I'm keeping the ${season.name} with Nepsis Shield, a free Orthodox companion: a short prayer and practice for each day, the saints, and a quiet record. No account needed.`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${season.name} with Nepsis Shield`, text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      showSuccess("Invitation copied. Paste it anywhere to share.");
+    } catch (error) {
+      // Closing the share sheet is not an error worth reporting.
+      if ((error as Error)?.name !== "AbortError") showError("Couldn't share right now.");
+    }
+  }
+
+  return (
+    <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={() => void share()}>
+      <Share2 className="mr-2 h-4 w-4" /> Invite someone
+    </Button>
+  );
 }
 
 // Android app: notifications the evening before each fast. Website: a calendar file with the fasts.
@@ -220,7 +246,10 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           >
             See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
           </button>
-          <FastRemindersButton today={today} calendar={calendar} />
+          <div className="flex flex-wrap items-center gap-2">
+            <ShareSeasonButton season={season} />
+            <FastRemindersButton today={today} calendar={calendar} />
+          </div>
         </div>
         {showAll ? <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} /> : null}
       </Card>
@@ -248,7 +277,10 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           >
             Preview the journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
           </button>
-          <FastRemindersButton today={today} calendar={calendar} />
+          <div className="flex flex-wrap items-center gap-2">
+            <ShareSeasonButton season={season} />
+            <FastRemindersButton today={today} calendar={calendar} />
+          </div>
         </div>
         {showAll ? (
           <div className="mt-4 grid gap-4">
