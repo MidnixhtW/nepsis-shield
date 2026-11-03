@@ -407,6 +407,13 @@ export default function Privacy() {
               </div>
             </div>
 
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+              <p className="text-sm font-semibold">Visit counts on the website</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                nepsisshield.com counts page visits with Vercel Web Analytics so we know which parts of the app are used. It uses no cookies, does not identify you, and never sees anything you write or save in the app: prayers, names, notes, and progress stay on this device. The Android app does not count visits.
+              </p>
+            </div>
+
             <p className="text-xs leading-relaxed text-muted-foreground">
               Privacy hardening: requests are sent with <span className="font-semibold text-foreground">no-referrer</span> and are cached per-session to reduce repeated calls.
             </p>

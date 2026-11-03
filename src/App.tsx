@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Privacy from "./pages/Privacy";
@@ -23,6 +24,13 @@ import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
 const queryClient = new QueryClient();
 
+// Cookie-free visit counts (Vercel Web Analytics), only on the public website: not in the
+// Android app, local builds, or tests. The script is served from the site's own domain.
+const countVisits =
+  import.meta.env.PROD &&
+  typeof window !== "undefined" &&
+  /(^|\.)nepsisshield\.com$|\.vercel\.app$/.test(window.location.hostname);
+
 function PhilokaliaRoute() {
   return isPhilokaliaUnlocked() ? <PhilokaliaGuide /> : <NotFound />;
 }
@@ -35,6 +43,7 @@ const App = () => (
         <AudioProvider>
           <Toaster />
           <Sonner />
+          {countVisits ? <Analytics mode="production" /> : null}
           <BrowserRouter>
             <ConnectionStatusBanner />
             <ScrollToTop />
