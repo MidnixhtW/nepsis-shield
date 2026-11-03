@@ -114,6 +114,38 @@ export async function cancelSystemPrayerReminder(key: PrayerReminderKey): Promis
   }
 }
 
+// Fast-start reminders use their own id range so they never collide with the daily prayer reminders.
+const SEASON_REMINDER_IDS = Array.from({ length: 12 }, (_, index) => 7201 + index);
+
+/** One-off notifications, e.g. the evening before each fast begins. Replaces any earlier set. */
+export async function scheduleSeasonReminders(
+  reminders: Array<{ title: string; body: string; at: Date }>,
+): Promise<SystemReminderResult> {
+  const plugin = await getLocalNotifications();
+  if (!plugin) {
+    return { ok: false, native: false, reason: Capacitor.isNativePlatform() ? "plugin-missing" : "not-native" };
+  }
+  try {
+    const allowed = await ensurePermission(plugin);
+    if (!allowed) return { ok: false, native: false, reason: "permission-denied" };
+    await plugin.cancel({ notifications: SEASON_REMINDER_IDS.map((id) => ({ id })) });
+    const future = reminders.filter((reminder) => reminder.at.getTime() > Date.now()).slice(0, SEASON_REMINDER_IDS.length);
+    if (future.length) {
+      await plugin.schedule({
+        notifications: future.map((reminder, index) => ({
+          id: SEASON_REMINDER_IDS[index],
+          title: reminder.title,
+          body: reminder.body,
+          schedule: { at: reminder.at },
+        })),
+      });
+    }
+    return { ok: true, native: true };
+  } catch {
+    return { ok: false, native: false, reason: "failed" };
+  }
+}
+
 export function isNativeReminderUnavailable(result: SystemReminderResult) {
   return "reason" in result && (result.reason === "not-native" || result.reason === "plugin-missing");
 }

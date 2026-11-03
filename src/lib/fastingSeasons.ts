@@ -155,6 +155,17 @@ export function nextSeason(day: Date, calendar: ChurchCalendar) {
   return upcoming ? { season: upcoming, daysUntil: daysBetween(today, upcoming.start) } : null;
 }
 
+const FASTS: SeasonId[] = ["great-lent", "apostles-fast", "dormition-fast", "nativity-fast"];
+
+/** Fasts that begin within the next `withinDays` days, soonest first (for reminders). */
+export function upcomingFasts(day: Date, calendar: ChurchCalendar, withinDays = 365) {
+  const today = dateOnly(day);
+  return nearbySeasons(today, calendar)
+    .filter((season) => FASTS.includes(season.id))
+    .filter((season) => season.start > today && daysBetween(today, season.start) <= withinDays)
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+}
+
 // Short traditional texts, in widely used public-domain English forms.
 const EPHRAIM = {
   text: "O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk. But give rather the spirit of chastity, humility, patience, and love to Thy servant. Yea, O Lord and King, grant me to see my own transgressions and not to judge my brother, for blessed art Thou unto ages of ages. Amen.",

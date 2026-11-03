@@ -47,6 +47,37 @@ export function createSimpleIcs(opts: {
   return lines.join("\r\n") + "\r\n";
 }
 
+function toIcsDay(date: Date) {
+  return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`;
+}
+
+/** All-day events, each with an alert at 6 PM the evening before (e.g. when a fast begins). */
+export function createAllDayEventsIcs(events: Array<{ uid: string; title: string; description?: string; date: Date }>) {
+  const dtstamp = toIcsDate(new Date());
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nepsis Shield//EN", "CALSCALE:GREGORIAN"];
+  for (const event of events) {
+    const next = new Date(event.date);
+    next.setDate(next.getDate() + 1);
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${event.uid}@nepsisshield`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART;VALUE=DATE:${toIcsDay(event.date)}`,
+      `DTEND;VALUE=DATE:${toIcsDay(next)}`,
+      `SUMMARY:${escapeText(event.title)}`,
+      ...(event.description ? [`DESCRIPTION:${escapeText(event.description)}`] : []),
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "TRIGGER:-PT6H",
+      `DESCRIPTION:${escapeText(event.title)}`,
+      "END:VALARM",
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n") + "\r\n";
+}
+
 export function downloadTextFile(filename: string, content: string, mime: string) {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);

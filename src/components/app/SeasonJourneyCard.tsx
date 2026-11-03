@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { CalendarDays, Check, ChevronDown, ExternalLink, Leaf } from "lucide-react";
+import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -10,13 +10,84 @@ import {
   currentSeason,
   journeyDay,
   nextSeason,
+  upcomingFasts,
   type ChurchCalendar,
   type JourneyDay,
   type SeasonInstance,
 } from "@/lib/fastingSeasons";
+import { createAllDayEventsIcs, downloadTextFile } from "@/lib/ics";
+import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { cn } from "@/lib/utils";
+import { showError, showSuccess } from "@/utils/toast";
 
 const STORE_KEY = "fasting-journeys:v1";
+/** True once native fast reminders are on, so they can be rolled forward each time the app opens. */
+const FAST_REMINDERS_KEY = "fasting-journeys:native-reminders";
+
+function fastReminders(today: Date, calendar: ChurchCalendar) {
+  return upcomingFasts(today, calendar).map((season) => {
+    const at = addDays(season.start, -1);
+    at.setHours(19, 0, 0, 0);
+    return { season, title: `${season.name} begins tomorrow`, body: season.summary, at };
+  });
+}
+
+// Android app: notifications the evening before each fast. Website: a calendar file with the fasts.
+function FastRemindersButton({ today, calendar }: { today: Date; calendar: ChurchCalendar }) {
+  const [nativeOn, setNativeOn] = useState(() => getStoredItem<boolean>(FAST_REMINDERS_KEY) === true);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (nativeOn) void scheduleSeasonReminders(fastReminders(today, calendar));
+  }, [nativeOn, today, calendar]);
+
+  async function enable() {
+    setBusy(true);
+    try {
+      const reminders = fastReminders(today, calendar);
+      const result = await scheduleSeasonReminders(reminders);
+      if (result.ok) {
+        setStoredItem(FAST_REMINDERS_KEY, true);
+        setNativeOn(true);
+        showSuccess(`You'll be reminded the evening before each fast (${reminders.length} in the next year).`);
+        return;
+      }
+      if (isNativeReminderUnavailable(result)) {
+        const ics = createAllDayEventsIcs(
+          reminders.map(({ season }) => ({
+            uid: season.key,
+            title: season.name,
+            description: `${season.summary} ${season.fastingNote}`,
+            date: season.start,
+          })),
+        );
+        downloadTextFile("orthodox-fasts.ics", ics, "text/calendar");
+        showSuccess("Calendar file downloaded. Open it to add the fasts, with an alert the evening before each.");
+        return;
+      }
+      showError(
+        "reason" in result && result.reason === "permission-denied"
+          ? "Notifications are turned off for Nepsis Shield. Allow them in your phone's settings."
+          : "Couldn't set fast reminders.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  if (nativeOn) {
+    return (
+      <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+        <BellRing className="h-3.5 w-3.5 text-accent" /> Fast reminders are on
+      </p>
+    );
+  }
+  return (
+    <Button type="button" variant="outline" size="sm" className="rounded-full" disabled={busy} onClick={() => void enable()}>
+      <BellRing className="mr-2 h-4 w-4" /> Remind me when fasts begin
+    </Button>
+  );
+}
 /** Show the next season on Today once it is this close. */
 const UPCOMING_WINDOW_DAYS = 30;
 
@@ -140,14 +211,17 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           <Leaf className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}
         </p>
 
-        <button
-          type="button"
-          aria-expanded={showAll}
-          onClick={() => setShowAll((open) => !open)}
-          className="mt-4 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
-        </button>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <button
+            type="button"
+            aria-expanded={showAll}
+            onClick={() => setShowAll((open) => !open)}
+            className="inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
+          </button>
+          <FastRemindersButton today={today} calendar={calendar} />
+        </div>
         {showAll ? <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} /> : null}
       </Card>
     );
@@ -165,14 +239,17 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           {season.name} begins {format(season.start, "EEEE, MMMM d")}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{season.summary}</p>
-        <button
-          type="button"
-          aria-expanded={showAll}
-          onClick={() => setShowAll((open) => !open)}
-          className="mt-3 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          Preview the journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
-        </button>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <button
+            type="button"
+            aria-expanded={showAll}
+            onClick={() => setShowAll((open) => !open)}
+            className="inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Preview the journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
+          </button>
+          <FastRemindersButton today={today} calendar={calendar} />
+        </div>
         {showAll ? (
           <div className="mt-4 grid gap-4">
             <div>
