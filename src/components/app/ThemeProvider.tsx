@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 
-export const APP_THEMES = ["dark", "red-dark", "blue-cream"] as const;
+export const APP_THEMES = ["dark", "parchment", "red-dark", "blue-cream"] as const;
 export type AppTheme = (typeof APP_THEMES)[number];
 
 function ThemeClassSync() {

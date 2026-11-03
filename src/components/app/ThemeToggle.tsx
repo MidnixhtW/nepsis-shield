@@ -13,31 +13,44 @@ import {
 import { cn } from "@/lib/utils";
 import type { AppTheme } from "@/components/app/ThemeProvider";
 
-const themes: Array<{
+/** Shared by the theme picker and first-time setup. `preview` is background, text, and accent. */
+export const themeOptions: Array<{
   value: AppTheme;
   label: string;
   description: string;
   swatch: string;
+  preview: [string, string, string];
 }> = [
   {
     value: "dark",
     label: "Olive & Brass",
     description: "Quiet field colors, matched to the shield",
     swatch: "bg-[#8ea65c]",
+    preview: ["#0e0f0b", "#ece4cc", "#d0b063"],
+  },
+  {
+    value: "parchment",
+    label: "Parchment",
+    description: "Light olive and cream for daytime reading",
+    swatch: "bg-[#ebe3cc]",
+    preview: ["#f2ecdc", "#2a2f1c", "#8c6421"],
   },
   {
     value: "red-dark",
     label: "Black & Red",
     description: "High-alert command display",
     swatch: "bg-[#e6333c]",
+    preview: ["#080808", "#ebe8e8", "#e6333c"],
   },
   {
     value: "blue-cream",
     label: "Blue & Cream",
     description: "Daylight operations display",
     swatch: "bg-[#225ea8]",
+    preview: ["#f1ead8", "#14243e", "#225ea8"],
   },
 ];
+const themes = themeOptions;
 
 export function ThemeToggle({
   variant = "icon",

@@ -104,7 +104,7 @@ const RAW_APP_KEYS: Record<string, (raw: string) => boolean> = {
     return !!parsed && typeof parsed === "object" && Array.isArray(parsed.completedLines);
   },
   "nepsis-shield:philokalia-guide-unlocked": (raw) => raw === "true",
-  "ortho-companion:tactical-appearance": (raw) => ["dark", "red-dark", "blue-cream"].includes(raw),
+  "ortho-companion:tactical-appearance": (raw) => ["dark", "parchment", "red-dark", "blue-cream"].includes(raw),
 };
 // Value schema validation
 
