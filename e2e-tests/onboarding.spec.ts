@@ -15,6 +15,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await onboarding.getByRole("button", { name: "Continue" }).click();
   await onboarding.getByRole("button", { name: /EMS \/ medical/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar (keep New Calendar)
 
   await onboarding.getByRole("button", { name: /Discipline in prayer/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();

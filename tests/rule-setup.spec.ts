@@ -9,6 +9,8 @@ test("setup accepts several needs and a rule version that can be changed later",
 
   await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
   await onboarding.getByRole("button", { name: "Continue" }).click(); // role
+  await onboarding.getByRole("button", { name: /Old Calendar/ }).click();
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar
 
   const next = onboarding.getByRole("button", { name: "Continue" });
   await expect(next).toBeDisabled();

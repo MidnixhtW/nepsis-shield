@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   BookOpen,
+  CalendarDays,
   Check,
   ChevronRight,
   Compass,
@@ -34,11 +35,13 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
+import { useSettings } from "@/hooks/useSettings";
+import type { CalendarMode } from "@/lib/settings";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-type OnboardingStep = "welcome" | "role" | "need" | "rhythm" | "rule";
+type OnboardingStep = "welcome" | "role" | "calendar" | "need" | "rhythm" | "rule";
 
 type NeedOption = {
   id: VigilanceNeed;
@@ -54,7 +57,21 @@ type RhythmOption = {
   icon: React.ReactNode;
 };
 
-const steps: OnboardingStep[] = ["welcome", "role", "need", "rhythm", "rule"];
+const steps: OnboardingStep[] = ["welcome", "role", "calendar", "need", "rhythm", "rule"];
+
+// Fasts, feasts, readings, and journeys all follow this choice.
+const calendarOptions: Array<{ id: CalendarMode; title: string; description: string }> = [
+  {
+    id: "gregorian",
+    title: "New Calendar",
+    description: "Nativity on December 25. Most parishes of the OCA, Greek, Antiochian, Romanian, and Bulgarian churches.",
+  },
+  {
+    id: "julian",
+    title: "Old Calendar",
+    description: "Nativity on January 7. The Russian (including ROCOR), Serbian, Georgian, and Jerusalem churches, and Mount Athos.",
+  },
+];
 
 const needOptions: NeedOption[] = [
   {
@@ -244,6 +261,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(() => !getStoredItem<boolean>(ONBOARDING_KEY));
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
+  const { settings, updateSettings } = useSettings();
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
@@ -410,6 +428,32 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   );
                 })}
 
+              </div>
+            </section>
+          ) : null}
+
+          {step === "calendar" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your calendar</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  Which calendar does your parish keep?
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  Fasts, feasts, readings, and seasonal journeys follow it. Not sure? If your parish celebrates Nativity on December 25, choose New Calendar; on January 7, Old Calendar. You can change this later in Settings.
+                </p>
+              </div>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                {calendarOptions.map((option) => (
+                  <SelectionCard
+                    key={option.id}
+                    selected={settings.calendarMode === option.id}
+                    icon={<CalendarDays className="h-5 w-5" />}
+                    title={option.title}
+                    description={option.description}
+                    onClick={() => updateSettings({ calendarMode: option.id })}
+                  />
+                ))}
               </div>
             </section>
           ) : null}
