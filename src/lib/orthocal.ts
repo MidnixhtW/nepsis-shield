@@ -144,7 +144,8 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
 
   const fastingLevel = day.fast_level ?? 0;
   const fastingDesc = day.fast_level_desc?.trim() || "No fast";
-  const fastingException = day.fast_exception_desc?.trim() || undefined;
+  // Orthocal can attach an allowance ("Fish, Wine and Oil are Allowed") to non-fasting days; it only means something during a fast.
+  const fastingException = fastingLevel > 0 ? day.fast_exception_desc?.trim() || undefined : undefined;
   const fallbackFastingRule = getDailyFastingRule(date);
 
   const toneValue = typeof day.tone === "number" ? day.tone : undefined;
