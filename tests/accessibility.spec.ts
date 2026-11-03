@@ -26,6 +26,8 @@ for (const route of routes) {
 
 test("keyboard users can reveal and use the skip link", async ({ page }) => {
   await page.goto("/today", { waitUntil: "domcontentloaded" });
+  // Wait for the app to mount; a Tab pressed while only the loading screen exists has nothing to focus.
+  await expect(page.locator("#main-content")).toBeVisible();
   await page.keyboard.press("Tab");
   const skipLink = page.getByRole("link", { name: "Skip to content" });
   await expect(skipLink).toBeFocused();
