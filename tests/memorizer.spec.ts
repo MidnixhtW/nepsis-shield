@@ -32,8 +32,11 @@ test("reset requires confirmation and clears persisted progress", async ({ page 
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Keep progress" }).click();
   await expect(page.getByText("2 / 6", { exact: true })).toBeVisible();
+  // Let the closing animation finish; otherwise the reopen can target the dialog that is leaving.
+  await expect(dialog).toBeHidden();
 
   await page.getByRole("button", { name: "Reset progress" }).click();
+  await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Reset progress" }).click();
   await expect(page.getByText("0 / 6", { exact: true })).toBeVisible();
   await page.reload({ waitUntil: "domcontentloaded" });
