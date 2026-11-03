@@ -29,10 +29,18 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Nepsis Shield</title>
+    <style>
+      /* Boot screen shown until React mounts and replaces #root's contents. */
+      html, body { margin: 0; background: #0e0f0b; }
+      .boot-shell { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; }
+      .boot-shell img { width: 88px; height: 88px; animation: boot-breathe 2.4s ease-in-out infinite; }
+      @keyframes boot-breathe { 0%, 100% { opacity: 0.55; transform: scale(0.97); } 50% { opacity: 1; transform: scale(1); } }
+      @media (prefers-reduced-motion: reduce) { .boot-shell img { animation: none; } }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"><div class="boot-shell" role="status" aria-label="Loading Nepsis Shield"><img src="/military-orthodox-cross.svg" alt="" width="88" height="88" /></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
