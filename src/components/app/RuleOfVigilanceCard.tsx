@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Clock3, Compass, MoonStar, ShieldCheck, Sun } from "lucide-react";
+import { ArrowRight, ChevronDown, Clock3, Compass, Eye, MoonStar, Plus, ShieldCheck, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
 import { getStoredResponderMode } from "@/lib/responderMode";
 import {
   RULE_OF_VIGILANCE_CHANGED_EVENT,
   buildRuleOfVigilance,
   getStoredRuleOfVigilance,
+  ruleNeeds,
+  setStoredRuleOfVigilance,
   type RuleOfVigilance,
+  type RuleTarget,
 } from "@/lib/ruleOfVigilance";
 
 import type { AppSection } from "@/components/app/AppShell";
@@ -54,26 +58,22 @@ export function RuleOfVigilanceCard({
     };
   }, []);
 
-  const rule = useMemo(() => storedRule ?? defaultRule(), [storedRule]);
+  const [choosingVersion, setChoosingVersion] = useState(false);
+  // Rebuild so rules saved before versions existed gain their practice and destination.
+  const rule = useMemo(() => {
+    const base = storedRule ?? defaultRule();
+    return buildRuleOfVigilance({ needs: ruleNeeds(base), rhythm: base.rhythm, role: base.role, variant: base.variant });
+  }, [storedRule]);
+
+  function chooseVersion(variant: string) {
+    const next = buildRuleOfVigilance({ needs: ruleNeeds(rule), rhythm: rule.rhythm, role: rule.role, variant });
+    setStoredRuleOfVigilance(next);
+    setStoredRule(next);
+  }
 
   function begin() {
-    if (rule.need === "scripture") {
-      onNavigate?.({ section: "read", read: "daily" });
-      return;
-    }
-    if (rule.need === "sleep") {
-      onNavigate?.({ section: "pray", tab: "sleep" });
-      return;
-    }
-    if (rule.need === "confession") {
-      onNavigate?.({ section: "pray", tab: "prep" });
-      return;
-    }
-    if (rule.need === "fasting") {
-      onNavigate?.({ section: "today" });
-      return;
-    }
-    onNavigate?.({ section: "pray", tab: "daily" });
+    const target: RuleTarget = rule.target ?? { section: "pray", tab: "daily" };
+    onNavigate?.(target);
   }
 
   return (
@@ -84,6 +84,18 @@ export function RuleOfVigilanceCard({
             <Compass className="mr-1.5 h-3.5 w-3.5" /> Today’s Rule
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
+          <button
+            type="button"
+            aria-expanded={choosingVersion}
+            onClick={() => setChoosingVersion((open) => !open)}
+            className="mt-2 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {rule.variantLabel} · Change version
+            <ChevronDown className={"h-4 w-4 transition-transform " + (choosingVersion ? "rotate-180" : "")} />
+          </button>
+          {choosingVersion ? (
+            <RuleVariantPicker need={rule.need} value={rule.variant} onChange={chooseVersion} className="mt-3 sm:grid-cols-1" />
+          ) : null}
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
           {onNavigate ? (
             <Button type="button" className="gold-foil mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
@@ -103,6 +115,10 @@ export function RuleOfVigilanceCard({
           <RuleRow icon={<Clock3 className="h-4 w-4" />} label="Midday" body={rule.midday} />
           <RuleRow icon={<MoonStar className="h-4 w-4" />} label="Evening" body={rule.evening} />
           <RuleRow icon={<ShieldCheck className="h-4 w-4" />} label="Pressure" body={rule.underPressure} />
+          {rule.practice ? <RuleRow icon={<Eye className="h-4 w-4" />} label="Focus" body={rule.practice} /> : null}
+          {(rule.also ?? []).map((item) => (
+            <RuleRow key={item.need} icon={<Plus className="h-4 w-4" />} label={`Also: ${item.label}`} body={item.body} />
+          ))}
         </div>
       </div>
     </Card>

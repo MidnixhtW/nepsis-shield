@@ -26,12 +26,14 @@ import {
 } from "@/lib/responderMode";
 
 import {
+  MAX_VIGILANCE_NEEDS,
   buildRuleOfVigilance,
   setStoredRuleOfVigilance,
   type RuleOfVigilance,
   type VigilanceNeed,
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
+import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
@@ -154,17 +156,23 @@ function SelectionCard({
   title,
   description,
   onClick,
+  order,
+  multiple = false,
 }: {
   selected: boolean;
   icon: React.ReactNode;
   title: string;
   description: string;
   onClick: () => void;
+  /** 1-based position among multiple selections, shown in place of the check mark. */
+  order?: number;
+  multiple?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={multiple ? selected : undefined}
       className={cn(
         "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
         "bg-card/60 shadow-[0_18px_55px_hsl(35_91%_48%/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
@@ -182,7 +190,7 @@ function SelectionCard({
             selected ? "gold-foil border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
           )}
         >
-          <Check className="h-4 w-4" />
+          {order ? <span className="text-sm font-bold">{order}</span> : <Check className="h-4 w-4" />}
         </span>
       </span>
       <span className="relative mt-4 block text-base font-semibold tracking-tight">{title}</span>
@@ -191,12 +199,14 @@ function SelectionCard({
   );
 }
 
-function RulePreview({ rule }: { rule: RuleOfVigilance }) {
+function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVariantChange: (variant: string) => void }) {
   const rows = [
+    ...(rule.practice ? [[rule.variantLabel ?? "Focus", rule.practice]] : []),
     ["Morning", rule.morning],
     ["Midday", rule.midday],
     ["Evening", rule.evening],
     ["Under pressure", rule.underPressure],
+    ...(rule.also ?? []).map((item) => [`Also: ${item.label}`, item.body]),
   ];
 
   return (
@@ -204,6 +214,8 @@ function RulePreview({ rule }: { rule: RuleOfVigilance }) {
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your Rule of Vigilance</p>
       <h2 id="onboarding-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
+      <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Choose a version</p>
+      <RuleVariantPicker need={rule.need} value={rule.variant} onChange={onVariantChange} className="mt-2" />
       <div className="mt-6 grid gap-3">
         {rows.map(([label, body]) => (
           <div key={label} className="rounded-3xl bg-background/45 p-4 shadow-[inset_0_1px_0_hsl(42_92%_58%/0.10)]">
@@ -232,7 +244,9 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(() => !getStoredItem<boolean>(ONBOARDING_KEY));
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
-  const [selectedNeed, setSelectedNeed] = useState<VigilanceNeed>("peace");
+  // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
+  const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
   const [selectedRhythm, setSelectedRhythm] = useState<VigilanceRhythm>("morning");
   const scrollArea = useRef<HTMLDivElement>(null);
 
@@ -265,9 +279,22 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
 
   const step = steps[stepIndex];
   const rule = useMemo(
-    () => buildRuleOfVigilance({ need: selectedNeed, rhythm: selectedRhythm, role: selectedRole }),
-    [selectedNeed, selectedRhythm, selectedRole],
+    () => buildRuleOfVigilance({ needs: selectedNeeds, rhythm: selectedRhythm, role: selectedRole, variant: selectedVariant }),
+    [selectedNeeds, selectedRhythm, selectedRole, selectedVariant],
   );
+
+  // Several needs may be chosen; the first stays the lead.
+  function toggleNeed(need: VigilanceNeed) {
+    let next = selectedNeeds;
+    if (selectedNeeds.includes(need)) {
+      next = selectedNeeds.filter((item) => item !== need);
+    } else if (selectedNeeds.length < MAX_VIGILANCE_NEEDS) {
+      next = [...selectedNeeds, need];
+    }
+    // A different lead need has different versions, so start again from its first one.
+    if (next[0] !== selectedNeeds[0]) setSelectedVariant(undefined);
+    setSelectedNeeds(next);
+  }
 
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
@@ -283,9 +310,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   }
 
   function skip() {
-    const defaultRule = buildRuleOfVigilance({ need: selectedNeed, rhythm: selectedRhythm, role: selectedRole });
     setStoredResponderMode(selectedRole);
-    setStoredRuleOfVigilance(defaultRule);
+    setStoredRuleOfVigilance(rule);
     setStoredItem(ONBOARDING_KEY, true);
     setOpen(false);
   }
@@ -393,23 +419,31 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               <div className="max-w-2xl">
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">What are you seeking?</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  Choose the place where you most need watchfulness.
+                  Choose where you most need watchfulness.
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  This shapes your Rule of Vigilance. You can change it later by replaying onboarding from Help.
+                  Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your Rule of Vigilance; the others add a practice each. You can change it later by replaying onboarding from the menu.
+                </p>
+                <p role="status" className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                  {selectedNeeds.length ? `${selectedNeeds.length} of ${MAX_VIGILANCE_NEEDS} chosen` : "Choose at least one"}
                 </p>
               </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {needOptions.map((option) => (
-                  <SelectionCard
-                    key={option.id}
-                    selected={selectedNeed === option.id}
-                    icon={option.icon}
-                    title={option.title}
-                    description={option.description}
-                    onClick={() => setSelectedNeed(option.id)}
-                  />
-                ))}
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {needOptions.map((option) => {
+                  const position = selectedNeeds.indexOf(option.id);
+                  return (
+                    <SelectionCard
+                      key={option.id}
+                      multiple
+                      selected={position >= 0}
+                      order={position >= 0 ? position + 1 : undefined}
+                      icon={option.icon}
+                      title={option.title}
+                      description={option.description}
+                      onClick={() => toggleNeed(option.id)}
+                    />
+                  );
+                })}
               </div>
             </section>
           ) : null}
@@ -442,7 +476,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
 
           {step === "rule" ? (
             <section className="mx-auto w-full max-w-4xl">
-              <RulePreview rule={rule} />
+              <RulePreview rule={rule} onVariantChange={setSelectedVariant} />
             </section>
           ) : null}
           </div>
@@ -459,7 +493,12 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               {step === "rule" ? rule.pastoralNote : "One clear choice per screen. No pressure, no clutter."}
             </p>
           </div>
-          <Button type="button" className="gold-foil h-14 flex-1 rounded-full text-base font-bold text-primary-foreground sm:max-w-sm" onClick={next}>
+          <Button
+            type="button"
+            className="gold-foil h-14 flex-1 rounded-full text-base font-bold text-primary-foreground disabled:opacity-50 sm:max-w-sm"
+            onClick={next}
+            disabled={step === "need" && selectedNeeds.length === 0}
+          >
             {step === "rule" ? "Seal this Daily Rule" : "Continue"}
             <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
