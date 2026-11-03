@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,21 +7,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import Privacy from "./pages/Privacy";
-import About from "./pages/About";
-import Download from "./pages/Download";
-import FieldManual from "./pages/FieldManual";
-import ReleaseNotes from "./pages/ReleaseNotes";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
-import Saints from "@/pages/Saints";
 
-import Settings from "@/pages/Settings";
-import PhilokaliaGuide from "@/pages/PhilokaliaGuide";
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
+
+// Pages other than Today load on demand, keeping the first download small.
+const Privacy = lazy(() => import("./pages/Privacy"));
+const About = lazy(() => import("./pages/About"));
+const Download = lazy(() => import("./pages/Download"));
+const FieldManual = lazy(() => import("./pages/FieldManual"));
+const ReleaseNotes = lazy(() => import("./pages/ReleaseNotes"));
+const Saints = lazy(() => import("@/pages/Saints"));
+const Settings = lazy(() => import("@/pages/Settings"));
+const PhilokaliaGuide = lazy(() => import("@/pages/PhilokaliaGuide"));
 
 const queryClient = new QueryClient();
 
@@ -47,6 +50,7 @@ const App = () => (
           <BrowserRouter>
             <ConnectionStatusBanner />
             <ScrollToTop />
+            <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/privacy" element={<Privacy />} />
@@ -62,6 +66,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </BrowserRouter>
         </AudioProvider>
       </TooltipProvider>
