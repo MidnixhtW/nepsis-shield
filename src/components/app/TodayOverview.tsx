@@ -1,7 +1,7 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { ArrowRight, BookOpen, ExternalLink, Leaf, Shield } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, Leaf, LifeBuoy, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
 import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
-import { NeedHelpNow } from "@/components/app/NeedHelpNow";
+import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { currentSeason } from "@/lib/fastingSeasons";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -31,13 +31,28 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
   const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
 
+  // Two columns on desktop: the day's journey and rule on the left, help and the calendar on the right.
+  // On phones the columns stack in the same order as before.
   return (
-    <div className="grid gap-5 sm:gap-6">
-      <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
-      <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
-      <section aria-label="Help now" className="grid gap-3">
-        <NeedHelpNow onNavigate={onNavigate} />
-        <Accordion type="single" collapsible defaultValue={groundDefault} className="rounded-3xl border bg-card px-5">
+    <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+      <div className="grid min-w-0 gap-5 sm:gap-6">
+        <SeasonJourneyCard today={today} calendar={settings.calendarMode} />
+        <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
+      </div>
+      <div className="grid min-w-0 gap-5 sm:gap-6">
+      {/* Help lives in the top bar on every screen, so Today keeps only a short pointer and the reset. */}
+      <section aria-label="Help now" className="rounded-3xl border bg-card px-5">
+        <div className="flex flex-wrap items-center gap-3 py-4">
+          <LifeBuoy aria-hidden className="h-5 w-5 shrink-0 text-accent" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Struggling right now?</p>
+            <p className="text-xs text-muted-foreground">Help is always at the top of every screen.</p>
+          </div>
+          <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={openHelpPanel}>
+            Open Help
+          </Button>
+        </div>
+        <Accordion type="single" collapsible defaultValue={groundDefault} className="border-t">
           <AccordionItem value="ground" className="border-0">
             <AccordionTrigger className="text-left">Ground me now · guided reset</AccordionTrigger>
             <AccordionContent><GroundMeNow /></AccordionContent>
@@ -46,7 +61,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
       </section>
       <BackupReminderCard />
       <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
-      <div className="grid items-start gap-5 md:grid-cols-2">
+      <div className="grid items-start gap-5 md:grid-cols-2 lg:grid-cols-1">
         <Card className="rounded-3xl p-5 sm:p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Readings · {format(today, "MMMM d")}</p>
           <h2 className="mt-2 text-2xl font-semibold">Receive today’s Scripture.</h2>
@@ -92,6 +107,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             </Button>
           </div>
         </Card>
+      </div>
       </div>
     </div>
   );

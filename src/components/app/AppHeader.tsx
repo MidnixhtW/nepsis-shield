@@ -1,4 +1,4 @@
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
   Crosshair,
@@ -35,6 +35,7 @@ import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { prayerHourName, useNow, usesTwentyFourHourTime } from "@/lib/prayerHours";
+import { OPEN_HELP_EVENT, OPEN_MENU_EVENT } from "@/lib/appEvents";
 import { useResponderMode } from "@/lib/responderMode";
 import { showSuccess } from "@/utils/toast";
 
@@ -111,6 +112,12 @@ function MenuLinks() {
         <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
       </MenuSection>
 
+      <MenuSection title="Appearance">
+        <div className="px-1">
+          <ThemeToggle variant="row" />
+        </div>
+      </MenuSection>
+
       <MenuSection title="Help">
         <SheetClose asChild>
           <button
@@ -142,6 +149,11 @@ function MenuLinks() {
 // Always-visible entry to the "Need help now?" choices, so nobody has to scroll Today to find them.
 function HelpNowButton() {
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_HELP_EVENT, show);
+    return () => window.removeEventListener(OPEN_HELP_EVENT, show);
+  }, []);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -185,6 +197,12 @@ export function AppHeader() {
   const secretTaps = useRef<number[]>([]);
   const now = useNow();
   const [role] = useResponderMode();
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    const show = () => setMenuOpen(true);
+    window.addEventListener(OPEN_MENU_EVENT, show);
+    return () => window.removeEventListener(OPEN_MENU_EVENT, show);
+  }, []);
   const hourName = prayerHourName(now);
   // Service roles read the clock as 0600; everyone else sees the date with the hour of prayer.
   const clockLine = usesTwentyFourHourTime(role)
@@ -222,8 +240,7 @@ export function AppHeader() {
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
         <HelpNowButton />
-        <ThemeToggle />
-        <Sheet>
+        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
             <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-md border border-primary/30 bg-card/75 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary">
               <Menu className="h-[18px] w-[18px]" />

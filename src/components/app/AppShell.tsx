@@ -1,6 +1,7 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Download } from "lucide-react";
+import { useLocation } from "react-router-dom";
+import { MoreHorizontal } from "lucide-react";
+import { openAppMenu } from "@/lib/appEvents";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon } from "@/components/app/OrthodoxMotifs";
@@ -72,18 +73,20 @@ function ShellNavigation({
         })}
       </ToggleGroup>
 
-      <Link
-        to="/download"
-        aria-label="Open more options, install, and share"
+      {/* "More" opens the full menu (settings, saints, library, install, about), not a single page. */}
+      <button
+        type="button"
+        aria-label="More: open the menu"
+        onClick={openAppMenu}
         className={cn(
-          "flex w-full items-center justify-center whitespace-nowrap rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground",
+          "flex w-full items-center justify-center whitespace-nowrap rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
           desktop ? "h-10 flex-row gap-2 text-sm" : "h-12 flex-col gap-1.5 text-xs",
           installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
         )}
       >
-        <Download className={cn("h-[17px] w-[17px] shrink-0", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
+        <MoreHorizontal className={cn("h-[17px] w-[17px] shrink-0", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
         <span className="font-bold leading-none">More</span>
-      </Link>
+      </button>
     </nav>
   );
 }

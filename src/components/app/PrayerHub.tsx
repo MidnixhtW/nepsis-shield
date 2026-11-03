@@ -1,4 +1,4 @@
-import { Home, Link2 } from "lucide-react";
+import type { ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CenserIcon } from "@/components/app/OrthodoxMotifs";
 import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
@@ -12,64 +12,44 @@ import { PreparationChecklist } from "@/components/app/PreparationChecklist";
 import { StillnessTimer } from "@/components/app/StillnessTimer";
 import { ConfessionPrep } from "@/components/app/ConfessionPrep";
 import { SleepMode } from "@/components/app/SleepMode";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SectionIntro } from "@/components/app/SectionIntro";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
-import { showError, showSuccess } from "@/utils/toast";
+import { cn } from "@/lib/utils";
 
 export type PrayerTab = "daily" | "rule" | "prayers" | "names" | "counter" | "prep" | "journal" | "sleep";
 
-const prayerTabs: Array<{ value: PrayerTab; label: string }> = [
-  { value: "daily", label: "Daily" },
-  { value: "rule", label: "Rule" },
-  { value: "prayers", label: "Prayer texts" },
-  { value: "names", label: "Names" },
-  { value: "counter", label: "Stillness" },
-  { value: "prep", label: "Prepare" },
-  { value: "journal", label: "Journal" },
-  { value: "sleep", label: "Sleep" },
+// Eight practices in four groups, so the tab bar fits on a phone. Each tab value is still its own URL.
+const groups: Array<{ id: string; label: string; items: Array<{ value: PrayerTab; label: string }> }> = [
+  { id: "daily", label: "Daily", items: [{ value: "daily", label: "Daily prayer" }, { value: "rule", label: "My rule" }] },
+  { id: "prayers", label: "Prayers", items: [{ value: "prayers", label: "Prayer texts" }, { value: "names", label: "Names" }] },
+  { id: "stillness", label: "Stillness", items: [{ value: "counter", label: "Jesus Prayer" }, { value: "sleep", label: "Sleep" }] },
+  { id: "prepare", label: "Prepare", items: [{ value: "prep", label: "Confession" }, { value: "journal", label: "Journal" }] },
 ];
+
+const content: Record<PrayerTab, ReactNode> = {
+  daily: <DailyPrayerFlow />,
+  rule: <PrayerRule />,
+  prayers: <PrayerBook showRule={false} />,
+  names: <CommemorationList />,
+  counter: (
+    <div className="grid gap-4 sm:gap-5"><GroundMeNow /><JesusPrayerCounter /><StillnessTimer /></div>
+  ),
+  sleep: <SleepMode />,
+  prep: (
+    <div className="grid gap-4 sm:gap-5"><PreparationChecklist /><ConfessionPrep /></div>
+  ),
+  journal: <DailyReflection />,
+};
 
 export function PrayerHub({
   tab,
   onTabChange,
-  onHome,
 }: {
   tab: PrayerTab;
   onTabChange: (t: PrayerTab) => void;
   onHome?: () => void;
 }) {
-  async function copyLink() {
-    try {
-      const url = new URL(window.location.href);
-      url.pathname = "/pray";
-      url.searchParams.set("tab", tab);
-      await navigator.clipboard.writeText(url.toString());
-      showSuccess("Link copied.");
-    } catch {
-      showError("Couldn't copy link.");
-    }
-  }
-
-  const actions = (
-    <>
-      {onHome ? (
-        <Button type="button" variant="outline" size="sm" className="premium-action" onClick={onHome}>
-          <Home className="mr-2 h-4 w-4" /> Today
-        </Button>
-      ) : null}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button type="button" variant="outline" size="icon" className="premium-action h-10 w-10" onClick={copyLink}>
-            <Link2 className="h-4 w-4" />
-            <span className="sr-only">Copy link</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>Copy link</TooltipContent>
-      </Tooltip>
-    </>
-  );
+  const activeGroup = groups.find((group) => group.items.some((item) => item.value === tab)) ?? groups[0];
 
   return (
     <div className="grid min-w-0 gap-4 sm:gap-5 lg:gap-6">
@@ -78,30 +58,41 @@ export function PrayerHub({
         title="Make room for stillness."
         description="Begin with the daily office, or choose a focused practice for the moment you are in."
         icon={<CenserIcon className="h-5 w-5" />}
-        actions={actions}
       />
 
-      <Tabs value={tab} onValueChange={(value) => onTabChange(value as PrayerTab)}>
+      <Tabs
+        value={activeGroup.id}
+        onValueChange={(value) => onTabChange(groups.find((group) => group.id === value)?.items[0].value ?? "daily")}
+      >
         <TabsList className="premium-tabs">
-          {prayerTabs.map((item) => (
-            <TabsTrigger key={item.value} value={item.value} className="premium-tab">
-              {item.label}
+          {groups.map((group) => (
+            <TabsTrigger key={group.id} value={group.id} className="premium-tab flex-1">
+              {group.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyPrayerFlow /></TabsContent>
-        <TabsContent value="rule" className="mt-4 sm:mt-5"><PrayerRule /></TabsContent>
-        <TabsContent value="prayers" className="mt-4 sm:mt-5"><PrayerBook showRule={false} /></TabsContent>
-        <TabsContent value="names" className="mt-4 sm:mt-5"><CommemorationList /></TabsContent>
-        <TabsContent value="counter" className="mt-4 sm:mt-5">
-          <div className="grid gap-4 sm:gap-5"><GroundMeNow /><JesusPrayerCounter /><StillnessTimer /></div>
-        </TabsContent>
-        <TabsContent value="prep" className="mt-4 sm:mt-5">
-          <div className="grid gap-4 sm:gap-5"><PreparationChecklist /><ConfessionPrep /></div>
-        </TabsContent>
-        <TabsContent value="journal" className="mt-4 sm:mt-5"><DailyReflection /></TabsContent>
-        <TabsContent value="sleep" className="mt-4 sm:mt-5"><SleepMode /></TabsContent>
+        {groups.map((group) => (
+          <TabsContent key={group.id} value={group.id} className="mt-4 sm:mt-5">
+            <div role="group" aria-label={`${group.label} sections`} className="mb-4 inline-flex rounded-full border border-border/60 bg-card/60 p-1">
+              {group.items.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  aria-pressed={tab === item.value}
+                  onClick={() => onTabChange(item.value)}
+                  className={cn(
+                    "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    tab === item.value ? "bg-accent/15 text-accent" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            {group.items.some((item) => item.value === tab) ? content[tab] : null}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

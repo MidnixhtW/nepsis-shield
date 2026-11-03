@@ -208,7 +208,7 @@ const Index = () => {
 
         <div className="grid gap-8 animate-in fade-in duration-500 sm:gap-10 lg:gap-12">
           {section === "today" ? (
-            <div className="mx-auto grid w-full max-w-4xl gap-5 sm:gap-6">
+            <div className="mx-auto grid w-full max-w-4xl gap-5 sm:gap-6 lg:max-w-6xl">
               <OrthodoxHero />
               <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             </div>
