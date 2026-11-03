@@ -1,7 +1,7 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { ArrowRight, BookOpen, ExternalLink, Leaf } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, Leaf, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { currentSeason } from "@/lib/fastingSeasons";
+import { isWarriorSaint } from "@/lib/warriorSaints";
 
 export function TodayOverview({ onNavigate, onOpenRoute }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
@@ -70,7 +71,16 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             <div className="mt-4 grid gap-3 text-sm">
               <p className="flex items-start gap-2 text-muted-foreground"><Leaf className="mt-0.5 h-4 w-4 shrink-0" /><span>{q.data.fasting.description}{q.data.fasting.exception ? ` · ${q.data.fasting.exception}` : ""}</span></p>
               <ul className="grid gap-2">
-                {q.data.saints.slice(0, 3).map((saint) => <li key={saint}>{saint}</li>)}
+                {q.data.saints.slice(0, 3).map((saint) => (
+                  <li key={saint}>
+                    {saint}
+                    {isWarriorSaint(saint) ? (
+                      <span className="mt-1 flex w-fit items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
+                        <Shield aria-hidden className="h-3 w-3" /> Patron of those who serve
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
               </ul>
               <p className="text-xs leading-relaxed text-muted-foreground">Adapt fasting with your priest for health and duty needs.</p>
             </div>

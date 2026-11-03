@@ -23,6 +23,8 @@ export type OrthocalDay = {
   fast_exception?: string;
   fast_exception_desc?: string;
   saints?: string[];
+  /** The day's main commemorations (e.g. Greatmartyr George); not repeated in `saints`. */
+  feasts?: string[];
   readings?: OrthocalReading[];
   abbreviated_reading_indices?: number[];
 
@@ -157,7 +159,8 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
       description: fastingDesc === "No fast" ? fallbackFastingRule.description : fastingDesc,
       exception: fastingException,
     },
-    saints: day.saints ?? [],
+    // Orthocal lists the day's main commemorations under `feasts`, so lead with them.
+    saints: Array.from(new Set([...(day.feasts ?? []), ...(day.saints ?? [])].map((name) => name.trim()).filter(Boolean))),
 
     readings: extractPrimaryReadings(day),
     tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
