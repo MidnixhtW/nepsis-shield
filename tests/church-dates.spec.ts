@@ -55,3 +55,14 @@ test("a saying of the Fathers changes each day and cycles through all of them", 
   expect(seen.size).toBe(SAYINGS.length);
   expect(sayingForDay(new Date(2026, 10, 3)).text).not.toBe(sayingForDay(new Date(2026, 10, 4)).text);
 });
+
+test("the home-screen widget gets two weeks of days", async () => {
+  const { buildWidgetDays } = await import("../src/lib/widgetSnapshot");
+  const days = buildWidgetDays(d("2026-11-20"), "gregorian", "Fish, wine and oil are allowed");
+  expect(days).toHaveLength(14);
+  expect(days[0]).toMatchObject({ date: "2026-11-20", headline: "Nativity Fast · Day 6 of 40", detail: "Fish, wine and oil are allowed" });
+  expect(days[1].detail).toBe("");
+  const christmas = buildWidgetDays(d("2026-12-25"), "gregorian")[0];
+  expect(christmas.headline).toBe("Christ is born! Glorify Him!");
+  expect(buildWidgetDays(d("2026-11-10"), "gregorian")[0].headline).toBe("Nativity Fast begins in 5 days");
+});

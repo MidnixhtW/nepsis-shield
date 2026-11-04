@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
@@ -21,6 +22,7 @@ import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { currentSeason } from "@/lib/fastingSeasons";
 import { isWarriorSaint } from "@/lib/warriorSaints";
+import { saveWidgetSnapshot } from "@/lib/widgetSnapshot";
 
 export function TodayOverview({ onNavigate, onOpenRoute }: {
   onNavigate?: (to: { section: AppSection; tab?: string; read?: string }) => void;
@@ -32,6 +34,12 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     : q.data?.sources.ocaDailyUrl ?? buildOcaDailyUrl(today);
 
   const inSeason = currentSeason(today, settings.calendarMode) !== null;
+
+  // Keep the Android home-screen widget current: two weeks of days, with today's fast once it has loaded.
+  const fastToday = q.data ? [q.data.fasting.description, q.data.fasting.exception].filter(Boolean).join(" · ") : undefined;
+  useEffect(() => {
+    void saveWidgetSnapshot(today, settings.calendarMode, fastToday);
+  }, [today, settings.calendarMode, fastToday]);
 
   // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
   const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
