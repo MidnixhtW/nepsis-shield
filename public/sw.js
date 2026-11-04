@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v9";
+const CACHE_NAME = "nepsis-shield-pwa-v10";
 const APP_SHELL = [
   "/",
   "/today",
@@ -45,6 +45,8 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // Live data (prayer groups) must never be cached or served stale.
+  if (url.pathname.startsWith("/api/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

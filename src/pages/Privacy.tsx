@@ -96,6 +96,7 @@ const ALLOWED_APP_KEYS = new Set([
   "fasting-journeys:v1",
   "commemorations:v1",
   "patron-saint:v1",
+  "prayer-groups:v1",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.
@@ -412,6 +413,13 @@ export default function Privacy() {
               <p className="text-sm font-semibold">Visit counts on the website</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 nepsisshield.com counts page visits with Vercel Web Analytics so we know which parts of the app are used. It uses no cookies, does not identify you, and never sees anything you write or save in the app: prayers, names, notes, and progress stay on this device. The Android app does not count visits.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+              <p className="text-sm font-semibold">Prayer groups (only if you use them)</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                A prayer group is the one feature that keeps anything on our server: the group's name, the first name you choose for it, the prayer requests you add, and who marked prayer each day. Anyone with the group's link can join and read it, so share the link only with people you trust. Requests are deleted after 30 days, daily prayer marks after 3 days, and a group left unused for 90 days is deleted. The group's creator can close it, which deletes everything in it at once. There are no accounts, and no email or phone number is ever asked for.
               </p>
             </div>
 
