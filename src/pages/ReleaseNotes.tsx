@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { BadgeCheck, CalendarDays, ListChecks } from "lucide-react";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
-import { RELEASE_NOTES } from "@/lib/releaseInfo";
+import { CURRENT_BUILD, CURRENT_VERSION, RELEASE_NOTES } from "@/lib/releaseInfo";
 
 export default function ReleaseNotes() {
 
@@ -16,7 +16,7 @@ export default function ReleaseNotes() {
       <PremiumPageHeader
         eyebrow="Release log"
         title="Release notes"
-        description="Version history for Nepsis Shield and the Android APK track."
+        description={`What is new in Nepsis Shield. You are on version ${CURRENT_VERSION} (build ${CURRENT_BUILD}).`}
         icon={<OrthodoxCrossIcon className="h-6 w-6" />}
         actions={
           <>

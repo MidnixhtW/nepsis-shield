@@ -31,7 +31,9 @@ if (!Number.isInteger(versionCode) || versionCode < 1) {
   fail(`ANDROID_VERSION_CODE must be a positive integer. Received: ${rawVersionCode}`);
 }
 
-const versionName = (process.env.ANDROID_VERSION_NAME ?? process.env.VITE_APK_VERSION ?? `debug-${versionCode}`).replace(/[^0-9A-Za-z._+-]/g, "-");
+// The name people see in the Play Store and app settings: the release from package.json (the build number is versionCode).
+const appVersion = JSON.parse(readFileSync("package.json", "utf8")).version;
+const versionName = (process.env.ANDROID_VERSION_NAME ?? appVersion ?? `debug-${versionCode}`).replace(/[^0-9A-Za-z._+-]/g, "-");
 const applicationId = process.env.ANDROID_APPLICATION_ID?.trim();
 const appName = process.env.ANDROID_APP_NAME?.trim();
 

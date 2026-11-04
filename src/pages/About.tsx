@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { ExternalLink, Shield, Info, BookText, BadgeCheck } from "lucide-react";
 import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { APK_ARTIFACTS_URL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
+import { CURRENT_VERSION } from "@/lib/releaseInfo";
 
 export default function About() {
 
@@ -144,8 +145,10 @@ export default function About() {
               <p className="font-semibold">Created by Empathik</p>
               <p className="mt-1 text-xs text-muted-foreground">
                 Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life, family and work stress, first response, public safety, and service under pressure.
-
               </p>
+              <Button asChild size="sm" variant="outline" className="mt-3 rounded-2xl border-border/60">
+                <Link to="/release-notes">What's new in version {CURRENT_VERSION}</Link>
+              </Button>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">

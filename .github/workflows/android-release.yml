@@ -27,8 +27,7 @@ jobs:
       VITE_APK_RELEASE_DATE: ${{ github.run_started_at }}
 
       ANDROID_VERSION_CODE: ${{ github.run_number }}
-      ANDROID_VERSION_NAME: V${{ github.run_number }}
-      ANDROID_APP_NAME: Ortho Companion
+      ANDROID_APP_NAME: Nepsis Shield
       SIGNING_READY: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.ANDROID_KEYSTORE_PASSWORD != '' && secrets.ANDROID_KEY_ALIAS != '' && secrets.ANDROID_KEY_PASSWORD != '' }}
 
     steps:
