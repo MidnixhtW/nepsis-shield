@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router";
-import { BookOpenCheck, Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
+import { ExternalLink, Home } from "lucide-react";
 import { ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
 import { GroupedSections, type SectionGroup } from "@/components/app/GroupedSections";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ import { HymnsAndPropers } from "@/components/app/HymnsAndPropers";
 import { ParishFinder } from "@/components/app/ParishFinder";
 import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion";
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
-import { FirstStepHint } from "@/components/app/FirstStepHint";
 import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
@@ -148,44 +146,6 @@ export function LearnHub({
           ) : null
         }
       />
-
-      <FirstStepHint
-        title="Recommended: build your personal path."
-
-        description="Choose what you need most and how much time you have; the app will recommend a simple starting rhythm."
-        actionLabel="Open Path"
-        icon={<Sparkles className="h-4 w-4" />}
-        onAction={() => onTabChange?.("path")}
-      />
-
-      <Card className="premium-surface rounded-[1.35rem] p-4 sm:rounded-[1.75rem] sm:p-5 lg:p-6">
-        <div className="relative flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-3">
-          <div>
-            <p className="premium-eyebrow">Tool library</p>
-            <h2 className="mt-1 text-lg font-semibold tracking-tight">Quick access</h2>
-          </div>
-
-          <p className="text-xs text-muted-foreground">Secondary features live here.</p>
-        </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-          <Button type="button" variant="outline" className="h-auto min-w-0 justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left" onClick={() => onTabChange?.("creed")}>
-            <BookOpenCheck className="mr-2 h-4 w-4 shrink-0 text-primary" /> <span className="truncate">Memorize the Creed</span>
-          </Button>
-          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
-            <Link to="/saints"><Sparkles className="mr-2 h-4 w-4 text-primary" /> Saints</Link>
-          </Button>
-          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
-            <Link to="/field-manual"><Crosshair className="mr-2 h-4 w-4 text-primary" /> Life & Service Guide</Link>
-          </Button>
-
-          <Button asChild variant="outline" className="h-auto justify-start rounded-xl border-border/60 bg-background/50 px-3 py-3 text-left">
-            <Link to="/download"><Download className="mr-2 h-4 w-4 text-primary" /> Install / Share</Link>
-          </Button>
-          <Button asChild variant="ghost" className="h-auto justify-start rounded-xl px-3 py-3 text-left">
-            <Link to="/settings"><Settings className="mr-2 h-4 w-4 text-primary" /> Settings</Link>
-          </Button>
-        </div>
-      </Card>
 
       <GroupedSections groups={groups} tab={tab ?? "welcome"} onTabChange={(t) => onTabChange?.(t)} content={content} />
     </div>

@@ -5,7 +5,7 @@
  * The radar, grid and scan-line backgrounds are turned off here for a quieter prayer space.
  */
 @layer base {
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) {
     color-scheme: dark;
     --background: 75 16% 5%;
     --foreground: 44 36% 88%;
@@ -41,7 +41,7 @@
     --sidebar-ring: 42 52% 62%;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) body {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) body {
     background-image:
       radial-gradient(circle at 78% -4%, hsl(var(--accent) / 0.07), transparent 34rem),
       radial-gradient(circle at 8% 82%, hsl(var(--primary) / 0.05), transparent 30rem),
@@ -51,24 +51,24 @@
     background-attachment: scroll !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) ::-webkit-scrollbar-track {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) ::-webkit-scrollbar-track {
     background: hsl(75 16% 4%);
   }
 }
 
 @layer components {
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .youth-app-shell::before,
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-page::after {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .youth-app-shell::before,
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-page::after {
     display: none !important;
     animation: none !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-page::before {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-page::before {
     background: radial-gradient(circle at 88% 6%, hsl(var(--accent) / 0.06), transparent 26rem) !important;
     background-size: auto !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) :is(
     .premium-page-header,
     .section-intro,
     .premium-surface,
@@ -82,36 +82,36 @@
       0 18px 48px hsl(75 40% 1% / 0.36) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(.premium-page-header, .section-intro) {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) :is(.premium-page-header, .section-intro) {
     border-left-color: hsl(var(--accent) / 0.6) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-eyebrow,
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .uppercase.text-primary {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-eyebrow,
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .uppercase.text-primary {
     color: hsl(var(--accent)) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-icon-mark {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-icon-mark {
     border-color: hsl(var(--accent) / 0.32) !important;
     background: linear-gradient(145deg, hsl(var(--accent) / 0.1), hsl(var(--card) / 0.9)) !important;
     box-shadow: inset 0 0 0 1px hsl(var(--accent) / 0.04) !important;
     color: hsl(var(--accent)) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-shell {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-hero-shell {
     border-color: hsl(var(--accent) / 0.24) !important;
     background: hsl(75 18% 4%) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-veil {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-hero-veil {
     background: linear-gradient(90deg, hsl(75 24% 3% / 0.97), hsl(75 18% 5% / 0.88) 50%, hsl(70 14% 6% / 0.5)) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .premium-hero-aura {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .premium-hero-aura {
     background: hsl(var(--accent) / 0.1) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) :is(
     .candlelight-card,
     .orthodox-drawer-header,
     .orthodox-nav-frame,
@@ -125,17 +125,17 @@
       0 16px 45px hsl(75 40% 1% / 0.34) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) :is(.premium-tab, .premium-tabs > [role="tab"])[data-state="active"] {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) :is(.premium-tab, .premium-tabs > [role="tab"])[data-state="active"] {
     box-shadow: none !important;
   }
 }
 
 @layer utilities {
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .tactical-radar-field {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .tactical-radar-field {
     display: none !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .bg-primary {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .bg-primary {
     background-color: hsl(var(--primary)) !important;
     background-image: linear-gradient(135deg, hsl(80 32% 58%), hsl(80 30% 47%)) !important;
     box-shadow:
@@ -143,12 +143,12 @@
       0 6px 18px hsl(75 40% 2% / 0.4) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .gold-foil {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .gold-foil {
     background-image: linear-gradient(135deg, hsl(44 62% 68%), hsl(40 52% 50%)) !important;
     box-shadow: 0 6px 18px hsl(75 40% 2% / 0.4) !important;
   }
 
-  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment)) .field-grid {
+  :root:where(:not(.red-dark):not(.blue-cream):not(.parchment):not(.paschal)) .field-grid {
     background-image: radial-gradient(circle at 72% 28%, hsl(var(--accent) / 0.06), transparent 18rem) !important;
     background-size: auto !important;
   }

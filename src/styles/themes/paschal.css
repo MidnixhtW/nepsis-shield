@@ -1,0 +1,66 @@
+/*
+ * Paschal White: a bright white theme with paschal red and gold. It shares Parchment's structure
+ * (parchment.css styles both classes) and changes only the colors; imported after parchment.css.
+ */
+@layer base {
+  .paschal {
+    --background: 40 33% 97%;
+    --foreground: 20 14% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 12%;
+    --primary: 356 64% 36%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 38 30% 91%;
+    --secondary-foreground: 20 14% 12%;
+    --muted: 38 24% 92%;
+    --muted-foreground: 20 8% 36%;
+    --accent: 34 72% 30%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 356 64% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 36 20% 82%;
+    --input: 36 20% 80%;
+    --ring: 34 72% 34%;
+    --icon-gold: 34 72% 30%;
+    --liturgical-warm: 34 72% 30%;
+    --byzantine-blue: 356 64% 36%;
+    --cinnabar: 356 64% 40%;
+    --success: 140 40% 28%;
+    --sidebar-background: 40 33% 96%;
+    --sidebar-foreground: 20 14% 12%;
+    --sidebar-primary: 356 64% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 38 30% 91%;
+    --sidebar-accent-foreground: 20 14% 12%;
+    --sidebar-border: 36 20% 82%;
+    --sidebar-ring: 34 72% 34%;
+  }
+
+  /* Outranks Parchment's body rule, which also applies to this theme. */
+  html.paschal:not(.dark):not(.red-dark):not(.lenten) body {
+    background-image:
+      radial-gradient(circle at 80% -6%, hsl(var(--accent) / 0.08), transparent 32rem),
+      linear-gradient(180deg, hsl(40 40% 98%), hsl(40 30% 96%)) !important;
+  }
+}
+
+/* Parchment's structure has a few fixed olive colors; Paschal White uses red and gold instead. */
+@layer components {
+  html.paschal .premium-hero-shell {
+    background: hsl(356 40% 14%) !important;
+    box-shadow: 0 22px 60px hsl(356 30% 20% / 0.2) !important;
+  }
+
+  html.paschal .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(356 44% 10% / 0.96), hsl(356 36% 14% / 0.84) 52%, hsl(350 28% 20% / 0.4)) !important;
+  }
+}
+
+@layer utilities {
+  html.paschal .bg-primary {
+    background-image: linear-gradient(135deg, hsl(356 60% 42%), hsl(356 66% 32%)) !important;
+    box-shadow: 0 6px 16px hsl(356 40% 20% / 0.18) !important;
+  }
+}

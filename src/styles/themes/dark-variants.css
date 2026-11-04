@@ -1,0 +1,129 @@
+/*
+ * Lenten Violet and Midnight: dark themes built on the Olive & Brass structure (which applies to every
+ * theme not excluded in olive-brass.css); only the colors change here. Same single-class specificity,
+ * imported after olive-brass.css, so these win; high-contrast mode still wins over both.
+ */
+@layer base {
+  .lenten {
+    --background: 268 22% 6%;
+    --foreground: 40 30% 90%;
+    --card: 268 18% 9%;
+    --card-foreground: 40 30% 90%;
+    --popover: 268 20% 8%;
+    --popover-foreground: 40 30% 90%;
+    --primary: 272 34% 66%;
+    --primary-foreground: 268 30% 8%;
+    --secondary: 268 14% 15%;
+    --secondary-foreground: 40 28% 90%;
+    --muted: 268 12% 13%;
+    --muted-foreground: 270 10% 70%;
+    --accent: 42 58% 62%;
+    --accent-foreground: 268 30% 8%;
+    --destructive: 356 62% 58%;
+    --destructive-foreground: 40 30% 96%;
+    --border: 268 14% 22%;
+    --input: 268 14% 24%;
+    --ring: 42 58% 64%;
+    --icon-gold: 42 58% 62%;
+    --liturgical-warm: 42 58% 62%;
+    --byzantine-blue: 272 34% 56%;
+    --cinnabar: 356 62% 58%;
+    --success: 140 30% 58%;
+    --sidebar-background: 268 22% 7%;
+    --sidebar-foreground: 40 30% 90%;
+    --sidebar-primary: 272 34% 66%;
+    --sidebar-primary-foreground: 268 30% 8%;
+    --sidebar-accent: 268 14% 15%;
+    --sidebar-accent-foreground: 40 28% 90%;
+    --sidebar-border: 268 14% 22%;
+    --sidebar-ring: 42 58% 64%;
+  }
+
+  html.lenten body {
+    background-image:
+      radial-gradient(circle at 78% -4%, hsl(var(--accent) / 0.07), transparent 34rem),
+      radial-gradient(circle at 8% 82%, hsl(var(--primary) / 0.07), transparent 30rem),
+      linear-gradient(160deg, hsl(268 26% 4%), hsl(268 20% 6%) 55%, hsl(262 18% 7%)) !important;
+  }
+
+  html.lenten ::-webkit-scrollbar-track {
+    background: hsl(268 22% 4%);
+  }
+
+  /* Midnight: near-black with warm amber and little blue light, for prayer late at night. */
+  .midnight {
+    --background: 30 8% 3%;
+    --foreground: 36 22% 82%;
+    --card: 30 6% 6%;
+    --card-foreground: 36 22% 82%;
+    --popover: 30 6% 5%;
+    --popover-foreground: 36 22% 82%;
+    --primary: 34 40% 56%;
+    --primary-foreground: 30 20% 5%;
+    --secondary: 30 6% 12%;
+    --secondary-foreground: 36 20% 84%;
+    --muted: 30 6% 10%;
+    --muted-foreground: 34 10% 62%;
+    --accent: 30 62% 58%;
+    --accent-foreground: 30 20% 5%;
+    --destructive: 4 60% 54%;
+    --destructive-foreground: 36 22% 92%;
+    --border: 30 6% 16%;
+    --input: 30 6% 18%;
+    --ring: 30 62% 60%;
+    --icon-gold: 30 62% 58%;
+    --liturgical-warm: 30 62% 58%;
+    --byzantine-blue: 34 40% 46%;
+    --cinnabar: 4 60% 54%;
+    --success: 90 24% 52%;
+    --sidebar-background: 30 8% 4%;
+    --sidebar-foreground: 36 22% 82%;
+    --sidebar-primary: 34 40% 56%;
+    --sidebar-primary-foreground: 30 20% 5%;
+    --sidebar-accent: 30 6% 12%;
+    --sidebar-accent-foreground: 36 20% 84%;
+    --sidebar-border: 30 6% 16%;
+    --sidebar-ring: 30 62% 60%;
+  }
+
+  html.midnight body {
+    background-image: linear-gradient(180deg, hsl(30 8% 3%), hsl(30 6% 4%)) !important;
+  }
+
+  html.midnight ::-webkit-scrollbar-track {
+    background: hsl(30 8% 2%);
+  }
+}
+
+/* The Olive & Brass structure has a few fixed olive colors; give each variant its own. */
+@layer components {
+  html.lenten .premium-hero-shell {
+    background: hsl(268 24% 5%) !important;
+  }
+
+  html.lenten .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(268 30% 4% / 0.97), hsl(268 22% 6% / 0.88) 50%, hsl(262 18% 7% / 0.5)) !important;
+  }
+
+  html.midnight .premium-hero-shell {
+    background: hsl(30 8% 3%) !important;
+  }
+
+  html.midnight .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(30 10% 2% / 0.97), hsl(30 8% 4% / 0.9) 50%, hsl(30 6% 5% / 0.55)) !important;
+  }
+}
+
+@layer utilities {
+  html.lenten .bg-primary {
+    background-image: linear-gradient(135deg, hsl(272 36% 70%), hsl(272 30% 58%)) !important;
+  }
+
+  html.midnight .bg-primary {
+    background-image: linear-gradient(135deg, hsl(34 44% 62%), hsl(32 40% 50%)) !important;
+  }
+
+  html.midnight .gold-foil {
+    background-image: linear-gradient(135deg, hsl(32 60% 62%), hsl(28 54% 48%)) !important;
+  }
+}

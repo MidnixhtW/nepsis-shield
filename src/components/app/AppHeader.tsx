@@ -1,19 +1,21 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
+  ArrowRight,
   Crosshair,
   Download,
   HelpCircle,
   Info,
   LifeBuoy,
   Menu,
-
-  Plus,
+  Search,
   Settings as SettingsIcon,
   Shield,
+  Users,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetClose,
@@ -24,18 +26,19 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { ProtectionPsalm } from "@/components/app/ProtectionPsalm";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { CenserIcon, ChurchDomeIcon, GospelBookIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
+import { CenserIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
 import { unlockPhilokaliaGuide } from "@/lib/philokaliaUnlock";
 import { prayerHourName, useNow, usesTwentyFourHourTime } from "@/lib/prayerHours";
 import { OPEN_HELP_EVENT, OPEN_MENU_EVENT } from "@/lib/appEvents";
+import { searchDestinations } from "@/lib/destinations";
+import { CURRENT_VERSION } from "@/lib/releaseInfo";
 import { useResponderMode } from "@/lib/responderMode";
 import { showSuccess } from "@/utils/toast";
 
@@ -85,62 +88,83 @@ function MenuSection({ title, children }: { title: string; children: ReactNode }
   );
 }
 
+// The menu: a "Go to" search across every part of the app, then a few places that are not in the tab bar.
 function MenuLinks() {
+  const [query, setQuery] = useState("");
+  const results = searchDestinations(query);
+
   return (
     <div className="grid gap-3 pb-3">
-      <MenuLink to="/today" icon={<Plus className="h-4 w-4" />} label="New Chat" description="Start fresh from Today" />
-      <ByzantineDivider className="px-3 py-1" />
+      <div className="relative px-1">
+        <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Go to... Compline, Creed, groups"
+          aria-label="Go to a part of the app"
+          className="h-11 rounded-xl pl-9"
+        />
+      </div>
 
-      <MenuSection title="Daily rhythm">
-        <div className="grid grid-cols-2 gap-1">
-          <MenuLink to="/today" icon={<VigilLampIcon className="h-4 w-4" />} label="Today" />
-          <MenuLink to="/pray" icon={<CenserIcon className="h-4 w-4" />} label="Pray" />
-          <MenuLink to="/read" icon={<GospelBookIcon className="h-4 w-4" />} label="Read" />
-          <MenuLink to="/learn" icon={<ChurchDomeIcon className="h-4 w-4" />} label="Learn" />
-        </div>
-      </MenuSection>
+      {query.trim() ? (
+        <MenuSection title={results.length ? `Found ${results.length}` : "Nothing found"}>
+          {results.length ? (
+            results.slice(0, 12).map((destination) => (
+              <MenuLink key={destination.to} to={destination.to} icon={<ArrowRight className="h-4 w-4" />} label={destination.label} description={destination.area} />
+            ))
+          ) : (
+            <p className="px-3 text-xs leading-relaxed text-muted-foreground">Try another word, such as prayer, fast, saints or Bible.</p>
+          )}
+        </MenuSection>
+      ) : (
+        <>
+          <MenuSection title="Pray with the Church">
+            <MenuLink to="/pray?tab=services" icon={<CenserIcon className="h-4 w-4" />} label="Services" description="Compline, the Hours, the Akathist, Panikhida" />
+            <MenuLink to="/pray?tab=groups" icon={<Users className="h-4 w-4" />} label="Prayer groups" description="Pray for each other, privately" />
+            <MenuLink to="/pray?tab=family" icon={<VigilLampIcon className="h-4 w-4" />} label="Family prayer" description="Evening prayer and saint stories for children" />
+          </MenuSection>
 
-      <MenuSection title="Library">
-        <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Life & Service Guide" description="Daily life, pressure, prayer, and recovery" />
-        <MenuLink to="/saints" icon={<SaintHaloIcon className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
-      </MenuSection>
+          <MenuSection title="Library">
+            <MenuLink to="/saints" icon={<SaintHaloIcon className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
+            <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Life & Service Guide" description="Daily life, pressure, prayer, and recovery" />
+          </MenuSection>
 
-      <MenuSection title="More">
-        <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Accessibility and role" />
-        <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Web app, APK, QR, and copy" />
-        <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="Sources & Trust" description="Purpose, sources, and safety note" />
-        <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy" description="Local data controls" />
-      </MenuSection>
+          <MenuSection title="App">
+            <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Reminders, calendar, name day, text size" />
+            <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy and backup" description="Your data stays on this device" />
+            <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Android app, home screen, QR code" />
+            <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose, sources, and what's new" />
+          </MenuSection>
 
-      <MenuSection title="Appearance">
-        <div className="px-1">
-          <ThemeToggle variant="row" />
-        </div>
-      </MenuSection>
+          <MenuSection title="Appearance">
+            <div className="px-1">
+              <ThemeToggle variant="row" />
+            </div>
+          </MenuSection>
 
-      <MenuSection title="Help">
-        <SheetClose asChild>
-          <button
-            type="button"
-            className="group flex min-w-0 items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            onClick={startTutorial}
-          >
-            <span className="shrink-0 text-muted-foreground group-hover:text-primary">
-              <HelpCircle className="h-4 w-4" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate font-medium leading-tight text-foreground">Help</span>
-              <span className="mt-0.5 block truncate text-xs text-muted-foreground">Replay onboarding</span>
-            </span>
-          </button>
-        </SheetClose>
-        <p className="px-2.5 py-2 text-xs leading-relaxed text-muted-foreground">
-          Struggling right now? Tap Help at the top of any screen for quick support and the guided reset.
-        </p>
-      </MenuSection>
+          <MenuSection title="Help">
+            <SheetClose asChild>
+              <button
+                type="button"
+                className="group flex min-w-0 items-center gap-3 rounded-lg px-2.5 py-2 text-left text-sm hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={startTutorial}
+              >
+                <span className="shrink-0 text-muted-foreground group-hover:text-primary">
+                  <HelpCircle className="h-4 w-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-medium leading-tight text-foreground">Take the tour again</span>
+                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">Replay first-time setup</span>
+                </span>
+              </button>
+            </SheetClose>
+          </MenuSection>
+        </>
+      )}
 
       <p className="border-t border-border/45 pt-3 text-center text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        Version 265
+        Version {CURRENT_VERSION}
       </p>
     </div>
   );

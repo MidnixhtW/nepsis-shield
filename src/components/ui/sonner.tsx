@@ -1,11 +1,12 @@
 import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
+import { LIGHT_THEMES } from "@/components/app/ThemeProvider";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "dark" } = useTheme();
-  const toasterTheme: ToasterProps["theme"] = theme === "blue-cream" ? "light" : "dark";
+  const toasterTheme: ToasterProps["theme"] = LIGHT_THEMES.includes(theme) ? "light" : "dark";
 
   return (
     <Sonner

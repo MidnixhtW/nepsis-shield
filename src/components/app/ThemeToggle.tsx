@@ -49,6 +49,27 @@ export const themeOptions: Array<{
     swatch: "bg-[#225ea8]",
     preview: ["#f1ead8", "#14243e", "#225ea8"],
   },
+  {
+    value: "lenten",
+    label: "Lenten Violet",
+    description: "Deep violet and gold, the colors of Lent",
+    swatch: "bg-[#a68bc4]",
+    preview: ["#100b15", "#ede6d8", "#d6b465"],
+  },
+  {
+    value: "midnight",
+    label: "Midnight",
+    description: "Near-black and warm amber, easy on the eyes at night",
+    swatch: "bg-[#d99a52]",
+    preview: ["#080807", "#d9d2c4", "#d99a52"],
+  },
+  {
+    value: "paschal",
+    label: "Paschal White",
+    description: "Bright white with paschal red and gold",
+    swatch: "bg-[#962130]",
+    preview: ["#faf8f3", "#231e1a", "#962130"],
+  },
 ];
 const themes = themeOptions;
 

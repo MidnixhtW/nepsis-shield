@@ -29,5 +29,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/today$/);
   await expect(onboarding).toBeHidden();
+  // Today shows the rule compactly; open it to see the whole rule.
+  await page.getByRole("button", { name: "Show rule" }).click();
   await expect(page.getByRole("heading", { name: "Rule for Steady Prayer" })).toBeVisible();
 });

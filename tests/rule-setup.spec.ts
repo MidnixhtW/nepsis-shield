@@ -30,6 +30,8 @@ test("setup accepts several needs and a rule version that can be changed later",
   await onboarding.getByRole("button", { name: "Seal this Daily Rule" }).click();
   await expect(onboarding).toBeHidden();
 
+  // Today shows the rule compactly; open it to see the whole rule.
+  await page.getByRole("button", { name: "Show rule" }).click();
   await expect(page.getByRole("heading", { name: "Rule for Honest Return" })).toBeVisible();
   const changeVersion = page.getByRole("button", { name: /Preparing for confession · Change version/ });
   await expect(changeVersion).toBeVisible();
@@ -40,5 +42,6 @@ test("setup accepts several needs and a rule version that can be changed later",
   await expect(page.getByText(/keep any counsel your priest gave/)).toBeVisible();
 
   await page.reload();
+  await page.getByRole("button", { name: "Show rule" }).click();
   await expect(page.getByRole("button", { name: /After confession · Change version/ })).toBeVisible();
 });

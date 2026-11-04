@@ -20,7 +20,6 @@ import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
-import { currentSeason } from "@/lib/fastingSeasons";
 import { isWarriorSaint } from "@/lib/warriorSaints";
 import { saveWidgetSnapshot } from "@/lib/widgetSnapshot";
 
@@ -33,7 +32,6 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     ? `https://www.goarch.org/chapel?date=${encodeURIComponent(format(today, "M/d/yyyy"))}`
     : q.data?.sources.ocaDailyUrl ?? buildOcaDailyUrl(today);
 
-  const inSeason = currentSeason(today, settings.calendarMode) !== null;
 
   // Keep the Android home-screen widget current: two weeks of days, with today's fast once it has loaded.
   const fastToday = q.data ? [q.data.fasting.description, q.data.fasting.exception].filter(Boolean).join(" · ") : undefined;
@@ -57,7 +55,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             { id: "memorials", label: "Memorial days", node: <MemorialsCard today={today} /> },
           ]}
         />
-        <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
+        {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
+        <RuleOfVigilanceCard onNavigate={onNavigate} compact />
         <FathersSayingCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">

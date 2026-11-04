@@ -3,7 +3,7 @@
  * Darker olive and brass keep text and buttons readable on cream; high-contrast mode still wins.
  */
 @layer base {
-  .parchment {
+  :is(.parchment, .paschal) {
     color-scheme: light;
     --background: 44 38% 92%;
     --foreground: 75 28% 13%;
@@ -40,7 +40,7 @@
   }
 
   /* Matches the older html:not(.dark):not(.red-dark) body rule's specificity so its dark gradient can't win. */
-  html.parchment:not(.dark):not(.red-dark) body {
+  html:is(.parchment, .paschal):not(.dark):not(.red-dark) body {
     background-color: hsl(var(--background)) !important;
     background-image:
       radial-gradient(circle at 78% -4%, hsl(var(--accent) / 0.08), transparent 34rem),
@@ -52,18 +52,18 @@
 }
 
 @layer components {
-  .parchment .youth-app-shell::before,
-  .parchment .premium-page::after {
+  :is(.parchment, .paschal) .youth-app-shell::before,
+  :is(.parchment, .paschal) .premium-page::after {
     display: none !important;
     animation: none !important;
   }
 
-  .parchment .premium-page::before {
+  :is(.parchment, .paschal) .premium-page::before {
     background: radial-gradient(circle at 88% 6%, hsl(var(--accent) / 0.06), transparent 26rem) !important;
     background-size: auto !important;
   }
 
-  .parchment :is(
+  :is(.parchment, .paschal) :is(
     .premium-page-header,
     .section-intro,
     .premium-surface,
@@ -84,64 +84,64 @@
       0 14px 40px hsl(75 30% 20% / 0.12) !important;
   }
 
-  .parchment :is(.premium-page-header, .section-intro) {
+  :is(.parchment, .paschal) :is(.premium-page-header, .section-intro) {
     border-left-color: hsl(var(--accent) / 0.65) !important;
   }
 
-  .parchment .premium-eyebrow,
-  .parchment .uppercase.text-primary {
+  :is(.parchment, .paschal) .premium-eyebrow,
+  :is(.parchment, .paschal) .uppercase.text-primary {
     color: hsl(var(--accent)) !important;
   }
 
-  .parchment .premium-icon-mark {
+  :is(.parchment, .paschal) .premium-icon-mark {
     border-color: hsl(var(--accent) / 0.35) !important;
     background: linear-gradient(145deg, hsl(var(--accent) / 0.1), hsl(var(--card))) !important;
     box-shadow: none !important;
     color: hsl(var(--accent)) !important;
   }
 
-  .parchment .premium-hero-shell {
+  :is(.parchment, .paschal) .premium-hero-shell {
     border-color: hsl(var(--accent) / 0.3) !important;
     background: hsl(75 30% 14%) !important;
     box-shadow: 0 22px 60px hsl(75 30% 20% / 0.25) !important;
   }
 
-  .parchment .premium-hero-veil {
+  :is(.parchment, .paschal) .premium-hero-veil {
     background: linear-gradient(90deg, hsl(75 32% 11% / 0.96), hsl(75 26% 15% / 0.84) 52%, hsl(70 20% 20% / 0.4)) !important;
   }
 
-  .parchment :is(.premium-tab, .premium-tabs > [role="tab"])[data-state="active"] {
+  :is(.parchment, .paschal) :is(.premium-tab, .premium-tabs > [role="tab"])[data-state="active"] {
     box-shadow: none !important;
   }
 }
 
 @layer utilities {
-  .parchment .tactical-radar-field {
+  :is(.parchment, .paschal) .tactical-radar-field {
     display: none !important;
   }
 
-  .parchment .bg-primary {
+  :is(.parchment, .paschal) .bg-primary {
     background-color: hsl(var(--primary)) !important;
     background-image: linear-gradient(135deg, hsl(80 32% 38%), hsl(80 34% 28%)) !important;
     box-shadow: 0 6px 16px hsl(75 30% 20% / 0.18) !important;
   }
 
-  .parchment .gold-foil {
+  :is(.parchment, .paschal) .gold-foil {
     background-image: linear-gradient(135deg, hsl(40 62% 44%), hsl(34 64% 32%)) !important;
     box-shadow: 0 6px 16px hsl(75 30% 20% / 0.18) !important;
   }
 
-  .parchment .field-grid {
+  :is(.parchment, .paschal) .field-grid {
     background-image: radial-gradient(circle at 72% 28%, hsl(var(--accent) / 0.06), transparent 18rem) !important;
     background-size: auto !important;
   }
 
-  .parchment .orthodox-container {
+  :is(.parchment, .paschal) .orthodox-container {
     border-color: hsl(var(--accent) / 0.3) !important;
     background-color: hsl(var(--card) / 0.96) !important;
   }
 
-  .parchment ::-webkit-scrollbar-thumb {
+  :is(.parchment, .paschal) ::-webkit-scrollbar-thumb {
     background: hsl(var(--primary) / 0.4) !important;
   }
 }
