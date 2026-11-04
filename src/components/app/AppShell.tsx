@@ -1,5 +1,5 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { MoreHorizontal } from "lucide-react";
 import { openAppMenu } from "@/lib/appEvents";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";

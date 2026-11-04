@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { BookOpen, CalendarDays, CheckCircle2, Play, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

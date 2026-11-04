@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { useCurrentDay } from "@/hooks/useCurrentDay";

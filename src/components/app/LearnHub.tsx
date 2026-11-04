@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { BookOpenCheck, Crosshair, Download, ExternalLink, Home, Settings, Sparkles } from "lucide-react";
 import { ChurchDomeIcon } from "@/components/app/OrthodoxMotifs";
 import { GroupedSections, type SectionGroup } from "@/components/app/GroupedSections";

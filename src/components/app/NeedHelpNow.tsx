@@ -1,5 +1,5 @@
 import { BookOpen, Flame, Heart, MoonStar, ShieldAlert, Wind } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { CrisisResources } from "@/components/app/CrisisResources";
 import type { AppSection } from "@/components/app/AppShell";

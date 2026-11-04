@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";

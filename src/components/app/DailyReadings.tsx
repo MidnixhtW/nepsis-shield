@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { readingText } from "@/lib/orthocal";
 import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 function ReadingsSkeleton() {
   return (

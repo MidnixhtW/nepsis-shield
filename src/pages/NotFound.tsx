@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";

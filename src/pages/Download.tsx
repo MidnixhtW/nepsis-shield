@@ -1,5 +1,5 @@
 import { INSTALL_PAGE_URL } from "@/lib/publicSite";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import {
   CheckCircle2,
   Download as DownloadIcon,

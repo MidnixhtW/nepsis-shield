@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { format } from "date-fns";
 import { BellRing, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";

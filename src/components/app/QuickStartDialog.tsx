@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import {
   ArrowLeft,
   BookOpen,
