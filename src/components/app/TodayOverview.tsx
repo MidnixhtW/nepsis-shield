@@ -16,6 +16,7 @@ import { NameDayCard } from "@/components/app/NameDay";
 import { FeastGreetingCard } from "@/components/app/FeastGreetingCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
+import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { currentSeason } from "@/lib/fastingSeasons";
@@ -49,6 +50,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           ]}
         />
         <RuleOfVigilanceCard onNavigate={onNavigate} compact={inSeason} />
+        <FathersSayingCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">
       {/* Help lives in the top bar on every screen, so Today keeps only a short pointer and the reset. */}

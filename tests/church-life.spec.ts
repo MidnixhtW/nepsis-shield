@@ -63,3 +63,10 @@ test("a busy day shows two occasions and folds the rest", async ({ page }) => {
   await expect(memorials).toBeVisible();
   await expect(page.getByRole("button", { name: "Show less" })).toHaveAttribute("aria-expanded", "true");
 });
+
+test("Today shows a word from the Fathers", async ({ page }) => {
+  await page.goto("/today");
+  const card = page.getByRole("region", { name: "A word from the Fathers" });
+  await expect(card).toBeVisible();
+  await expect(card.getByText(/Sayings of the Holy Fathers, tr\. E\. A\. Wallis Budge/)).toBeVisible();
+});

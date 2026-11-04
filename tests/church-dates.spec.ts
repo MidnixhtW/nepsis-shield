@@ -47,3 +47,11 @@ test("feast greetings appear on the right days", () => {
   expect(feastGreeting(d("2027-06-10"), "gregorian")?.feast).toBe("The Ascension");
   expect(feastGreeting(d("2026-11-03"), "gregorian")).toBeNull();
 });
+
+test("a saying of the Fathers changes each day and cycles through all of them", async () => {
+  const { SAYINGS, sayingForDay } = await import("../src/content/fathersSayings");
+  const seen = new Set<string>();
+  for (let i = 0; i < SAYINGS.length; i++) seen.add(sayingForDay(new Date(2027, 0, 1 + i)).text);
+  expect(seen.size).toBe(SAYINGS.length);
+  expect(sayingForDay(new Date(2026, 10, 3)).text).not.toBe(sayingForDay(new Date(2026, 10, 4)).text);
+});
