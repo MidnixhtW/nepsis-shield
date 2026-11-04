@@ -108,6 +108,9 @@ export function MemorialsCard({ today }: { today: Date }) {
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <Button asChild variant="outline" size="sm" className="rounded-full">
+          <Link to="/pray?tab=services&service=panikhida">Pray the Panikhida</Link>
+        </Button>
+        <Button asChild variant="ghost" size="sm" className="rounded-full">
           <Link to="/pray?tab=names">Open names</Link>
         </Button>
         {nativeOn ? (

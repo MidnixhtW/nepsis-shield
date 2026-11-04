@@ -197,10 +197,13 @@ function soulSaturday(): JourneyDay {
     theme: "On the second, third, and fourth Saturdays of Lent, the Church prays especially for the departed.",
     practice: "Pray by name for your departed loved ones, and bring their names to church if your parish serves a memorial.",
     prayer: DEPARTED,
+    link: PANIKHIDA,
   };
 }
 
 const OCA_LIVES = { label: "Today's saints (OCA)", href: "https://www.oca.org/saints/lives" };
+const AKATHIST = { label: "Pray the Akathist", href: "/pray?tab=services&service=akathist" };
+const PANIKHIDA = { label: "Pray the Panikhida", href: "/pray?tab=services&service=panikhida" };
 
 function annunciation(): JourneyDay {
   return {
@@ -263,6 +266,7 @@ function greatLentDay(index: number, civil: Date, calendar: ChurchCalendar): Jou
       theme: "The Church sings the Akathist to the Mother of God, giving thanks for her protection.",
       practice: "Pray a few stanzas of the Akathist, or simply ask the Theotokos for her prayers.",
       prayer: THEOTOKOS,
+      link: AKATHIST,
     },
     34: {
       title: "Sunday of St. Mary of Egypt",
@@ -426,6 +430,7 @@ function paschalDay(index: number): JourneyDay {
       theme: "Before Pentecost, the Church prays for all the departed.",
       practice: "Pray by name for your departed loved ones: “Memory eternal.”",
       prayer: DEPARTED,
+      link: PANIKHIDA,
     },
     49: {
       title: "Pentecost",

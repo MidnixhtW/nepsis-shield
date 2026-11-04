@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2 } from "lucide-react";
+import { Link } from "react-router";
+import { ArrowRight, BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -137,7 +138,11 @@ function DayBody({ day }: { day: JourneyDay }) {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Today's practice</p>
         <p className="mt-1 text-sm leading-relaxed text-foreground/90">{day.practice}</p>
       </div>
-      {day.link ? (
+      {day.link?.href.startsWith("/") ? (
+        <Link to={day.link.href} className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-accent underline-offset-2 hover:underline">
+          {day.link.label} <ArrowRight aria-hidden className="h-3.5 w-3.5" />
+        </Link>
+      ) : day.link ? (
         <a
           href={day.link.href}
           target="_blank"
