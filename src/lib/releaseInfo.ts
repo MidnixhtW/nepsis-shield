@@ -14,6 +14,18 @@ export const CURRENT_VERSION = __APP_VERSION__.replace(/\.0$/, "");
 // Newest first. Written for the people using the app, not for developers.
 export const RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: "1.1",
+    date: "November 4, 2026",
+    title: "Pray with the whole Church",
+    changes: [
+      "Services: Small Compline, the Hours, the Akathist to the Theotokos, the Three Canons before Communion, the Panikhida for the departed, and the Canon for those fallen in battle, with a section menu, text size and read-aloud.",
+      "A word from the Desert Fathers on Today, a new saying each day.",
+      "Prayer groups: make a private group for your family, parish or friends, share prayer requests, and see who has prayed today. No accounts.",
+      "Family prayer: a five-minute evening prayer for parents and children, prayers children can learn, and saint stories for bedtime.",
+      "Android: a Today widget for the home screen with the feast or fast and the day's saying.",
+    ],
+  },
+  {
     version: "1.0",
     date: "November 4, 2026",
     title: "Church life through the year",

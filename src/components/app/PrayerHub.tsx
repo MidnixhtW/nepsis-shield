@@ -15,14 +15,15 @@ import { SleepMode } from "@/components/app/SleepMode";
 import { CommunionPrep } from "@/components/app/CommunionPrep";
 import { ServicesLibrary } from "@/components/app/ServicesLibrary";
 import { PrayerGroups } from "@/components/app/PrayerGroups";
+import { FamilyPrayer } from "@/components/app/FamilyPrayer";
 import { SectionIntro } from "@/components/app/SectionIntro";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 
-export type PrayerTab = "daily" | "rule" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep";
 
-// Eleven practices in four groups, so the tab bar fits on a phone. Each tab value is still its own URL.
+// Twelve practices in four groups, so the tab bar fits on a phone. Each tab value is still its own URL.
 const groups: Array<SectionGroup<PrayerTab>> = [
-  { id: "daily", label: "Daily", items: [{ value: "daily", label: "Daily prayer" }, { value: "rule", label: "My rule" }] },
+  { id: "daily", label: "Daily", items: [{ value: "daily", label: "Daily prayer" }, { value: "rule", label: "My rule" }, { value: "family", label: "Family" }] },
   { id: "prayers", label: "Prayers", items: [{ value: "prayers", label: "Prayer texts" }, { value: "services", label: "Services" }, { value: "names", label: "Names" }, { value: "groups", label: "Groups" }] },
   { id: "stillness", label: "Stillness", items: [{ value: "counter", label: "Jesus Prayer" }, { value: "sleep", label: "Sleep" }] },
   { id: "prepare", label: "Prepare", items: [{ value: "prep", label: "Confession" }, { value: "communion", label: "Communion" }, { value: "journal", label: "Journal" }] },
@@ -31,6 +32,7 @@ const groups: Array<SectionGroup<PrayerTab>> = [
 const content: Record<PrayerTab, ReactNode> = {
   daily: <DailyPrayerFlow />,
   rule: <PrayerRule />,
+  family: <FamilyPrayer />,
   prayers: <PrayerBook showRule={false} />,
   names: <CommemorationList />,
   services: <ServicesLibrary />,
