@@ -23,7 +23,7 @@ export const RELEASE_NOTES: ReleaseNote[] = [
       "A new Me tab in place of More: a quiet week of dots for the days you prayed (no streak to keep up), your favorites, recently opened places, your rule, names, journal and groups, and Settings.",
       "Star any practice, service or topic to keep it on Me and on Today.",
       "Read aloud now has a small player above the tabs, with pause, skip and stop, and keeps reading while you move around the app. Daily readings and the saint stories for children can be read aloud too.",
-      "Recorded readers: the morning, evening and night prayers, St. Seraphim's rule and the saint stories are now read by real voices (Omar, Empa, Iris and Liam), recorded with ElevenLabs. Choose your reader in Settings or in the full-screen prayer. They play in the Android app too.",
+      "Recorded readers: the morning, evening and night prayers, St. Seraphim's rule and the saint stories are now read by recorded voices (Abba, Anna, Timba, Maria and Empa), made with ElevenLabs. Choose your reader in Settings or in the full-screen prayer. They play in the Android app too.",
       "Quieter screens: the length and reading options for daily prayer fold away, and the saved-copy notice shows only when today's content could not be refreshed.",
     ],
   },

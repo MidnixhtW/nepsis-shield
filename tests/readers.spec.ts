@@ -12,7 +12,7 @@ test("the Reader setting plays recorded prayers in the chosen voice", async ({ p
   });
   await page.goto("/settings#reader");
   const readers = page.getByRole("radiogroup", { name: "Reader" });
-  await expect(readers.getByRole("radio", { name: /Omar/ })).toHaveAttribute("aria-checked", "true");
+  await expect(readers.getByRole("radio", { name: /Abba/ })).toHaveAttribute("aria-checked", "true");
 
   await readers.getByRole("radio", { name: /Empa/ }).click();
   await expect(readers.getByRole("radio", { name: /Empa/ })).toHaveAttribute("aria-checked", "true");
@@ -29,8 +29,8 @@ test("the Reader setting plays recorded prayers in the chosen voice", async ({ p
 test("the full-screen prayer offers a reader choice", async ({ page }) => {
   await page.goto("/pray?tab=daily&begin=morning");
   const reader = page.getByRole("dialog").getByRole("combobox", { name: "Reader" });
-  await expect(reader).toHaveValue("omar");
-  await reader.selectOption("iris");
+  await expect(reader).toHaveValue("abba");
+  await reader.selectOption("maria");
   await page.goto("/settings#reader");
-  await expect(page.getByRole("radiogroup", { name: "Reader" }).getByRole("radio", { name: /Iris/ })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("radiogroup", { name: "Reader" }).getByRole("radio", { name: /Maria/ })).toHaveAttribute("aria-checked", "true");
 });
