@@ -1,11 +1,14 @@
 import { useSyncExternalStore } from "react";
 
 // One shared "read aloud" for the whole app, so listening keeps going while you move between screens
-// and the player bar above the tabs can pause, skip or stop it. Uses the device's own voice.
+// and the player bar above the tabs can pause, skip or stop it. A part plays its recording when it has one,
+// and otherwise the device's own voice reads it.
+
+export type ReadAloudPart = { text: string; audio?: string };
 
 export type ReadAloudState = {
   title: string | null;
-  parts: string[];
+  parts: ReadAloudPart[];
   index: number;
   playing: boolean;
 };
@@ -13,11 +16,17 @@ export type ReadAloudState = {
 const IDLE: ReadAloudState = { title: null, parts: [], index: 0, playing: false };
 let state: ReadAloudState = IDLE;
 const listeners = new Set<() => void>();
-// Each start gets a new id, so a cancelled utterance's end event cannot move the new reading along.
+// Each start gets a new id, so a cancelled part's end event cannot move the new reading along.
 let runId = 0;
+let player: HTMLAudioElement | null = null;
 
 export function canReadAloud() {
   return typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+}
+
+/** True when these items can be heard: a recording exists for each, or the device can speak. */
+export function canPlayItems(items: Array<{ text?: string; audio?: string }>) {
+  return items.length > 0 && (canReadAloud() || items.every((item) => !!item.audio));
 }
 
 function setState(next: ReadAloudState) {
@@ -54,49 +63,95 @@ export function splitForSpeech(texts: string[], maxLength = 320): string[] {
   return parts;
 }
 
-function speakFrom(index: number) {
-  if (!canReadAloud()) return;
-  const id = ++runId;
-  window.speechSynthesis.cancel();
-  if (index >= state.parts.length) {
-    setState(IDLE);
+function silence() {
+  if (player) {
+    player.onended = null;
+    player.onerror = null;
+    player.pause();
+  }
+  if (canReadAloud()) window.speechSynthesis.cancel();
+}
+
+function speakText(text: string, id: number, index: number) {
+  if (!canReadAloud()) {
+    playFrom(index + 1);
     return;
   }
-  setState({ ...state, index, playing: true });
-  const utterance = new SpeechSynthesisUtterance(state.parts[index]);
+  const utterance = new SpeechSynthesisUtterance(cleanForSpeech(text));
   utterance.rate = 0.88;
   utterance.onend = () => {
-    if (id === runId && state.playing) speakFrom(index + 1);
+    if (id === runId && state.playing) playFrom(index + 1);
   };
   window.speechSynthesis.speak(utterance);
 }
 
-export function startReadAloud(title: string, texts: string[]) {
-  const parts = splitForSpeech(texts);
-  if (!parts.length || !canReadAloud()) return;
-  state = { title, parts, index: 0, playing: true };
-  speakFrom(0);
+function playFrom(index: number, resumeAudio = false) {
+  const id = ++runId;
+  if (index >= state.parts.length) {
+    silence();
+    setState(IDLE);
+    return;
+  }
+  const part = state.parts[index];
+  if (!resumeAudio) silence();
+  setState({ ...state, index, playing: true });
+
+  if (part.audio) {
+    player ??= new Audio();
+    if (!resumeAudio || player.src !== new URL(part.audio, window.location.href).href) {
+      player.src = part.audio;
+      player.currentTime = 0;
+    }
+    player.onended = () => {
+      if (id === runId && state.playing) playFrom(index + 1);
+    };
+    // If the recording cannot be played (offline, say), the device voice reads it instead.
+    player.onerror = () => {
+      if (id === runId && state.playing) speakText(part.text, id, index);
+    };
+    player.play().catch(() => {
+      if (id === runId && state.playing) speakText(part.text, id, index);
+    });
+    return;
+  }
+  speakText(part.text, id, index);
 }
 
-// Pausing cancels and remembers the place; the browsers' own pause is unreliable on phones.
+/** Read items aloud: each item plays its recording if it has one, or is read by the device voice in short pieces. */
+export function startNarration(title: string, items: ReadAloudPart[]) {
+  const parts = items.flatMap((item) => (item.audio ? [item] : splitForSpeech([item.text]).map((text) => ({ text }))));
+  if (!parts.length || !canPlayItems(parts)) return;
+  state = { title, parts, index: 0, playing: true };
+  playFrom(0);
+}
+
+/** Read plain text with the device voice. */
+export function startReadAloud(title: string, texts: string[]) {
+  startNarration(title, texts.map((text) => ({ text })));
+}
+
+// Recordings pause where they are; the device voice is cancelled and starts the part again, since its own pause is unreliable on phones.
 export function pauseReadAloud() {
   runId++;
+  if (player) player.pause();
   if (canReadAloud()) window.speechSynthesis.cancel();
   setState({ ...state, playing: false });
 }
 
 export function resumeReadAloud() {
-  if (state.title) speakFrom(state.index);
+  if (!state.title) return;
+  const part = state.parts[state.index];
+  playFrom(state.index, !!part?.audio);
 }
 
 export function skipReadAloud(direction: -1 | 1) {
   if (!state.title) return;
-  speakFrom(Math.max(0, Math.min(state.parts.length - 1, state.index + direction)));
+  playFrom(Math.max(0, Math.min(state.parts.length - 1, state.index + direction)));
 }
 
 export function stopReadAloud() {
   runId++;
-  if (canReadAloud()) window.speechSynthesis.cancel();
+  silence();
   setState(IDLE);
 }
 

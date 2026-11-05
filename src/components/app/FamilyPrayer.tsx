@@ -6,7 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CHILD_PRAYERS, EVENING_PRAYER, PARENT_NOTES, SAINT_STORIES, ST_TIKHON } from "@/content/familyPrayer";
 import { cn } from "@/lib/utils";
-import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { canPlayItems, startNarration, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
 
 type Part = "tonight" | "learn" | "stories" | "parents";
 
@@ -101,6 +103,12 @@ function PrayersToLearn() {
 
 function SaintStories() {
   const reading = useReadAloud();
+  const [reader] = useReader();
+  // The story as read aloud: its title, the story, and the lesson. A recording is used when there is one.
+  const listen = (story: (typeof SAINT_STORIES)[number]) => {
+    const lines = [`${story.title}.`, ...story.story, story.lesson];
+    return { text: spokenText(lines), audio: clipUrl(reader, lines) };
+  };
   return (
     <Card className="rounded-3xl border p-5 sm:p-6">
       <h3 className="text-lg font-semibold tracking-tight">Saint stories for children</h3>
@@ -116,14 +124,14 @@ function SaintStories() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="grid gap-3">
-                {canReadAloud() ? (
+                {canPlayItems([listen(story)]) ? (
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     className="w-fit rounded-full"
                     aria-pressed={reading.title === story.title}
-                    onClick={() => (reading.title === story.title ? stopReadAloud() : startReadAloud(story.title, [story.title + ".", ...story.story, story.lesson]))}
+                    onClick={() => (reading.title === story.title ? stopReadAloud() : startNarration(story.title, [listen(story)]))}
                   >
                     {reading.title === story.title ? <Square className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />}
                     {reading.title === story.title ? "Stop" : "Read it to me"}

@@ -34,3 +34,4 @@ test-results
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+/narration-samples/

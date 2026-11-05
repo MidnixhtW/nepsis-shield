@@ -74,7 +74,10 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Build web app
-        run: npm run build
+        # The recorded prayers are played from nepsisshield.com, so they stay out of the APK.
+        run: |
+          npm run build
+          rm -rf dist/audio
 
       - name: Generate Android project
         run: |

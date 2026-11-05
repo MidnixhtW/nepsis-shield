@@ -99,6 +99,7 @@ const ALLOWED_APP_KEYS = new Set([
   "prayer-groups:v1",
   "favorites:v1",
   "recent-places:v1",
+  "read-aloud:voice",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.

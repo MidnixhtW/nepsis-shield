@@ -31,6 +31,7 @@ import { usePrayerReminderStatus } from "@/hooks/usePrayerReminderStatus";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PrayerReminders } from "@/components/app/PrayerReminders";
 import { PatronSaintSettings } from "@/components/app/NameDay";
+import { ReaderVoiceSettings } from "@/components/app/ReaderVoiceSettings";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
 
@@ -271,6 +272,8 @@ export default function Settings() {
             </div>
           </div>
         </Card>
+
+        <ReaderVoiceSettings />
 
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">

@@ -37,7 +37,9 @@ import {
   useDailyRhythm,
 } from "@/lib/dailyHabits";
 import { showSuccess } from "@/utils/toast";
-import { stopReadAloud } from "@/lib/readAloud";
+import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
+import { READERS, clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
 import { buildFlow, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
@@ -135,24 +137,16 @@ export function DailyPrayerFlow() {
     focusNextStep.current = false;
   }, [stepIndex, done, progressKey]);
 
-  // Read aloud: the device's own voice reads each step while the full-screen view is open.
-  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+  // Read aloud while the full-screen view is open: the chosen reader's recording of the step, or the device voice.
+  const [reader, setReader] = useReader();
+  const stepAudio = clipUrl(reader, current.body);
+  const canListen = canPlayItems([{ audio: stepAudio }]);
   const [readingAloud, setReadingAloud] = useState(false);
   useEffect(() => {
-    if (!canSpeak) return;
-    if (!readingAloud || !immersive) {
-      if (readingAloud) window.speechSynthesis.cancel();
-      return;
-    }
-    // The prayer reads its own steps, so stop any other reading first.
-    stopReadAloud();
-    window.speechSynthesis.cancel();
-    // "(3x)" markers are for the eye; read the words, not the count.
-    const text = [current.title, ...current.body].join(". ").replace(/\(\s*\d+x\s*\)/gi, "");
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.88;
-    window.speechSynthesis.speak(utterance);
-  }, [canSpeak, readingAloud, immersive, current]);
+    if (!readingAloud || !immersive) return;
+    startNarration(current.title, [{ text: stepAudio ? spokenText(current.body) : [current.title, ...current.body].join(". "), audio: stepAudio }]);
+    return () => stopReadAloud();
+  }, [readingAloud, immersive, current, stepAudio]);
   useEffect(() => {
     if (!immersive) setReadingAloud(false);
   }, [immersive]);
@@ -419,7 +413,7 @@ export function DailyPrayerFlow() {
                 {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
-                {canSpeak ? (
+                {canListen ? (
                   <Button
                     type="button"
                     variant="ghost"
@@ -434,6 +428,16 @@ export function DailyPrayerFlow() {
                     <span className="hidden sm:inline">{readingAloud ? "Stop reading" : "Read aloud"}</span>
                   </Button>
                 ) : null}
+                <select
+                  aria-label="Reader"
+                  value={reader}
+                  onChange={(event) => setReader(event.target.value as typeof reader)}
+                  className="h-8 max-w-[6.5rem] rounded-full border border-border/60 bg-transparent px-2 text-xs font-semibold text-foreground"
+                >
+                  {READERS.map((item) => (
+                    <option key={item.id} value={item.id} className="bg-background text-foreground">{item.id === "device" ? "Device" : item.name}</option>
+                  ))}
+                </select>
                 <Dialog.Close asChild>
                   <Button type="button" variant="ghost" size="icon" className="rounded-full">
                     <X className="h-5 w-5" />
