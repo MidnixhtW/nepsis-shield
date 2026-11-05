@@ -19,7 +19,7 @@ for (const time of ["morning", "evening", "night"] as const) {
 }
 for (const step of seraphimRule) add(`seraphim: ${step.title}`, step.body);
 if (process.argv.includes("--developer")) for (const step of developerPrayerRule) add(`developer: ${step.title}`, step.body);
-for (const set of ["joyful", "sorrowful", "glorious"] as const) {
+for (const set of ["joyful", "luminous", "sorrowful", "glorious"] as const) {
   rosaryNarration(set).forEach((lines, index) => add(`rosary ${set} ${index}`, lines));
 }
 add("angelus", marianAntiphonNarration(angelus));

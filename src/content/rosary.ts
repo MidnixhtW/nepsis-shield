@@ -17,14 +17,14 @@ export const rosaryPrayers = {
     "Let us pray. O God, whose only-begotten Son, by his life, death, and resurrection, hath purchased for us the rewards of eternal life: grant, we beseech thee, that meditating upon these mysteries of the most holy Rosary of the Blessed Virgin Mary, we may imitate what they contain and obtain what they promise; through the same Christ our Lord. Amen.",
 };
 
-export type MysterySetId = "joyful" | "sorrowful" | "glorious";
+export type MysterySetId = "joyful" | "luminous" | "sorrowful" | "glorious";
 
 export type Mystery = { title: string; scripture: string; reference: string };
 
-export const mysterySets: Record<MysterySetId, { label: string; days: string; mysteries: Mystery[] }> = {
+// The Luminous Mysteries were added in 2002. Some parishes, Western Rite and Catholic, pray them; the app offers them as a choice.
+export const mysterySets: Record<MysterySetId, { label: string; mysteries: Mystery[] }> = {
   joyful: {
     label: "Joyful Mysteries",
-    days: "Monday and Thursday, and Sundays in Advent",
     mysteries: [
       { title: "The Annunciation", scripture: "Behold the handmaid of the Lord; be it unto me according to thy word.", reference: "Luke 1:26-38" },
       { title: "The Visitation", scripture: "Blessed art thou among women, and blessed is the fruit of thy womb.", reference: "Luke 1:39-56" },
@@ -33,9 +33,18 @@ export const mysterySets: Record<MysterySetId, { label: string; days: string; my
       { title: "The Finding in the Temple", scripture: "Wist ye not that I must be about my Father's business?", reference: "Luke 2:41-52" },
     ],
   },
+  luminous: {
+    label: "Luminous Mysteries",
+    mysteries: [
+      { title: "The Baptism of our Lord", scripture: "This is my beloved Son, in whom I am well pleased.", reference: "Matthew 3:13-17" },
+      { title: "The Wedding at Cana", scripture: "Whatsoever he saith unto you, do it.", reference: "John 2:1-11" },
+      { title: "The Proclamation of the Kingdom", scripture: "The kingdom of God is at hand: repent ye, and believe the gospel.", reference: "Mark 1:14-15" },
+      { title: "The Transfiguration", scripture: "This is my beloved Son: hear him.", reference: "Luke 9:28-36" },
+      { title: "The Institution of the Holy Eucharist", scripture: "This is my body which is given for you: this do in remembrance of me.", reference: "Luke 22:14-20" },
+    ],
+  },
   sorrowful: {
     label: "Sorrowful Mysteries",
-    days: "Tuesday and Friday, and Sundays in Lent",
     mysteries: [
       { title: "The Agony in the Garden", scripture: "Nevertheless not as I will, but as thou wilt.", reference: "Matthew 26:36-46" },
       { title: "The Scourging at the Pillar", scripture: "Then Pilate therefore took Jesus, and scourged him.", reference: "John 19:1" },
@@ -46,7 +55,6 @@ export const mysterySets: Record<MysterySetId, { label: string; days: string; my
   },
   glorious: {
     label: "Glorious Mysteries",
-    days: "Wednesday and Saturday, and other Sundays",
     mysteries: [
       { title: "The Resurrection", scripture: "He is not here, but is risen.", reference: "Luke 24:1-12" },
       { title: "The Ascension", scripture: "While they beheld, he was taken up; and a cloud received him out of their sight.", reference: "Acts 1:6-11" },

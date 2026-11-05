@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronLeft, Info, RotateCcw, Square, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,28 +10,11 @@ import { addDays, dateOnly, orthodoxPascha } from "@/lib/fastingSeasons";
 import { clipUrl, useReader } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
 import { canPlayItems, startNarration, stopReadAloud, useReadAloud, type ReadAloudPart } from "@/lib/readAloud";
+import { dayKey, mysteryDays, mysterySetForDay, useRosaryPattern, type RosaryPattern } from "@/lib/rosarySchedule";
 import { cn } from "@/lib/utils";
 
 function haptic() {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(12);
-}
-
-/**
- * The traditional weekly pattern: Joyful on Monday and Thursday, Sorrowful on Tuesday and Friday, Glorious on Wednesday
- * and Saturday. Sundays follow the season: Joyful in Advent, Sorrowful in Lent, Glorious the rest of the year.
- */
-function mysterySetForDay(date: Date): MysterySetId {
-  const day = date.getDay();
-  if (day === 1 || day === 4) return "joyful";
-  if (day === 2 || day === 5) return "sorrowful";
-  if (day !== 0) return "glorious";
-  const today = dateOnly(date);
-  const pascha = orthodoxPascha(today.getFullYear());
-  if (today >= addDays(pascha, -46) && today < pascha) return "sorrowful";
-  const christmas = new Date(today.getFullYear(), 11, 25);
-  const adventStart = addDays(christmas, -(christmas.getDay() || 7) - 21);
-  if (today >= adventStart && today < christmas) return "joyful";
-  return "glorious";
 }
 
 /** From Pascha through Pentecost the Regina Caeli is said in place of the Angelus. */
@@ -67,8 +50,14 @@ function listen(reader: ReturnType<typeof useReader>[0], clips: string[][]): Rea
   return clips.map((lines) => ({ text: spokenText(lines), audio: clipUrl(reader, lines) }));
 }
 
+const PATTERNS: Array<{ id: RosaryPattern; label: string }> = [
+  { id: "traditional", label: "Traditional (15)" },
+  { id: "luminous", label: "With Luminous (20)" },
+];
+
 function RosaryCounter() {
-  const [setId, setSetId] = useState<MysterySetId>(() => mysterySetForDay(new Date()));
+  const [pattern, setPattern] = useRosaryPattern();
+  const [setId, setSetId] = useState<MysterySetId>(() => mysterySetForDay(new Date(), pattern));
   const steps = useMemo(() => rosarySteps(setId), [setId]);
   const [stepIndex, setStepIndex] = useState(0);
   const [bead, setBead] = useState(0);
@@ -81,6 +70,33 @@ function RosaryCounter() {
   const totalBeads = steps.reduce((sum, item) => sum + item.repeat, 0);
   const done = steps.slice(0, stepIndex).reduce((sum, item) => sum + item.repeat, 0) + bead;
   const title = `Rosary: ${mysterySets[setId].label}`;
+  const visibleSets = (Object.keys(mysterySets) as MysterySetId[]).filter((id) => id !== "luminous" || pattern === "luminous");
+
+  // Follow the calendar: when the day changes (the app left open past midnight, or reopened the next day), switch to
+  // that day's mysteries, unless a Rosary is under way.
+  const shownDay = useRef(dayKey());
+  const notStarted = stepIndex === 0 && bead === 0;
+  useEffect(() => {
+    function check() {
+      const today = dayKey();
+      if (today === shownDay.current || !notStarted) return;
+      shownDay.current = today;
+      setSetId(mysterySetForDay(new Date(), pattern));
+    }
+    const timer = window.setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", check);
+    window.addEventListener("focus", check);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", check);
+      window.removeEventListener("focus", check);
+    };
+  }, [notStarted, pattern]);
+
+  function choosePattern(next: RosaryPattern) {
+    setPattern(next);
+    if (notStarted) setSetId(mysterySetForDay(new Date(), next));
+  }
 
   function restart(next: MysterySetId = setId) {
     setSetId(next);
@@ -119,7 +135,7 @@ function RosaryCounter() {
         <div>
           <h2 className="text-xl font-semibold tracking-tight">The Rosary</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {mysterySets[setId].label}, traditionally prayed on {mysterySets[setId].days}.
+            {mysterySets[setId].label}, prayed on {mysteryDays(setId, pattern)}.
           </p>
         </div>
         {canPlayItems(narration) ? (
@@ -142,7 +158,7 @@ function RosaryCounter() {
         aria-label="Mysteries"
         className="mt-4 flex flex-wrap justify-start gap-2"
       >
-        {(Object.keys(mysterySets) as MysterySetId[]).map((id) => (
+        {visibleSets.map((id) => (
           <ToggleGroupItem
             key={id}
             value={id}
@@ -152,6 +168,27 @@ function RosaryCounter() {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span id="rosary-pattern-label">Weekly pattern</span>
+        <ToggleGroup
+          type="single"
+          value={pattern}
+          onValueChange={(value) => value && choosePattern(value as RosaryPattern)}
+          aria-labelledby="rosary-pattern-label"
+          className="flex flex-wrap gap-1.5"
+        >
+          {PATTERNS.map((item) => (
+            <ToggleGroupItem
+              key={item.id}
+              value={item.id}
+              className="h-8 rounded-full border border-border/60 px-3 text-xs data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
+            >
+              {item.label}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
 
       <Separator className="my-4" />
 
