@@ -12,7 +12,7 @@ export const WESTERN_SAINTS: WesternSaint[] = [
   { name: "Saint Gregory the Dialogist, Pope of Rome", month: 3, day: 12, region: "Rome", line: "Fed the poor of Rome, sent missionaries to England, and gave us the Presanctified Liturgy.", search: "Gregory Dialogist" },
   { name: "Saint Benedict of Nursia", month: 3, day: 14, region: "Italy", line: "Father of Western monks; his Rule teaches prayer and work in a steady rhythm.", search: "Benedict Nursia" },
   { name: "Saint Patrick of Ireland", month: 3, day: 17, region: "Ireland", line: "Taken to Ireland as a slave, he escaped, then went back to bring it the Gospel.", search: "Patrick Ireland" },
-  { name: "Saint Edward the Martyr", month: 3, day: 18, region: "England", line: "Young King of England, killed by treachery and honoured as a passion-bearer.", search: "Edward Martyr" },
+  { name: "Saint Edward the Martyr", month: 3, day: 18, region: "England", line: "Young King of England, killed by treachery and honoured as a martyr.", search: "Edward Martyr" },
   { name: "Saint Cuthbert of Lindisfarne", month: 3, day: 20, region: "England", line: "Monk and bishop who prayed through the night standing in the cold North Sea.", search: "Cuthbert" },
   { name: "Saint Augustine of Canterbury", month: 5, day: 26, region: "England", line: "Sent by St Gregory to the English; first Archbishop of Canterbury.", search: "Augustine Canterbury" },
   { name: "Saint Bede the Venerable", month: 5, day: 27, region: "England", line: "Monk and scholar who wrote the history of the English Church.", search: "Bede" },

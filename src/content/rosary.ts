@@ -24,7 +24,7 @@ export type Mystery = { title: string; scripture: string; reference: string };
 export const mysterySets: Record<MysterySetId, { label: string; days: string; mysteries: Mystery[] }> = {
   joyful: {
     label: "Joyful Mysteries",
-    days: "Monday and Thursday",
+    days: "Monday and Thursday, and Sundays in Advent",
     mysteries: [
       { title: "The Annunciation", scripture: "Behold the handmaid of the Lord; be it unto me according to thy word.", reference: "Luke 1:26-38" },
       { title: "The Visitation", scripture: "Blessed art thou among women, and blessed is the fruit of thy womb.", reference: "Luke 1:39-56" },
@@ -35,7 +35,7 @@ export const mysterySets: Record<MysterySetId, { label: string; days: string; my
   },
   sorrowful: {
     label: "Sorrowful Mysteries",
-    days: "Tuesday and Friday",
+    days: "Tuesday and Friday, and Sundays in Lent",
     mysteries: [
       { title: "The Agony in the Garden", scripture: "Nevertheless not as I will, but as thou wilt.", reference: "Matthew 26:36-46" },
       { title: "The Scourging at the Pillar", scripture: "Then Pilate therefore took Jesus, and scourged him.", reference: "John 19:1" },
@@ -46,7 +46,7 @@ export const mysterySets: Record<MysterySetId, { label: string; days: string; my
   },
   glorious: {
     label: "Glorious Mysteries",
-    days: "Wednesday, Saturday and Sunday",
+    days: "Wednesday and Saturday, and other Sundays",
     mysteries: [
       { title: "The Resurrection", scripture: "He is not here, but is risen.", reference: "Luke 24:1-12" },
       { title: "The Ascension", scripture: "While they beheld, he was taken up; and a cloud received him out of their sight.", reference: "Acts 1:6-11" },
@@ -56,14 +56,6 @@ export const mysterySets: Record<MysterySetId, { label: string; days: string; my
     ],
   },
 };
-
-/** The traditional weekly pattern: Joyful on Monday and Thursday, Sorrowful on Tuesday and Friday, Glorious otherwise. */
-export function mysterySetForDay(date: Date): MysterySetId {
-  const day = date.getDay();
-  if (day === 1 || day === 4) return "joyful";
-  if (day === 2 || day === 5) return "sorrowful";
-  return "glorious";
-}
 
 /** "announce" is said before the prayer, for a mystery: its name and a line of Scripture. */
 export type RosaryStep = { title: string; note?: string; announce?: string; text: string; repeat: number };

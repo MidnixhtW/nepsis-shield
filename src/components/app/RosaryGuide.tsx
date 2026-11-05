@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { angelus, marianAntiphonNarration, mysterySetForDay, mysterySets, reginaCaeli, rosaryNarration, rosarySteps, type MysterySetId } from "@/content/rosary";
+import { angelus, marianAntiphonNarration, mysterySets, reginaCaeli, rosaryNarration, rosarySteps, type MysterySetId } from "@/content/rosary";
 import { addDays, dateOnly, orthodoxPascha } from "@/lib/fastingSeasons";
 import { clipUrl, useReader } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
@@ -14,6 +14,24 @@ import { cn } from "@/lib/utils";
 
 function haptic() {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(12);
+}
+
+/**
+ * The traditional weekly pattern: Joyful on Monday and Thursday, Sorrowful on Tuesday and Friday, Glorious on Wednesday
+ * and Saturday. Sundays follow the season: Joyful in Advent, Sorrowful in Lent, Glorious the rest of the year.
+ */
+function mysterySetForDay(date: Date): MysterySetId {
+  const day = date.getDay();
+  if (day === 1 || day === 4) return "joyful";
+  if (day === 2 || day === 5) return "sorrowful";
+  if (day !== 0) return "glorious";
+  const today = dateOnly(date);
+  const pascha = orthodoxPascha(today.getFullYear());
+  if (today >= addDays(pascha, -46) && today < pascha) return "sorrowful";
+  const christmas = new Date(today.getFullYear(), 11, 25);
+  const adventStart = addDays(christmas, -(christmas.getDay() || 7) - 21);
+  if (today >= adventStart && today < christmas) return "joyful";
+  return "glorious";
 }
 
 /** From Pascha through Pentecost the Regina Caeli is said in place of the Angelus. */
@@ -31,11 +49,12 @@ function WesternRiteNote() {
         <div className="text-sm leading-relaxed text-muted-foreground">
           <p>
             <span className="font-semibold text-foreground">Added with Western Rite Orthodoxy in mind.</span> Western Rite
-            Orthodox parishes pray the Rosary and the Angelus. This is the traditional form, with fifteen mysteries.
+            Orthodox parishes pray the Rosary and the Angelus. Here is the traditional form, with fifteen mysteries; practice
+            varies between parishes, and some also pray the Luminous Mysteries. Follow your parish.
           </p>
           <p className="mt-2">
-            Catholics, Eastern or Roman, can pray it too. If your parish adds the Luminous Mysteries or the Fatima prayer, add
-            them where it does. Byzantine Christians have their own way of praying with beads, the Jesus Prayer on a prayer rope.
+            Catholics, Eastern or Roman, can pray it too. Byzantine Christians have their own ways of praying with beads: the
+            Jesus Prayer on a prayer rope, and St Seraphim's rule of 150 "Rejoice, O Virgin Theotokos".
           </p>
         </div>
       </div>
