@@ -45,7 +45,7 @@ const legacyMap: Record<
 };
 
 function isPrayerTab(x: string | null): x is PrayerTab {
-  return x === "daily" || x === "rule" || x === "family" || x === "prayers" || x === "names" || x === "services" || x === "groups" || x === "counter" || x === "prep" || x === "communion" || x === "journal" || x === "sleep";
+  return x === "daily" || x === "rule" || x === "family" || x === "prayers" || x === "names" || x === "services" || x === "groups" || x === "counter" || x === "prep" || x === "communion" || x === "journal" || x === "sleep" || x === "rosary";
 }
 
 function isReadTab(x: string | null): x is ReadTab {

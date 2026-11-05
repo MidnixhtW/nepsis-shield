@@ -41,6 +41,7 @@ export const DESTINATIONS: Destination[] = [
   { label: "Audio", to: "/learn?tab=audio", area: "Learn", keywords: "chant podcast radio listen" },
   { label: "Find a parish", to: "/learn?tab=parish", area: "Learn", keywords: "church near me directory" },
   { label: "OCA library", to: "/learn?tab=library", area: "Learn", keywords: "articles faith" },
+  { label: "Rosary and Angelus", to: "/pray?tab=rosary", area: "Pray", keywords: "western rite hail mary mysteries beads regina caeli catholic" },
   { label: "For those who serve", to: "/learn?tab=serve", area: "Learn", keywords: "military police fire ems dispatch chaplain first responders duty" },
   { label: "Saints", to: "/saints", area: "Library", keywords: "lives patron warrior name day" },
   { label: "Life & Service Guide", to: "/field-manual", area: "Library", keywords: "military police fire ems stress grief travel" },

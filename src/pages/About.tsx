@@ -41,7 +41,7 @@ export default function About() {
                 Some people keep watch over others for a living: military, police, fire, EMS, dispatch, corrections and chaplains. For them the app adds the Life &amp; Service Guide, the warrior saints and the Canon for the Fallen. Choose a service role in Settings to see that support first.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                The prayers and calendar follow the Orthodox Church. Every Christian is welcome to pray with it. Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers, but your calendar and some commemorations may differ, so follow your parish.
+                The prayers and calendar follow the Orthodox Church. Every Christian is welcome to pray with it. Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers, but your calendar and some commemorations may differ, so follow your parish. For Western Rite Orthodox parishes the app includes the Rosary and the Angelus, which Catholics can pray too.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 It is meant to help you take one faithful next step. It does not replace your priest, chaplain, clinician, therapist, emergency services, or the life of the Church.

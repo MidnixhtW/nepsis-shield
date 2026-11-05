@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { BookOpen, Compass, HeartHandshake, Home, Moon, MoonStar, NotebookPen, ScrollText, Sparkles, Sun, Sunset, Users } from "lucide-react";
+import { BookOpen, Compass, Flower2, HeartHandshake, Home, Moon, MoonStar, NotebookPen, ScrollText, Sparkles, Sun, Sunset, Users } from "lucide-react";
 import { CenserIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
 import { PrayerRule } from "@/components/app/PrayerRule";
@@ -16,9 +16,10 @@ import { ServicesLibrary } from "@/components/app/ServicesLibrary";
 import { PrayerGroups } from "@/components/app/PrayerGroups";
 import { FamilyPrayer } from "@/components/app/FamilyPrayer";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 
-export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary";
 
 // The starting screen: every practice as a tile, one tap from praying. Each practice keeps its own URL (?tab=...).
 const launcher: LauncherGroup[] = [
@@ -36,6 +37,7 @@ const launcher: LauncherGroup[] = [
     tiles: [
       { to: "/pray?tab=services", label: "Services", hint: "Compline, the Hours, Akathist, Panikhida", icon: CenserIcon },
       { to: "/pray?tab=prayers", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: BookOpen },
+      { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 },
       { to: "/pray?tab=names", label: "Names", hint: "The living and the departed", icon: ScrollText },
       { to: "/pray?tab=groups", label: "Prayer groups", hint: "Pray for each other", icon: Users },
     ],
@@ -71,6 +73,7 @@ const titles: Record<PrayerTab, string> = {
   prep: "Confession",
   communion: "Holy Communion",
   journal: "Journal",
+  rosary: "Rosary and Angelus",
 };
 
 const content: Record<PrayerTab, ReactNode> = {
@@ -90,6 +93,7 @@ const content: Record<PrayerTab, ReactNode> = {
   ),
   communion: <CommunionPrep />,
   journal: <DailyReflection />,
+  rosary: <RosaryGuide />,
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
