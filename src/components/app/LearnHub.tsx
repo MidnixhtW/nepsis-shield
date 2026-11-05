@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Crosshair, DoorOpen, ExternalLink, Headphones, Library, ListChecks, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Trophy } from "lucide-react";
+import { DoorOpen, ExternalLink, Headphones, Library, ListChecks, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Shield, Trophy } from "lucide-react";
 import { ChurchDomeIcon, SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { Button } from "@/components/ui/button";
@@ -16,15 +16,16 @@ import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
+import { ForThoseWhoServe } from "@/components/app/ForThoseWhoServe";
 
-export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish";
+export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve";
 
 // The starting screen: topics as tiles, the same way Pray is laid out. Each topic keeps its own URL (?tab=...).
 const launcher: LauncherGroup[] = [
   {
     title: "Start",
     tiles: [
-      { to: "/learn?tab=welcome", label: "New to Orthodoxy?", hint: "What this app offers, gently", icon: DoorOpen },
+      { to: "/learn?tab=welcome", label: "New to Orthodoxy?", hint: "Where to begin, gently", icon: DoorOpen },
       { to: "/learn?tab=path", label: "My path", hint: "Next steps chosen for you", icon: Route },
       { to: "/learn?tab=challenges", label: "Challenges", hint: "Small habits, a few days at a time", icon: Trophy },
     ],
@@ -49,7 +50,7 @@ const launcher: LauncherGroup[] = [
     title: "Library",
     tiles: [
       { to: "/saints", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
-      { to: "/field-manual", label: "Life & Service Guide", hint: "Stress, grief, duty, travel", icon: Crosshair },
+      { to: "/learn?tab=serve", label: "For those who serve", hint: "Military, first responders, chaplains", icon: Shield },
       { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
       { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the faith", icon: Library },
     ],
@@ -68,6 +69,7 @@ const titles: Record<LearnTab, string> = {
   audio: "Audio",
   parish: "Find a parish",
   library: "OCA library",
+  serve: "For those who serve",
 };
 
 const ocaLibrary = (
@@ -161,6 +163,7 @@ const content: Record<LearnTab, ReactNode> = {
   hymns: <HymnsAndPropers />,
   parish: <ParishFinder />,
   library: ocaLibrary,
+  serve: <ForThoseWhoServe />,
 };
 
 export function LearnHub({ tab }: { tab: LearnTab | null }) {

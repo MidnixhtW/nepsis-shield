@@ -178,7 +178,7 @@ export default function Settings() {
 
       <div className="premium-card-stack mt-5 lg:grid-cols-2">
 
-        <Card className={cn("rounded-3xl p-5 shadow-sm", roleTheme.card)}>
+        <Card id="role" className={cn("scroll-mt-24 rounded-3xl p-5 shadow-sm", roleTheme.card)}>
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 break-words">
               <h2 className="text-base font-semibold tracking-tight">Role / mode</h2>

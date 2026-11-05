@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import {
   BookOpen,
   CalendarDays,
@@ -19,11 +20,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type { AppSection } from "@/components/app/AppShell";
 
 type CalendarLens = "orthodox" | "shared" | "both";
-
-type PathAction = { section: AppSection; tab?: string; read?: string };
 
 function FeatureCard({
   title,
@@ -58,29 +56,22 @@ function FeatureCard({
 
 function PathButton({
   children,
-  onClick,
+  to,
   variant = "outline",
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
+  to: string;
   variant?: "default" | "outline";
 }) {
-  if (!onClick) {
-    return (
-      <div className="flex h-auto min-h-11 justify-start whitespace-normal rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 py-3 text-left text-sm font-semibold leading-snug text-muted-foreground">
-        <span className="min-w-0 break-words">{children}</span>
-      </div>
-    );
-  }
-
   return (
     <Button
-      type="button"
+      asChild
       variant={variant}
       className="tap h-auto min-h-11 justify-start whitespace-normal rounded-2xl border-border/60 px-4 py-3 text-left leading-snug"
-      onClick={onClick}
     >
-      <span className="min-w-0 break-words">{children}</span>
+      <Link to={to}>
+        <span className="min-w-0 break-words">{children}</span>
+      </Link>
     </Button>
   );
 }
@@ -112,13 +103,7 @@ const calendarContent: Record<CalendarLens, { title: string; items: string[] }> 
   },
 };
 
-export function InclusiveChristianPath({
-  compact = false,
-  onNavigate,
-}: {
-  compact?: boolean;
-  onNavigate?: (to: PathAction) => void;
-}) {
+export function InclusiveChristianPath({ compact = false }: { compact?: boolean }) {
   const [lens, setLens] = useState<CalendarLens>("both");
   const selected = calendarContent[lens];
 
@@ -132,27 +117,29 @@ export function InclusiveChristianPath({
               <HeartHandshake className="mr-1 h-3.5 w-3.5" /> Welcome
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">
-              Orthodox-rooted • Christian-first
+              Orthodox • Every Christian welcome
             </Badge>
           </div>
 
           <div className="mt-3 grid gap-3 lg:grid-cols-[1.4fr_0.9fr] lg:items-end">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight">
-                For those who serve, protect, heal, and keep watch.
+                Keep watch in prayer.
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                A Christian prayer and formation app rooted in the Orthodox tradition for everyday believers, families, seekers, military, first responders, public safety, medical teams, chaplains, dispatchers, security, and all who seek Scripture, prayer, and a steadier life in Christ.
-
+                Nepsis Shield is an Orthodox prayer companion. <em>Nepsis</em> means watchfulness: staying awake to God and guarding the heart. You do not need to be Orthodox to start. Begin with a short prayer, and learn the rest a little at a time.
+              </p>
+              <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers. Your calendar and some commemorations may differ, so follow your parish.
               </p>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
 
-              <PathButton variant="default" onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "prayers" }) : undefined}>
+              <PathButton variant="default" to="/pray?tab=prayers">
                 <Hand className="mr-2 h-4 w-4" /> Start with prayer
               </PathButton>
-              <PathButton onClick={onNavigate ? () => onNavigate({ section: "learn", tab: "qa" }) : undefined}>
+              <PathButton to="/learn?tab=qa">
                 <MessageCircleQuestion className="mr-2 h-4 w-4" /> Learn Orthodoxy gently
               </PathButton>
 
@@ -273,13 +260,13 @@ export function InclusiveChristianPath({
               </div>
 
               <div className="mt-4 flex flex-wrap gap-2">
-                <PathButton onClick={onNavigate ? () => onNavigate({ section: "read", read: "plans" }) : undefined}>
+                <PathButton to="/read?read=plans">
                   <BookOpen className="mr-2 h-4 w-4" /> Reading plans
                 </PathButton>
-                <PathButton onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "counter" }) : undefined}>
+                <PathButton to="/pray?tab=counter">
                   <Sparkles className="mr-2 h-4 w-4" /> Jesus Prayer
                 </PathButton>
-                <PathButton onClick={onNavigate ? () => onNavigate({ section: "pray", tab: "journal" }) : undefined}>
+                <PathButton to="/pray?tab=journal">
                   <Heart className="mr-2 h-4 w-4" /> Reflection
                 </PathButton>
 

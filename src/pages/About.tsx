@@ -17,7 +17,7 @@ export default function About() {
       <PremiumPageHeader
         eyebrow="About"
         title="Sources, trust, and purpose"
-        description="A Christian life and service guide for everyday faithfulness, families, military, first responders, and the wider service community."
+        description="An Orthodox prayer companion for keeping watch: what it is, where its texts come from, and who made it."
         icon={<Info className="h-5 w-5" />}
         actions={
           <>
@@ -35,10 +35,16 @@ export default function About() {
             <div>
               <h2 className="text-base font-semibold tracking-tight">What Nepsis Shield is</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Nepsis Shield is an Orthodox companion for prayer, Scripture, saints, daily watchfulness, ordinary life, and practical support under pressure. It is meant to help you take one faithful next step; it is not a replacement for your priest, chaplain, clinician, therapist, emergency services, or sacramental life.
+                Nepsis Shield is an Orthodox prayer companion for keeping watch. <em>Nepsis</em> is the Church's word for watchfulness: staying awake to God and guarding the heart. Everyone keeps watch over something, whether a family, a household, their own heart, or a post. The app gives daily prayer, Scripture, the saints and the fasts to all of them, under the protection of St Michael the Archangel.
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                It is offered under the patronage of St Michael the Archangel, for everyday Christians, families, military, first responders, and those who serve or protect others.
+                Some people keep watch over others for a living: military, police, fire, EMS, dispatch, corrections and chaplains. For them the app adds the Life &amp; Service Guide, the warrior saints and the Canon for the Fallen. Choose a service role in Settings to see that support first.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                The prayers and calendar follow the Orthodox Church. Every Christian is welcome to pray with it. Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers, but your calendar and some commemorations may differ, so follow your parish.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                It is meant to help you take one faithful next step. It does not replace your priest, chaplain, clinician, therapist, emergency services, or the life of the Church.
               </p>
 
             </div>
