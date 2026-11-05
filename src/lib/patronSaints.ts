@@ -863,6 +863,78 @@ export const patronNeeds: PatronNeed[] = [
     prayer:
       "Venerable Bede, pray to God for me. Ask Christ to bless my study with attention, humility, and love for truth. Amen.",
   },
+  {
+    need: "Soldiers and sharing what you have",
+    saints: "Saint Martin of Tours",
+    search: "Martin Tours",
+    note: "For soldiers, those leaving the service, and anyone asked to share with the poor.",
+    keywords: ["soldier", "military", "veteran", "service", "poor", "share", "generosity", "cloak", "charity", "leaving"],
+    prayer:
+      "Holy Martin, soldier of Christ, pray to God for me. Teach me to see Christ in the one who is cold and poor, and to share what I have without fear. Amen.",
+  },
+  {
+    need: "Order in work and prayer",
+    saints: "Saint Benedict of Nursia",
+    search: "Benedict Nursia",
+    note: "For a steady daily rhythm, balancing work and prayer, and keeping a rule of life.",
+    keywords: ["routine", "rule", "schedule", "discipline", "work", "balance", "order", "rhythm", "monastic", "habit"],
+    prayer:
+      "Holy Father Benedict, pray to God for me. Help me to pray and to work in good order, to listen with the ear of my heart, and to prefer nothing to the love of Christ. Amen.",
+  },
+  {
+    need: "Brothers and sisters",
+    saints: "Saint Scholastica",
+    search: "Scholastica",
+    note: "For siblings, friendships that grow apart, and love that keeps talking of God.",
+    keywords: ["brother", "sister", "sibling", "siblings", "friendship", "family", "distance", "love"],
+    prayer:
+      "Holy Scholastica, pray to God for my brothers and sisters. Keep our love for one another warm, and let us help each other toward Christ. Amen.",
+  },
+  {
+    need: "Leaders and those who serve the poor",
+    saints: "Saint Gregory the Dialogist",
+    search: "Gregory Dialogist",
+    note: "For pastors, managers, and anyone responsible for others and for the poor.",
+    keywords: ["leader", "leadership", "manager", "boss", "pastor", "responsibility", "poor", "decide", "decision"],
+    prayer:
+      "Holy Gregory, servant of the servants of God, pray to God for me. Make me humble in authority, merciful to the poor, and faithful in what has been given into my care. Amen.",
+  },
+  {
+    need: "Courage to speak the truth",
+    saints: "Saint Ambrose of Milan",
+    search: "Ambrose Milan",
+    note: "For speaking up to the powerful with respect, and for those preparing for baptism.",
+    keywords: ["courage", "truth", "speak", "power", "injustice", "authority", "baptism", "convert", "catechumen"],
+    prayer:
+      "Holy Ambrose, pray to God for me. Give me courage to speak the truth in love, even to the powerful, and to stand firm in the faith. Amen.",
+  },
+  {
+    need: "Leaving home and starting over",
+    saints: "Saint Columba of Iona",
+    search: "Columba Iona",
+    note: "For those who move far away, emigrants, exiles, and new beginnings.",
+    keywords: ["move", "moving", "emigrate", "immigrant", "exile", "homesick", "new", "start", "abroad", "pilgrim"],
+    prayer:
+      "Holy Columba, pilgrim for Christ, pray to God for me. Be with me far from home, and make the place where I now live a place of prayer. Amen.",
+  },
+  {
+    need: "Protecting someone in danger",
+    saints: "Saint Alban of Britain",
+    search: "Alban",
+    note: "For those who shelter the hunted and stand in harm's way for another.",
+    keywords: ["protect", "shelter", "refugee", "danger", "sacrifice", "persecuted", "defend", "hide"],
+    prayer:
+      "Holy Alban, protomartyr of Britain, pray to God for me. Give me courage to protect those in danger and to stand with Christ whatever it costs. Amen.",
+  },
+  {
+    need: "Faithfulness in small things",
+    saints: "Saint David of Wales",
+    search: "David Wales",
+    note: "For ordinary days, small duties, and joy in doing little things well.",
+    keywords: ["small", "little", "ordinary", "daily", "joy", "faithful", "chores", "humble"],
+    prayer:
+      "Holy David, pray to God for me. Help me to be joyful, to keep the faith, and to do the little things well. Amen.",
+  },
 ];
 
 const stopWords = new Set([

@@ -65,7 +65,8 @@ export function mysterySetForDay(date: Date): MysterySetId {
   return "glorious";
 }
 
-export type RosaryStep = { title: string; note?: string; text: string; repeat: number };
+/** "announce" is said before the prayer, for a mystery: its name and a line of Scripture. */
+export type RosaryStep = { title: string; note?: string; announce?: string; text: string; repeat: number };
 
 const ORDINALS = ["First", "Second", "Third", "Fourth", "Fifth"];
 
@@ -81,7 +82,13 @@ export function rosarySteps(setId: MysterySetId): RosaryStep[] {
   set.mysteries.forEach((mystery, index) => {
     const name = `${ORDINALS[index]} ${set.label.replace(/ies$/, "y")}: ${mystery.title}`;
     steps.push(
-      { title: name, note: `"${mystery.scripture}" (${mystery.reference}). Then the Our Father.`, text: rosaryPrayers.ourFather, repeat: 1 },
+      {
+        title: name,
+        note: `"${mystery.scripture}" (${mystery.reference}). Then the Our Father.`,
+        announce: `The ${name}. ${mystery.scripture}`,
+        text: rosaryPrayers.ourFather,
+        repeat: 1,
+      },
       { title: "Hail Mary", note: mystery.title, text: rosaryPrayers.hailMary, repeat: 10 },
       { title: "Glory be", note: mystery.title, text: rosaryPrayers.gloryBe, repeat: 1 },
     );
@@ -119,3 +126,21 @@ export const reginaCaeli = {
     "Let us pray. O God, who by the resurrection of thy Son our Lord Jesus Christ didst vouchsafe to give joy to the whole world: grant, we beseech thee, that through his Mother, the Virgin Mary, we may obtain the joys of everlasting life; through the same Christ our Lord. Amen.",
   ],
 };
+
+/** Text as read aloud: the V. and R. marks are for the eye. */
+export function speakable(text: string) {
+  return text.replace(/^[VR]\. /gm, "");
+}
+
+/** The Rosary as recordings, in order. Each entry is one clip; the Hail Mary is the same clip every time. */
+export function rosaryNarration(setId: MysterySetId): string[][] {
+  return rosarySteps(setId).flatMap((step) => {
+    const prayer = Array.from({ length: step.repeat }, () => [speakable(step.text)]);
+    return step.announce ? [[step.announce], ...prayer] : prayer;
+  });
+}
+
+/** The Angelus or Regina Caeli as one recording, with each "Hail Mary…" said in full. */
+export function marianAntiphonNarration(prayer: { lines: string[] }): string[] {
+  return prayer.lines.map((line) => speakable(line).replace("Hail Mary…", rosaryPrayers.hailMary));
+}

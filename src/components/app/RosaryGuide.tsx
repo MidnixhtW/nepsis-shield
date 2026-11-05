@@ -5,9 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { angelus, mysterySetForDay, mysterySets, reginaCaeli, rosaryPrayers, rosarySteps, type MysterySetId } from "@/content/rosary";
+import { angelus, marianAntiphonNarration, mysterySetForDay, mysterySets, reginaCaeli, rosaryNarration, rosarySteps, type MysterySetId } from "@/content/rosary";
 import { addDays, dateOnly, orthodoxPascha } from "@/lib/fastingSeasons";
-import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
+import { canPlayItems, startNarration, stopReadAloud, useReadAloud, type ReadAloudPart } from "@/lib/readAloud";
 import { cn } from "@/lib/utils";
 
 function haptic() {
@@ -41,12 +43,19 @@ function WesternRiteNote() {
   );
 }
 
+/** One recording per clip, in this reader's voice where it has been recorded. */
+function listen(reader: ReturnType<typeof useReader>[0], clips: string[][]): ReadAloudPart[] {
+  return clips.map((lines) => ({ text: spokenText(lines), audio: clipUrl(reader, lines) }));
+}
+
 function RosaryCounter() {
   const [setId, setSetId] = useState<MysterySetId>(() => mysterySetForDay(new Date()));
   const steps = useMemo(() => rosarySteps(setId), [setId]);
   const [stepIndex, setStepIndex] = useState(0);
   const [bead, setBead] = useState(0);
   const reading = useReadAloud();
+  const [reader] = useReader();
+  const narration = useMemo(() => listen(reader, rosaryNarration(setId)), [reader, setId]);
 
   const finished = stepIndex >= steps.length;
   const step = steps[Math.min(stepIndex, steps.length - 1)];
@@ -82,7 +91,7 @@ function RosaryCounter() {
   }
 
   function readAll() {
-    startReadAloud(title, steps.flatMap((item) => Array.from({ length: item.repeat }, () => item.text)));
+    startNarration(title, narration);
   }
 
   return (
@@ -94,7 +103,7 @@ function RosaryCounter() {
             {mysterySets[setId].label}, traditionally prayed on {mysterySets[setId].days}.
           </p>
         </div>
-        {canReadAloud() ? (
+        {canPlayItems(narration) ? (
           reading.title === title ? (
             <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={stopReadAloud}>
               <Square className="mr-1.5 h-4 w-4" /> Stop
@@ -179,7 +188,8 @@ function AngelusCard() {
   const prayer = easter ? reginaCaeli : angelus;
   const name = easter ? "Regina Caeli" : "The Angelus";
   const reading = useReadAloud();
-  const spoken = prayer.lines.map((line) => line.replace(/^[VR]\. /, "").replace("Hail Mary…", rosaryPrayers.hailMary));
+  const [reader] = useReader();
+  const parts = listen(reader, [marianAntiphonNarration(prayer)]);
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -192,13 +202,13 @@ function AngelusCard() {
               : "Traditionally prayed morning, noon and evening, remembering the Incarnation."}
           </p>
         </div>
-        {canReadAloud() ? (
+        {canPlayItems(parts) ? (
           <Button
             type="button"
             variant="outline"
             size="sm"
             className="rounded-full"
-            onClick={() => (reading.title === name ? stopReadAloud() : startReadAloud(name, spoken))}
+            onClick={() => (reading.title === name ? stopReadAloud() : startNarration(name, parts))}
           >
             {reading.title === name ? <Square className="mr-1.5 h-4 w-4" /> : <Volume2 className="mr-1.5 h-4 w-4" />}
             {reading.title === name ? "Stop" : "Read it to me"}

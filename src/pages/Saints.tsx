@@ -12,6 +12,7 @@ import { ocaSaintSearchUrl, patronNeeds } from "@/lib/patronSaints";
 import { showError, showSuccess } from "@/utils/toast";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
+import { WesternSaintsCard } from "@/components/app/WesternSaintsCard";
 
 async function copyPrayer(label: string, prayer: string) {
 
@@ -221,6 +222,8 @@ export default function Saints() {
             If you may harm yourself or someone else, seek immediate help from emergency services, a trusted person, clergy, or a qualified clinician. Prayer and treatment are not enemies.
           </p>
         </Card>
+
+        <WesternSaintsCard />
 
         <Card className="rounded-2xl border-border/50 bg-card/70 p-4 shadow-sm sm:p-5">
           <details>

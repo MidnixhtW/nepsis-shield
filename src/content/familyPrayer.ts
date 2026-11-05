@@ -139,6 +139,28 @@ export const SAINT_STORIES: SaintStory[] = [
     ],
     lesson: "Being holy happens in ordinary days: at home, at work, in the kitchen.",
   },
+  {
+    saint: "St. Martin of Tours",
+    day: "November 12",
+    title: "The soldier and the cloak",
+    story: [
+      "Long ago in Gaul, which is now France, there was a young Roman soldier named Martin. He was learning about Jesus, but he had not yet been baptised.",
+      "One freezing winter day, at the gate of the city of Amiens, Martin saw a poor man shivering with almost no clothes. Everyone else walked past him. Martin had nothing to give except the soldier's cloak he was wearing. So he took his sword, cut the cloak in two, and wrapped half of it around the poor man.",
+      "That night Martin dreamed that he saw Jesus wearing the half cloak, telling the angels that Martin had given it to Him. Soon Martin was baptised. Later he left the army and became a monk, and then a bishop who loved the poor.",
+    ],
+    lesson: "When we help someone in need, we are helping Jesus Himself.",
+  },
+  {
+    saint: "St. Cuthbert of Lindisfarne",
+    day: "March 20",
+    title: "The monk and the otters",
+    story: [
+      "In the north of England, beside the cold grey sea, lived a monk named Cuthbert. At night, while others slept, he liked to go down to the beach to pray.",
+      "One night another monk secretly followed him. He watched Cuthbert walk into the icy sea until the water came up to his neck, and pray there all night long, singing psalms to God.",
+      "At dawn Cuthbert came out and knelt on the sand to pray again. Then two otters came out of the sea. They warmed his feet with their breath and dried them with their fur, and when he blessed them, they slipped back into the water. Cuthbert asked the watching monk to tell no one until after he had died.",
+    ],
+    lesson: "God cares for those who pray to Him, and all His creatures can show His kindness.",
+  },
 ];
 
 export const PARENT_NOTES: string[] = [

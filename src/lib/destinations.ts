@@ -44,6 +44,7 @@ export const DESTINATIONS: Destination[] = [
   { label: "Rosary and Angelus", to: "/pray?tab=rosary", area: "Pray", keywords: "western rite hail mary mysteries beads regina caeli catholic" },
   { label: "For those who serve", to: "/learn?tab=serve", area: "Learn", keywords: "military police fire ems dispatch chaplain first responders duty" },
   { label: "Saints", to: "/saints", area: "Library", keywords: "lives patron warrior name day" },
+  { label: "Saints of the West", to: "/saints#west", area: "Library", keywords: "western rite benedict patrick martin gregory ambrose columba britain ireland celtic english" },
   { label: "Life & Service Guide", to: "/field-manual", area: "Library", keywords: "military police fire ems stress grief travel" },
   { label: "Settings", to: "/settings", area: "App", keywords: "reminders notifications calendar patron saint name day accessibility text size" },
   { label: "Reader voice", to: "/settings#reader", area: "App", keywords: "read aloud listen audio narration abba anna timba maria empa voice" },

@@ -2,6 +2,7 @@
 //   node --experimental-strip-types scripts/narration/list-clips.ts > narration-samples/batch1.json
 import { developerPrayerRule, longExtras, seraphimRule, shortFlows, standardExtras } from "../../src/content/dailyPrayerSteps.ts";
 import { SAINT_STORIES } from "../../src/content/familyPrayer.ts";
+import { angelus, marianAntiphonNarration, reginaCaeli, rosaryNarration } from "../../src/content/rosary.ts";
 import { clipId, spokenText } from "../../src/lib/narrationText.ts";
 
 type Clip = { id: string; label: string; text: string };
@@ -18,6 +19,11 @@ for (const time of ["morning", "evening", "night"] as const) {
 }
 for (const step of seraphimRule) add(`seraphim: ${step.title}`, step.body);
 if (process.argv.includes("--developer")) for (const step of developerPrayerRule) add(`developer: ${step.title}`, step.body);
+for (const set of ["joyful", "sorrowful", "glorious"] as const) {
+  rosaryNarration(set).forEach((lines, index) => add(`rosary ${set} ${index}`, lines));
+}
+add("angelus", marianAntiphonNarration(angelus));
+add("regina caeli", marianAntiphonNarration(reginaCaeli));
 for (const story of SAINT_STORIES) add(`story: ${story.title}`, [`${story.title}.`, ...story.story, story.lesson]);
 
 const list = [...clips.values()];
