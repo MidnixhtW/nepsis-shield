@@ -3,17 +3,18 @@ import { expect, test } from "./fixtures";
 test("names added to the list are prayed in the daily prayer flow", async ({ page }) => {
   await page.goto("/pray?tab=names");
   await page.getByRole("textbox", { name: "Add a name: For the health of" }).fill("Nicholas");
-  await page.getByRole("button", { name: "Add" }).first().click();
+  await page.getByRole("button", { name: "Add", exact: true }).first().click();
   await page.getByRole("textbox", { name: "Add a name: For the repose of" }).fill("Helen");
-  await page.getByRole("button", { name: "Add" }).last().click();
+  await page.getByRole("button", { name: "Add", exact: true }).last().click();
   await expect(page.getByRole("button", { name: "Remove Nicholas" })).toBeVisible();
 
   await page.reload();
   await expect(page.getByRole("button", { name: "Remove Helen" })).toBeVisible();
 
-  await page.getByRole("tab", { name: "Daily" }).click();
-  await page.getByRole("button", { name: "Begin prayer" }).first().click();
+  await page.getByRole("link", { name: "Pray", exact: true }).click();
+  await page.getByRole("link", { name: /Morning prayers/ }).click();
   const prayer = page.getByRole("dialog");
+  await prayer.getByRole("button", { name: "Begin prayer" }).click();
   // Step through until the commemoration step appears (it sits just before the closing prayer).
   for (let i = 0; i < 12; i++) {
     if (await prayer.getByRole("heading", { name: "Remember, O Lord" }).isVisible()) break;

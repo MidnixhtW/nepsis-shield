@@ -1,14 +1,14 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
-import { useLocation } from "react-router";
-import { MoreHorizontal } from "lucide-react";
-import { openAppMenu } from "@/lib/appEvents";
+import { UserRound } from "lucide-react";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon } from "@/components/app/OrthodoxMotifs";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ReadAloudBar } from "@/components/app/ReadAloudBar";
+import { useReadAloud } from "@/lib/readAloud";
 
-export type AppSection = "today" | "pray" | "read" | "learn";
+export type AppSection = "today" | "pray" | "read" | "learn" | "me";
 
 type SectionItem = [
   AppSection,
@@ -20,18 +20,17 @@ const sectionMeta: Record<AppSection, SectionItem[1]> = {
   pray: { label: "Pray", icon: CenserIcon, aria: "Go to Prayer" },
   read: { label: "Read", icon: GospelBookIcon, aria: "Go to Readings" },
   learn: { label: "Learn", icon: ChurchDomeIcon, aria: "Go to learning and tools" },
+  me: { label: "Me", icon: UserRound, aria: "Go to Me: your rule, favorites and recent" },
 };
 
 function ShellNavigation({
   section,
   items,
-  installActive,
   onSectionChange,
   desktop = false,
 }: {
   section: AppSection;
   items: SectionItem[];
-  installActive: boolean;
   onSectionChange: (section: AppSection) => void;
   desktop?: boolean;
 }) {
@@ -73,20 +72,6 @@ function ShellNavigation({
         })}
       </ToggleGroup>
 
-      {/* "More" opens the full menu (settings, saints, library, install, about), not a single page. */}
-      <button
-        type="button"
-        aria-label="More: open the menu"
-        onClick={openAppMenu}
-        className={cn(
-          "flex w-full items-center justify-center whitespace-nowrap rounded-lg px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          desktop ? "h-10 flex-row gap-2 text-sm" : "h-12 flex-col gap-1.5 text-xs",
-          installActive && "bg-primary text-primary-foreground shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
-        )}
-      >
-        <MoreHorizontal className={cn("h-[17px] w-[17px] shrink-0", installActive ? "text-primary-foreground" : "text-muted-foreground")} />
-        <span className="font-bold leading-none">More</span>
-      </button>
     </nav>
   );
 }
@@ -102,10 +87,10 @@ export function AppShell({
   onSectionChange: (section: AppSection) => void;
   children: ReactNode;
 }) {
-  const location = useLocation();
-  const installActive = location.pathname === "/download";
+  // Leave room at the bottom for the read-aloud bar while it shows.
+  const reading = !!useReadAloud().title;
   const items = useMemo(
-    () => (["today", "pray", "read", "learn"] as AppSection[]).map((key) => [key, sectionMeta[key]] as SectionItem),
+    () => (["today", "pray", "read", "learn", "me"] as AppSection[]).map((key) => [key, sectionMeta[key]] as SectionItem),
     [],
   );
 
@@ -129,7 +114,7 @@ export function AppShell({
         <div className="mx-auto flex w-full max-w-6xl items-center gap-6 pb-3.5 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(0.875rem,env(safe-area-inset-top))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8">
           <div className="min-w-0 flex-1">{header}</div>
           <div className="hidden w-[34rem] shrink-0 min-[1120px]:block">
-            <ShellNavigation section={section} items={items} installActive={installActive} onSectionChange={onSectionChange} desktop />
+            <ShellNavigation section={section} items={items} onSectionChange={onSectionChange} desktop />
           </div>
         </div>
       </div>
@@ -137,15 +122,20 @@ export function AppShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="water-page relative z-10 mx-auto w-full max-w-6xl pb-[calc(7.5rem+env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-5 sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pt-7 lg:px-8 lg:pt-9 min-[1120px]:pb-12"
+        className={cn("water-page relative z-10 mx-auto w-full max-w-6xl pb-[calc(7.5rem+env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-5 sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pt-7 lg:px-8 lg:pt-9 min-[1120px]:pb-12", reading && "pb-[calc(11.5rem+env(safe-area-inset-bottom))] min-[1120px]:pb-28")}
       >
         <ByzantineDivider className="mb-8 hidden opacity-45 lg:flex" />
         {children}
       </main>
 
+      <div className="fixed inset-x-0 bottom-5 z-40 mx-auto hidden w-full max-w-md px-4 min-[1120px]:block">
+        <ReadAloudBar />
+      </div>
+
       <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-primary/25 bg-background/88 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-2 backdrop-blur-xl min-[1120px]:hidden">
-        <div className="pointer-events-auto mx-auto w-full max-w-[29rem]">
-          <ShellNavigation section={section} items={items} installActive={installActive} onSectionChange={onSectionChange} />
+        <div className="pointer-events-auto mx-auto grid w-full max-w-[29rem] gap-2">
+          <ReadAloudBar />
+          <ShellNavigation section={section} items={items} onSectionChange={onSectionChange} />
         </div>
       </div>
     </div>

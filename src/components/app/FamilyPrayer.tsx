@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { Baby, BookHeart, Flame, Lightbulb, Users } from "lucide-react";
+import { Baby, BookHeart, Flame, Lightbulb, Square, Users, Volume2 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CHILD_PRAYERS, EVENING_PRAYER, PARENT_NOTES, SAINT_STORIES, ST_TIKHON } from "@/content/familyPrayer";
 import { cn } from "@/lib/utils";
+import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
 
 type Part = "tonight" | "learn" | "stories" | "parents";
 
@@ -99,6 +100,7 @@ function PrayersToLearn() {
 }
 
 function SaintStories() {
+  const reading = useReadAloud();
   return (
     <Card className="rounded-3xl border p-5 sm:p-6">
       <h3 className="text-lg font-semibold tracking-tight">Saint stories for children</h3>
@@ -114,6 +116,19 @@ function SaintStories() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="grid gap-3">
+                {canReadAloud() ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="w-fit rounded-full"
+                    aria-pressed={reading.title === story.title}
+                    onClick={() => (reading.title === story.title ? stopReadAloud() : startReadAloud(story.title, [story.title + ".", ...story.story, story.lesson]))}
+                  >
+                    {reading.title === story.title ? <Square className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />}
+                    {reading.title === story.title ? "Stop" : "Read it to me"}
+                  </Button>
+                ) : null}
                 {story.story.map((paragraph) => (
                   <p key={paragraph.slice(0, 24)} className="scripture-text text-[1.05rem] leading-relaxed">{paragraph}</p>
                 ))}

@@ -8,6 +8,8 @@ import { SERVICES, isServiceId, type ServiceInfo } from "@/content/services";
 import type { ServiceBlock } from "@/content/services/types";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { cn } from "@/lib/utils";
+import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { FavoriteStar } from "@/components/app/FavoriteStar";
 
 const FONT_KEY = "services:font-size";
 
@@ -64,8 +66,9 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
   const [blocks, setBlocks] = useState<ServiceBlock[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [fontSize, setFontSize] = useState(readFontSize);
-  const [speaking, setSpeaking] = useState(false);
-  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+  const reading = useReadAloud();
+  const speaking = reading.title === service.title;
+  const canSpeak = canReadAloud();
 
   useEffect(() => {
     let cancelled = false;
@@ -79,11 +82,6 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
       cancelled = true;
     };
   }, [service]);
-
-  // Stop reading aloud when leaving the service.
-  useEffect(() => () => {
-    if (canSpeak) window.speechSynthesis.cancel();
-  }, [canSpeak]);
 
   const sections = useMemo(
     () => (blocks ?? []).flatMap((block, index) => (block.kind === "heading" ? [{ index, text: block.text }] : [])),
@@ -99,22 +97,14 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
     document.getElementById(`service-part-${index}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // Read the prayers aloud with the device's voice, from the top or from the chosen part. Instructions are skipped.
-  function toggleSpeech(fromIndex = 0) {
+  // Read the prayers aloud with the device's voice. Instructions are skipped. The player bar keeps going between screens.
+  function toggleSpeech() {
     if (!canSpeak || !blocks) return;
-    window.speechSynthesis.cancel();
     if (speaking) {
-      setSpeaking(false);
+      stopReadAloud();
       return;
     }
-    const spoken = blocks.slice(fromIndex).filter((block) => block.kind !== "rubric");
-    spoken.forEach((block, i) => {
-      const utterance = new SpeechSynthesisUtterance(block.text.replace(/\((Thrice|[A-Za-z ]*times)[^)]*\)/gi, "").replace(/\n/g, " "));
-      utterance.rate = 0.88;
-      if (i === spoken.length - 1) utterance.onend = () => setSpeaking(false);
-      window.speechSynthesis.speak(utterance);
-    });
-    setSpeaking(true);
+    startReadAloud(service.title, blocks.filter((block) => block.kind !== "rubric").map((block) => block.text));
   }
 
   return (
@@ -126,7 +116,10 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
       </div>
       <Card className="rounded-3xl border p-5 sm:p-6">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{service.when}</p>
-        <h2 id="service-title" className="mt-1 text-2xl font-semibold tracking-tight">{service.title}</h2>
+        <div className="mt-1 flex items-start justify-between gap-2">
+          <h2 id="service-title" className="text-2xl font-semibold tracking-tight">{service.title}</h2>
+          <FavoriteStar to={`/pray?tab=services&service=${service.id}`} label={service.title} />
+        </div>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{service.summary}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_minmax(0,14rem)] sm:items-end">
           {sections.length > 1 ? (

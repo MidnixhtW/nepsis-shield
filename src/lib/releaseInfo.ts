@@ -14,6 +14,19 @@ export const CURRENT_VERSION = __APP_VERSION__.replace(/\.0$/, "");
 // Newest first. Written for the people using the app, not for developers.
 export const RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: "1.2",
+    date: "November 5, 2026",
+    title: "One tap to pray",
+    changes: [
+      "Today opens with the prayers for this hour: morning, evening or night, with how long they take and a Begin button that opens them full screen.",
+      "Pray and Learn now open on large tiles, each one tap from its practice or topic, with a way back at the top.",
+      "A new Me tab in place of More: a quiet week of dots for the days you prayed (no streak to keep up), your favorites, recently opened places, your rule, names, journal and groups, and Settings.",
+      "Star any practice, service or topic to keep it on Me and on Today.",
+      "Read aloud now has a small player above the tabs, with pause, skip and stop, and keeps reading while you move around the app. Daily readings and the saint stories for children can be read aloud too.",
+      "Quieter screens: the length and reading options for daily prayer fold away, and the saved-copy notice shows only when today's content could not be refreshed.",
+    ],
+  },
+  {
     version: "1.1",
     date: "November 4, 2026",
     title: "Pray with the whole Church",

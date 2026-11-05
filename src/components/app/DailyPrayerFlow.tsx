@@ -1,23 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { useCurrentDay } from "@/hooks/useCurrentDay";
-import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
 import {
   Bell,
   Check,
   ChevronLeft,
   ChevronRight,
-  ExternalLink,
   Eye,
-  Leaf,
   Maximize2,
   Moon,
   MoonStar,
   RotateCcw,
-  Sparkles,
   Sun,
   Sunset,
   Type,
@@ -25,11 +20,11 @@ import {
   VolumeX,
   X,
 } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
@@ -42,6 +37,7 @@ import {
   useDailyRhythm,
 } from "@/lib/dailyHabits";
 import { showSuccess } from "@/utils/toast";
+import { stopReadAloud } from "@/lib/readAloud";
 import { buildFlow, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
@@ -70,125 +66,6 @@ const prayerMeta: Record<PrayerTime, { label: string; icon: ReactNode; hint: str
   },
 };
 
-function fastingLabel(description: string, exception?: string) {
-  return exception ? `${description} · ${exception}` : description;
-}
-
-function BeginTodayCalendar() {
-  const { today, query: q, retry } = useDailyCalendar();
-
-  if (q.isLoading) {
-    return (
-      <div className="rounded-3xl border border-border/60 bg-card p-5 text-sm text-muted-foreground shadow-sm">
-        Loading today’s fasting and saints…
-      </div>
-    );
-  }
-
-  if (!q.data) {
-    return <DailyContentStatus date={today} failed={true} refreshing={q.isFetching} onRetry={retry} />;
-  }
-
-  const saints = q.data.saints.slice(0, 4);
-  const firstSaint = saints[0];
-
-  return (
-    <Card className="overflow-hidden rounded-3xl border-primary/20 bg-card shadow-sm">
-      <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
-      <div className="border-b border-border/60 bg-primary/5 px-5 py-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Before you begin</p>
-        <h3 className="mt-1 text-lg font-semibold tracking-tight">Today in the Church</h3>
-        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-          Let the calendar set the tone: fasting teaches watchfulness, and the saints remind us we never pray alone.
-        </p>
-      </div>
-
-      <div className="grid gap-0 divide-y divide-border/60 md:grid-cols-2 md:divide-x md:divide-y-0">
-        <section className="p-5">
-          <div className="flex items-start gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-amber-500/12 text-amber-700 dark:text-amber-200">
-              <Leaf className="h-5 w-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Fasting today</p>
-              <p className="mt-1 text-sm font-semibold leading-relaxed">
-                {fastingLabel(q.data.fasting.description, q.data.fasting.exception)}
-              </p>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                Follow your parish calendar, health needs, and priest’s blessing.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="p-5">
-          <div className="flex items-start gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
-              <Sparkles className="h-5 w-5" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Saints of the day</p>
-              <div className="mt-1 grid gap-1.5">
-                {saints.length ? (
-                  saints.map((saint) => (
-                    <p key={saint} className="text-sm leading-relaxed">
-                      {saint}
-                    </p>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground">See today’s calendar commemorations.</p>
-                )}
-              </div>
-              {firstSaint ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="mt-3 h-auto min-h-9 rounded-2xl border-border/60 bg-background/60 text-xs"
-                  asChild
-                >
-                  <a href={`https://www.oca.org/saints/lives?search=${encodeURIComponent(firstSaint)}`} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
-                    Read first life <ExternalLink aria-hidden="true" className="ml-2 h-3.5 w-3.5" />
-                  </a>
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </section>
-      </div>
-    </Card>
-  );
-}
-
-function PrayerFlowSteps({ current }: { current: number }) {
-  const items = ["Prepare", "Pray", "Continue"];
-
-  return (
-    <div className="grid grid-cols-3 gap-2">
-      {items.map((item, index) => {
-        const active = index === current;
-        const complete = index < current;
-        return (
-          <div
-            key={item}
-            aria-current={active ? "step" : undefined}
-            className={
-              "rounded-2xl border px-3 py-2 text-center text-xs font-semibold transition-colors " +
-              (active
-                ? "border-primary/40 bg-primary/10 text-primary"
-                : complete
-                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-200"
-                  : "border-border/60 bg-muted/20 text-muted-foreground")
-            }
-          >
-            {item}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 export function DailyPrayerFlow() {
   const [time, setTime] = useState<PrayerTime>(() => recommendedTime());
   const [mode, setMode] = useState<PrayerMode>("short");
@@ -198,6 +75,7 @@ export function DailyPrayerFlow() {
   const [hydrated, setHydrated] = useState(false);
   const [immersive, setImmersive] = useState(false);
   const today = useCurrentDay();
+  const [searchParams, setSearchParams] = useSearchParams();
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusNextStep = useRef(false);
   const rhythm = useDailyRhythm();
@@ -209,12 +87,23 @@ export function DailyPrayerFlow() {
     if (saved?.readerPrefs) setReaderPrefs({ ...DEFAULT_READER_PREFS, ...saved.readerPrefs });
 
     const resume = getPrayerResume();
-    if (resume) {
+    // "Begin" on Today and the Pray tiles link here with ?begin=morning|evening|night: open that prayer full screen.
+    const begin = searchParams.get("begin");
+    if (begin === "morning" || begin === "evening" || begin === "night") {
+      setTime(begin);
+      setStepIndex(0);
+      setImmersive(true);
+      const next = new URLSearchParams(searchParams);
+      next.delete("begin");
+      setSearchParams(next, { replace: true });
+    } else if (resume) {
       setTime(resume.time);
       setMode(resume.mode);
       setStepIndex(resume.stepIndex);
     }
     setHydrated(true);
+    // Runs once on opening; the begin link is read and then removed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -239,7 +128,6 @@ export function DailyPrayerFlow() {
   const done = completed[progressKey] ?? !!rhythm.today.prayers[storedPrayerKey];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
-  const flowStage = done ? 2 : stepIndex === 0 ? 0 : 1;
 
   useEffect(() => {
     if (!focusNextStep.current) return;
@@ -252,8 +140,13 @@ export function DailyPrayerFlow() {
   const [readingAloud, setReadingAloud] = useState(false);
   useEffect(() => {
     if (!canSpeak) return;
+    if (!readingAloud || !immersive) {
+      if (readingAloud) window.speechSynthesis.cancel();
+      return;
+    }
+    // The prayer reads its own steps, so stop any other reading first.
+    stopReadAloud();
     window.speechSynthesis.cancel();
-    if (!readingAloud || !immersive) return;
     // "(3x)" markers are for the eye; read the words, not the count.
     const text = [current.title, ...current.body].join(". ").replace(/\(\s*\d+x\s*\)/gi, "");
     const utterance = new SpeechSynthesisUtterance(text);
@@ -305,28 +198,6 @@ export function DailyPrayerFlow() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.7fr)] lg:items-start">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-xl font-semibold tracking-tight">Daily Prayer Flow</h2>
-              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : prayerMeta[time].label}
-              </Badge>
-            </div>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Set the rule, receive today’s Church calendar, then pray one step at a time.
-            </p>
-          </div>
-          <div className="grid gap-2">
-            <PrayerFlowSteps current={flowStage} />
-            <p className="text-xs leading-relaxed text-muted-foreground lg:text-right">
-              Keep the movement simple: prepare the heart, pray the rule, then carry it into the day.
-            </p>
-          </div>
-        </div>
-
-        <Separator className="my-4" />
-
         <div className="grid gap-3 md:grid-cols-3">
           {(Object.keys(prayerMeta) as PrayerTime[]).map((key) => (
             <button
@@ -354,7 +225,18 @@ export function DailyPrayerFlow() {
           ))}
         </div>
 
-        <div className="mt-4 grid gap-4 rounded-2xl border border-border/60 bg-background/45 p-4">
+        <Accordion type="single" collapsible className="mt-3">
+          <AccordionItem value="options" className="border-0">
+            <AccordionTrigger className="rounded-2xl px-1 py-2 text-left text-sm hover:no-underline">
+              <span>
+                Length and reading options
+                <span className="ml-2 font-normal text-muted-foreground">
+                  {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim" : mode === "long" ? "Longer" : mode === "standard" ? "Standard" : "Short"}
+                </span>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+        <div className="grid gap-4 rounded-2xl border border-border/60 bg-background/45 p-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
@@ -425,9 +307,10 @@ export function DailyPrayerFlow() {
             </label>
           </div>
         </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </Card>
-
-      {stepIndex === 0 && !done ? <BeginTodayCalendar /> : null}
 
       <Card
         className={
@@ -479,11 +362,6 @@ export function DailyPrayerFlow() {
           </div>
         </div>
 
-        {!readerPrefs.focus ? (
-          <p className="mt-3 text-xs text-muted-foreground">
-            This app supports your prayer life; keep your parish, priest, and printed prayer book at the center.
-          </p>
-        ) : null}
 
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex gap-2">

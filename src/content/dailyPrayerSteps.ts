@@ -376,8 +376,8 @@ export function buildFlow(time: PrayerTime, mode: PrayerMode) {
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];
 }
 
-export function recommendedTime(): PrayerTime {
-  const hour = new Date().getHours();
+export function recommendedTime(now = new Date()): PrayerTime {
+  const hour = now.getHours();
   if (hour < 12) return "morning";
   if (hour < 20) return "evening";
   return "night";

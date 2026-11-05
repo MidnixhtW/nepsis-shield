@@ -5,7 +5,7 @@ test("a repose date shows the next memorial and a card on Today", async ({ page 
   await page.goto("/pray?tab=names");
   await page.getByRole("textbox", { name: "Add a name: For the repose of" }).fill("Helen");
   await page.getByLabel("Date of repose (optional)").fill("2026-11-02");
-  await page.getByRole("button", { name: "Add" }).last().click();
+  await page.getByRole("button", { name: "Add", exact: true }).last().click();
   await expect(page.getByText(/Reposed Nov 2, 2026 · next: 3rd day, Wed Nov 4/)).toBeVisible();
 
   await page.goto("/today");
@@ -46,7 +46,7 @@ test("a busy day shows two occasions and folds the rest", async ({ page }) => {
   await page.goto("/pray?tab=names");
   await page.getByRole("textbox", { name: "Add a name: For the repose of" }).fill("Helen");
   await page.getByLabel("Date of repose (optional)").fill("2026-12-23");
-  await page.getByRole("button", { name: "Add" }).last().click();
+  await page.getByRole("button", { name: "Add", exact: true }).last().click();
   await page.goto("/settings");
   await page.getByLabel("Saint", { exact: true }).fill("St. Anastasia");
   await page.getByLabel("Feast month").selectOption("12");

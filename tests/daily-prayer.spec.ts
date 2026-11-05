@@ -14,7 +14,7 @@ test("complete the guided daily prayer flow", async ({ page }) => {
   });
   await page.goto("/pray?tab=daily");
 
-  await expect(page.getByRole("heading", { name: "Daily Prayer Flow" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Daily prayer", level: 2 })).toBeVisible();
 
   await page.getByRole("button", { name: /Morning Offer the day/ }).click();
   await expect(page.getByText("Step 1 of 4")).toBeVisible();

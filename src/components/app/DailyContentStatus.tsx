@@ -10,8 +10,9 @@ export function DailyContentStatus({ date, data, failed, refreshing, onRetry }: 
   refreshing: boolean;
   onRetry: () => Promise<unknown>;
 }) {
-  if (!failed && !data?.cache) return null;
-  const unavailable = failed || data?.cache?.stale;
+  // Saved copies are normal and quiet; speak up only when the day's content is missing or could not be refreshed.
+  const unavailable = failed || !!data?.cache?.stale;
+  if (!unavailable) return null;
   return (
     <div className="my-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
       <p role="status" className="text-sm leading-relaxed text-muted-foreground">

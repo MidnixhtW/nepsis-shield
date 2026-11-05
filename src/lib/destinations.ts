@@ -3,7 +3,12 @@ export type Destination = { label: string; to: string; area: string; keywords?: 
 
 export const DESTINATIONS: Destination[] = [
   { label: "Today", to: "/today", area: "Today", keywords: "home start feast fast saints readings saying" },
+  { label: "Me", to: "/me", area: "Me", keywords: "my favorites recent rule names journal week profile" },
+  { label: "Pray", to: "/pray", area: "Pray", keywords: "all prayer practices" },
   { label: "Daily prayer", to: "/pray?tab=daily", area: "Pray", keywords: "morning evening night prayers office" },
+  { label: "Morning prayers", to: "/pray?tab=daily&begin=morning", area: "Pray", keywords: "wake start day" },
+  { label: "Evening prayers", to: "/pray?tab=daily&begin=evening", area: "Pray", keywords: "vespers sunset" },
+  { label: "Night prayers", to: "/pray?tab=daily&begin=night", area: "Pray", keywords: "bedtime sleep compline" },
   { label: "My rule of prayer", to: "/pray?tab=rule", area: "Pray", keywords: "rule seraphim discipline" },
   { label: "Family prayer", to: "/pray?tab=family", area: "Pray", keywords: "children kids parents household bedtime stories" },
   { label: "Prayer texts", to: "/pray?tab=prayers", area: "Pray", keywords: "prayer book saints michael meals" },
@@ -21,6 +26,7 @@ export const DESTINATIONS: Destination[] = [
   { label: "Confession", to: "/pray?tab=prep", area: "Pray", keywords: "repentance examination sins" },
   { label: "Holy Communion", to: "/pray?tab=communion", area: "Pray", keywords: "eucharist preparation thanksgiving" },
   { label: "Journal", to: "/pray?tab=journal", area: "Pray", keywords: "reflection notes examen" },
+  { label: "Learn", to: "/learn", area: "Learn", keywords: "all topics faith worship" },
   { label: "Daily readings", to: "/read?read=daily", area: "Read", keywords: "scripture epistle gospel lectionary" },
   { label: "Bible", to: "/read?read=bible", area: "Read", keywords: "scripture book chapter verse bookmarks" },
   { label: "Reading plans", to: "/read?read=plans", area: "Read", keywords: "psalter kathisma gospels plan" },

@@ -21,6 +21,7 @@ test("the Help panel offers Psalm 90", async ({ page }) => {
 
 test("St. Seraphim's rule is a prayer length", async ({ page }) => {
   await page.goto("/pray?tab=daily");
+  await page.getByRole("button", { name: /Length and reading options/ }).click();
   await page.getByRole("radio", { name: "St. Seraphim" }).click();
   await expect(page.getByRole("heading", { name: "Begin" })).toBeVisible();
   await page.getByRole("button", { name: "Begin prayer" }).first().click();

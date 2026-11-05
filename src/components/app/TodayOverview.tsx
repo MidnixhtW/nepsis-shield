@@ -18,6 +18,7 @@ import { FeastGreetingCard } from "@/components/app/FeastGreetingCard";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
+import { PrayNowCard } from "@/components/app/PrayNowCard";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -42,9 +43,11 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
   const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
 
-  // Two columns on desktop: the day's occasions (at most two open) and the rule on the left, help and the calendar on the right.
-  // On phones the columns stack in the same order as before.
+  // "Pray now" leads. Below it, two columns on desktop: the day's occasions (at most two open) and the rule on the left,
+  // help and the calendar on the right. On phones the columns stack in the same order.
   return (
+    <div className="grid gap-5 sm:gap-6">
+    <PrayNowCard />
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
         <TodayMoments
@@ -129,6 +132,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         </Card>
       </div>
       </div>
+    </div>
     </div>
   );
 }

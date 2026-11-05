@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";
@@ -11,15 +11,16 @@ import { AppFooter } from "@/components/app/AppFooter";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import NotFound from "@/pages/NotFound";
 import { saveGlobalResume } from "@/lib/dailyHabits";
+import { recordVisit } from "@/lib/recentPlaces";
 
 const LearnHub = lazy(() => import("@/components/app/LearnHub").then((module) => ({ default: module.LearnHub })));
 const PrayerHub = lazy(() => import("@/components/app/PrayerHub").then((module) => ({ default: module.PrayerHub })));
 const ReadHub = lazy(() => import("@/components/app/ReadHub").then((module) => ({ default: module.ReadHub })));
 const TodayOverview = lazy(() => import("@/components/app/TodayOverview").then((module) => ({ default: module.TodayOverview })));
-const OrthodoxHero = lazy(() => import("@/components/app/YoungAdultHero").then((module) => ({ default: module.OrthodoxHero })));
+const MeHub = lazy(() => import("@/components/app/MeHub").then((module) => ({ default: module.MeHub })));
 const MonasticAudioPlayer = lazy(() => import("@/components/app/MonasticAudioPlayer").then((module) => ({ default: module.MonasticAudioPlayer })));
 
-const SECTIONS: AppSection[] = ["today", "pray", "read", "learn"];
+const SECTIONS: AppSection[] = ["today", "pray", "read", "learn", "me"];
 
 type SectionTarget = {
   section: AppSection;
@@ -76,6 +77,12 @@ function resumeLabel(to: SectionTarget) {
 
 const Index = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Remember the place for "Recently opened" on Me.
+  useEffect(() => {
+    recordVisit(location.pathname, location.search);
+  }, [location.pathname, location.search]);
 
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -144,49 +151,16 @@ const Index = () => {
     setSection(to.section);
   }
 
+  // A tab in the bar always opens that tab's own starting screen, the way most apps behave.
   function onSectionChange(nextSection: AppSection) {
-    const nextParams = new URLSearchParams(searchParams);
-    const tab = nextParams.get("tab");
-    const read = nextParams.get("read");
-
-    if (nextSection === "pray") {
-      if (!isPrayerTab(tab)) nextParams.delete("tab");
-    } else if (nextSection === "learn") {
-      if (!isLearnTab(tab)) nextParams.delete("tab");
-    } else {
-      nextParams.delete("tab");
-    }
-
-    if (nextSection === "read") {
-      if (!isReadTab(read)) nextParams.delete("read");
-    } else {
-      nextParams.delete("read");
-    }
-
-    const qs = nextParams.toString();
-    navigate(nextSection === "today" ? "/today" : qs ? `/${nextSection}?${qs}` : `/${nextSection}`);
+    navigate(`/${nextSection}`);
     setSection(nextSection);
   }
 
-  const prayerTabRaw = searchParams.get("tab");
-  const prayerTab: PrayerTab = isPrayerTab(prayerTabRaw) ? prayerTabRaw : "daily";
-
-  function setPrayerTab(t: PrayerTab) {
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", t);
-    next.delete("service");
-    next.delete("join");
-    next.delete("group");
-    setSearchParams(next, { replace: true });
-  }
-
-  const learnTab: LearnTab = isLearnTab(prayerTabRaw) ? prayerTabRaw : "welcome";
-
-  function setLearnTab(t: LearnTab) {
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", t);
-    setSearchParams(next, { replace: true });
-  }
+  // With no ?tab= the Pray and Learn tabs open on their tiles.
+  const tabRaw = searchParams.get("tab");
+  const prayerTab: PrayerTab | null = isPrayerTab(tabRaw) ? tabRaw : null;
+  const learnTab: LearnTab | null = isLearnTab(tabRaw) ? tabRaw : null;
 
   const readTabRaw = searchParams.get("read");
   const readTab: ReadTab = isReadTab(readTabRaw) ? readTabRaw : "daily";
@@ -212,20 +186,20 @@ const Index = () => {
         <div className="grid gap-8 animate-in fade-in duration-500 sm:gap-10 lg:gap-12">
           {section === "today" ? (
             <div className="mx-auto grid w-full max-w-4xl gap-5 sm:gap-6 lg:max-w-6xl">
-              <OrthodoxHero />
               <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
             </div>
           ) : null}
 
           {section === "pray" ? (
-            <PrayerHub tab={prayerTab} onTabChange={setPrayerTab} onHome={() => navigateTo({ section: "today" })} />
+            <PrayerHub key={prayerTab ?? "home"} tab={prayerTab} />
           ) : null}
           {section === "read" ? (
             <ReadHub tab={readTab} onTabChange={setReadTab} onHome={() => navigateTo({ section: "today" })} />
           ) : null}
           {section === "learn" ? (
-            <LearnHub tab={learnTab} onTabChange={setLearnTab} onHome={() => navigateTo({ section: "today" })} />
+            <LearnHub key={learnTab ?? "home"} tab={learnTab} />
           ) : null}
+          {section === "me" ? <MeHub /> : null}
 
           <AppFooter />
         </div>

@@ -8,7 +8,7 @@ export type PrayerModeKey = "short" | "standard" | "long" | "seraphim" | "person
 export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry";
 
 export type ResumeTarget = {
-  section?: "today" | "pray" | "read" | "learn";
+  section?: "today" | "pray" | "read" | "learn" | "me";
   tab?: string;
   read?: string;
   path?: string;
@@ -71,6 +71,8 @@ export type DailyRhythm = {
   customRuleSteps: CustomRuleStep[];
   streak: number;
   weekActiveDays: number;
+  /** The last seven days, oldest first, for a quiet row of dots (no streak to protect). */
+  week: Array<{ key: string; weekday: string; active: boolean; isToday: boolean }>;
   completedToday: number;
 };
 
@@ -161,11 +163,17 @@ function buildRhythm(): DailyRhythm {
     streak += 1;
   }
 
-  let weekActiveDays = 0;
-  for (let offset = 0; offset < 7; offset += 1) {
-    const key = dayKey(addDays(new Date(), -offset));
-    if (activeRecord(store.records[key])) weekActiveDays += 1;
-  }
+  const week = Array.from({ length: 7 }, (_, i) => {
+    const date = addDays(new Date(), i - 6);
+    const key = dayKey(date);
+    return {
+      key,
+      weekday: date.toLocaleDateString("en-US", { weekday: "short" }),
+      active: activeRecord(store.records[key]),
+      isToday: i === 6,
+    };
+  });
+  const weekActiveDays = week.filter((day) => day.active).length;
 
   return {
     todayKey: today,
@@ -177,6 +185,7 @@ function buildRhythm(): DailyRhythm {
     customRuleSteps: store.customRuleSteps,
     streak,
     weekActiveDays,
+    week,
     completedToday: Object.values(todayRecord.habits).filter(Boolean).length,
   };
 }

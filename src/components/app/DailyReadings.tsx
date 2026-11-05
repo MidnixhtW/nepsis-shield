@@ -1,6 +1,6 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
-import { BookOpen, ExternalLink } from "lucide-react";
+import { BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -16,6 +16,7 @@ import { readingText } from "@/lib/orthocal";
 import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
 import { useNavigate } from "react-router";
+import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
 
 function ReadingsSkeleton() {
   return (
@@ -99,6 +100,23 @@ function ReadingCard({
 export function DailyReadings() {
   const navigate = useNavigate();
   const { today, query: q, retry } = useDailyCalendar();
+  const reading = useReadAloud();
+  const listenTitle = "Today's Epistle and Gospel";
+  const listening = reading.title === listenTitle;
+
+  function listen() {
+    if (listening) {
+      stopReadAloud();
+      return;
+    }
+    if (!q.data) return;
+    const texts = [q.data.readings.epistle, q.data.readings.gospel].flatMap((item) => {
+      const text = readingText(item, Number.POSITIVE_INFINITY);
+      const name = item?.display ?? item?.short_display;
+      return text ? [name ? `${name}.` : "", text] : [];
+    });
+    startReadAloud(listenTitle, texts);
+  }
 
   function openRef(ref?: string) {
     if (!ref) return;
@@ -117,7 +135,14 @@ export function DailyReadings() {
               Read with attention. Keep a single line with you through the day.
             </p>
           </div>
-          <BookOpen className="h-5 w-5 text-muted-foreground" />
+          {canReadAloud() && q.data ? (
+            <Button type="button" variant="outline" size="sm" className="shrink-0 rounded-full" aria-pressed={listening} onClick={listen}>
+              {listening ? <Square className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />}
+              {listening ? "Stop" : "Listen"}
+            </Button>
+          ) : (
+            <BookOpen className="h-5 w-5 text-muted-foreground" />
+          )}
         </div>
 
         <Separator className="my-4" />
