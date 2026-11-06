@@ -45,11 +45,11 @@ function weeklyPsalterPortion(date: Date) {
     7: [19, 20],
   };
   const ks = schedule[dow] ?? [1];
-  // Equivalent whole-Psalm boundaries in Hebrew/KJV numbering, not LXX numbering.
-  const boundaries = [1, 9, 18, 25, 33, 38, 47, 56, 65, 71, 78, 86, 92, 102, 106, 110, 119, 120, 135, 144, 151];
+  // The Psalter's traditional kathisma divisions, in the Septuagint's own numbering; read in the LXX (Brenton).
+  const boundaries = [1, 9, 17, 24, 32, 37, 46, 55, 64, 70, 77, 85, 91, 101, 105, 109, 118, 119, 134, 143, 151];
   const first = boundaries[ks[0] - 1];
   const last = boundaries[ks[ks.length - 1]] - 1;
-  return { label: `Kathismata ${ks.join(", ")} · Psalms ${first}–${last} (KJV numbering)`, ref: `Psalms ${first}-${last}` };
+  return { label: `Kathismata ${ks.join(", ")} · Psalms ${first}–${last} (Septuagint numbering)`, ref: `Psalms ${first}-${last}` };
 }
 
 const GOSPEL_CHAPTERS: Array<{ ref: string }> = [
@@ -122,7 +122,7 @@ export function ReadingPlans() {
   }
 
   function openRef(ref: string, planId: string) {
-    navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}${planId === "psalter" ? "&base=kjv" : ""}`);
+    navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}${planId === "psalter" ? "&base=lxx" : ""}`);
   }
 
   return (

@@ -19,8 +19,10 @@ import {
 import { BIBLE_BOOKS, getBookByName } from "@/lib/bible/books";
 import {
   apiNameForBook,
+  effectiveBase,
   translationForBook,
   type BaseTranslation,
+  type TextTranslation,
 } from "@/lib/bible/osb";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,9 +52,16 @@ import { cn } from "@/lib/utils";
 import { BibleBookmarksPanel } from "@/components/app/BibleBookmarksPanel";
 import { bibleApiUrl, bookmarksKey, lastReadKey, saveEnabledKey, LAST_READ_TTL_MS, BOOKMARKS_TTL_MS, splitBookChapter, isInteractiveTarget, prefsKey, normalizeRefForBolls, bollsSlugForBase, bollsSlugForBook, sortBookmarks, type BibleApiVerse, type BibleApiResponse, type BookmarkItem, type BookmarkSort, type FallbackSource, type ReadPrefs } from "@/lib/bible/reader";
 
+const ORTHODOX_DEFAULT_KEY = "bible:orthodox-default:v1";
+
+/** Bolls has the NKJV and Brenton's LXX, which bible-api lacks; for those two it is tried first. */
+function bollsFirst(base: TextTranslation) {
+  return base === "nkjv" || base === "lxx";
+}
+
 export function OrthodoxBible() {
   // OSB-aligned mode (book list), public text sources
-  const [base, setBase] = useState<BaseTranslation>("nkjv");
+  const [base, setBase] = useState<BaseTranslation>("orthodox");
 
   // Browse mode
   const [bookName, setBookName] = useState("John");
@@ -101,7 +110,10 @@ export function OrthodoxBible() {
       ref?: string;
     }>(lastReadKey());
 
-    if (last?.base) setBase(last.base);
+    // The LXX + NKJV default arrived later; readers who were simply on the old NKJV default move to it once.
+    const movedToOrthodox = getStoredItem<boolean>(ORTHODOX_DEFAULT_KEY);
+    if (last?.base) setBase(!movedToOrthodox && last.base === "nkjv" ? "orthodox" : last.base);
+    if (!movedToOrthodox) setStoredItem(ORTHODOX_DEFAULT_KEY, true);
     if (last?.bookName) setBookName(last.bookName);
     if (typeof last?.chapter === "number") setChapter(Math.max(1, last.chapter));
     if (last?.ref) {
@@ -117,7 +129,7 @@ export function OrthodoxBible() {
       setTab("reference");
       setRefInput(deepRef);
       setRefSubmitted(deepRef);
-      if (deepBase === "kjv" || deepBase === "web" || deepBase === "nkjv" || deepBase === "lxx") setBase(deepBase);
+      if (deepBase === "orthodox" || deepBase === "kjv" || deepBase === "web" || deepBase === "nkjv" || deepBase === "lxx") setBase(deepBase);
       url.searchParams.delete("ref");
       url.searchParams.delete("base");
       window.history.replaceState(window.history.state, "", url.toString());
@@ -181,44 +193,56 @@ export function OrthodoxBible() {
     queryKey: ["bible", "browse", apiBookName, chapter, translation, base],
 
     queryFn: async () => {
-      try {
-        const data = await fetchJsonCached<BibleApiResponse>(
-          browseUrl,
-          undefined,
-          {
-            key: `cache:bible-api:${browseUrl}`,
-            ttlMs: 1000 * 60 * 60 * 8, // 8h
-          },
-        );
-        setBrowseSource("bible-api");
-        return data;
-      } catch (e) {
-        // Fallback to Bolls for chapters (best-effort).
-        const slug = bollsSlugForBook(bookName, base);
+      const textBase = effectiveBase(book, base);
+      const fromBolls = async () => {
+        const slug = bollsSlugForBook(bookName, textBase);
         const id = await resolveBollsBookId(slug, [apiBookName, bookName]);
-        if (!id) throw e;
-
+        if (!id) throw new Error("Book not available in this translation");
         const verses = await fetchBollsChapter(slug, id, chapter);
         setBrowseSource("bolls");
-
-        const fallback: BibleApiResponse = {
+        return {
           reference: `${bookName} ${chapter}`,
           translation_id: slug,
           translation_name: slug,
-          verses: verses.map((v) => ({
-            book_name: bookName,
-            chapter,
-            verse: v.verse,
-            text: v.text,
-          })),
-        };
-        return fallback;
+          verses: verses.map((v) => ({ book_name: bookName, chapter, verse: v.verse, text: v.text })),
+        } satisfies BibleApiResponse;
+      };
+      const fromBibleApi = async () => {
+        const data = await fetchJsonCached<BibleApiResponse>(browseUrl, undefined, {
+          key: `cache:bible-api:${browseUrl}`,
+          ttlMs: 1000 * 60 * 60 * 8, // 8h
+        });
+        setBrowseSource("bible-api");
+        return data;
+      };
+      if (bollsFirst(textBase) && !book?.forceTranslation) {
+        try {
+          return await fromBolls();
+        } catch {
+          return fromBibleApi();
+        }
+      }
+      try {
+        return await fromBibleApi();
+      } catch (e) {
+        // Fallback to Bolls for chapters (best-effort).
+        try {
+          return await fromBolls();
+        } catch {
+          throw e;
+        }
       }
     },
     enabled: Boolean(apiBookName),
   });
 
-  const refUrl = useMemo(() => bibleApiUrl(refSubmitted, base), [refSubmitted, base]);
+  const refBook = useMemo(() => {
+    const parsed = normalizeRefForBolls(refSubmitted);
+    if (!parsed) return /^psalms?\b/i.test(refSubmitted.trim()) ? getBookByName("Psalms") : undefined;
+    return getBookByName(parsed.candidates[parsed.candidates.length - 1]) ?? getBookByName(parsed.candidates[0]);
+  }, [refSubmitted]);
+  const refBase = effectiveBase(refBook, base);
+  const refUrl = useMemo(() => bibleApiUrl(refSubmitted, translationForBook(refBook, base)), [refSubmitted, refBook, base]);
   const refQuery = useQuery({
     queryKey: ["bible", "ref", refSubmitted, base],
     queryFn: async () => {
@@ -227,7 +251,7 @@ export function OrthodoxBible() {
         const first = Number(psalmRange[1]);
         const last = Number(psalmRange[2]);
         if (first < 1 || last > 150 || last < first) throw new Error("Invalid Psalm range");
-        const slug = bollsSlugForBase(base);
+        const slug = bollsSlugForBase(refBase);
         const id = await resolveBollsBookId(slug, ["Psalms", "Psalm"]);
         if (!id) throw new Error("Psalms unavailable in this translation");
         const verses: BibleApiVerse[] = [];
@@ -243,7 +267,10 @@ export function OrthodoxBible() {
         setRefSource("bolls");
         return { reference: refSubmitted, translation_id: slug, verses } satisfies BibleApiResponse;
       }
+      // bible-api keeps verse ranges but has no NKJV; Bolls has the NKJV and the LXX but serves whole chapters.
+      const parsed = normalizeRefForBolls(refSubmitted);
       try {
+        if (refBase === "nkjv" || (refBase === "lxx" && !refSubmitted.includes(":"))) throw new Error("Read from Bolls");
         const data = await fetchJsonCached<BibleApiResponse>(
           refUrl,
           undefined,
@@ -256,10 +283,9 @@ export function OrthodoxBible() {
         return data;
       } catch (e) {
         // Fallback to Bolls for chapter-based reads.
-        const parsed = normalizeRefForBolls(refSubmitted);
         if (!parsed) throw e;
 
-        const slug = bollsSlugForBase(base);
+        const slug = bollsSlugForBase(refBase);
         const id = await resolveBollsBookId(slug, parsed.candidates);
         if (!id) throw e;
 
@@ -385,6 +411,12 @@ export function OrthodoxBible() {
                 }}
                 className="flex flex-wrap gap-2"
               >
+                <ToggleGroupItem
+                  value="orthodox"
+                  className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
+                >
+                  LXX + NKJV
+                </ToggleGroupItem>
                 <ToggleGroupItem
                   value="nkjv"
                   className="h-9 rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
@@ -795,7 +827,7 @@ export function OrthodoxBible() {
                     />
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Reference lookup uses the base translation (KJV/WEB). Some Orthodox books may not be supported by the public dataset.
+                    The default, LXX + NKJV, reads the Old Testament in the Septuagint (Brenton) and the New Testament in the NKJV, the pattern of the Orthodox Study Bible. Some Orthodox books may not be in every public text.
                   </p>
                 </div>
                 <Button className="h-11 rounded-2xl" onClick={() => setRefSubmitted(refInput)}>

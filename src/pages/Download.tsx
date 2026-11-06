@@ -19,6 +19,8 @@ import { Separator } from "@/components/ui/separator";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import {
+  APK_CHANNEL,
+  APK_CHANNEL_LABEL,
   APK_DOWNLOAD_HOST,
 
   APK_DOWNLOAD_IS_DIRECT,
@@ -90,7 +92,7 @@ function ApkDownloadCard() {
           <Smartphone className="mr-1 h-3.5 w-3.5" /> Android APK
         </Badge>
         <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          Version {APK_VERSION}
+          {APK_CHANNEL_LABEL} · Version {APK_VERSION}
         </Badge>
         <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
           {APK_DOWNLOAD_IS_DIRECT ? "Direct APK available" : "Awaiting hosted APK"}
@@ -99,7 +101,9 @@ function ApkDownloadCard() {
 
       <h2 className="mt-4 text-2xl font-semibold tracking-tight">APK direct download</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        Download the Android APK directly for device testing and sideload installs.
+        {APK_CHANNEL === "release"
+          ? "Download the signed Android app and install it directly."
+          : "Download the Android testing build for device testing and sideload installs. Android may warn about it until the signed release is published."}
       </p>
 
       <Separator className="my-5" />

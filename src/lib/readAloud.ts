@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { playableUrl } from "@/lib/offlineAudio";
 
 // One shared "read aloud" for the whole app, so listening keeps going while you move between screens
 // and the player bar above the tabs can pause, skip or stop it. A part plays its recording when it has one,
@@ -19,6 +20,8 @@ const listeners = new Set<() => void>();
 // Each start gets a new id, so a cancelled part's end event cannot move the new reading along.
 let runId = 0;
 let player: HTMLAudioElement | null = null;
+// The recording the player holds, by its original URL (a saved recording plays from a local blob URL).
+let playerSource: string | null = null;
 
 export function canReadAloud() {
   return typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
@@ -97,21 +100,28 @@ function playFrom(index: number, resumeAudio = false) {
   setState({ ...state, index, playing: true });
 
   if (part.audio) {
-    player ??= new Audio();
-    if (!resumeAudio || player.src !== new URL(part.audio, window.location.href).href) {
-      player.src = part.audio;
-      player.currentTime = 0;
-    }
-    player.onended = () => {
-      if (id === runId && state.playing) playFrom(index + 1);
+    const original = part.audio;
+    const audio = (player ??= new Audio());
+    const start = (src?: string) => {
+      if (id !== runId) return;
+      if (src) {
+        audio.src = src;
+        audio.currentTime = 0;
+        playerSource = original;
+      }
+      audio.onended = () => {
+        if (id === runId && state.playing) playFrom(index + 1);
+      };
+      // If the recording cannot be played (offline and not saved, say), the device voice reads it instead.
+      audio.onerror = () => {
+        if (id === runId && state.playing) speakText(part.text, id, index);
+      };
+      audio.play().catch(() => {
+        if (id === runId && state.playing) speakText(part.text, id, index);
+      });
     };
-    // If the recording cannot be played (offline, say), the device voice reads it instead.
-    player.onerror = () => {
-      if (id === runId && state.playing) speakText(part.text, id, index);
-    };
-    player.play().catch(() => {
-      if (id === runId && state.playing) speakText(part.text, id, index);
-    });
+    if (resumeAudio && playerSource === original) start();
+    else void playableUrl(original).then(start);
     return;
   }
   speakText(part.text, id, index);

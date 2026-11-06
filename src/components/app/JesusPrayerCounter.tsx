@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { Minus, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
+import { Minus, Moon, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
+import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,9 @@ function storageKeyForDay(dayKey: string) {
 function goalKey() {
   return `jesus_prayer_goal`;
 }
+
+const PULSE_KEY = "jesus_prayer_pulse";
+const PULSE_OPTIONS = [10, 33, 50, 100];
 
 function saveEnabledKey() {
   return "privacy:counter_save";
@@ -63,6 +68,13 @@ export function JesusPrayerCounter() {
   const [saveEnabled, setSaveEnabled] = useState(true);
 
   const [streakDays, setStreakDays] = useState(0);
+  const [dark, setDark] = useState(false);
+  const [pulseEvery, setPulseEvery] = useState(() => {
+    const saved = Number(getStoredItem<string>(PULSE_KEY));
+    return PULSE_OPTIONS.includes(saved) ? saved : 33;
+  });
+  const addKnot = useCallback(() => setCount((c) => c + 1), []);
+  const closeDark = useCallback(() => setDark(false), []);
 
   useEffect(() => {
     cleanupStoredByPrefix("jesus_prayer_count:", COUNT_TTL_MS);
@@ -287,6 +299,46 @@ export function JesusPrayerCounter() {
 
           </div>
 
+          <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
+            <div className="flex items-start gap-3">
+              <Moon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">Watchfulness mode</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  The screen goes fully black to keep your night vision and save battery. Tap anywhere for each knot, and
+                  feel a firm pulse at every marker. Hold for a second to leave.
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span id="pulse-label" className="text-xs text-muted-foreground">Pulse every</span>
+              <ToggleGroup
+                type="single"
+                value={String(pulseEvery)}
+                onValueChange={(value) => {
+                  if (!value) return;
+                  setPulseEvery(Number(value));
+                  setStoredItem(PULSE_KEY, value);
+                }}
+                aria-labelledby="pulse-label"
+                className="flex flex-wrap gap-1.5"
+              >
+                {PULSE_OPTIONS.map((option) => (
+                  <ToggleGroupItem
+                    key={option}
+                    value={String(option)}
+                    className="h-8 rounded-full border border-border/60 px-3 text-xs data-[state=on]:border-primary/30 data-[state=on]:bg-primary/10"
+                  >
+                    {option}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
+            <Button type="button" className="mt-3 h-11 w-full rounded-2xl" onClick={() => setDark(true)}>
+              <Moon className="mr-2 h-4 w-4" /> Begin in the dark
+            </Button>
+          </div>
+
           <Button
             onClick={() => setCount(0)}
             variant="ghost"
@@ -363,6 +415,7 @@ export function JesusPrayerCounter() {
           </Button>
         </div>
       </Card>
+      {dark ? <DarkPrayerRope count={count} every={pulseEvery} onKnot={addKnot} onClose={closeDark} /> : null}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { fetchJsonCached } from "@/lib/privacyFetch";
+import { readOfflineDay, saveOfflineDay } from "@/lib/offlineDays";
 import type { CalendarMode } from "@/lib/settings";
 import { getDailyFastingRule } from "@/lib/fastingRules";
 
@@ -134,13 +135,24 @@ function extractPrimaryReadings(day: OrthocalDay): {
 export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian", forceRefresh = false): Promise<DailyData> {
   const orthocalApiUrl = buildOrthocalApiUrl(date, mode);
   let cache: DailyData["cache"];
-  const day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, { signal: AbortSignal.timeout(15000) }, {
-    key: `cache:orthocal:${mode}:${orthocalApiUrl}`,
-    ttlMs: 1000 * 60 * 60 * 12,
-    forceRefresh,
-    staleIfError: true,
-    onCacheUsed: (savedAt, stale) => { cache = { savedAt, stale }; },
-  });
+  // A stored day (see offlineDays.ts) opens instantly, with or without signal. Fresh copies are fetched in the
+  // background by fillOfflineWindow, so only a missing day, or "Try again", waits on the network.
+  const stored = forceRefresh ? undefined : await readOfflineDay<OrthocalDay>(mode, date);
+  let day: OrthocalDay;
+  if (stored) {
+    day = stored.day;
+    cache = { savedAt: stored.savedAt, stale: false };
+  } else {
+    try {
+      day = await fetchJsonCached<OrthocalDay>(orthocalApiUrl, { signal: AbortSignal.timeout(15000) });
+      void saveOfflineDay(mode, date, day);
+    } catch (error) {
+      const fallback = await readOfflineDay<OrthocalDay>(mode, date);
+      if (!fallback) throw error;
+      day = fallback.day;
+      cache = { savedAt: fallback.savedAt, stale: true };
+    }
+  }
 
   const fastingLevel = day.fast_level ?? 0;
   const fastingDesc = day.fast_level_desc?.trim() || "No fast";

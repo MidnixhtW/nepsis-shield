@@ -43,6 +43,14 @@ export function buildLatestDebugApkUrl(repository: string) {
     : "";
 }
 
+/** The newest signed release APK, kept at a fixed address by the release workflow. */
+export function buildLatestReleaseApkUrl(repository: string) {
+  const normalized = normalizeGitHubRepository(repository);
+  return normalized
+    ? `https://github.com/${normalized}/releases/download/android-release-latest/nepsis-shield-latest.apk`
+    : "";
+}
+
 export function buildReleaseAabUrl(repository: string, version: string) {
   const normalized = normalizeGitHubRepository(repository);
   const releaseVersion = version.trim();
@@ -73,7 +81,12 @@ export const APK_GITHUB_REPOSITORY = normalizeGitHubRepository(
     DEFAULT_APK_GITHUB_REPOSITORY,
 );
 
-const latestDebugApkUrl = buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);
+// "release" once a signed APK has been published (set VITE_APK_CHANNEL=release on the host); "testing" until then.
+export const APK_CHANNEL: "release" | "testing" = import.meta.env.VITE_APK_CHANNEL === "release" ? "release" : "testing";
+export const APK_CHANNEL_LABEL = APK_CHANNEL === "release" ? "Signed release" : "Testing build";
+
+const latestDebugApkUrl =
+  APK_CHANNEL === "release" ? buildLatestReleaseApkUrl(APK_GITHUB_REPOSITORY) : buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);
 
 export function trustedGitHubHttpsUrl(value: string) {
   const trimmed = value.trim();

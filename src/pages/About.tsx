@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
-import { APK_ARTIFACTS_URL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
+import { APK_ARTIFACTS_URL, APK_CHANNEL, APK_CHANNEL_LABEL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
 import { CURRENT_VERSION } from "@/lib/releaseInfo";
 
 export default function About() {
@@ -57,7 +57,9 @@ export default function About() {
             <div>
               <h2 className="text-base font-semibold tracking-tight">Android APK download</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Install the Android testing build directly when an APK has been published.
+                {APK_CHANNEL === "release"
+                  ? "Install the signed Android app directly."
+                  : "Install the Android testing build directly. A signed release is on its way."}
               </p>
             </div>
             <BadgeCheck className="h-5 w-5 text-muted-foreground" />
@@ -71,7 +73,7 @@ export default function About() {
                 Android
               </Badge>
               <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-                Debug APK
+                {APK_CHANNEL_LABEL}
               </Badge>
             </div>
 

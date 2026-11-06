@@ -14,6 +14,21 @@ export const CURRENT_VERSION = __APP_VERSION__.replace(/\.0$/, "");
 // Newest first. Written for the people using the app, not for developers.
 export const RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: "1.3",
+    date: "November 6, 2026",
+    title: "Ready with no signal",
+    changes: [
+      "The next two weeks of the Church calendar (saints, fasting, tone and the day's readings) are kept on your device and refreshed whenever you have a connection, so Today opens instantly on a flight, in the field or anywhere with no signal.",
+      "Save your reader's recordings for offline listening in Settings > Reader, so the prayers play with no signal too.",
+      "A one-tap choice on Today between Standard, Short and the new Watch rule: about a minute of the Trisagion, St Michael's protection and the Jesus Prayer, for the days that leave no room.",
+      "A private Watchfulness Log on Today: twelve weeks of quiet squares and how many days in a row you have kept a rule. Any rule counts, even the one-minute Watch rule. Nothing is shared or ranked.",
+      "Watchfulness mode for the Jesus Prayer: the screen goes fully black, any tap counts a knot, and a firm pulse marks every 10, 33, 50 or 100.",
+      "The Bible now reads the Old Testament in the Septuagint (Brenton's English) and the New Testament in the NKJV by default, the pattern of the Orthodox Study Bible. The weekly Psalter follows the Septuagint's kathismata.",
+      "The Rosary can follow the Luminous pattern, and picks the day's mysteries by itself.",
+      "Saints of the West, with eight new patrons and two new stories for children: St Martin's cloak and St Cuthbert's otters.",
+    ],
+  },
+  {
     version: "1.2",
     date: "November 5, 2026",
     title: "One tap to pray",

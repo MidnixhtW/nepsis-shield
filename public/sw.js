@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v12";
+const CACHE_NAME = "nepsis-shield-pwa-v13";
 const APP_SHELL = [
   "/",
   "/today",
@@ -81,4 +81,61 @@ self.addEventListener("fetch", (event) => {
       return cached || network;
     }),
   );
+});
+
+// Zero-signal days: refill the next 14 days of the Church calendar in the background (Chrome and Edge, installed app).
+// Shares the "nepsis-offline" IndexedDB database with src/lib/offlineDays.ts; keep the two in step.
+const OFFLINE_DAYS = 14;
+const REFRESH_AFTER_MS = 1000 * 60 * 60 * 24 * 3;
+
+function openOfflineDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("nepsis-offline", 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains("days")) db.createObjectStore("days", { keyPath: "key" });
+      if (!db.objectStoreNames.contains("meta")) db.createObjectStore("meta");
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function idb(db, store, mode, action) {
+  return new Promise((resolve, reject) => {
+    const request = action(db.transaction(store, mode).objectStore(store));
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function dateKey(date) {
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${mm}-${dd}`;
+}
+
+async function refillOfflineDays() {
+  const db = await openOfflineDb();
+  const mode = (await idb(db, "meta", "readonly", (s) => s.get("calendarMode"))) || "gregorian";
+  for (let offset = 0; offset < OFFLINE_DAYS; offset += 1) {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    const key = `${mode}:${dateKey(date)}`;
+    const existing = await idb(db, "days", "readonly", (s) => s.get(key));
+    if (existing && Date.now() - existing.savedAt < REFRESH_AFTER_MS) continue;
+    try {
+      const url = `https://orthocal.info/api/${mode}/${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}/`;
+      const response = await fetch(url, { referrerPolicy: "no-referrer" });
+      if (!response.ok) continue;
+      const day = await response.json();
+      await idb(db, "days", "readwrite", (s) => s.put({ key, mode, date: dateKey(date), savedAt: Date.now(), day }));
+    } catch {
+      // Try again at the next sync.
+    }
+  }
+}
+
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag === "offline-days") event.waitUntil(refillOfflineDays());
 });

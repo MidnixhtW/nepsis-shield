@@ -2,7 +2,7 @@
 
 export type PrayerTime = "morning" | "evening" | "night";
 
-export type PrayerMode = "short" | "standard" | "long" | "seraphim";
+export type PrayerMode = "short" | "standard" | "long" | "seraphim" | "watch";
 
 export type PrayerStep = {
   title: string;
@@ -285,14 +285,36 @@ export const longExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
 };
 
+// The Watch rule: about a minute, for a long shift, a flight, a hospital corridor or any day that leaves no room.
+// The Trisagion, the Lord's Prayer, St Michael's protection, and the Jesus Prayer.
+export const watchRule: PrayerStep[] = [
+  commonOpening[0],
+  {
+    title: "Trisagion",
+    body: [
+      "Holy God, Holy Mighty, Holy Immortal, have mercy on us. (3x)",
+      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
+      "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
+    ],
+  },
+  {
+    title: "Holy Archangel Michael",
+    body: [
+      "Holy Archangel Michael, commander of the bodiless hosts, defend us and pray to God for us.",
+    ],
+  },
+  seraphimRule[seraphimRule.length - 1],
+];
+
 /** A saved length, with the old "Developer's Rule" (removed) treated as Standard. */
 export function knownPrayerMode(mode: unknown): PrayerMode | undefined {
   if (mode === "personal") return "standard";
-  return mode === "short" || mode === "standard" || mode === "long" || mode === "seraphim" ? mode : undefined;
+  return mode === "short" || mode === "standard" || mode === "long" || mode === "seraphim" || mode === "watch" ? mode : undefined;
 }
 
 export function buildFlow(time: PrayerTime, mode: PrayerMode) {
   if (mode === "seraphim") return seraphimRule;
+  if (mode === "watch") return watchRule;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];

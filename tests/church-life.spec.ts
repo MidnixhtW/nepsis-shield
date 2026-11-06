@@ -20,7 +20,7 @@ test("the patron saint is greeted on the name day", async ({ page }) => {
   await page.getByLabel("Saint", { exact: true }).fill("St. Nicholas");
   await page.getByLabel("Feast month").selectOption("12");
   await page.getByLabel("Day", { exact: true }).fill("6");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.goto("/today");
   const card = page.getByRole("region", { name: "Your name day" });
   await expect(card).toBeVisible();
@@ -51,7 +51,7 @@ test("a busy day shows two occasions and folds the rest", async ({ page }) => {
   await page.getByLabel("Saint", { exact: true }).fill("St. Anastasia");
   await page.getByLabel("Feast month").selectOption("12");
   await page.getByLabel("Day", { exact: true }).fill("25");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
 
   await page.goto("/today");
   await expect(page.getByRole("region", { name: "Feast greeting" })).toBeVisible();

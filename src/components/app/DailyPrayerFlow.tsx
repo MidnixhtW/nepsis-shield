@@ -225,7 +225,7 @@ export function DailyPrayerFlow() {
               <span>
                 Length and reading options
                 <span className="ml-2 font-normal text-muted-foreground">
-                  {mode === "seraphim" ? "St. Seraphim" : mode === "long" ? "Longer" : mode === "standard" ? "Standard" : "Short"}
+                  {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim" : mode === "long" ? "Longer" : mode === "standard" ? "Standard" : "Short"}
                 </span>
               </span>
             </AccordionTrigger>
@@ -235,7 +235,7 @@ export function DailyPrayerFlow() {
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                St. Seraphim's rule for shifts and deployments, short for busy days, standard for normal use, or longer when you have room.
+                The Watch rule takes about a minute, St. Seraphim's rule suits shifts and deployments, short for busy days, standard for normal use, or longer when you have room.
               </p>
             </div>
             <ToggleGroup
@@ -250,6 +250,7 @@ export function DailyPrayerFlow() {
               className="flex-wrap justify-start gap-2"
             >
               {[
+                ["watch", "Watch (1 min)"],
                 ["seraphim", "St. Seraphim"],
                 ["short", "Short"],
                 ["standard", "Standard"],
@@ -409,7 +410,7 @@ export function DailyPrayerFlow() {
           >
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                {mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
+                {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
                 {canListen ? (

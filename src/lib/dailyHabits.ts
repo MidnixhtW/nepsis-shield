@@ -4,7 +4,7 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 export type DailyHabitKey = "prayer" | "reading" | "reflection" | "mercy";
 export type PrayerTimeKey = "morning" | "evening" | "night" | "personal";
-export type PrayerModeKey = "short" | "standard" | "long" | "seraphim" | "personal";
+export type PrayerModeKey = "short" | "standard" | "long" | "seraphim" | "watch" | "personal";
 export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry";
 
 export type ResumeTarget = {
@@ -73,6 +73,10 @@ export type DailyRhythm = {
   weekActiveDays: number;
   /** The last seven days, oldest first, for a quiet row of dots (no streak to protect). */
   week: Array<{ key: string; weekday: string; active: boolean; isToday: boolean }>;
+  /** The Watchfulness Log: the last twelve weeks, Monday-first columns, true where a prayer rule was kept. */
+  log: Array<Array<{ key: string; kept: boolean; future: boolean }>>;
+  /** Days in a row the rule was kept, counting today only once it is kept (so the day is never "broken" before evening). */
+  ruleDays: number;
   completedToday: number;
 };
 
@@ -146,6 +150,35 @@ function activeRecord(record: DailyRecord | undefined) {
   return Object.values(record.habits).some(Boolean) || Object.values(record.prayers).some(Boolean);
 }
 
+function keptRule(record: DailyRecord | undefined) {
+  return !!record && Object.values(record.prayers).some(Boolean);
+}
+
+const LOG_WEEKS = 12;
+
+function buildLog(store: HabitStore) {
+  const now = new Date();
+  const mondayOffset = (now.getDay() + 6) % 7;
+  const start = addDays(now, -mondayOffset - (LOG_WEEKS - 1) * 7);
+  return Array.from({ length: LOG_WEEKS }, (_, week) =>
+    Array.from({ length: 7 }, (_, day) => {
+      const date = addDays(start, week * 7 + day);
+      const key = dayKey(date);
+      return { key, kept: keptRule(store.records[key]), future: date > now && key !== dayKey(now) };
+    }),
+  );
+}
+
+function countRuleDays(store: HabitStore) {
+  let count = 0;
+  const startOffset = keptRule(store.records[dayKey()]) ? 0 : 1;
+  for (let offset = startOffset; offset < 3650; offset += 1) {
+    if (!keptRule(store.records[dayKey(addDays(new Date(), -offset))])) break;
+    count += 1;
+  }
+  return count;
+}
+
 function getTodayRecord(store: HabitStore) {
   const today = dayKey();
   return store.records[today] ?? emptyRecord(today);
@@ -186,6 +219,8 @@ function buildRhythm(): DailyRhythm {
     streak,
     weekActiveDays,
     week,
+    log: buildLog(store),
+    ruleDays: countRuleDays(store),
     completedToday: Object.values(todayRecord.habits).filter(Boolean).length,
   };
 }

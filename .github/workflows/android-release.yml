@@ -280,3 +280,30 @@ jobs:
             release_args+=(--prerelease)
           fi
           gh release create "${release_args[@]}"
+
+      - name: Update the rolling signed release
+        # The app's Download button points here once VITE_APK_CHANNEL=release is set on the host.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          signed=$(ls release-files/*-signed-release.apk 2>/dev/null | head -n 1 || true)
+          if [ -z "$signed" ]; then
+            echo "No signed APK in this run (signing secrets missing); the rolling release is left as it was."
+            exit 0
+          fi
+          cp "$signed" release-files/nepsis-shield-latest.apk
+          cat > rolling-notes.md <<'EOF'
+          ## Nepsis Shield, latest signed release
+
+          The newest signed Android release, at a fixed address:
+          https://github.com/${{ github.repository }}/releases/download/android-release-latest/nepsis-shield-latest.apk
+
+          Built from ${{ github.sha }} (run ${{ github.run_number }}).
+          EOF
+          if gh release view android-release-latest --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            gh release upload android-release-latest release-files/nepsis-shield-latest.apk --repo "${{ github.repository }}" --clobber
+            gh release edit android-release-latest --repo "${{ github.repository }}" --title "Nepsis Shield (latest signed release)" --notes-file rolling-notes.md
+          else
+            gh release create android-release-latest release-files/nepsis-shield-latest.apk --repo "${{ github.repository }}" --title "Nepsis Shield (latest signed release)" --notes-file rolling-notes.md
+          fi

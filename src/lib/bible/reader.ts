@@ -1,6 +1,6 @@
 // Bible reader helpers: storage keys, reference parsing and fallback-source lookups.
 import { getBookByName } from "./books";
-import type { BaseTranslation } from "./osb";
+import type { BaseTranslation, TextTranslation } from "./osb";
 
 export type BibleApiVerse = {
   book_name?: string;
@@ -88,14 +88,14 @@ export function normalizeRefForBolls(ref: string): { candidates: string[]; chapt
   return { candidates: Array.from(new Set(candidates)), chapter: ch };
 }
 
-export function bollsSlugForBase(base: BaseTranslation) {
+export function bollsSlugForBase(base: TextTranslation) {
   if (base === "nkjv") return "NKJV";
-  if (base === "lxx") return "LXX";
+  if (base === "lxx") return "LXXE"; // Brenton's English Septuagint (1851); "LXX" on Bolls is the Greek text
   return base === "web" ? "WEB" : "KJV";
 }
 
-export function bollsSlugForBook(bookName: string, base: BaseTranslation) {
-  // Bolls has NKJV and LXX (Brenton).
+export function bollsSlugForBook(bookName: string, base: TextTranslation) {
+  // Bolls has the NKJV and Brenton's English LXX (LXXE).
   return bollsSlugForBase(base);
 }
 

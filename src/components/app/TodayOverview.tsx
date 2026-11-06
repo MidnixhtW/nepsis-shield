@@ -19,6 +19,7 @@ import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { PrayNowCard } from "@/components/app/PrayNowCard";
+import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -60,6 +61,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         />
         {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
         <RuleOfVigilanceCard onNavigate={onNavigate} compact />
+        <WatchfulnessLog />
         <FathersSayingCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">

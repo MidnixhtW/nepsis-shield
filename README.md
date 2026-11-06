@@ -51,6 +51,15 @@ Signing secrets for release builds:
 - `ANDROID_KEY_ALIAS`
 - `ANDROID_KEY_PASSWORD`
 
+To publish the first signed release:
+
+1. Make a keystore once, on your own computer, and keep it and its passwords somewhere safe. Losing it means the app can never be updated under the same name.
+   `keytool -genkeypair -v -keystore nepsis-release.keystore -alias nepsis -keyalg RSA -keysize 4096 -validity 10000`
+2. Turn it into text for GitHub: `base64 -w0 nepsis-release.keystore` (macOS: `base64 -i nepsis-release.keystore`).
+3. In GitHub, Settings > Secrets and variables > Actions, add the four secrets above.
+4. Run the **Publish Android Release** workflow. It publishes a numbered release and keeps the newest signed APK at the fixed `android-release-latest` release.
+5. On Vercel, set `VITE_APK_CHANNEL=release` and redeploy. The Download button then points to the signed APK and is labelled "Signed release" instead of "Testing build".
+
 The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. By default, the app points to this repository's rolling APK release:
 
 - `MidnixhtW/nepsis-shield`

@@ -1,4 +1,5 @@
-import { Volume2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, Trash2, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -6,10 +7,69 @@ import { shortFlows } from "@/content/dailyPrayerSteps";
 import { READERS, clipUrl, useReader, type ReaderId } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
 import { canReadAloud, startNarration } from "@/lib/readAloud";
+import { onOfflineAudioChange, readerClipUrls, removeReaderOffline, saveReaderOffline, savedClipCount } from "@/lib/offlineAudio";
 import { cn } from "@/lib/utils";
 
 // The opening of the daily prayers, as a sample of each reader.
 const SAMPLE = shortFlows.morning[0].body;
+
+// Keeps the chosen reader's recordings on the device for listening with no signal.
+function OfflineReader({ reader, name }: { reader: ReaderId; name: string }) {
+  const total = readerClipUrls(reader).length;
+  const [saved, setSaved] = useState(0);
+  const [progress, setProgress] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    const refresh = () => savedClipCount(reader).then((count) => live && setSaved(count));
+    refresh();
+    const stop = onOfflineAudioChange(refresh);
+    return () => {
+      live = false;
+      stop();
+    };
+  }, [reader]);
+
+  if (!total || typeof caches === "undefined") return null;
+  const complete = saved >= total;
+
+  async function save() {
+    setError(null);
+    setProgress(0);
+    try {
+      await saveReaderOffline(reader, (done) => setProgress(done));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save the recordings.");
+    } finally {
+      setProgress(null);
+    }
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl border border-border/60 bg-background/45 p-4">
+      <p className="text-sm font-semibold">Listen with no signal</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+        {complete
+          ? `${name}'s ${total} recordings are on this device and play offline.`
+          : `Save ${name}'s ${total} recordings (about 25 MB) so the prayers play on a flight or in the field.${saved ? ` ${saved} saved so far.` : ""}`}
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {complete ? (
+          <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={() => void removeReaderOffline(reader)}>
+            <Trash2 className="mr-1.5 h-4 w-4" /> Remove from device
+          </Button>
+        ) : (
+          <Button type="button" size="sm" className="rounded-full" disabled={progress !== null} onClick={() => void save()}>
+            <Download className="mr-1.5 h-4 w-4" />
+            {progress !== null ? `Saving ${progress} of ${total}…` : `Save ${name} for offline`}
+          </Button>
+        )}
+      </div>
+      {error ? <p role="alert" className="mt-2 text-xs text-destructive">{error}</p> : null}
+    </div>
+  );
+}
 
 // Settings: who reads the prayers and stories aloud.
 export function ReaderVoiceSettings() {
@@ -68,6 +128,7 @@ export function ReaderVoiceSettings() {
           );
         })}
       </div>
+      {reader !== "device" ? <OfflineReader reader={reader} name={READERS.find((item) => item.id === reader)?.name ?? "Reader"} /> : null}
     </Card>
   );
 }
