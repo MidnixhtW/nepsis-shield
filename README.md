@@ -77,7 +77,7 @@ Configure these optional deployment variables only when overriding the default A
 Capacitor is configured with:
 
 - App name: `Nepsis Shield`
-- Android package ID: `com.orthocompanion.app`
+- Android package ID: `com.nepsisshield.app` (the Google Play listing; it cannot change)
 - Web build directory: `dist`
 
 ## App icon assets
