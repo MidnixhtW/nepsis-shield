@@ -14,16 +14,16 @@ test("the Reader setting plays recorded prayers in the chosen voice", async ({ p
   const readers = page.getByRole("radiogroup", { name: "Reader" });
   await expect(readers.getByRole("radio", { name: /Abba/ })).toHaveAttribute("aria-checked", "true");
 
-  await readers.getByRole("radio", { name: /Empa/ }).click();
-  await expect(readers.getByRole("radio", { name: /Empa/ })).toHaveAttribute("aria-checked", "true");
+  await readers.getByRole("radio", { name: /Timba/ }).click();
+  await expect(readers.getByRole("radio", { name: /Timba/ })).toHaveAttribute("aria-checked", "true");
 
   // "Hear" plays that reader's recording of the opening prayers.
-  await page.getByRole("button", { name: "Hear Empa" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __played: string[] }).__played.join(" "))).toMatch(/\/audio\/empa\/[0-9a-f]{16}\.mp3/);
-  await expect(page.getByRole("region", { name: "Reading aloud" })).toContainText("Sample: Empa");
+  await page.getByRole("button", { name: "Hear Timba" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __played: string[] }).__played.join(" "))).toMatch(/\/audio\/timba\/[0-9a-f]{16}\.mp3/);
+  await expect(page.getByRole("region", { name: "Reading aloud" })).toContainText("Sample: Timba");
 
   await page.reload();
-  await expect(page.getByRole("radiogroup", { name: "Reader" }).getByRole("radio", { name: /Empa/ })).toHaveAttribute("aria-checked", "true");
+  await expect(page.getByRole("radiogroup", { name: "Reader" }).getByRole("radio", { name: /Timba/ })).toHaveAttribute("aria-checked", "true");
 });
 
 test("the full-screen prayer offers a reader choice", async ({ page }) => {

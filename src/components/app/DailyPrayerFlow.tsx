@@ -40,7 +40,7 @@ import { showSuccess } from "@/utils/toast";
 import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
 import { READERS, clipUrl, useReader } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
-import { buildFlow, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
+import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
 
@@ -85,7 +85,8 @@ export function DailyPrayerFlow() {
   useEffect(() => {
     const saved = getStoredItem<{ time?: PrayerTime; mode?: PrayerMode; readerPrefs?: ReaderPrefs }>(FLOW_PREFS_KEY);
     if (saved?.time) setTime(saved.time);
-    if (saved?.mode) setMode(saved.mode);
+    const savedMode = knownPrayerMode(saved?.mode);
+    if (savedMode) setMode(savedMode);
     if (saved?.readerPrefs) setReaderPrefs({ ...DEFAULT_READER_PREFS, ...saved.readerPrefs });
 
     const resume = getPrayerResume();
@@ -100,7 +101,7 @@ export function DailyPrayerFlow() {
       setSearchParams(next, { replace: true });
     } else if (resume) {
       setTime(resume.time);
-      setMode(resume.mode);
+      setMode(knownPrayerMode(resume.mode) ?? "short");
       setStepIndex(resume.stepIndex);
     }
     setHydrated(true);
@@ -126,8 +127,7 @@ export function DailyPrayerFlow() {
     return remember ? [...flow.slice(0, -1), remember, flow[flow.length - 1]] : flow;
   }, [time, mode, names]);
   const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
-  const storedPrayerKey = mode === "personal" ? "personal" : time;
-  const done = completed[progressKey] ?? !!rhythm.today.prayers[storedPrayerKey];
+  const done = completed[progressKey] ?? !!rhythm.today.prayers[time];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
 
@@ -176,7 +176,7 @@ export function DailyPrayerFlow() {
     focusNextStep.current = true;
     if (stepIndex >= steps.length - 1) {
       setCompleted((prev) => ({ ...prev, [progressKey]: true }));
-      markPrayerComplete(mode === "personal" ? "personal" : time, mode);
+      markPrayerComplete(time, mode);
       showSuccess("Prayer marked complete for today.");
       setImmersive(false);
       return;
@@ -225,7 +225,7 @@ export function DailyPrayerFlow() {
               <span>
                 Length and reading options
                 <span className="ml-2 font-normal text-muted-foreground">
-                  {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim" : mode === "long" ? "Longer" : mode === "standard" ? "Standard" : "Short"}
+                  {mode === "seraphim" ? "St. Seraphim" : mode === "long" ? "Longer" : mode === "standard" ? "Standard" : "Short"}
                 </span>
               </span>
             </AccordionTrigger>
@@ -235,7 +235,7 @@ export function DailyPrayerFlow() {
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
               <p className="mt-1 text-xs text-muted-foreground">
-                St. Seraphim's rule for shifts and deployments, short for busy days, standard for normal use, longer when you have room, or the developer's rule for a fuller Orthodox anchor.
+                St. Seraphim's rule for shifts and deployments, short for busy days, standard for normal use, or longer when you have room.
               </p>
             </div>
             <ToggleGroup
@@ -254,7 +254,6 @@ export function DailyPrayerFlow() {
                 ["short", "Short"],
                 ["standard", "Standard"],
                 ["long", "Longer"],
-                ["personal", "Developer's Rule"],
               ].map(([value, label]) => (
                 <ToggleGroupItem
                   key={value}
@@ -410,7 +409,7 @@ export function DailyPrayerFlow() {
           >
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                {mode === "personal" ? "Developer's Rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
+                {mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
                 {canListen ? (

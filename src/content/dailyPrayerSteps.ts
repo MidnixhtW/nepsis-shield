@@ -2,7 +2,7 @@
 
 export type PrayerTime = "morning" | "evening" | "night";
 
-export type PrayerMode = "short" | "standard" | "long" | "seraphim" | "personal";
+export type PrayerMode = "short" | "standard" | "long" | "seraphim";
 
 export type PrayerStep = {
   title: string;
@@ -220,89 +220,6 @@ export const standardExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
 };
 
-export const developerPrayerRule: PrayerStep[] = [
-  {
-    title: "Beginning",
-    body: [
-      "Stand or sit attentively. Make the sign of the Cross.",
-      "In the Name of the Father, and of the Son, and of the Holy Spirit. Amen.",
-      "Glory to Thee, our God, glory to Thee.",
-      "O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.",
-    ],
-  },
-  {
-    title: "The Trisagion Prayers",
-    body: [
-      "Holy God, Holy Mighty, Holy Immortal, have mercy on us. (3x)",
-      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
-      "O Most Holy Trinity, have mercy on us; Lord, cleanse us from our sins; Master, pardon our transgressions; Holy One, visit and heal our infirmities for Thy Name's sake.",
-      "Lord, have mercy. (3x)",
-      "Our Father, Who art in heaven, hallowed be Thy Name. Thy kingdom come. Thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses, as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
-    ],
-  },
-  {
-    title: "Psalm 50",
-    body: [
-      "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
-      "Create in me a clean heart, O God, and renew a right spirit within me. Cast me not away from Thy presence, and take not Thy Holy Spirit from me.",
-      "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
-    ],
-  },
-  creedStep,
-  {
-    title: "Prayer before work",
-    body: [
-      "O Lord Jesus Christ, Son of God, bless the work of my hands today. Make my attention sober, my decisions truthful, my speech gentle, and my craft useful to those who depend on it.",
-      "Deliver me from pride, impatience, distraction, vanity, and the love of praise. Let no work of mine harm another soul. Teach me to build with humility, diligence, and mercy. Amen.",
-    ],
-  },
-  {
-    title: "Jesus Prayer",
-    body: [
-      "Pray slowly 33 times, or as much as your rule permits:",
-      "Lord Jesus Christ, Son of God, have mercy on me, a sinner.",
-    ],
-  },
-  {
-    title: "Prayer of St. Ephraim",
-    body: [
-      "O Lord and Master of my life, take from me the spirit of sloth, despair, lust of power, and idle talk.",
-      "But give rather the spirit of chastity, humility, patience, and love to Thy servant.",
-      "Yea, O Lord and King, grant me to see my own transgressions, and not to judge my brother, for blessed art Thou, unto ages of ages. Amen.",
-      "Make a prostration or deep bow if appropriate.",
-    ],
-  },
-  {
-    title: "Holy Archangel Michael",
-    body: [
-      "Holy Archangel Michael, commander of the bodiless hosts, defend us and pray to God for us.",
-      "Guard this work from vanity, anger, confusion, and every temptation that darkens the heart. Ask the Lord to grant courage with humility, strength with mercy, and watchfulness in every duty. Amen.",
-    ],
-  },
-  {
-    title: "Intercessions",
-    body: [
-      "Remember, O Lord, my family, my parish, my clergy, my friends, my enemies, the sick, the suffering, travelers, captives, those in danger, those who have no one to pray for them, and all who have asked for my prayers.",
-      "Pray to God for me, O holy patron saint and all saints, for I fervently flee unto you who are swift helpers and intercessors for my soul.",
-    ],
-  },
-  {
-    title: "The Theotokos",
-    body: [
-      "It is truly meet to bless thee, O Theotokos, ever-blessed and most pure, and the Mother of our God.",
-      "More honorable than the Cherubim, and beyond compare more glorious than the Seraphim, without corruption thou gavest birth to God the Word. True Theotokos, we magnify thee.",
-    ],
-  },
-  {
-    title: "Dismissal",
-    body: [
-      "Glory to the Father, and to the Son, and to the Holy Spirit, now and ever and unto ages of ages. Amen.",
-      "Lord, have mercy. (3x)",
-      "Through the prayers of our holy fathers, Lord Jesus Christ our God, have mercy on us and save us. Amen.",
-    ],
-  },
-];
-
 export const longExtras: Record<PrayerTime, PrayerStep[]> = {
   morning: [
     {
@@ -368,8 +285,13 @@ export const longExtras: Record<PrayerTime, PrayerStep[]> = {
   ],
 };
 
+/** A saved length, with the old "Developer's Rule" (removed) treated as Standard. */
+export function knownPrayerMode(mode: unknown): PrayerMode | undefined {
+  if (mode === "personal") return "standard";
+  return mode === "short" || mode === "standard" || mode === "long" || mode === "seraphim" ? mode : undefined;
+}
+
 export function buildFlow(time: PrayerTime, mode: PrayerMode) {
-  if (mode === "personal") return developerPrayerRule;
   if (mode === "seraphim") return seraphimRule;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];

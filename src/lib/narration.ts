@@ -6,14 +6,13 @@ import { clipId, spokenText } from "@/lib/narrationText";
 import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 
 // Recorded readers for prayers and stories (ElevenLabs), with the device's own voice as the fallback.
-export type ReaderId = "abba" | "anna" | "timba" | "maria" | "empa" | "device";
+export type ReaderId = "abba" | "anna" | "timba" | "maria" | "device";
 
 export const READERS: Array<{ id: ReaderId; name: string; note: string }> = [
   { id: "abba", name: "Abba", note: "Steady and fatherly" },
   { id: "anna", name: "Anna", note: "Slow, reverent, gentle Slavic accent" },
   { id: "timba", name: "Timba", note: "Soft-spoken and serene" },
   { id: "maria", name: "Maria", note: "Soft and prayerful, gentle Hispanic accent" },
-  { id: "empa", name: "Empa", note: "The voice of the app's creator" },
   { id: "device", name: "Device voice", note: "Your phone's built-in voice" },
 ];
 

@@ -156,7 +156,7 @@ export function PrayerRule() {
 
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold tracking-tight">Developer's Prayer Rule</h3>
+            <h3 className="text-base font-semibold tracking-tight">My prayer rule</h3>
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               {doneCount}/{steps.length}
             </Badge>
@@ -174,7 +174,7 @@ export function PrayerRule() {
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <p className="text-sm font-semibold">Rule mode</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Standard is the recommended developer's rule. Keep it with humility, and ask your priest before increasing it.
+            Standard suits most people. Keep it with humility, and ask your priest before increasing it.
           </p>
           <ToggleGroup
             type="single"
@@ -341,7 +341,7 @@ export function PrayerRule() {
                         ),
                       );
                       const ics = createSimpleIcs({
-                        title: "Developer's Prayer Rule (Nepsis Shield)",
+                        title: "Morning prayer (Nepsis Shield)",
                         description: "Orthodox daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.",
                         start,
                         end,

@@ -1,6 +1,6 @@
 // Lists every clip in a recording batch with its id and spoken text, as JSON.
 //   node --experimental-strip-types scripts/narration/list-clips.ts > narration-samples/batch1.json
-import { developerPrayerRule, longExtras, seraphimRule, shortFlows, standardExtras } from "../../src/content/dailyPrayerSteps.ts";
+import { longExtras, seraphimRule, shortFlows, standardExtras } from "../../src/content/dailyPrayerSteps.ts";
 import { SAINT_STORIES } from "../../src/content/familyPrayer.ts";
 import { angelus, marianAntiphonNarration, reginaCaeli, rosaryNarration } from "../../src/content/rosary.ts";
 import { clipId, spokenText } from "../../src/lib/narrationText.ts";
@@ -18,7 +18,6 @@ for (const time of ["morning", "evening", "night"] as const) {
   for (const step of [...shortFlows[time], ...standardExtras[time], ...longExtras[time]]) add(`${time}: ${step.title}`, step.body);
 }
 for (const step of seraphimRule) add(`seraphim: ${step.title}`, step.body);
-if (process.argv.includes("--developer")) for (const step of developerPrayerRule) add(`developer: ${step.title}`, step.body);
 for (const set of ["joyful", "luminous", "sorrowful", "glorious"] as const) {
   rosaryNarration(set).forEach((lines, index) => add(`rosary ${set} ${index}`, lines));
 }

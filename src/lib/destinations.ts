@@ -47,7 +47,7 @@ export const DESTINATIONS: Destination[] = [
   { label: "Saints of the West", to: "/saints#west", area: "Library", keywords: "western rite benedict patrick martin gregory ambrose columba britain ireland celtic english" },
   { label: "Life & Service Guide", to: "/field-manual", area: "Library", keywords: "military police fire ems stress grief travel" },
   { label: "Settings", to: "/settings", area: "App", keywords: "reminders notifications calendar patron saint name day accessibility text size" },
-  { label: "Reader voice", to: "/settings#reader", area: "App", keywords: "read aloud listen audio narration abba anna timba maria empa voice" },
+  { label: "Reader voice", to: "/settings#reader", area: "App", keywords: "read aloud listen audio narration abba anna timba maria voice" },
   { label: "Privacy and backup", to: "/privacy", area: "App", keywords: "data export import encrypt delete" },
   { label: "Install / share", to: "/download", area: "App", keywords: "android apk app qr" },
   { label: "About", to: "/about", area: "App", keywords: "sources credits empathik" },

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { ArrowRight, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { buildFlow, recommendedTime, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
+import { buildFlow, knownPrayerMode, recommendedTime, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
 import { getStoredItem } from "@/lib/deviceStorage";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
@@ -18,7 +18,7 @@ const NEXT: Record<PrayerTime, PrayerTime | null> = { morning: "evening", evenin
 
 function savedMode(): PrayerMode {
   const saved = getStoredItem<{ mode?: PrayerMode }>("daily_prayer_flow:prefs");
-  return saved?.mode && saved.mode !== "personal" && saved.mode !== "seraphim" ? saved.mode : "short";
+  return saved?.mode && saved.mode !== "seraphim" ? (knownPrayerMode(saved.mode) ?? "short") : "short";
 }
 
 // About 110 words a minute, read slowly and aloud.
