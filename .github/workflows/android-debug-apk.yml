@@ -33,17 +33,21 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Set up Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: 24.x
-          check-latest: true
-          package-manager-cache: false
+          node-version: 22.x
+          cache: pnpm
 
       - name: Verify Node.js tool versions
         run: |
           node --version
-          npm --version
+          pnpm --version
 
       - name: Set build timestamp
         run: echo "VITE_APK_RELEASE_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
@@ -71,32 +75,32 @@ jobs:
           "$SDKMANAGER" --list_installed
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: pnpm install --frozen-lockfile
 
       - name: Build web app
         # The recorded prayers are played from nepsisshield.com, so they stay out of the APK.
         run: |
-          npm run build
+          pnpm build
           rm -rf dist/audio
 
       - name: Generate Android project
         run: |
 
           rm -rf android
-          npx capacitor add android
+          pnpm exec capacitor add android
           printf "sdk.dir=%s\n" "$ANDROID_HOME" > android/local.properties
 
       - name: Sync Capacitor Android assets
-        run: npx capacitor sync android
+        run: pnpm exec capacitor sync android
 
       - name: Patch Android package metadata
-        run: npm run android:patch-build
+        run: pnpm android:patch-build
 
       - name: Apply OCP Orthodox launcher icon
-        run: npm run android:apply-icon
+        run: pnpm android:apply-icon
 
       - name: Add the Today home-screen widget
-        run: npm run android:apply-widget
+        run: pnpm android:apply-widget
 
       - name: Build debug APK
         working-directory: android
