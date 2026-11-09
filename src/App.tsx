@@ -13,6 +13,7 @@ import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferen
 import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
+import { ReminderTapRouter } from "@/components/app/ReminderTapRouter";
 
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
@@ -52,6 +53,7 @@ const App = () => (
           <BrowserRouter>
             <ConnectionStatusBanner />
             <ScrollToTop />
+            <ReminderTapRouter />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
               <Route path="/" element={<Index />} />

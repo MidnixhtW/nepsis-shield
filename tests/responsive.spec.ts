@@ -65,7 +65,7 @@ test("1024px tablet-width header stays uncluttered", async ({ page }) => {
 test("desktop navigation does not collide at its first breakpoint", async ({ page }) => {
   await page.setViewportSize({ width: 1120, height: 800 });
   await page.goto("/today", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: /^(Morning|Evening|Night) prayers$/, level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^(Morning|Evening|Night) prayers$/, level: 2 })).toBeVisible();
 
   // Browsers with classic scrollbars (Linux WebKit on CI) lose ~15px once the page is long
   // enough to scroll, which drops the layout just under 1120px and correctly switches to the

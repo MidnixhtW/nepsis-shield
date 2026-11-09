@@ -19,7 +19,8 @@ import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { PrayNowCard } from "@/components/app/PrayNowCard";
-import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
+import { DayIconBanner } from "@/components/app/DayIconBanner";
+import { WeekDots } from "@/components/app/WeekDots";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -48,6 +49,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   // help and the calendar on the right. On phones the columns stack in the same order.
   return (
     <div className="grid gap-5 sm:gap-6">
+    <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} />
     <PrayNowCard />
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
@@ -61,7 +63,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         />
         {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
         <RuleOfVigilanceCard onNavigate={onNavigate} compact />
-        <WatchfulnessLog />
+        <WeekDots />
         <FathersSayingCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">
@@ -70,11 +72,11 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         <div className="flex flex-wrap items-center gap-3 py-4">
           <LifeBuoy aria-hidden className="h-5 w-5 shrink-0 text-accent" />
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold">Struggling right now?</p>
-            <p className="text-xs text-muted-foreground">Help is always at the top of every screen.</p>
+            <p className="text-sm font-semibold">How are you, really?</p>
+            <p className="text-xs text-muted-foreground">Anxious, lonely, can't sleep, stuck scrolling: pick one for a one-minute way back.</p>
           </div>
           <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={openHelpPanel}>
-            Open Help
+            I'm feeling…
           </Button>
         </div>
         <Accordion type="single" collapsible defaultValue={groundDefault} className="border-t">

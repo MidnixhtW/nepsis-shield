@@ -1,4 +1,4 @@
-import { BookOpen, Flame, Heart, MoonStar, ShieldAlert, Wind } from "lucide-react";
+import { BookOpen, Flame, Heart, Moon, MoonStar, ShieldAlert, Smartphone, Users, Wind } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { CrisisResources } from "@/components/app/CrisisResources";
@@ -41,6 +41,27 @@ const helpItems: Array<{
     line: "Use the short rule.",
     target: { section: "pray", tab: "daily" },
     icon: MoonStar,
+  },
+  {
+    key: "lonely",
+    label: "Lonely",
+    line: "Pray for someone else.",
+    target: { section: "pray", tab: "groups" },
+    icon: Users,
+  },
+  {
+    key: "sleepless",
+    label: "Can't sleep",
+    line: "Quiet prayers for the night.",
+    target: { section: "pray", tab: "sleep" },
+    icon: Moon,
+  },
+  {
+    key: "scrolling",
+    label: "Stuck scrolling",
+    line: "Put it down for one minute.",
+    target: { section: "pray", tab: "counter" },
+    icon: Smartphone,
   },
   {
     key: "dry",

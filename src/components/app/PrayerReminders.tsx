@@ -14,7 +14,7 @@ import {
 } from "@/lib/systemPrayerReminders";
 import { showError, showSuccess } from "@/utils/toast";
 
-type PrayerTime = "morning" | "evening" | "night";
+type PrayerTime = "morning" | "evening" | "night" | "scroll";
 type ReminderPrefs = Record<PrayerTime, { enabled: boolean; time: string }>;
 
 // Same storage key the Daily Prayer Flow used, so existing reminder choices carry over.
@@ -25,12 +25,18 @@ const DEFAULT_REMINDERS: ReminderPrefs = {
   morning: { enabled: false, time: "07:00" },
   evening: { enabled: false, time: "18:00" },
   night: { enabled: false, time: "21:30" },
+  scroll: { enabled: false, time: "22:30" },
 };
 
 const prayerLabels: Record<PrayerTime, string> = {
-  morning: "Morning",
-  evening: "Evening",
-  night: "Night",
+  morning: "Morning prayer",
+  evening: "Evening prayer",
+  night: "Night prayer",
+  scroll: "Before you scroll",
+};
+
+const prayerHints: Partial<Record<PrayerTime, string>> = {
+  scroll: "At the time you usually pick up your phone at night: one minute of prayer first.",
 };
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
@@ -67,6 +73,7 @@ export function PrayerReminders() {
         morning: { ...DEFAULT_REMINDERS.morning, ...savedReminders.morning },
         evening: { ...DEFAULT_REMINDERS.evening, ...savedReminders.evening },
         night: { ...DEFAULT_REMINDERS.night, ...savedReminders.night },
+        scroll: { ...DEFAULT_REMINDERS.scroll, ...savedReminders.scroll },
       });
     }
     setHydrated(true);
@@ -92,7 +99,7 @@ export function PrayerReminders() {
     if (result.ok) {
       savePref(key, { enabled: true, time });
       await reminderStatus.refresh();
-      if (!quiet) showSuccess(`${label} prayer reminder set for ${displayTime(time)} every day.`);
+      if (!quiet) showSuccess(`${label} reminder set for ${displayTime(time)} every day.`);
       return;
     }
     if ("reason" in result && result.reason === "permission-denied") {
@@ -145,8 +152,8 @@ export function PrayerReminders() {
     const { start, end } = makeReminderDate(reminder.time);
     const label = prayerLabels[key];
     const ics = createSimpleIcs({
-      title: `${label} Prayer (Nepsis Shield)`,
-      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} prayers.`,
+      title: `${label} (Nepsis Shield)`,
+      description: key === "scroll" ? "One minute of prayer before the phone." : `Open Nepsis Shield and pray the ${label.toLowerCase()}s.`,
       start,
       end,
       dailyReminder: true,
@@ -185,13 +192,14 @@ export function PrayerReminders() {
           <div key={key} className="grid gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div className="flex items-center gap-3">
               <Switch
-                aria-label={`${prayerLabels[key]} prayer reminder`}
+                aria-label={`${prayerLabels[key]} reminder`}
                 checked={isOn(key)}
                 disabled={busy !== null}
                 onCheckedChange={(checked) => void toggle(key, checked)}
               />
               <div>
-                <p className="text-sm font-semibold">{prayerLabels[key]} prayer</p>
+                <p className="text-sm font-semibold">{prayerLabels[key]}</p>
+                {prayerHints[key] ? <p className="text-xs text-muted-foreground">{prayerHints[key]}</p> : null}
                 <p role="status" className="text-xs text-muted-foreground">{statusLine(key)}</p>
               </div>
             </div>

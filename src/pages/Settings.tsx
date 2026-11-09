@@ -195,6 +195,13 @@ export default function Settings() {
               </SelectContent>
             </Select>
           </div>
+          <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
+            <div>
+              <Label htmlFor="western-rite" className="text-sm font-medium">Western Rite parish</Label>
+              <p className="text-xs text-muted-foreground">Adds the Rosary and the Angelus to Pray.</p>
+            </div>
+            <Switch id="western-rite" checked={settings.westernRite} onCheckedChange={(checked) => updateSettings({ westernRite: checked })} />
+          </div>
         </Card>
 
         <PatronSaintSettings />

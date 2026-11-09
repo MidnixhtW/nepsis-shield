@@ -7,7 +7,6 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
-import { ORTHODOX_ICONOGRAPHY } from "@/lib/orthodoxIconography";
 import { useNow } from "@/lib/prayerHours";
 
 const LABELS: Record<PrayerTime, { title: string; line: string }> = {
@@ -53,19 +52,17 @@ export function PrayNowCard() {
   const [mode, setMode] = useState<PrayerMode>(savedMode);
   const done = !!rhythm.today.prayers[time];
   const next = NEXT[time];
-  const icon = ORTHODOX_ICONOGRAPHY.deesis;
 
   return (
     <section aria-labelledby="pray-now-title" className="rounded-3xl border border-accent/30 bg-card p-5 sm:p-6">
-      <div className="flex items-start gap-4">
-        <div className="min-w-0 flex-1">
+      <div>
+        <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{done ? "Prayed today" : "Pray now"}</p>
-          <h1 id="pray-now-title" className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">{LABELS[time].title}</h1>
+          <h2 id="pray-now-title" className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">{LABELS[time].title}</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
             {done ? (next ? `Glory to God. ${LABELS[next].title} come later today.` : "Glory to God. Rest in peace tonight.") : `${LABELS[time].line} ${lengthFor(time, mode)}`}
           </p>
         </div>
-        <img src={icon.imageUrl} alt={icon.alt} title={icon.credit} className="w-16 shrink-0 rounded-lg object-contain shadow-md sm:w-20" />
       </div>
       <ToggleGroup
         type="single"
@@ -113,9 +110,6 @@ export function PrayNowCard() {
           ))}
         </nav>
       ) : null}
-      <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-        Icon: <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">{icon.credit}</a>
-      </p>
     </section>
   );
 }

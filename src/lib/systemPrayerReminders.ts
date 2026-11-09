@@ -9,7 +9,16 @@ const REMINDER_IDS = {
   morning: 7101,
   evening: 7102,
   night: 7103,
+  scroll: 7104,
 } as const;
+
+// What each daily reminder says, and where tapping it opens.
+const REMINDER_TEXT: Record<keyof typeof REMINDER_IDS, { title: string; body: string; to: string }> = {
+  morning: { title: "Morning Prayer", body: "Offer the day to God before the noise begins.", to: "/pray?tab=daily&begin=morning" },
+  evening: { title: "Evening Prayer", body: "Give thanks and look back on the day.", to: "/pray?tab=daily&begin=evening" },
+  night: { title: "Night Prayer", body: "Into Thy hands, O Lord.", to: "/pray?tab=daily&begin=night" },
+  scroll: { title: "Before you scroll", body: "One minute of prayer first. Then the phone can wait.", to: "/pray?tab=daily&begin=night" },
+};
 
 export type PrayerReminderKey = keyof typeof REMINDER_IDS;
 
@@ -58,11 +67,11 @@ async function ensurePermission(plugin: LocalNotificationsPlugin) {
 
 export async function scheduleSystemPrayerReminder({
   key,
-  label,
   time,
 }: {
   key: PrayerReminderKey;
-  label: string;
+  /** Kept for callers; the reminder's own wording comes from REMINDER_TEXT. */
+  label?: string;
   time: string;
 }): Promise<SystemReminderResult> {
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return { ok: false, native: false, reason: "failed" };
@@ -85,8 +94,9 @@ export async function scheduleSystemPrayerReminder({
       notifications: [
         {
           id,
-          title: `${label} Prayer`,
-          body: "Open Nepsis Shield and keep your prayer rule.",
+          title: REMINDER_TEXT[key].title,
+          body: REMINDER_TEXT[key].body,
+          extra: { to: REMINDER_TEXT[key].to },
           schedule: {
             at: nextReminderDate(time),
             every: "day",
@@ -161,4 +171,16 @@ export async function scheduleSeasonReminders(
 
 export function isNativeReminderUnavailable(result: SystemReminderResult) {
   return "reason" in result && (result.reason === "not-native" || result.reason === "plugin-missing");
+}
+
+/** In the app, tapping a reminder opens the page it names (its `extra.to`). Returns a function to stop listening. */
+export function onReminderTap(open: (to: string) => void) {
+  if (!nativeRemindersAvailable()) return () => {};
+  const handle = LocalNotifications.addListener("localNotificationActionPerformed", (event) => {
+    const to = (event.notification.extra as { to?: unknown } | undefined)?.to;
+    if (typeof to === "string" && to.startsWith("/")) open(to);
+  });
+  return () => {
+    void handle.then((listener) => listener.remove());
+  };
 }

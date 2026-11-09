@@ -24,7 +24,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await onboarding.getByRole("button", { name: /Smallest faithful step/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
-  await expect(onboarding.getByText("Your Rule of Vigilance")).toBeVisible();
+  await expect(onboarding.getByText("Your daily prayer plan")).toBeVisible();
   await onboarding.getByRole("button", { name: "Seal this Daily Rule" }).click();
 
   await expect(page).toHaveURL(/\/today$/);

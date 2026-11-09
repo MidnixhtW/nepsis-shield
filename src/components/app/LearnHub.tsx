@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { DoorOpen, ExternalLink, Headphones, Library, ListChecks, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Shield, Trophy } from "lucide-react";
+import { Link } from "react-router";
+import { BookMarked, BookHeart, DoorOpen, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Shield } from "lucide-react";
 import { ChurchDomeIcon, SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { Button } from "@/components/ui/button";
@@ -17,60 +18,109 @@ import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { ForThoseWhoServe } from "@/components/app/ForThoseWhoServe";
+import { BecomingOrthodox } from "@/components/app/BecomingOrthodox";
+import { SaintStoriesFeed } from "@/components/app/SaintStoriesFeed";
+import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
+import { useResponderMode } from "@/lib/responderMode";
+import { cn } from "@/lib/utils";
 
-export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve";
+export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories";
 
 // The starting screen: topics as tiles, the same way Pray is laid out. Each topic keeps its own URL (?tab=...).
-const launcher: LauncherGroup[] = [
-  {
-    title: "Start",
-    tiles: [
-      { to: "/learn?tab=welcome", label: "New to Orthodoxy?", hint: "Where to begin, gently", icon: DoorOpen },
-      { to: "/learn?tab=path", label: "My path", hint: "Next steps chosen for you", icon: Route },
-      { to: "/learn?tab=challenges", label: "Challenges", hint: "Small habits, a few days at a time", icon: Trophy },
-    ],
-  },
-  {
-    title: "Faith",
-    tiles: [
-      { to: "/learn?tab=creed", label: "The Creed", hint: "Learn the Symbol of Faith by heart", icon: ScrollText },
-      { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
-      { to: "/learn?tab=guide", label: "Daily guide", hint: "Faith at work and on duty", icon: ListChecks },
-    ],
-  },
-  {
-    title: "Worship",
-    tiles: [
-      { to: "/learn?tab=liturgy", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
-      { to: "/learn?tab=hymns", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
-      { to: "/learn?tab=audio", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
-    ],
-  },
-  {
-    title: "Library",
-    tiles: [
-      { to: "/saints", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
-      { to: "/learn?tab=serve", label: "For those who serve", hint: "Military, first responders, chaplains", icon: Shield },
-      { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
-      { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the faith", icon: Library },
-    ],
-  },
+// Older addresses still work: welcome, path and challenges are the three parts of "Your next step",
+// and guide and serve both open the one page for faith at work and on duty.
+function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
+  return [
+    {
+      title: "Start",
+      tiles: [
+        { to: "/learn?tab=path", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
+        { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: DoorOpen },
+      ],
+    },
+    {
+      title: "Faith",
+      tiles: [
+        { to: "/learn?tab=creed", label: "The Creed", hint: "Learn the Symbol of Faith by heart", icon: ScrollText },
+        { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
+      ],
+    },
+    {
+      title: "Worship",
+      tiles: [
+        { to: "/learn?tab=liturgy", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
+        { to: "/learn?tab=hymns", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
+      ],
+    },
+    {
+      title: "Library",
+      tiles: [
+        { to: "/learn?tab=stories", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: BookHeart },
+        { to: "/saints", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
+        serving
+          ? { to: "/learn?tab=serve", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }
+          : { to: "/learn?tab=serve", label: "Faith at work", hint: "Prayer for work, stress and daily life", icon: Shield },
+        { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
+        ...(philokalia ? [{ to: "/philokalia", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
+      ],
+    },
+    {
+      title: "More resources",
+      tiles: [
+        { to: "/learn?tab=audio", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
+        { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
+      ],
+    },
+  ];
+}
+
+const NEXT_STEP_VIEWS: Array<{ tab: LearnTab; label: string }> = [
+  { tab: "path", label: "Your path" },
+  { tab: "welcome", label: "Becoming Orthodox" },
+  { tab: "challenges", label: "Challenges" },
 ];
 
-const titles: Record<LearnTab, string> = {
-  welcome: "New to Orthodoxy?",
-  path: "My path",
-  challenges: "Challenges",
-  creed: "The Creed",
-  qa: "Questions and answers",
-  guide: "Daily guide",
-  liturgy: "Divine Liturgy",
-  hymns: "Hymns of the day",
-  audio: "Audio",
-  parish: "Find a parish",
-  library: "OCA library",
-  serve: "For those who serve",
-};
+// One page for the three ways in: a path chosen for you, the road into the Church, and short challenges.
+function NextStep({ tab }: { tab: LearnTab }) {
+  return (
+    <div className="grid gap-4">
+      <nav aria-label="Your next step" className="flex flex-wrap gap-1.5">
+        {NEXT_STEP_VIEWS.map((view) => (
+          <Link
+            key={view.tab}
+            to={`/learn?tab=${view.tab}`}
+            replace
+            aria-current={view.tab === tab ? "page" : undefined}
+            className={cn(
+              "inline-flex h-9 items-center rounded-full border px-3.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              view.tab === tab ? "border-accent/50 bg-accent/15 text-foreground" : "border-border/60 text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {view.label}
+          </Link>
+        ))}
+      </nav>
+      {tab === "welcome" ? (
+        <>
+          <BecomingOrthodox />
+          <InclusiveChristianPath />
+        </>
+      ) : tab === "challenges" ? (
+        <PrayerChallenges />
+      ) : (
+        <PersonalizedPath />
+      )}
+    </div>
+  );
+}
+
+const onDuty = (
+  <div className="grid gap-5">
+    <DutyModeCard />
+    <ForThoseWhoServe />
+    <OrthodoxDailyGuide />
+  </div>
+);
 
 const ocaLibrary = (
   <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
@@ -147,34 +197,56 @@ const ocaLibrary = (
 );
 
 const content: Record<LearnTab, ReactNode> = {
-  welcome: <InclusiveChristianPath />,
-  path: <PersonalizedPath />,
-  challenges: <PrayerChallenges />,
+  welcome: <NextStep tab="welcome" />,
+  path: <NextStep tab="path" />,
+  challenges: <NextStep tab="challenges" />,
   creed: <NiceneCreedMemorizer />,
-  guide: (
-    <div className="grid gap-5">
-      <DutyModeCard />
-      <OrthodoxDailyGuide />
-    </div>
-  ),
+  guide: onDuty,
   qa: <CatechesisQA />,
   liturgy: <DivineLiturgyCompanion />,
   audio: <OrthodoxAudioLibrary />,
   hymns: <HymnsAndPropers />,
   parish: <ParishFinder />,
   library: ocaLibrary,
-  serve: <ForThoseWhoServe />,
+  serve: onDuty,
+  stories: <SaintStoriesFeed />,
 };
 
 export function LearnHub({ tab }: { tab: LearnTab | null }) {
+  const [role] = useResponderMode();
+  const serving = role !== "civilian";
+  const philokalia = isPhilokaliaUnlocked();
+
   if (!tab) {
     return (
       <div className="grid min-w-0 gap-5">
         <LauncherIntro eyebrow="Learn" title="Grow with steadiness." />
-        <SectionLauncher groups={launcher} />
+        <SectionLauncher groups={buildLauncher(serving, philokalia)} />
+        {philokalia ? null : (
+          <p className="px-1 text-xs leading-relaxed text-muted-foreground">
+            One more guide, on the Fathers and watchfulness, is hidden in the app. Hint: tap the shield at the top seven times.
+          </p>
+        )}
       </div>
     );
   }
+
+  const workTitle = serving ? "On duty" : "Faith at work";
+  const titles: Record<LearnTab, string> = {
+    welcome: "Your next step",
+    path: "Your next step",
+    challenges: "Your next step",
+    creed: "The Creed",
+    qa: "Questions and answers",
+    guide: workTitle,
+    serve: workTitle,
+    liturgy: "Divine Liturgy",
+    hymns: "Hymns of the day",
+    audio: "Audio",
+    parish: "Find a parish",
+    library: "OCA library",
+    stories: "Saint stories",
+  };
 
   return (
     <div className="grid min-w-0 gap-4 sm:gap-5">

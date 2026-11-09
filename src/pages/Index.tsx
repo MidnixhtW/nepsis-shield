@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { LearnTab } from "@/components/app/LearnHub";
 import type { PrayerTab } from "@/components/app/PrayerHub";
 import type { ReadTab } from "@/components/app/ReadHub";
-import { AppFooter } from "@/components/app/AppFooter";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import NotFound from "@/pages/NotFound";
 import { saveGlobalResume } from "@/lib/dailyHabits";
@@ -93,7 +92,8 @@ function isLearnTab(x: string | null): x is LearnTab {
     x === "library" ||
     x === "hymns" ||
     x === "parish" ||
-    x === "serve"
+    x === "serve" ||
+    x === "stories"
   );
 }
 
@@ -226,7 +226,6 @@ const Index = () => {
           ) : null}
           {section === "me" ? <MeHub /> : null}
 
-          <AppFooter />
         </div>
       </Suspense>
     </AppShell>

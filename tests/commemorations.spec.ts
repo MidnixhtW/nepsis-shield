@@ -11,7 +11,7 @@ test("names added to the list are prayed in the daily prayer flow", async ({ pag
   await page.reload();
   await expect(page.getByRole("button", { name: "Remove Helen" })).toBeVisible();
 
-  await page.getByRole("link", { name: "Pray", exact: true }).click();
+  await page.goto("/pray");
   await page.getByRole("link", { name: /Morning prayers/ }).click();
   const prayer = page.getByRole("dialog");
   await prayer.getByRole("button", { name: "Begin prayer" }).click();
@@ -42,7 +42,7 @@ test("the backup reminder appears after a month and can be put off", async ({ pa
 test("during a fast the rule card is compact and can be expanded", async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 10, 21, 10, 0)); // Nativity Fast
   await page.goto("/today");
-  await expect(page.getByText("Your rule:")).toBeVisible();
+  await expect(page.getByText("Your prayer plan:")).toBeVisible();
   await page.getByRole("button", { name: "Show rule" }).click();
-  await expect(page.getByText("Today’s Rule")).toBeVisible();
+  await expect(page.getByText(/Daily prayer plan · Rule of prayer/)).toBeVisible();
 });

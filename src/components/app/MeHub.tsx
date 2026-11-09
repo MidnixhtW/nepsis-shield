@@ -4,7 +4,8 @@ import { Bookmark, ChevronRight, Clock, Compass, Download, Info, Menu, NotebookP
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
-import { WeekDots } from "@/components/app/WeekDots";
+import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
+import { PrayerPartner } from "@/components/app/PrayerPartner";
 import { openAppMenu } from "@/lib/appEvents";
 import { useFavorites } from "@/lib/favorites";
 import { useRecentPlaces } from "@/lib/recentPlaces";
@@ -65,7 +66,9 @@ export function MeHub() {
         </Button>
       </div>
 
-      <WeekDots />
+      <WatchfulnessLog />
+
+      <PrayerPartner />
 
       <Section title="Favorites">
         {favorites.length ? (
@@ -93,8 +96,8 @@ export function MeHub() {
 
       <Section title="Yours">
         <ul className="grid sm:grid-cols-2">
-          <Row to="/pray?tab=rule" icon={Compass} label="My rule" hint="Length, steps and versions" />
-          <Row to="/pray?tab=names" icon={ScrollText} label="Names" hint="The living and the departed" />
+          <Row to="/pray?tab=rule" icon={Compass} label="My prayer plan" hint="Your rule of prayer: length and steps" />
+          <Row to="/pray?tab=names" icon={ScrollText} label="Prayer list" hint="Names of the living and the departed" />
           <Row to="/pray?tab=journal" icon={NotebookPen} label="Journal" hint="Reflections and the day's examen" />
           <Row to="/pray?tab=groups" icon={Users} label="Prayer groups" hint="Groups you have joined" />
           <Row to="/pray?tab=prayers" icon={Sparkles} label="Pinned prayers" hint="Prayers you starred" />

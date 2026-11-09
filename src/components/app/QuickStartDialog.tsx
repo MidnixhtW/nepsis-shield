@@ -38,6 +38,7 @@ import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
 import { useTheme } from "next-themes";
 import { useSettings } from "@/hooks/useSettings";
 import { themeOptions } from "@/components/app/ThemeToggle";
+import { DEFAULT_THEME } from "@/components/app/ThemeProvider";
 import type { CalendarMode } from "@/lib/settings";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
@@ -244,7 +245,7 @@ function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVaria
 
   return (
     <div className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your Rule of Vigilance</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your daily prayer plan</p>
       <h2 id="onboarding-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
       <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Choose a version</p>
@@ -279,6 +280,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
   const { theme, setTheme } = useTheme();
+  // Until a look is picked by hand, the role sets it: Olive & Brass for Military, the Church Year for everyone else.
+  const [themePicked, setThemePicked] = useState(false);
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
@@ -334,6 +337,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
     setStoredResponderMode(role);
+    if (!themePicked) setTheme(role === "military" ? "dark" : DEFAULT_THEME);
   }
 
   function finish() {
@@ -433,11 +437,14 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                 {themeOptions.map((option) => (
                   <SelectionCard
                     key={option.value}
-                    selected={(theme ?? "dark") === option.value}
+                    selected={(theme ?? DEFAULT_THEME) === option.value}
                     icon={<ThemePreview colors={option.preview} />}
                     title={option.label}
                     description={option.description}
-                    onClick={() => setTheme(option.value)}
+                    onClick={() => {
+                      setTheme(option.value);
+                      setThemePicked(true);
+                    }}
                   />
                 ))}
               </div>

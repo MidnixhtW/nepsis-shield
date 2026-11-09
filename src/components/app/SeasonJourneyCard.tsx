@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router";
-import { ArrowRight, BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2 } from "lucide-react";
+import { ArrowRight, BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -20,6 +20,7 @@ import { createAllDayEventsIcs, downloadTextFile } from "@/lib/ics";
 import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { cn } from "@/lib/utils";
+import { COUNTED_FASTS, getFastCount, keepFastTogether, keptOnThisDevice } from "@/lib/fastCount";
 import { showError, showSuccess } from "@/utils/toast";
 
 const STORE_KEY = "fasting-journeys:v1";
@@ -115,6 +116,63 @@ function FastRemindersButton({ today, calendar }: { today: Date; calendar: Churc
     </Button>
   );
 }
+// "Keeping the fast together": an anonymous count of people keeping this fast with the app.
+// Hidden when the count service is off or unreachable.
+function KeepingTogether({ season }: { season: SeasonInstance }) {
+  const [count, setCount] = useState<number | null>(null);
+  const [kept, setKept] = useState(() => keptOnThisDevice(season));
+  const [busy, setBusy] = useState(false);
+  const counted = COUNTED_FASTS.includes(season.id);
+
+  useEffect(() => {
+    if (!counted) return;
+    let alive = true;
+    void getFastCount(season).then((value) => {
+      if (alive) setCount(value);
+    });
+    return () => {
+      alive = false;
+    };
+    // The season instance is rebuilt each render; its key names the same fast.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [season.key, counted]);
+
+  if (!counted || count === null) return null;
+
+  async function join() {
+    setBusy(true);
+    const next = await keepFastTogether(season);
+    setBusy(false);
+    if (next === null) {
+      showError("Couldn't add you right now. Please try again.");
+      return;
+    }
+    setCount(next);
+    setKept(true);
+  }
+
+  const others = Math.max(0, count - (kept ? 1 : 0));
+  const line = kept
+    ? others > 0
+      ? `You and ${others.toLocaleString()} ${others === 1 ? "other" : "others"} are keeping the ${season.name} together.`
+      : `You're the first keeping the ${season.name} here. Invite someone to join you.`
+    : count > 0
+      ? `${count.toLocaleString()} ${count === 1 ? "person is" : "people are"} keeping the ${season.name} with Nepsis Shield.`
+      : `Be the first to keep the ${season.name} together.`;
+
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-accent/25 bg-accent/5 px-3.5 py-2.5">
+      <Users aria-hidden className="h-4 w-4 shrink-0 text-accent" />
+      <p role="status" className="min-w-0 flex-1 text-sm">{line}</p>
+      {kept ? null : (
+        <Button type="button" size="sm" variant="outline" className="rounded-full" disabled={busy} onClick={() => void join()}>
+          I'm keeping it
+        </Button>
+      )}
+    </div>
+  );
+}
+
 /** Show the next season on Today once it is this close. */
 const UPCOMING_WINDOW_DAYS = 30;
 
@@ -256,6 +314,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
             <FastRemindersButton today={today} calendar={calendar} />
           </div>
         </div>
+        <KeepingTogether season={season} />
         {showAll ? <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} /> : null}
       </Card>
     );
@@ -287,6 +346,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
             <FastRemindersButton today={today} calendar={calendar} />
           </div>
         </div>
+        <KeepingTogether season={season} />
         {showAll ? (
           <div className="mt-4 grid gap-4">
             <div>

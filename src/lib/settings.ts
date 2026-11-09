@@ -27,6 +27,8 @@ export type AppSettings = {
   reminders: ReminderPrefs;
   accessibility: AccessibilityPrefs;
   personalization: PersonalizationPrefs;
+  /** Western Rite parish: shows the Rosary and Angelus. */
+  westernRite: boolean;
 };
 
 const KEY = "app:settings";
@@ -48,6 +50,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   personalization: {
     showGroundingOnToday: true,
   },
+  westernRite: false,
 };
 
 export function getSettings(): AppSettings {
