@@ -9,7 +9,7 @@ import { createSimpleIcs, downloadTextFile } from "@/lib/ics";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import {
   cancelSystemPrayerReminder,
-  isNativeReminderUnavailable,
+  nativeRemindersAvailable,
   scheduleSystemPrayerReminder,
 } from "@/lib/systemPrayerReminders";
 import { showError, showSuccess } from "@/utils/toast";
@@ -20,9 +20,10 @@ type ReminderPrefs = Record<PrayerTime, { enabled: boolean; time: string }>;
 // Same storage key the Daily Prayer Flow used, so existing reminder choices carry over.
 const REMINDER_PREFS_KEY = "daily_prayer_flow:reminders";
 
+// Off until the person turns one on, so a switch that looks on always means a reminder is set.
 const DEFAULT_REMINDERS: ReminderPrefs = {
-  morning: { enabled: true, time: "07:00" },
-  evening: { enabled: true, time: "18:00" },
+  morning: { enabled: false, time: "07:00" },
+  evening: { enabled: false, time: "18:00" },
   night: { enabled: false, time: "21:30" },
 };
 
@@ -31,6 +32,8 @@ const prayerLabels: Record<PrayerTime, string> = {
   evening: "Evening",
   night: "Night",
 };
+
+const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
 
 function makeReminderDate(time: string) {
   const [hours, minutes] = time.split(":").map(Number);
@@ -42,10 +45,18 @@ function makeReminderDate(time: string) {
   return { start, end };
 }
 
+function displayTime(time: string) {
+  const [hours, minutes] = time.split(":").map(Number);
+  const at = new Date();
+  at.setHours(hours || 0, minutes || 0, 0, 0);
+  return at.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
 export function PrayerReminders() {
+  const native = nativeRemindersAvailable();
   const [reminders, setReminders] = useState<ReminderPrefs>(DEFAULT_REMINDERS);
   const [hydrated, setHydrated] = useState(false);
-  const [reminderBusy, setReminderBusy] = useState<PrayerTime | null>(null);
+  const [busy, setBusy] = useState<PrayerTime | null>(null);
   const [downloaded, setDownloaded] = useState<Partial<Record<PrayerTime, string>>>({});
   const reminderStatus = usePrayerReminderStatus();
 
@@ -66,76 +77,93 @@ export function PrayerReminders() {
     setStoredItem(REMINDER_PREFS_KEY, reminders);
   }, [hydrated, reminders]);
 
-  async function updateReminder(nextTime: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
-    if (patch.time !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(patch.time)) return;
-    if (patch.enabled === false) {
-      setReminderBusy(nextTime);
-      try {
-        const result = await cancelSystemPrayerReminder(nextTime);
-        if (!result.ok && !isNativeReminderUnavailable(result)) {
-          showError("Could not cancel the native reminder. It may still be scheduled.");
-          return;
-        }
-        await reminderStatus.refresh();
-      } catch {
-        showError("Could not cancel the native reminder. It may still be scheduled.");
-        return;
-      } finally {
-        setReminderBusy(null);
-      }
-    }
-    setReminders((prev) => ({ ...prev, [nextTime]: { ...prev[nextTime], ...patch } }));
+  function savePref(key: PrayerTime, patch: Partial<ReminderPrefs[PrayerTime]>) {
+    setReminders((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
   }
 
-  function downloadCalendarReminder(nextTime: PrayerTime) {
-    const reminder = reminders[nextTime];
+  // In the app the switch shows what is really scheduled; in a browser it shows the saved choice.
+  function isOn(key: PrayerTime) {
+    return native ? Boolean(reminderStatus.scheduled[key]) : reminders[key].enabled;
+  }
+
+  async function schedule(key: PrayerTime, time: string, quiet = false) {
+    const label = prayerLabels[key];
+    const result = await scheduleSystemPrayerReminder({ key, label, time });
+    if (result.ok) {
+      savePref(key, { enabled: true, time });
+      await reminderStatus.refresh();
+      if (!quiet) showSuccess(`${label} prayer reminder set for ${displayTime(time)} every day.`);
+      return;
+    }
+    if ("reason" in result && result.reason === "permission-denied") {
+      showError("Notifications are turned off for Nepsis Shield. Turn them on in your phone's settings, then try again.");
+      return;
+    }
+    showError("Couldn't set the reminder. Please try again.");
+  }
+
+  async function toggle(key: PrayerTime, checked: boolean) {
+    if (!native) {
+      savePref(key, { enabled: checked });
+      return;
+    }
+    setBusy(key);
+    try {
+      if (checked) {
+        await schedule(key, reminders[key].time);
+      } else {
+        const result = await cancelSystemPrayerReminder(key);
+        if (!result.ok) {
+          showError("Couldn't turn the reminder off. Please try again.");
+          return;
+        }
+        savePref(key, { enabled: false });
+        await reminderStatus.refresh();
+      }
+    } catch {
+      showError("Couldn't change the reminder. Please try again.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function changeTime(key: PrayerTime, time: string) {
+    if (!TIME_PATTERN.test(time)) return;
+    savePref(key, { time });
+    // A reminder that is already on moves to the new time straight away.
+    if (native && reminderStatus.scheduled[key]) {
+      try {
+        await schedule(key, time, true);
+      } catch {
+        showError("Couldn't move the reminder to the new time.");
+      }
+    }
+  }
+
+  function addToCalendar(key: PrayerTime) {
+    const reminder = reminders[key];
     const { start, end } = makeReminderDate(reminder.time);
-    const label = prayerLabels[nextTime];
+    const label = prayerLabels[key];
     const ics = createSimpleIcs({
       title: `${label} Prayer (Nepsis Shield)`,
-      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} rule. This daily calendar reminder is created locally from your reminder preference.`,
+      description: `Open Nepsis Shield and pray the ${label.toLowerCase()} prayers.`,
       start,
       end,
       dailyReminder: true,
     });
-    downloadTextFile(`${nextTime}-prayer-reminder.ics`, ics, "text/calendar");
-    setDownloaded((previous) => ({ ...previous, [nextTime]: reminder.time }));
+    downloadTextFile(`${key}-prayer-reminder.ics`, ics, "text/calendar");
+    setDownloaded((previous) => ({ ...previous, [key]: reminder.time }));
   }
 
-  async function syncReminderToSystem(nextTime: PrayerTime) {
-    setReminderBusy(nextTime);
-    try {
-      const reminder = reminders[nextTime];
-      const label = prayerLabels[nextTime];
-      const result = await scheduleSystemPrayerReminder({
-        key: nextTime,
-        label,
-        time: reminder.time,
-      });
-
-      if (result.ok) {
-        await reminderStatus.refresh();
-        showSuccess(`${label} prayer reminder scheduled daily at ${reminder.time}.`);
-        return;
-      }
-
-      if ("reason" in result && result.reason === "permission-denied") {
-        showError("Notification permission was denied. Enable notifications for Nepsis Shield in system settings.");
-        return;
-      }
-
-      if (isNativeReminderUnavailable(result)) {
-        downloadCalendarReminder(nextTime);
-        showSuccess(`${label} calendar file downloaded. Import it into your calendar to activate the daily reminder.`);
-        return;
-      }
-
-      showError("Couldn't add the system reminder.");
-    } catch {
-      showError("Couldn't add the system reminder.");
-    } finally {
-      setReminderBusy(null);
+  function statusLine(key: PrayerTime) {
+    const reminder = reminders[key];
+    if (native) {
+      if (reminderStatus.checking && !reminderStatus.scheduled[key]) return "Checking…";
+      return reminderStatus.scheduled[key] ? `Every day at ${displayTime(reminder.time)}` : "Off";
     }
+    if (!reminder.enabled) return "Off";
+    if (downloaded[key] === reminder.time) return "Open the downloaded file to add it to your calendar";
+    return "Tap Add to calendar to get the reminder";
   }
 
   return (
@@ -144,7 +172,9 @@ export function PrayerReminders() {
         <div>
           <h3 className="text-lg font-semibold tracking-tight">Prayer reminders</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Turning a preference on does not schedule it: select Sync to schedule native notifications. In a browser, Sync downloads a daily calendar file; import it and check alerts in your calendar app. Turn a preference off to cancel its native reminder. Imported calendar events must be removed in your calendar app.
+            {native
+              ? "A gentle notification at the time you choose, every day."
+              : "In a browser, reminders go in your calendar app. Turn one on, then add it to your calendar. The Android app sends them as notifications."}
           </p>
         </div>
         <Bell className="h-5 w-5 text-muted-foreground" />
@@ -155,37 +185,35 @@ export function PrayerReminders() {
           <div key={key} className="grid gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div className="flex items-center gap-3">
               <Switch
-                aria-label={`${prayerLabels[key]} reminder preference`}
-                checked={reminders[key].enabled || Boolean(reminderStatus.scheduled[key])}
-                disabled={reminderBusy !== null || reminderStatus.checking}
-                onCheckedChange={(checked) => void updateReminder(key, { enabled: checked })}
+                aria-label={`${prayerLabels[key]} prayer reminder`}
+                checked={isOn(key)}
+                disabled={busy !== null}
+                onCheckedChange={(checked) => void toggle(key, checked)}
               />
               <div>
                 <p className="text-sm font-semibold">{prayerLabels[key]} prayer</p>
-                <p role="status" className="text-xs text-muted-foreground">
-                  {reminderStatus.checking ? "Checking native schedule…" : reminderStatus.error ? "Native schedule could not be verified" : reminderStatus.scheduled[key] ? `Native reminder scheduled${reminderStatus.scheduled[key]?.time ? ` at ${reminderStatus.scheduled[key]?.time}` : ""}${reminderStatus.scheduled[key]?.time !== reminders[key].time ? " · Sync to apply this preferred time" : ""}` : downloaded[key] ? `Calendar file downloaded for ${downloaded[key]} · import required, schedule unconfirmed` : reminders[key].enabled ? "Preference on · not scheduled yet" : "Preference off · no native reminder scheduled"}
-                </p>
+                <p role="status" className="text-xs text-muted-foreground">{statusLine(key)}</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 sm:justify-end">
               <input
                 type="time"
                 value={reminders[key].time}
-                disabled={reminderBusy !== null}
-                onChange={(event) => void updateReminder(key, { time: event.target.value })}
+                disabled={busy !== null}
+                onChange={(event) => void changeTime(key, event.target.value)}
                 className="h-10 rounded-2xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label={`${prayerLabels[key]} reminder time`}
               />
-              <Button
-                type="button"
-                variant="outline"
-                className="rounded-2xl border-border/60"
-                aria-label={`Sync ${prayerLabels[key].toLowerCase()} prayer reminder`}
-                onClick={() => void syncReminderToSystem(key)}
-                disabled={(!reminders[key].enabled && !reminderStatus.scheduled[key]) || reminderBusy !== null}
-              >
-                <CalendarPlus className="mr-2 h-4 w-4" /> {reminderBusy === key ? "Updating…" : "Sync"}
-              </Button>
+              {!native && reminders[key].enabled ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="rounded-2xl border-border/60"
+                  onClick={() => addToCalendar(key)}
+                >
+                  <CalendarPlus className="mr-2 h-4 w-4" /> Add to calendar
+                </Button>
+              ) : null}
             </div>
           </div>
         ))}

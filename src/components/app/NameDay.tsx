@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { format } from "date-fns";
 import { BellRing, ExternalLink, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import { nameDayStatus, nextNameDay, type PatronSaint } from "@/lib/nameDay";
 import { PATRON_SAINT_CHANGED_EVENT, getPatronSaint, setPatronSaint } from "@/lib/patronSaint";
 import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { showError, showSuccess } from "@/utils/toast";
+import { searchNameDaySaints, type NameDaySaint } from "@/content/nameDaySaints";
+import { WESTERN_SAINTS } from "@/content/westernSaints";
 
 /** True once native name-day reminders are on, so Today can roll them forward each year. */
 const NATIVE_KEY = "nameday:native-reminders";
@@ -47,6 +49,18 @@ export function PatronSaintSettings() {
   const [name, setName] = useState(patron?.name ?? "");
   const [month, setMonth] = useState(patron?.month ?? 1);
   const [day, setDay] = useState(patron?.day ?? 1);
+  // Once a saint is picked from the list, hide the suggestions until the name is typed again.
+  const [picked, setPicked] = useState(Boolean(patron));
+  const suggestions = useMemo(() => (picked ? [] : searchNameDaySaints(name, WESTERN_SAINTS)), [name, picked]);
+
+  function choose(saint: NameDaySaint) {
+    setName(saint.name);
+    setMonth(saint.month);
+    setDay(saint.day);
+    setPicked(true);
+    setPatronSaint({ name: saint.name.slice(0, 60), month: saint.month, day: saint.day });
+    showSuccess(`${saint.name} saved as your patron saint.`);
+  }
 
   function save(event: FormEvent) {
     event.preventDefault();
@@ -81,12 +95,39 @@ export function PatronSaintSettings() {
     <Card id="patron-saint" className="scroll-mt-24 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <h2 className="text-base font-semibold tracking-tight">Your patron saint</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        The saint whose name you bear. On their feast day, your name day, Today greets you and asks their prayers. Enter the date as it appears in the Church calendar; the app adjusts it for the Old Calendar.
+        The saint whose name you bear. On your name day, Today greets you and asks their prayers. Type a name and pick your saint, or enter the feast date yourself. The app adjusts it for the Old Calendar.
       </p>
       <form onSubmit={save} className="mt-4 grid gap-3 sm:grid-cols-[2fr_1.4fr_0.8fr_auto] sm:items-end">
         <div className="grid gap-1.5">
           <Label htmlFor="patron-name">Saint</Label>
-          <Input id="patron-name" value={name} onChange={(event) => setName(event.target.value)} placeholder="e.g. St. Nicholas" maxLength={60} />
+          <Input
+            id="patron-name"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+              setPicked(false);
+            }}
+            placeholder="Type a name, e.g. Nicholas"
+            maxLength={60}
+            autoComplete="off"
+            aria-controls="patron-suggestions"
+          />
+          {suggestions.length ? (
+            <ul id="patron-suggestions" aria-label="Matching saints" className="grid gap-1 rounded-xl border border-border/60 bg-background p-1">
+              {suggestions.map((saint) => (
+                <li key={`${saint.name}-${saint.month}-${saint.day}`}>
+                  <button
+                    type="button"
+                    onClick={() => choose(saint)}
+                    className="flex w-full items-baseline justify-between gap-3 rounded-lg px-3 py-2 text-left text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span className="font-medium">{saint.name}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{MONTHS[saint.month - 1].slice(0, 3)} {saint.day}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="patron-month">Feast month</Label>
@@ -123,6 +164,7 @@ export function PatronSaintSettings() {
             onClick={() => {
               setPatronSaint(null);
               setName("");
+              setPicked(false);
             }}
           >
             Clear

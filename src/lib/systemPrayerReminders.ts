@@ -23,8 +23,13 @@ function nextReminderDate(time: string) {
   return at;
 }
 
+/** True in the installed Android app, where reminders are real notifications. In a browser they are calendar files. */
+export function nativeRemindersAvailable() {
+  return Capacitor.isNativePlatform() && Capacitor.isPluginAvailable("LocalNotifications");
+}
+
 async function getLocalNotifications(): Promise<LocalNotificationsPlugin | null> {
-  if (!Capacitor.isNativePlatform() || !Capacitor.isPluginAvailable("LocalNotifications")) return null;
+  if (!nativeRemindersAvailable()) return null;
   return LocalNotifications;
 }
 
