@@ -280,7 +280,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
   const { theme, setTheme } = useTheme();
-  // Until a look is picked by hand, the role sets it: Olive & Brass for Military, the Church Year for everyone else.
+  // Every role keeps the Church Year look; the role only tints its accent color (see seasonal.css).
   const [themePicked, setThemePicked] = useState(false);
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
@@ -337,7 +337,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
     setStoredResponderMode(role);
-    if (!themePicked) setTheme(role === "military" ? "dark" : DEFAULT_THEME);
+    if (!themePicked) setTheme(DEFAULT_THEME);
   }
 
   function finish() {
