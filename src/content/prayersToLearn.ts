@@ -39,6 +39,30 @@ export const PSALM_90_VERSES = [
   "With long life will I satisfy him, and shew him my salvation.",
 ];
 
+// Psalm 50 in the Septuagint numbering (Psalm 51 in most English Bibles), from Brenton's public-domain
+// translation of the Septuagint (1851), with the pronouns for God capitalized as elsewhere in the app.
+export const PSALM_50_VERSES = [
+  "Have mercy upon me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
+  "Wash me thoroughly from mine iniquity, and cleanse me from my sin.",
+  "For I am conscious of mine iniquity; and my sin is continually before me.",
+  "Against Thee only have I sinned, and done evil before Thee: that Thou mightest be justified in Thy sayings, and mightest overcome when Thou art judged.",
+  "For, behold, I was conceived in iniquities, and in sins did my mother conceive me.",
+  "For, behold, Thou lovest truth: Thou hast manifested to me the secret and hidden things of Thy wisdom.",
+  "Thou shalt sprinkle me with hyssop, and I shall be purified: Thou shalt wash me, and I shall be made whiter than snow.",
+  "Thou shalt cause me to hear gladness and joy: the afflicted bones shall rejoice.",
+  "Turn away Thy face from my sins, and blot out all mine iniquities.",
+  "Create in me a clean heart, O God; and renew a right spirit in my inward parts.",
+  "Cast me not away from Thy presence; and remove not Thy Holy Spirit from me.",
+  "Restore to me the joy of Thy salvation: establish me with Thy directing Spirit.",
+  "Then will I teach transgressors Thy ways; and ungodly men shall turn to Thee.",
+  "Deliver me from blood-guiltiness, O God, the God of my salvation: and my tongue shall joyfully declare Thy righteousness.",
+  "O Lord, Thou shalt open my lips; and my mouth shall declare Thy praise.",
+  "For if Thou desiredst sacrifice, I would have given it: Thou wilt not take pleasure in whole-burnt-offerings.",
+  "Sacrifice to God is a broken spirit: a broken and humbled heart God will not despise.",
+  "Do good, O Lord, to Sion in Thy good pleasure; and let the walls of Jerusalem be built.",
+  "Then shalt Thou be pleased with a sacrifice of righteousness, offering, and whole-burnt-sacrifices: then shall they offer calves upon Thine altar.",
+];
+
 function pairs(lines: string[]) {
   const out: string[] = [];
   for (let index = 0; index < lines.length; index += 2) out.push(lines.slice(index, index + 2).join(" "));
@@ -125,15 +149,10 @@ export const PRAYERS_TO_LEARN: PrayerToLearn[] = [
   },
   {
     id: "psalm-50",
-    title: "Psalm 50 · key verses",
+    title: "Psalm 50",
     hint: "The psalm of repentance, from morning prayer",
     group: "psalms",
-    sections: [
-      "Have mercy on me, O God, according to Thy great mercy; and according to the multitude of Thy compassions blot out my transgression.",
-      "Wash me thoroughly from mine iniquity, and cleanse me from my sin. For I know mine iniquity, and my sin is ever before me.",
-      "Create in me a clean heart, O God, and renew a right spirit within me. Cast me not away from Thy presence, and take not Thy Holy Spirit from me.",
-      "Restore unto me the joy of Thy salvation, and with Thy governing Spirit establish me. O Lord, open Thou my lips, and my mouth shall declare Thy praise.",
-    ],
+    sections: pairs(PSALM_50_VERSES),
   },
   {
     id: "meal-blessing",

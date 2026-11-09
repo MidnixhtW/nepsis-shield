@@ -62,7 +62,7 @@ Everything here is ready to copy and upload. Regenerate the images after UI chan
 
 **Graphics** (in `play-store/`)
 - `feature-graphic.png` — 1024 × 500, required
-- Phone screenshots, 1080 × 2160: `1-today-journey.png`, `2-full-screen-prayer.png`, `3-help-now.png`, `4-names.png`, `5-scripture.png`
+- Phone screenshots, 1080 × 2160: `1-today-journey.png`, `2-full-screen-prayer.png`, `3-help-now.png`, `4-names.png`, `5-scripture.png`, `6-learn-by-heart.png`
 - App icon: `public/icons/icon-512.png`
 
 ---
