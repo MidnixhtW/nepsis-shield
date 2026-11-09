@@ -85,6 +85,7 @@ function isLearnTab(x: string | null): x is LearnTab {
     x === "path" ||
     x === "challenges" ||
     x === "creed" ||
+    x === "byheart" ||
     x === "guide" ||
     x === "qa" ||
     x === "liturgy" ||

@@ -40,6 +40,7 @@ import { showSuccess } from "@/utils/toast";
 import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
 import { READERS, clipUrl, useReader } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
+import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
@@ -332,6 +333,11 @@ export function DailyPrayerFlow() {
             <Button type="button" variant="outline" size="sm" className="rounded-2xl border-border/60" onClick={() => setImmersive(true)}>
               <Maximize2 className="mr-2 h-4 w-4" /> Full screen
             </Button>
+            {LEARN_ID_BY_STEP_TITLE[current.title] ? (
+              <Button asChild variant="ghost" size="sm" className="rounded-2xl">
+                <Link to={`/learn?tab=byheart&prayer=${LEARN_ID_BY_STEP_TITLE[current.title]}`}>Learn by heart</Link>
+              </Button>
+            ) : null}
           </div>
         </div>
 

@@ -6,6 +6,7 @@ const routes = [
   "/pray?tab=daily",
   "/read?read=daily",
   "/learn?tab=creed",
+  "/learn?tab=byheart",
   "/settings",
   "/about",
   "/privacy",

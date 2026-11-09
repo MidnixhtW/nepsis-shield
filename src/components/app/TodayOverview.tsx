@@ -21,6 +21,7 @@ import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { PrayNowCard } from "@/components/app/PrayNowCard";
 import { DayIconBanner } from "@/components/app/DayIconBanner";
 import { WeekDots } from "@/components/app/WeekDots";
+import { LearnReviewCard } from "@/components/app/LearnReviewCard";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -64,6 +65,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
         <RuleOfVigilanceCard onNavigate={onNavigate} compact />
         <WeekDots />
+        <LearnReviewCard />
         <FathersSayingCard today={today} />
       </div>
       <div className="grid min-w-0 gap-5 sm:gap-6">

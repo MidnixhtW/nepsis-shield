@@ -87,13 +87,21 @@ function PrayersToLearn() {
   return (
     <Card className="rounded-3xl border p-5 sm:p-6">
       <h3 className="text-lg font-semibold tracking-tight">Short prayers children can learn</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Learn one at a time. Say it together until your child can say it alone.</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Learn one at a time. Say it together until your child can say it alone. Older children can practice the longer ones, and the Creed and Our Father, in{" "}
+        <Link to="/learn?tab=byheart" className="font-semibold text-primary underline-offset-4 hover:underline">Learn by heart</Link>.
+      </p>
       <ul className="mt-4 grid gap-3">
         {CHILD_PRAYERS.map((prayer) => (
           <li key={prayer.text} className="rounded-2xl border border-border/60 bg-background/45 p-4">
             <p className="scripture-text text-[1.08rem] leading-relaxed">{prayer.text}</p>
             <p className="mt-1 text-sm text-muted-foreground">{prayer.when}</p>
             {prayer.source ? <p className="mt-1 text-[11px] text-muted-foreground">From {prayer.source}</p> : null}
+            {prayer.learnId ? (
+              <Link to={`/learn?tab=byheart&prayer=${prayer.learnId}`} className="mt-2 inline-block text-sm font-semibold text-primary underline-offset-4 hover:underline">
+                Practice it by heart
+              </Link>
+            ) : null}
           </li>
         ))}
       </ul>

@@ -15,7 +15,7 @@ import { DivineLiturgyCompanion } from "@/components/app/DivineLiturgyCompanion"
 import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
-import { NiceneCreedMemorizer } from "@/components/app/NiceneCreedMemorizer";
+import { PrayerMemorizer } from "@/components/app/PrayerMemorizer";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { ForThoseWhoServe } from "@/components/app/ForThoseWhoServe";
 import { BecomingOrthodox } from "@/components/app/BecomingOrthodox";
@@ -24,7 +24,7 @@ import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 import { useResponderMode } from "@/lib/responderMode";
 import { cn } from "@/lib/utils";
 
-export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories";
+export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |"guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories";
 
 // The starting screen: topics as tiles, the same way Pray is laid out. Each topic keeps its own URL (?tab=...).
 // Older addresses still work: welcome, path and challenges are the three parts of "Your next step",
@@ -41,7 +41,7 @@ function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
     {
       title: "Faith",
       tiles: [
-        { to: "/learn?tab=creed", label: "The Creed", hint: "Learn the Symbol of Faith by heart", icon: ScrollText },
+        { to: "/learn?tab=byheart", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: ScrollText },
         { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
       ],
     },
@@ -200,7 +200,9 @@ const content: Record<LearnTab, ReactNode> = {
   welcome: <NextStep tab="welcome" />,
   path: <NextStep tab="path" />,
   challenges: <NextStep tab="challenges" />,
-  creed: <NiceneCreedMemorizer />,
+  // The old Creed address opens the Creed in Learn by heart.
+  creed: <PrayerMemorizer defaultPrayer="creed" />,
+  byheart: <PrayerMemorizer />,
   guide: onDuty,
   qa: <CatechesisQA />,
   liturgy: <DivineLiturgyCompanion />,
@@ -236,7 +238,8 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
     welcome: "Your next step",
     path: "Your next step",
     challenges: "Your next step",
-    creed: "The Creed",
+    creed: "Learn by heart",
+    byheart: "Learn by heart",
     qa: "Questions and answers",
     guide: workTitle,
     serve: workTitle,

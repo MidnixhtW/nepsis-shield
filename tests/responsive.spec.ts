@@ -121,8 +121,8 @@ test("Learn tiles fit on a small phone and open their topics", async ({ page }) 
   await expect(page.getByRole("heading", { name: "Faith", level: 3 })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 
-  await page.getByRole("link", { name: /^The Creed/ }).click();
-  await expect(page).toHaveURL(/tab=creed/);
+  await page.getByRole("link", { name: /^Learn by heart/ }).click();
+  await expect(page).toHaveURL(/tab=byheart/);
   await page.getByRole("link", { name: "Learn", exact: true }).click();
   await page.getByRole("link", { name: /^Questions and answers/ }).click();
   await expect(page).toHaveURL(/tab=qa/);

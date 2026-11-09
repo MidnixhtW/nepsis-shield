@@ -100,6 +100,7 @@ const ALLOWED_APP_KEYS = new Set([
   "favorites:v1",
   "recent-places:v1",
   "read-aloud:voice",
+  "learn-by-heart:v1",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.
