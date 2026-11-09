@@ -291,7 +291,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
             <Check className="mr-2 h-4 w-4" /> {keptToday ? "Kept today" : "Mark today as kept"}
           </Button>
           <span className="text-xs text-muted-foreground">
-            {kept.length} of {season.length} days kept · no pressure, just a quiet record
+            {kept.length} of {season.length} days kept · only you see this
           </span>
         </div>
         <Progress value={(kept.length / season.length) * 100} aria-label={`${kept.length} of ${season.length} days kept`} className="mt-3 h-1.5" />

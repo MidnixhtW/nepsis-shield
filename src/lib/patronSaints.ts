@@ -1018,7 +1018,7 @@ export function buildSaintAssistantReply(query: string) {
     return {
       crisis: false,
       matches,
-      message: "Tell me what you are facing—depression, anxiety, grief, illness, work, travel, family, or another need—and I’ll suggest a saint from the app’s patron guide.",
+      message: "Tell me what you are facing (depression, anxiety, grief, illness, work, travel, family, or another need), and I’ll suggest a saint from the app’s patron guide.",
     };
   }
 

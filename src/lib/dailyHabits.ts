@@ -275,7 +275,7 @@ export function savePrayerResume(resume: Omit<PrayerResume, "date" | "updatedAt"
     };
     store.globalResume = {
       label: "Continue prayer",
-      helper: `${resume.title} — step ${resume.stepIndex + 1} of ${resume.totalSteps}`,
+      helper: `${resume.title} · step ${resume.stepIndex + 1} of ${resume.totalSteps}`,
       target: { section: "pray", tab: "daily" },
       updatedAt: Date.now(),
     };

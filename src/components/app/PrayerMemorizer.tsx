@@ -208,7 +208,7 @@ function SectionPractice({ prayer, section, onNext }: { prayer: PrayerToLearn; s
           />
           {result === "again" ? (
             <div className="flex flex-wrap items-center gap-3">
-              <p className="text-sm text-muted-foreground">A few slips. Once more and it will stick.</p>
+              <p className="text-sm text-muted-foreground">A few slips. Try it once more.</p>
               <Button variant="outline" onClick={() => { setResult(null); setRound((value) => value + 1); }}>Try again</Button>
             </div>
           ) : null}
@@ -383,7 +383,7 @@ function PrayerList() {
         <h2 className="text-2xl font-semibold tracking-tight">Learn by heart.</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           One short section at a time: read it, then say it as the words fade, then from first letters, then tap it in order.
-          Learned sections come back for a quick review after 1, 3, 7, 14 and 30 days, so they stay with you.
+          Learned sections come back for a quick review after 1, 3, 7, 14 and 30 days.
         </p>
         {due.length ? (
           <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">

@@ -300,7 +300,7 @@ function greatLentDay(index: number, civil: Date, calendar: ChurchCalendar): Jou
     };
   }
   const weekThemes = [
-    "Begin with what you can keep. The fast is for healing, not for proving yourself.",
+    "Begin with what you can keep. The fast is for healing.",
     "Watch your thoughts as well as your food. Notice what pulls you away from prayer.",
     "Give something away this week: time, money, or attention to someone who needs it.",
     "When you grow tired, shorten the prayer rather than abandoning it.",

@@ -119,7 +119,7 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
     if (lines.length * size * 1.38 <= textRoom) break;
   }
   ctx.font = '600 42px "Barlow", system-ui, sans-serif';
-  const attribution = input.attribution ? wrap(ctx, `— ${input.attribution}`, WIDTH - MARGIN * 2) : [];
+  const attribution = input.attribution ? wrap(ctx, input.attribution, WIDTH - MARGIN * 2) : [];
   const blockHeight = (icon ? iconHeight + 90 : 0) + eyebrowGap + lines.length * size * 1.38 + (attribution.length ? 30 + attribution.length * 56 : 0);
   let y = Math.max(140, (HEIGHT - FOOTER - blockHeight) / 2);
 

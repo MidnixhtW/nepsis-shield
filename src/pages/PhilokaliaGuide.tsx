@@ -57,25 +57,25 @@ type SpeechRecognitionLike = {
 
 const sources: GuideSource[] = [
   {
-    title: "OCA – The Orthodox Faith",
+    title: "OCA: The Orthodox Faith",
     url: "https://www.oca.org/orthodoxy/the-orthodox-faith",
     note: "Core catechetical library: doctrine, Scripture, worship, spirituality, sacraments, and Church life.",
     tags: ["catechism", "doctrine", "learn", "orthodox", "faith", "sacraments", "scripture"],
   },
   {
-    title: "OCA – Questions & Answers",
+    title: "OCA: Questions & Answers",
     url: "https://www.oca.org/questions",
     note: "Pastoral explanations on fasting, confession, worship, parish life, family questions, and newcomer concerns.",
     tags: ["question", "fast", "confession", "worship", "parish", "new", "catechumen"],
   },
   {
-    title: "OCA – Prayers",
+    title: "OCA: Prayers",
     url: "https://www.oca.org/orthodoxy/prayers",
     note: "Public prayers that teach the Church’s language of repentance, daily prayer, thanksgiving, and intercession.",
     tags: ["prayer", "pray", "repentance", "psalm", "rule"],
   },
   {
-    title: "OCA – Daily Readings",
+    title: "OCA: Daily Readings",
     url: "https://www.oca.org/readings",
     note: "Daily Scripture and saints for keeping learning tied to the Church calendar.",
     tags: ["read", "scripture", "bible", "saints", "calendar", "daily"],
@@ -93,13 +93,13 @@ const sources: GuideSource[] = [
     tags: ["goarch", "greek", "learn", "new", "catechism", "orthodox"],
   },
   {
-    title: "Assembly of Canonical Orthodox Bishops – Parish Directory",
+    title: "Assembly of Canonical Orthodox Bishops: Parish Directory",
     url: "https://www.assemblyofbishops.org/directories/parishes/",
     note: "Canonical Orthodox parish directory for finding churches across North America.",
     tags: ["parish", "church", "directory", "communion", "oca", "find"],
   },
   {
-    title: "ROCOR – Orthodox Christian Resources",
+    title: "ROCOR: Orthodox Christian Resources",
     url: "https://www.synod.com/synod/engdocuments/enart_resources.html",
     note: "Traditional Orthodox teaching and resources from ROCOR.",
     tags: ["rocor", "traditional", "learn", "prayer", "orthodox"],
@@ -165,7 +165,7 @@ function guideResponse(input: string) {
   }
 
   if (includesAny(q, ["pray", "prayer", "rule", "jesus prayer", "distracted", "failing"])) {
-    return `Begin smaller than your ambition. A humble rule might be: the Trisagion prayers, the Lord’s Prayer, one short Psalm or Gospel reading, and a few minutes of the Jesus Prayer. Keep it steady rather than dramatic.\n\nWhen distracted, return gently. Do not judge prayer by emotion, length, novelty, or intensity. The point is faithfulness before God, not a spiritual performance.\n\nFor grounding, start with ${sourcesToCheck}, especially the Church’s public prayers and basic catechesis.\n\n${priestReminder}`;
+    return `Begin smaller than your ambition. A humble rule might be: the Trisagion prayers, the Lord’s Prayer, one short Psalm or Gospel reading, and a few minutes of the Jesus Prayer. Keep it steady.\n\nWhen distracted, return gently. Do not judge prayer by emotion, length, novelty, or intensity. What matters is faithfulness before God.\n\nFor grounding, start with ${sourcesToCheck}, especially the Church’s public prayers and basic catechesis.\n\n${priestReminder}`;
   }
 
   if (includesAny(q, ["fast", "fasting", "food", "lent", "wednesday", "friday"])) {
@@ -181,10 +181,10 @@ function guideResponse(input: string) {
   }
 
   if (includesAny(q, ["source", "sources", "oca", "goarch", "antiochian", "rocor", "parish", "church", "directory"])) {
-    return `For trustworthy Orthodox learning, start with OCA – The Orthodox Faith for catechesis, OCA Questions & Answers for pastoral topics, OCA Prayers for the Church’s language of prayer, and OCA Daily Readings for Scripture with the Church calendar.\n\nYou can also compare introductory resources from canonical churches, including the Antiochian Archdiocese, GOARCH, and ROCOR. To find a parish, use the Assembly of Canonical Orthodox Bishops parish directory.\n\nRead slowly and locally: one parish, one priest, one source family, one next faithful step.\n\n${priestReminder}`;
+    return `For trustworthy Orthodox learning, start with the OCA's The Orthodox Faith for catechesis, OCA Questions & Answers for pastoral topics, OCA Prayers for the Church’s language of prayer, and OCA Daily Readings for Scripture with the Church calendar.\n\nYou can also compare introductory resources from canonical churches, including the Antiochian Archdiocese, GOARCH, and ROCOR. To find a parish, use the Assembly of Canonical Orthodox Bishops parish directory.\n\nRead slowly and locally: one parish, one priest, one source family, one next faithful step.\n\n${priestReminder}`;
   }
 
-  return `I would handle this with a simple Orthodox pattern: pray briefly, name the concern honestly, avoid dramatic conclusions, and take one concrete faithful step today. The spiritual life is usually healed by steadiness: repentance, humility, Scripture with the Church, confession, mercy, and parish life.\n\nFor sources, start with ${sourcesToCheck}. Read slowly and prefer the guidance of your actual parish over scattered online opinions.\n\nIf this question involves a major life decision, a serious sin pattern, family conflict, mental health, or strict fasting, do not settle it alone in an app. Bring it into confession or pastoral conversation.\n\n${priestReminder}`;
+  return `I would handle this with a simple Orthodox pattern: pray briefly, say plainly what worries you, avoid dramatic conclusions, and take one concrete faithful step today. The spiritual life is usually healed by steadiness: repentance, humility, Scripture with the Church, confession, mercy, and parish life.\n\nFor sources, start with ${sourcesToCheck}. Read slowly and prefer the guidance of your own parish over scattered online opinions.\n\nIf this question involves a major life decision, a serious sin pattern, family conflict, mental health, or strict fasting, do not settle it alone in an app. Bring it into confession or pastoral conversation.\n\n${priestReminder}`;
 }
 
 function SectionCard({ title, children, icon }: { title: string; children: React.ReactNode; icon: React.ReactNode }) {

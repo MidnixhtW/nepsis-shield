@@ -59,7 +59,7 @@ export function BecomingOrthodox() {
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Becoming Orthodox</p>
         <h2 className="mt-1.5 text-2xl font-semibold tracking-tight">Where are you on the way?</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Pick the step you are on. Parishes do things a little differently, so your priest is always the guide; this is a map, not a rulebook. It stays on this device.
+          Pick the step you are on. Parishes do things a little differently, so where your priest says something different, follow your priest. What you mark here stays on this device.
         </p>
         <ol className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6" aria-label="Steps into the Church">
           {JOURNEY_STAGES.map((item, itemIndex) => {

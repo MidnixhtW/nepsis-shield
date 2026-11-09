@@ -550,7 +550,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   When can prayer realistically take root?
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Choose the rhythm you can actually keep. A small rule kept peacefully is a beautiful beginning.
+                  Choose a rhythm you can keep. A small rule kept in peace is a good beginning.
                 </p>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -584,7 +584,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               {step === "rule" ? rule.title : "Your daily rule is being shaped gently."}
             </p>
             <p className="truncate text-xs text-muted-foreground">
-              {step === "rule" ? rule.pastoralNote : "One clear choice per screen. No pressure, no clutter."}
+              {step === "rule" ? rule.pastoralNote : "One choice per screen. You can change any of it later."}
             </p>
           </div>
           <Button

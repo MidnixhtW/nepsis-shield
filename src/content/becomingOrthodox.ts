@@ -20,7 +20,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     about: "You have seen something of Orthodoxy (a video, a friend, a book) and want to know more. There is no pressure and no deadline.",
     expect: [
       "You can pray Orthodox prayers now. Morning and evening prayers in this app are a good start.",
-      "Online content is a door, not the house. The Church is a parish, a priest and a community, not a feed.",
+      "Videos and posts can start you off, but the Church is a parish, a priest and a community.",
       "Questions are welcome. The faith has been asked hard questions for two thousand years.",
     ],
     steps: [
@@ -76,7 +76,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Catechism classes cover the Creed, the sacraments, prayer, fasting and the life of the Church.",
       "You will choose a sponsor (godparent), an Orthodox Christian in good standing who will pray for you and help you, with the priest's blessing.",
       "You will choose a patron saint, often one whose name you will take or already bear.",
-      "Before you are received you will usually make a first confession of your whole life. The priest will help you prepare; it is a gift, not a test.",
+      "Before you are received you will usually make a first confession of your whole life. The priest will help you prepare, and it is a sacrament of healing.",
       "Depending on your background and the parish, you will be received by Baptism or by Chrismation. Your priest and bishop decide this.",
     ],
     steps: [

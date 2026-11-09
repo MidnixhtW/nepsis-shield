@@ -618,7 +618,7 @@ export const prayerSources = [
     ],
   },
   {
-    group: "Assembly of Canonical Orthodox Bishops (US) – Liturgical Texts",
+    group: "Assembly of Canonical Orthodox Bishops (US): Liturgical Texts",
     items: [
       {
         label: "Liturgical Texts (official)",
