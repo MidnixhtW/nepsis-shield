@@ -31,9 +31,13 @@ test("complete the guided daily prayer flow", async ({ page }) => {
   await reader.getByRole("button", { name: "Next" }).click();
   await expect(reader.getByRole("heading", { name: "Close", exact: true })).toBeVisible();
 
-  await page.getByRole("button", { name: "Mark complete" }).click();
+  await reader.getByRole("button", { name: "Mark complete" }).click();
 
-  await expect(page.getByText("Prayer marked complete for today.")).toBeVisible();
+  // A closing screen: glory to God, and the Church praying the same prayers.
+  await expect(reader.getByRole("heading", { name: "Glory to God" })).toBeVisible();
+  await expect(reader.getByText(/The Church prays these same prayers this morning/)).toBeVisible();
+  await reader.getByRole("button", { name: "Done" }).click();
+  await expect(reader).toHaveCount(0);
   await expect(page.getByText("Complete", { exact: true })).toBeVisible();
   await expect(page.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "100");
 

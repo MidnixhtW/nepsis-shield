@@ -38,6 +38,7 @@ import { showSuccess } from "@/utils/toast";
 import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
 import { READERS, clipUrl, useReader } from "@/lib/narration";
 import { AudioRing } from "@/components/app/AudioRing";
+import { PrayerFinished } from "@/components/app/PrayerFinished";
 import { SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 import { spokenText } from "@/lib/narrationText";
 import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
@@ -77,6 +78,8 @@ export function DailyPrayerFlow() {
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
   const [hydrated, setHydrated] = useState(false);
   const [immersive, setImmersive] = useState(false);
+  // After the last step of full-screen prayer, a closing screen shows before the reader closes.
+  const [finished, setFinished] = useState(false);
   const today = useCurrentDay();
   const [searchParams, setSearchParams] = useSearchParams();
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -178,8 +181,8 @@ export function DailyPrayerFlow() {
     if (stepIndex >= steps.length - 1) {
       setCompleted((prev) => ({ ...prev, [progressKey]: true }));
       markPrayerComplete(time, mode);
-      showSuccess("Prayer marked complete for today.");
-      setImmersive(false);
+      if (immersive) setFinished(true);
+      else showSuccess("Prayer marked complete for today.");
       return;
     }
     // Beginning the prayer opens the distraction-free view.
@@ -405,7 +408,13 @@ export function DailyPrayerFlow() {
       </Link>
 
       {/* Distraction-free prayer: one step at a time, large text, app menus hidden. */}
-      <Dialog.Root open={immersive} onOpenChange={setImmersive}>
+      <Dialog.Root
+        open={immersive}
+        onOpenChange={(open) => {
+          setImmersive(open);
+          if (!open) setFinished(false);
+        }}
+      >
         <Dialog.Portal>
           <Dialog.Content
             aria-describedby={undefined}
@@ -416,6 +425,17 @@ export function DailyPrayerFlow() {
           >
             {/* The light of this hour, behind the prayer. */}
             <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: SKY_GRADIENT[skyPhase(new Date())] }} />
+            {finished ? (
+              <PrayerFinished
+                time={time}
+                prayerName={mode === "watch" ? "Watch rule" : mode === "seraphim" ? "rule of St. Seraphim" : `${prayerMeta[time].label.toLowerCase()} prayers`}
+                onDone={() => {
+                  setImmersive(false);
+                  setFinished(false);
+                }}
+              />
+            ) : (
+            <>
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                 {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
@@ -464,6 +484,8 @@ export function DailyPrayerFlow() {
                 </Button>
               </div>
             </footer>
+            </>
+            )}
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

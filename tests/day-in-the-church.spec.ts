@@ -34,3 +34,24 @@ test("full-screen prayer reads aloud from a round button in the footer", async (
   await dialog.getByRole("button", { name: "Stop reading" }).click();
   await expect(dialog.getByRole("button", { name: "Read aloud" })).toBeVisible();
 });
+
+test("the Jesus Prayer counts on a ring you tap", async ({ page }) => {
+  await page.goto("/pray?tab=counter");
+  const ring = page.getByRole("button", { name: /^Count a prayer/ });
+  await expect(ring).toHaveAccessibleName(/0 of 100 today/);
+  await ring.click();
+  await ring.click();
+  await expect(ring).toHaveAccessibleName(/2 of 100 today/);
+});
+
+test("Today shows the day's prayer as a line that fills in", async ({ page }) => {
+  await page.clock.setFixedTime(new Date(2026, 9, 13, 7, 0));
+  await page.goto("/today");
+  const line = page.getByRole("navigation", { name: /Today's prayer/ });
+  await expect(line).toHaveAccessibleName("Today's prayer: 0 of 4 done");
+  await expect(line.getByRole("link", { name: "Morning: not yet" })).toBeVisible();
+  await page.goto("/read?read=daily");
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("daily_rhythm:v1") ?? ""), { timeout: 20_000 }).toContain('"reading":true');
+  await page.goto("/today");
+  await expect(page.getByRole("navigation", { name: /Today's prayer/ }).getByRole("link", { name: "Readings: done" })).toBeVisible();
+});

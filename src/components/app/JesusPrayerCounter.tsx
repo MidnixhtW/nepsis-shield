@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Minus, Moon, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
 import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
+import { CountRing } from "@/components/app/CountRing";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -228,34 +228,23 @@ export function JesusPrayerCounter() {
         <Separator className="my-4" />
 
         <div className="grid gap-4">
-          <div className="rounded-2xl border border-border/60 bg-muted/25 p-4">
-            <div className="flex items-end justify-between">
-              <div>
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                  Today
-                </p>
-                <p className="mt-1 text-3xl font-semibold tabular-nums tracking-tight">
-                  {count}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-                  Goal
-                </p>
-                <p className="mt-1 text-lg font-semibold tabular-nums">{goal}</p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <Progress value={pct} className="h-2.5 rounded-full" />
-              <div className="mt-2 flex items-center justify-between">
-                <p className="text-xs text-muted-foreground">{pct}%</p>
-                {saveEnabled ? (
-                  <p className="text-xs text-muted-foreground">
-                    Streak: <span className="font-semibold text-foreground">{streakDays}</span>
-                  </p>
-                ) : null}
-              </div>
-            </div>
+          <div className="grid justify-items-center gap-3 rounded-2xl border border-border/60 bg-muted/25 p-5">
+            <CountRing
+              count={count}
+              goal={goal}
+              onTap={() => {
+                prayerRopeHaptic();
+                setCount((c) => c + 1);
+              }}
+            />
+            <p className="text-xs text-muted-foreground">
+              {pct}% of today's goal
+              {saveEnabled ? (
+                <>
+                  {" · "}Streak: <span className="font-semibold text-foreground">{streakDays}</span>
+                </>
+              ) : null}
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3">

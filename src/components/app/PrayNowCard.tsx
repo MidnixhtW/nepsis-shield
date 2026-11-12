@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
 import { useNow } from "@/lib/prayerHours";
+import { DayTimeline } from "@/components/app/DayTimeline";
 import { useSettings } from "@/hooks/useSettings";
 import { dayInTheChurch, SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 
@@ -116,6 +117,7 @@ export function PrayNowCard() {
           <Link to="/pray">All prayer</Link>
         </Button>
       </div>
+      <DayTimeline />
       {favorites.length ? (
         <nav aria-label="Favorites" className="relative mt-4 flex flex-wrap gap-2 border-t border-border/50 pt-4">
           {favorites.slice(0, 6).map((favorite) => (
