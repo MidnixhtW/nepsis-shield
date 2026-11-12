@@ -8,6 +8,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
 import { useNow } from "@/lib/prayerHours";
+import { useSettings } from "@/hooks/useSettings";
+import { dayInTheChurch, SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 
 const LABELS: Record<PrayerTime, { title: string; line: string }> = {
   morning: { title: "Morning prayers", line: "Offer the day to God before the noise begins." },
@@ -52,10 +54,27 @@ export function PrayNowCard() {
   const [mode, setMode] = useState<PrayerMode>(savedMode);
   const done = !!rhythm.today.prayers[time];
   const next = NEXT[time];
+  const { settings } = useSettings();
+  const churchDay = dayInTheChurch(now, settings.calendarMode);
+  const phase = skyPhase(now);
 
   return (
-    <section aria-labelledby="pray-now-title" className="rounded-3xl border border-accent/30 bg-card p-5 sm:p-6">
-      <div>
+    <section
+      aria-labelledby="pray-now-title"
+      data-season={churchDay.season}
+      data-sky={phase}
+      className="relative overflow-hidden rounded-3xl border border-accent/30 bg-card p-5 sm:p-6"
+    >
+      {/* The light of this hour of the day, and the color of this season of the Church. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ backgroundImage: SKY_GRADIENT[phase] }} />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-1" style={{ backgroundColor: `hsl(${churchDay.color})` }} />
+      {churchDay.label ? (
+        <p className="relative mb-3 flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+          <span aria-hidden className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: `hsl(${churchDay.color})` }} />
+          {churchDay.label}
+        </p>
+      ) : null}
+      <div className="relative">
         <div className="min-w-0">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{done ? "Prayed today" : "Pray now"}</p>
           <h2 id="pray-now-title" className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">{LABELS[time].title}</h2>
@@ -73,7 +92,7 @@ export function PrayNowCard() {
           setMode(value as PrayerMode);
           saveMode(value as PrayerMode);
         }}
-        className="mt-4 flex flex-wrap justify-start gap-1.5"
+        className="relative mt-4 flex flex-wrap justify-start gap-1.5"
       >
         {QUICK_MODES.map((item) => (
           <ToggleGroupItem
@@ -85,7 +104,7 @@ export function PrayNowCard() {
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="relative mt-3 flex flex-wrap gap-2">
         <Button asChild className="h-11 rounded-full px-6 font-semibold" variant={done ? "outline" : "default"}>
           <Link to={`/pray?tab=daily&begin=${time}`}>
             {done ? <Check className="mr-2 h-4 w-4" /> : null}
@@ -98,7 +117,7 @@ export function PrayNowCard() {
         </Button>
       </div>
       {favorites.length ? (
-        <nav aria-label="Favorites" className="mt-4 flex flex-wrap gap-2 border-t border-border/50 pt-4">
+        <nav aria-label="Favorites" className="relative mt-4 flex flex-wrap gap-2 border-t border-border/50 pt-4">
           {favorites.slice(0, 6).map((favorite) => (
             <Link
               key={favorite.to}

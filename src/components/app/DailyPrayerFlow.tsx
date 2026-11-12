@@ -16,8 +16,6 @@ import {
   Sun,
   Sunset,
   Type,
-  Volume2,
-  VolumeX,
   X,
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -39,6 +37,8 @@ import {
 import { showSuccess } from "@/utils/toast";
 import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
 import { READERS, clipUrl, useReader } from "@/lib/narration";
+import { AudioRing } from "@/components/app/AudioRing";
+import { SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 import { spokenText } from "@/lib/narrationText";
 import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
@@ -414,26 +414,13 @@ export function DailyPrayerFlow() {
               (readerPrefs.night ? "bg-slate-950 text-slate-100" : "bg-background")
             }
           >
+            {/* The light of this hour, behind the prayer. */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10" style={{ backgroundImage: SKY_GRADIENT[skyPhase(new Date())] }} />
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                 {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
-                {canListen ? (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    aria-pressed={readingAloud}
-                    aria-label={readingAloud ? "Stop reading" : "Read aloud"}
-                    className="rounded-full"
-                    onClick={() => setReadingAloud((on) => !on)}
-                  >
-                    {readingAloud ? <VolumeX className="h-4 w-4 sm:mr-1.5" /> : <Volume2 className="h-4 w-4 sm:mr-1.5" />}
-                    {/* Icon only on phones so the step counter stays on one line. */}
-                    <span className="hidden sm:inline">{readingAloud ? "Stop reading" : "Read aloud"}</span>
-                  </Button>
-                ) : null}
                 <select
                   aria-label="Reader"
                   value={reader}
@@ -470,6 +457,7 @@ export function DailyPrayerFlow() {
                 <Button type="button" variant="outline" className="h-12 rounded-2xl border-border/60 px-5" onClick={goBack} disabled={stepIndex === 0}>
                   <ChevronLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
+                {canListen ? <AudioRing on={readingAloud} onToggle={() => setReadingAloud((on) => !on)} /> : null}
                 <Button type="button" className="h-12 flex-1 rounded-2xl sm:flex-none sm:px-8" onClick={goNext}>
                   {nextLabel}
                   {nextIcon}
