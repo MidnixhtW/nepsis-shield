@@ -10,6 +10,7 @@ import { openAppMenu } from "@/lib/appEvents";
 import { useFavorites } from "@/lib/favorites";
 import { useRecentPlaces } from "@/lib/recentPlaces";
 import { CURRENT_VERSION } from "@/lib/releaseInfo";
+import { PolicyLinks } from "@/components/app/PolicyLinks";
 
 function Row({ to, icon: Icon, label, hint, trailing }: { to: string; icon: ComponentType<{ className?: string }>; label: string; hint?: string; trailing?: ReactNode }) {
   return (
@@ -107,7 +108,7 @@ export function MeHub() {
       <Section title="App">
         <ul className="grid sm:grid-cols-2">
           <Row to="/settings" icon={SettingsIcon} label="Settings" hint="Reminders, calendar, text size" />
-          <Row to="/privacy" icon={Shield} label="Privacy and backup" hint="Your data stays on this device" />
+          <Row to="/privacy" icon={Shield} label="Your data and backup" hint="Your data stays on this device" />
           <Row to="/download" icon={Download} label="Install / share" hint="Android app, home screen, QR code" />
           <Row to="/about" icon={Info} label="About" hint="Purpose, sources and what's new" />
         </ul>
@@ -118,6 +119,7 @@ export function MeHub() {
           <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Version {CURRENT_VERSION}</span>
         </div>
       </Section>
+      <PolicyLinks />
     </div>
   );
 }

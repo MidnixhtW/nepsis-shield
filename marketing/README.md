@@ -53,10 +53,18 @@ Everything here is ready to copy and upload. Regenerate the images after UI chan
 >
 > Nepsis Shield supports prayer and learning; it does not replace your priest, chaplain, or counselor.
 
-**Data safety answers (Android app)** — check these against the current build before submitting:
-- Data collected: **None.** Data shared: **None.**
-- The app stores your entries only on the device; encrypted backups are created only when you choose to.
-- The app fetches public calendar and Bible text from orthocal.info, bible-api.com, and bolls.life; no personal data is sent.
+**Privacy policy URL:** https://www.nepsisshield.com/privacy-policy (Terms: `/terms`, Cookie Policy: `/cookies`).
+
+**Data safety answers (Android app)** — check these against the current build before submitting. Prayer groups and the fast count are optional features that send data to the app's server, so "None" is not accurate:
+- Data collected (all optional, all for **App functionality**, encrypted in transit):
+  - **Personal info → Name**: the first name a person chooses in a prayer group.
+  - **App activity → Other user-generated content**: prayer requests and daily prayer marks in a group.
+  - **Device or other IDs**: the random number made on the device for the fast count and for recognizing a person's own requests in a group.
+- Data shared: **None.** (Group members see requests because the user chose to post them; Play does not count user-initiated sharing.)
+- Users can delete their data: they remove their own requests in the app, a group's creator can close it, and everything expires on its own (requests 30 days, marks 3 days, unused groups 90 days, fast counts about 4 months).
+- The server sees IP addresses only to rate-limit requests and keeps each count for about two minutes. If you count that as collection, add it under **Device or other IDs** for **Fraud prevention, security, and compliance**.
+- The app stores everything else only on the device; encrypted backups are created only when the person chooses to.
+- The app fetches public calendar and Bible text from orthocal.info, bible-api.com, and bolls.life; nothing the person wrote is sent.
 - Permissions: notifications (only if you turn on reminders).
 - The website's cookie-free visit counts (Vercel Web Analytics) are not part of the Android app.
 

@@ -36,6 +36,8 @@ test("create a group, share a request, and mark prayer", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Carry one another's burdens." })).toBeVisible();
   await page.getByLabel("Group name").fill("Our family");
   await page.getByLabel("Your first name").fill("Anna");
+  await expect(page.getByRole("button", { name: "Create group" })).toBeDisabled();
+  await page.getByRole("checkbox", { name: /I agree/ }).check();
   await page.getByRole("button", { name: "Create group" }).click();
 
   await expect(page.getByRole("heading", { name: "Our family", level: 2 })).toBeVisible();
@@ -58,6 +60,7 @@ test("an invite link lets someone join under their own name", async ({ page }) =
   await page.goto(`/pray?tab=groups&join=${group.id}`);
   await expect(page.getByRole("heading", { name: "Join a prayer group" })).toBeVisible();
   await page.getByLabel("Your first name").fill("Peter");
+  await page.getByRole("checkbox", { name: /I agree/ }).check();
   await page.getByRole("button", { name: "Join group" }).click();
   await expect(page.getByRole("heading", { name: "St. Michael parish", level: 2 })).toBeVisible();
   await expect(page.getByText("You pray here as Peter.")).toBeVisible();
@@ -69,6 +72,8 @@ test("groups explain when the service is not switched on", async ({ page }) => {
   await page.goto("/pray?tab=groups");
   await page.getByLabel("Group name").fill("Our family");
   await page.getByLabel("Your first name").fill("Anna");
+  await expect(page.getByRole("button", { name: "Create group" })).toBeDisabled();
+  await page.getByRole("checkbox", { name: /I agree/ }).check();
   await page.getByRole("button", { name: "Create group" }).click();
   await expect(page.getByText("Prayer groups are not switched on yet.")).toBeVisible();
 });

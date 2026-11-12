@@ -521,7 +521,7 @@ export function OrthodoxBible() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Text API sources: bible-api.com and bolls.life (public). OSB text is copyrighted.
+            Bible text comes from bible-api.com and bolls.life. New King James Version® copyright © 1982 by Thomas Nelson. Brenton's Septuagint (1851), the KJV, the WEB and the Douay-Rheims are in the public domain.
           </p>
         </div>
       </Card>

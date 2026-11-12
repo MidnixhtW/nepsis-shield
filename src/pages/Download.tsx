@@ -59,7 +59,7 @@ function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; inst
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild className="rounded-2xl">
-              <a href={qrCodeUrl} download="nepsis-shield-install-qr.png" target="_blank" rel="noopener noreferrer">
+              <a href={qrCodeUrl} download="nepsis-shield-install-qr.svg" target="_blank" rel="noopener noreferrer">
                 <DownloadIcon className="mr-2 h-4 w-4" /> Download QR
               </a>
             </Button>
@@ -138,7 +138,8 @@ function ApkDownloadCard() {
 
 export default function Download() {
   const installPageUrl = INSTALL_PAGE_URL;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&format=png&margin=16&data=${encodeURIComponent(installPageUrl)}`;
+  // Made once from INSTALL_PAGE_URL and kept with the site, so showing it asks no other server.
+  const qrCodeUrl = "/install-qr.svg";
 
   return (
     <PageContainer>

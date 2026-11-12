@@ -1,24 +1,33 @@
 // The icon shown across the top of Today: the feast when there is one, otherwise the season's icon.
-// Every image is a public-domain icon on Wikimedia Commons (allowed by the site's image policy).
+// Every image is a public-domain icon from Wikimedia Commons, copied into public/icons/days so loading one
+// sends nothing to another site (Commons sets tracking cookies on image requests). The source link stays for credit.
 import { churchDate, daysBetween, orthodoxPascha, type ChurchCalendar } from "./fastingSeasons";
 import { liturgicalSeason, SEASON_LABELS } from "./liturgicalSeason";
 
 export type DayIcon = {
   /** What the day is, e.g. "The Dormition of the Theotokos". */
   title: string;
-  /** The Commons file name, for looking up a direct image address (share cards need one). */
-  file: string;
   imageUrl: string;
   sourceUrl: string;
   alt: string;
   credit: string;
 };
 
+/** The local copy's name: the Commons file name in lowercase words, e.g. "Chora Anastasis1.jpg" -> "chora-anastasis1". */
+function localName(file: string) {
+  return file
+    .replace(/\.[a-z]+$/i, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60)
+    .replace(/-$/, "");
+}
+
 function commons(file: string, alt: string, credit: string) {
   const name = encodeURIComponent(file.replace(/ /g, "_"));
   return {
-    file,
-    imageUrl: `https://commons.wikimedia.org/wiki/Special:Redirect/file/${name}?width=900`,
+    imageUrl: `/icons/days/${localName(file)}.jpg`,
     sourceUrl: `https://commons.wikimedia.org/wiki/File:${name}`,
     alt,
     credit,

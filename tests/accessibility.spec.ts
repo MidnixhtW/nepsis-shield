@@ -10,6 +10,10 @@ const routes = [
   "/settings",
   "/about",
   "/privacy",
+  "/privacy-policy",
+  "/terms",
+  "/cookies",
+  "/pray?tab=groups",
   "/download",
   "/field-manual",
 ] as const;

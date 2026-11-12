@@ -1,5 +1,5 @@
 // Story-sized (1080 x 1920) share images for Instagram, TikTok and messages, drawn on a canvas in the
-// current theme's colors. The image is made on the device; only the icon (if any) is fetched.
+// current theme's colors. The image is made on the device from the app's own files.
 
 export type ShareCardInput = {
   /** Small line at the top, e.g. "A word from the Fathers". */
@@ -8,8 +8,8 @@ export type ShareCardInput = {
   text: string;
   /** Who said it, or the reference. */
   attribution?: string;
-  /** A Wikimedia Commons file name for an icon to show above the text. Left out if it can't be loaded. */
-  commonsFile?: string;
+  /** The app's own address for an icon to show above the text. Left out if it can't be loaded. */
+  imageUrl?: string;
 };
 
 const WIDTH = 1080;
@@ -40,25 +40,15 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number) {
   return lines;
 }
 
-// Commons' redirect links don't allow drawing into a canvas, but the direct upload.wikimedia.org address does.
-async function commonsImage(file: string) {
-  try {
-    const api = `https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url&iiurlwidth=800&titles=${encodeURIComponent(`File:${file}`)}`;
-    const data = await fetch(api).then((response) => response.json());
-    const page = Object.values(data?.query?.pages ?? {})[0] as { imageinfo?: Array<{ thumburl?: string }> } | undefined;
-    const url = page?.imageinfo?.[0]?.thumburl;
-    if (!url) return null;
-    return await new Promise<HTMLImageElement | null>((resolve) => {
-      const image = new Image();
-      image.crossOrigin = "anonymous";
-      image.onload = () => resolve(image);
-      image.onerror = () => resolve(null);
-      image.src = url;
-      setTimeout(() => resolve(null), 8000);
-    });
-  } catch {
-    return null;
-  }
+// The icons are the app's own files, so they can be drawn into the canvas and exported.
+function loadImage(url: string) {
+  return new Promise<HTMLImageElement | null>((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => resolve(null);
+    image.src = url;
+    setTimeout(() => resolve(null), 8000);
+  });
 }
 
 // An image without cross-origin permission would block saving the canvas, so test it on a scratch canvas first.
@@ -103,7 +93,7 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
   }
 
   await document.fonts?.ready;
-  const image = input.commonsFile ? await commonsImage(input.commonsFile) : null;
+  const image = input.imageUrl ? await loadImage(input.imageUrl) : null;
   const icon = image && canExport(image) ? image : null;
 
   // Measure everything first so the whole block can sit in the middle of the card.

@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v13";
+const CACHE_NAME = "nepsis-shield-pwa-v14";
 const APP_SHELL = [
   "/",
   "/today",

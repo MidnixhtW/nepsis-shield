@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { ArrowLeft, Check, HandHeart, Lock, Plus, Share2, Trash2, Users } from "lucide-react";
 import {
   AlertDialog,
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import {
   GROUPS_CHANGED_EVENT,
@@ -71,9 +72,26 @@ function PrivacyNote() {
     <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
       <Lock aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0" />
       <span>
-        Anyone with a group's link can join it. Only the first name you choose and the requests you add are kept on our server, for that group alone. Requests fade after 30 days, and a group left unused for 90 days is deleted.
+        Anyone with a group's link can join it and read it. Our server keeps the group's name, the requests you add, and the days you mark prayer, each with the first name you choose. Requests are deleted after 30 days, and a group left unused for 90 days is deleted.{" "}
+        <Link to="/privacy-policy" className="font-semibold underline underline-offset-2">Privacy Policy</Link>
       </span>
     </p>
+  );
+}
+
+// Prayer requests can show a person's faith and health, so nothing is sent until the person agrees.
+function ConsentCheck({ id, checked, onChange }: { id: string; checked: boolean; onChange: (checked: boolean) => void }) {
+  return (
+    <div className="flex items-start gap-3 sm:col-span-2">
+      <Checkbox id={id} checked={checked} onCheckedChange={(value) => onChange(value === true)} className="mt-0.5 h-5 w-5" required />
+      <Label htmlFor={id} className="text-sm font-normal leading-relaxed text-muted-foreground">
+        I agree that the group's name, my first name, and the requests and prayer marks I add are kept on the Nepsis Shield server and shown to
+        anyone with the group's link, as the{" "}
+        <Link to="/privacy-policy" className="font-semibold text-foreground underline underline-offset-2">Privacy Policy</Link> explains. I am 13 or
+        older and will follow the{" "}
+        <Link to="/terms" className="font-semibold text-foreground underline underline-offset-2">Terms of Use</Link>.
+      </Label>
+    </div>
   );
 }
 
@@ -131,10 +149,12 @@ export function PrayerGroups() {
 function CreateGroup({ onCreated }: { onCreated: (group: SavedGroup) => void }) {
   const [name, setName] = useState("");
   const [memberName, setMemberName] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (!agreed) return;
     setBusy(true);
     try {
       const group = await createGroup(name, memberName);
@@ -159,7 +179,8 @@ function CreateGroup({ onCreated }: { onCreated: (group: SavedGroup) => void }) 
           <Label htmlFor="group-member-name">Your first name</Label>
           <Input id="group-member-name" value={memberName} maxLength={40} required autoComplete="given-name" onChange={(event) => setMemberName(event.target.value)} />
         </div>
-        <Button type="submit" className="w-fit rounded-full" disabled={busy || !name.trim() || !memberName.trim()}>
+        <ConsentCheck id="group-create-consent" checked={agreed} onChange={setAgreed} />
+        <Button type="submit" className="w-fit rounded-full" disabled={busy || !name.trim() || !memberName.trim() || !agreed}>
           <Plus className="mr-2 h-4 w-4" /> Create group
         </Button>
       </form>
@@ -169,10 +190,12 @@ function CreateGroup({ onCreated }: { onCreated: (group: SavedGroup) => void }) 
 
 function JoinGroup({ id, onJoined, onCancel }: { id: string; onJoined: (id: string) => void; onCancel: () => void }) {
   const [memberName, setMemberName] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (!agreed) return;
     setBusy(true);
     try {
       const group = await joinGroup(id, memberName);
@@ -197,8 +220,9 @@ function JoinGroup({ id, onJoined, onCancel }: { id: string; onJoined: (id: stri
           <Label htmlFor="join-member-name">Your first name</Label>
           <Input id="join-member-name" value={memberName} maxLength={40} required autoComplete="given-name" onChange={(event) => setMemberName(event.target.value)} />
         </div>
+        <ConsentCheck id="group-join-consent" checked={agreed} onChange={setAgreed} />
         <div className="flex flex-wrap gap-2">
-          <Button type="submit" className="rounded-full" disabled={busy || !memberName.trim()}>Join group</Button>
+          <Button type="submit" className="rounded-full" disabled={busy || !memberName.trim() || !agreed}>Join group</Button>
           <Button type="button" variant="ghost" className="rounded-full" onClick={onCancel}>Not now</Button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { ReadAloudBar } from "@/components/app/ReadAloudBar";
+import { PolicyLinks } from "@/components/app/PolicyLinks";
 
 const widths = {
   compact: "max-w-4xl",
@@ -26,6 +27,7 @@ export function PageContainer({
       )}
     >
       {children}
+      <PolicyLinks className="mt-10" />
       {/* Pages outside the main tabs still show the read-aloud player while something is playing. */}
       <div className="pointer-events-none fixed inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 mx-auto w-full max-w-md px-4">
         <ReadAloudBar className="pointer-events-auto" />

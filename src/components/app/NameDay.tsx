@@ -110,7 +110,7 @@ export function PatronSaintSettings() {
             placeholder="Type a name, e.g. Nicholas"
             maxLength={60}
             autoComplete="off"
-            aria-controls="patron-suggestions"
+            aria-controls={suggestions.length ? "patron-suggestions" : undefined}
           />
           {suggestions.length ? (
             <ul id="patron-suggestions" aria-label="Matching saints" className="grid gap-1 rounded-xl border border-border/60 bg-background p-1">

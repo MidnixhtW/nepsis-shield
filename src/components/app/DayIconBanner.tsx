@@ -37,7 +37,7 @@ export function DayIconBanner({ today, calendar, saints }: { today: Date; calend
               card={{
                 eyebrow: format(today, "EEEE, MMMM d"),
                 text: ordinary && firstSaint ? `Today we remember ${firstSaint}` : icon.title,
-                commonsFile: icon.file,
+                imageUrl: icon.imageUrl,
               }}
               fileName="today.png"
             />

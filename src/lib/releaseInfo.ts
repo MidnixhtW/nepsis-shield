@@ -26,6 +26,8 @@ export const RELEASE_NOTES: ReleaseNote[] = [
       "The Bible now reads the Old Testament in the Septuagint (Brenton's English) and the New Testament in the NKJV by default, the pattern of the Orthodox Study Bible. The weekly Psalter follows the Septuagint's kathismata.",
       "The Rosary can follow the Luminous pattern, and picks the day's mysteries by itself.",
       "Saints of the West, with eight new patrons and two new stories for children: St Martin's cloak and St Cuthbert's otters.",
+      "A Privacy Policy, Terms of Use and Cookie Policy, linked at the bottom of every page. Prayer groups now ask you to agree before your name or requests are sent.",
+      "The icons on Today and the install QR code now come from this site itself, so loading them asks no other site and sets no cookies. Website visit counts skip anyone whose browser asks not to be tracked.",
     ],
   },
   {

@@ -405,10 +405,16 @@ export default function Privacy() {
                   Bible text for many references.
                 </p>
               </div>
-              <div className="rounded-2xl border border-border/60 bg-background p-4 sm:col-span-2">
+              <div className="rounded-2xl border border-border/60 bg-background p-4">
                 <p className="text-sm font-semibold">bolls.life</p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Alternative Bible datasets (used for some OSB-aligned lookups).
+                  Bible text, including the NKJV and Brenton's Septuagint.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border/60 bg-background p-4">
+                <p className="text-sm font-semibold">github.com</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  The newest Android build, on the Install page only.
                 </p>
               </div>
             </div>
@@ -416,14 +422,14 @@ export default function Privacy() {
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Visit counts on the website</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                nepsisshield.com counts page visits with Vercel Web Analytics so we know which parts of the app are used. It uses no cookies, does not identify you, and never sees anything you write or save in the app: prayers, names, notes, and progress stay on this device. The Android app does not count visits.
+                nepsisshield.com counts page visits with Vercel Web Analytics so we know which parts of the app are used. It uses no cookies, does not identify you, and never sees anything you write or save in the app: prayers, names, notes, and progress stay on this device. Browsers that send Do Not Track or Global Privacy Control are not counted. The Android app does not count visits.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Prayer groups and prayer partners (only if you use them)</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                A prayer group (a prayer partner is simply a group of two) keeps these on our server: the group's name, the first name you choose for it, the prayer requests you add, and who marked prayer each day. Anyone with the group's link can join and read it, so share the link only with people you trust. Requests are deleted after 30 days, daily prayer marks after 3 days, and a group left unused for 90 days is deleted. The group's creator can close it, which deletes everything in it at once. There are no accounts, and no email or phone number is ever asked for.
+                A prayer group (a prayer partner is simply a group of two) keeps these on our server: the group's name, the prayer requests you add, who marked prayer each day, and the first name you choose, shown with those. Anyone with the group's link can join and read it, so share the link only with people you trust. Requests are deleted after 30 days, daily prayer marks after 3 days, and a group left unused for 90 days is deleted. The group's creator can close it, which deletes everything in it at once. There are no accounts, and no email or phone number is ever asked for.
               </p>
             </div>
 
@@ -435,7 +441,9 @@ export default function Privacy() {
             </div>
 
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Privacy hardening: requests are sent with <span className="font-semibold text-foreground">no-referrer</span> and are cached per-session to reduce repeated calls.
+              Requests are sent with <span className="font-semibold text-foreground">no-referrer</span>, and copies are kept on this device so the same thing is not asked twice. The full details are in the{" "}
+              <Link to="/privacy-policy" className="font-semibold text-foreground underline underline-offset-2">Privacy Policy</Link> and{" "}
+              <Link to="/cookies" className="font-semibold text-foreground underline underline-offset-2">Cookie Policy</Link>.
             </p>
           </div>
         </Card>
