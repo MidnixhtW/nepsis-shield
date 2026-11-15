@@ -34,8 +34,8 @@ test("the Watchfulness Log counts days a rule was kept, privately", async ({ pag
     }
     localStorage.setItem("daily_rhythm:v1", JSON.stringify({ __wrapped: 1, v: { records, intentions: [], favoritePrayerIds: [], customRuleSteps: [] }, ts: Date.now() }));
   });
-  await page.goto("/today");
-  const log = page.getByRole("region", { name: "Watchfulness log" });
+  await page.goto("/me");
+  const log = page.getByRole("region", { name: /Prayer log/ });
   await expect(log).toContainText("3 days in a row");
   await expect(log).toContainText("3 in 12 weeks");
 });

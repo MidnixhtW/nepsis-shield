@@ -17,7 +17,7 @@ test("the menu's Go to search finds sections by name or keyword", async ({ page 
 });
 
 test("every theme can be chosen, including the new ones", async ({ page }) => {
-  for (const [label, cls] of [["Lenten Violet", "lenten"], ["Midnight", "midnight"], ["Paschal White", "paschal"]] as const) {
+  for (const [label, cls] of [["Olive & Brass", "dark"], ["Lenten Violet", "lenten"], ["Midnight", "midnight"], ["Paschal White", "paschal"], ["Church Year", "seasonal"]] as const) {
     await page.goto("/today");
     await page.getByRole("button", { name: "Open menu" }).click();
     await page.getByRole("button", { name: /^Theme: / }).click();

@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import type { AppTheme } from "@/components/app/ThemeProvider";
+import { DEFAULT_THEME, type AppTheme } from "@/components/app/ThemeProvider";
 
 /** Shared by the theme picker and first-time setup. `preview` is background, text, and accent. */
 export const themeOptions: Array<{
@@ -21,6 +21,13 @@ export const themeOptions: Array<{
   swatch: string;
   preview: [string, string, string];
 }> = [
+  {
+    value: "seasonal",
+    label: "Church Year",
+    description: "Follows the season: violet in Lent, red at Pascha, green at Pentecost, blue for the Theotokos",
+    swatch: "bg-[#6f9fd8]",
+    preview: ["#0c0f15", "#ede6d6", "#d6b45e"],
+  },
   {
     value: "dark",
     label: "Olive & Brass",
@@ -85,8 +92,8 @@ export function ThemeToggle({
 
   const activeTheme = mounted && themes.some((option) => option.value === theme)
     ? (theme as AppTheme)
-    : "dark";
-  const activeLabel = themes.find((option) => option.value === activeTheme)?.label ?? "Olive & Brass";
+    : DEFAULT_THEME;
+  const activeLabel = themes.find((option) => option.value === activeTheme)?.label ?? "Church Year";
 
   return (
     <DropdownMenu>
@@ -111,7 +118,7 @@ export function ThemeToggle({
           {variant === "row" ? <ChevronDown className="ml-2 h-4 w-4 shrink-0 text-muted-foreground" /> : null}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64 border-primary/25 bg-popover/95 p-1.5 backdrop-blur-xl">
+      <DropdownMenuContent align="end" className="max-h-[var(--radix-dropdown-menu-content-available-height)] w-64 overflow-y-auto border-primary/25 bg-popover/95 p-1.5 backdrop-blur-xl">
         <DropdownMenuLabel className="px-2 py-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
           Interface palette
         </DropdownMenuLabel>

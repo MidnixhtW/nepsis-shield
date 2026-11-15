@@ -3,21 +3,48 @@ import { useLocation, useNavigate, useParams, useSearchParams } from "react-rout
 import { AppHeader } from "@/components/app/AppHeader";
 
 import { AppShell, type AppSection } from "@/components/app/AppShell";
-import { PremiumSurface } from "@/components/app/PremiumSurface";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { LearnTab } from "@/components/app/LearnHub";
 import type { PrayerTab } from "@/components/app/PrayerHub";
 import type { ReadTab } from "@/components/app/ReadHub";
-import { AppFooter } from "@/components/app/AppFooter";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
 import NotFound from "@/pages/NotFound";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 import { recordVisit } from "@/lib/recentPlaces";
 
-const LearnHub = lazy(() => import("@/components/app/LearnHub").then((module) => ({ default: module.LearnHub })));
-const PrayerHub = lazy(() => import("@/components/app/PrayerHub").then((module) => ({ default: module.PrayerHub })));
-const ReadHub = lazy(() => import("@/components/app/ReadHub").then((module) => ({ default: module.ReadHub })));
+const loadLearnHub = () => import("@/components/app/LearnHub");
+const loadPrayerHub = () => import("@/components/app/PrayerHub");
+const loadReadHub = () => import("@/components/app/ReadHub");
+const loadMeHub = () => import("@/components/app/MeHub");
+
+const LearnHub = lazy(() => loadLearnHub().then((module) => ({ default: module.LearnHub })));
+const PrayerHub = lazy(() => loadPrayerHub().then((module) => ({ default: module.PrayerHub })));
+const ReadHub = lazy(() => loadReadHub().then((module) => ({ default: module.ReadHub })));
 const TodayOverview = lazy(() => import("@/components/app/TodayOverview").then((module) => ({ default: module.TodayOverview })));
-const MeHub = lazy(() => import("@/components/app/MeHub").then((module) => ({ default: module.MeHub })));
+const MeHub = lazy(() => loadMeHub().then((module) => ({ default: module.MeHub })));
+
+// Fetch the other tabs once the first screen is up, so switching tabs never shows the loading placeholder.
+function preloadTabs() {
+  const load = () => {
+    void loadPrayerHub();
+    void loadReadHub();
+    void loadLearnHub();
+    void loadMeHub();
+  };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(load, { timeout: 3000 });
+  else setTimeout(load, 1500);
+}
+
+// Shaped like the screen it stands in for, so the page never looks empty while a tab loads.
+function SectionPlaceholder() {
+  return (
+    <div role="status" aria-label="Loading" className="mx-auto grid w-full max-w-4xl gap-5">
+      <Skeleton className="h-56 rounded-3xl" />
+      <Skeleton className="h-36 rounded-3xl" />
+      <Skeleton className="h-24 rounded-3xl" />
+    </div>
+  );
+}
 const MonasticAudioPlayer = lazy(() => import("@/components/app/MonasticAudioPlayer").then((module) => ({ default: module.MonasticAudioPlayer })));
 
 const SECTIONS: AppSection[] = ["today", "pray", "read", "learn", "me"];
@@ -58,6 +85,7 @@ function isLearnTab(x: string | null): x is LearnTab {
     x === "path" ||
     x === "challenges" ||
     x === "creed" ||
+    x === "byheart" ||
     x === "guide" ||
     x === "qa" ||
     x === "liturgy" ||
@@ -65,7 +93,8 @@ function isLearnTab(x: string | null): x is LearnTab {
     x === "library" ||
     x === "hymns" ||
     x === "parish" ||
-    x === "serve"
+    x === "serve" ||
+    x === "stories"
   );
 }
 
@@ -84,6 +113,8 @@ const Index = () => {
   useEffect(() => {
     recordVisit(location.pathname, location.search);
   }, [location.pathname, location.search]);
+
+  useEffect(preloadTabs, []);
 
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -175,16 +206,10 @@ const Index = () => {
   return (
     <QuickStartDialog>
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
-      <Suspense
-        fallback={
-          <PremiumSurface className="grid min-h-40 place-items-center animate-pulse">
-            <p className="text-sm text-muted-foreground">Loading this section…</p>
-          </PremiumSurface>
-        }
-      >
+      <Suspense fallback={<SectionPlaceholder />}>
         <MonasticAudioPlayer />
 
-        <div className="grid gap-8 animate-in fade-in duration-500 sm:gap-10 lg:gap-12">
+        <div className="grid gap-8 sm:gap-10 lg:gap-12">
           {section === "today" ? (
             <div className="mx-auto grid w-full max-w-4xl gap-5 sm:gap-6 lg:max-w-6xl">
               <TodayOverview onNavigate={navigateTo} onOpenRoute={(path) => navigate(path)} />
@@ -202,7 +227,6 @@ const Index = () => {
           ) : null}
           {section === "me" ? <MeHub /> : null}
 
-          <AppFooter />
         </div>
       </Suspense>
     </AppShell>

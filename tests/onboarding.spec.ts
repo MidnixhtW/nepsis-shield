@@ -13,8 +13,15 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   })).toBeVisible();
 
   await onboarding.getByRole("button", { name: "Continue" }).click();
-  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme (keep Olive & Brass)
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme (keep Church Year)
+  // Every role keeps the same look; a role only tints the accent color.
+  const html = page.locator("html");
+  await onboarding.getByRole("button", { name: /^Military/ }).click();
+  await expect(html).toHaveClass(/seasonal/);
+  await expect(html).toHaveAttribute("data-role", "military");
   await onboarding.getByRole("button", { name: /EMS \/ medical/ }).click();
+  await expect(html).toHaveClass(/seasonal/);
+  await expect(html).toHaveAttribute("data-role", "ems");
   await onboarding.getByRole("button", { name: "Continue" }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar (keep New Calendar)
 
@@ -24,7 +31,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await onboarding.getByRole("button", { name: /Smallest faithful step/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
-  await expect(onboarding.getByText("Your Rule of Vigilance")).toBeVisible();
+  await expect(onboarding.getByText("Your daily prayer plan")).toBeVisible();
   await onboarding.getByRole("button", { name: "Seal this Daily Rule" }).click();
 
   await expect(page).toHaveURL(/\/today$/);

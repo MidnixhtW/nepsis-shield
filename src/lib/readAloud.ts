@@ -165,6 +165,14 @@ export function stopReadAloud() {
   setState(IDLE);
 }
 
+/** How far the current recording has played, from 0 to 1; null when the device voice is speaking or nothing is playing. */
+export function playbackProgress(): number | null {
+  if (!state.title || !player || !state.parts[state.index]?.audio) return null;
+  const duration = player.duration;
+  if (!duration || !Number.isFinite(duration)) return 0;
+  return Math.min(1, player.currentTime / duration);
+}
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => listeners.delete(listener);

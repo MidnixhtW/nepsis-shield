@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ChevronRight, Crosshair, Flame, ListChecks, Shield, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, Crosshair, Flame, Shield, SlidersHorizontal } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
@@ -7,7 +7,6 @@ import { SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
 // Learn > For those who serve: the support the app adds for people who keep watch over others for a living.
 const links = [
   { to: "/field-manual", label: "Life & Service Guide", hint: "Stress, grief, duty and travel, role by role", icon: Crosshair },
-  { to: "/learn?tab=guide", label: "Daily guide", hint: "Prayer before, during and after a shift", icon: ListChecks },
   { to: "/saints", label: "Saints", hint: "Warrior saints and patrons of those who serve", icon: SaintHaloIcon },
   { to: "/pray?tab=services&service=fallen-warriors", label: "Canon for the Fallen in Battle", hint: "The Church's prayer for those who gave their lives", icon: Flame },
   { to: "/settings#role", label: "Choose your service role", hint: "Show this support first across the app", icon: SlidersHorizontal },

@@ -164,7 +164,7 @@ export function InclusiveChristianPath({ compact = false }: { compact?: boolean 
               description="Rooted in the Church's prayer without becoming combative."
               icon={<Church className="h-5 w-5" />}
               items={[
-                "Morning/evening prayers, the Jesus Prayer — \"Lord Jesus Christ, Son of God, have mercy on me, a sinner\" — prayer rope practice, icons, feasts, fasting, saints, hymns, and propers.",
+                "Morning and evening prayers, the Jesus Prayer (\"Lord Jesus Christ, Son of God, have mercy on me, a sinner\"), prayer rope practice, icons, feasts, fasting, saints, hymns, and propers.",
                 "Beginner explanations for Theotokos, icons, Divine Liturgy, sacraments/mysteries, and Holy Tradition.",
                 "Official Orthodox source links when a topic needs more than a short summary.",
               ]}

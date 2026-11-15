@@ -40,7 +40,7 @@ const TOPICS: Topic[] = [
       "Use the Church's words (common prayers).",
       "Aim for attention and humility more than length.",
     ],
-    sourceLabel: "OCA – Prayer",
+    sourceLabel: "OCA: Prayer",
     sourceUrl:
       "https://www.oca.org/orthodoxy/the-orthodox-faith/worship/the-daily-cycles-of-prayer/prayer",
     icon: Sparkles,
@@ -54,7 +54,7 @@ const TOPICS: Topic[] = [
       "Join fasting to prayer and mercy.",
       "Avoid comparison; ask your priest for guidance if needed.",
     ],
-    sourceLabel: "OCA – Orthodox fasting",
+    sourceLabel: "OCA: Orthodox fasting",
     sourceUrl: "https://www.oca.org/questions/dailylife/orthodox-fasting",
     icon: ShieldCheck,
   },
@@ -66,7 +66,7 @@ const TOPICS: Topic[] = [
       "Give quietly; don't curate an image of generosity.",
       "Make a small habit you can keep weekly.",
     ],
-    sourceLabel: "OCA – Almsgiving",
+    sourceLabel: "OCA: Almsgiving",
     sourceUrl:
       "https://www.oca.org/orthodoxy/the-orthodox-faith/spirituality/prayer-fasting-and-almsgiving/almsgiving",
     icon: HandCoins,
@@ -79,7 +79,7 @@ const TOPICS: Topic[] = [
       "Keep the Gospels central; read the daily lections.",
       "Avoid sensational 'end-times' speculation.",
     ],
-    sourceLabel: "OCA – Bible (Q&A)",
+    sourceLabel: "OCA: Bible (Q&A)",
     sourceUrl: "https://www.oca.org/questions/scripture/bible",
     icon: BookOpen,
   },
@@ -91,7 +91,7 @@ const TOPICS: Topic[] = [
       "Arrive early if possible; stay for the whole service when you can.",
       "Prepare for Communion with prayer, fasting, repentance, and guidance.",
     ],
-    sourceLabel: "OCA – The Divine Liturgy (Q&A)",
+    sourceLabel: "OCA: The Divine Liturgy (Q&A)",
     sourceUrl: "https://www.oca.org/questions/divineliturgy/the-divine-liturgy",
     icon: HeartHandshake,
   },
@@ -104,7 +104,7 @@ const TOPICS: Topic[] = [
 
       "Ask your priest for a small rule between confessions.",
     ],
-    sourceLabel: "OCA – Confessing in the Presence of a Priest (Q&A)",
+    sourceLabel: "OCA: Confessing in the Presence of a Priest (Q&A)",
     sourceUrl:
       "https://www.oca.org/questions/sacramentconfession/confessing-in-the-presence-of-a-priest",
     icon: HelpingHand,

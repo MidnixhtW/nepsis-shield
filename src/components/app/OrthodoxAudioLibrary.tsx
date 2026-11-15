@@ -25,7 +25,7 @@ const shelves: AudioShelf[] = [
         note: "Podcasts, talks, interviews, and daily Orthodox formation.",
       },
       {
-        label: "Ancient Faith — Daily Orthodox Scriptures",
+        label: "Ancient Faith: Daily Orthodox Scriptures",
         href: "https://www.ancientfaith.com/podcasts/dailyscriptures",
         note: "Daily Scripture readings with Orthodox commentary.",
       },
@@ -42,7 +42,7 @@ const shelves: AudioShelf[] = [
         note: "Daily hymns, propers, and chant resources.",
       },
       {
-        label: "OCA — Liturgical music",
+        label: "OCA: Liturgical music",
         href: "https://www.oca.org/liturgics/music-downloads",
         note: "Downloadable Orthodox liturgical music from the OCA.",
       },
@@ -54,7 +54,7 @@ const shelves: AudioShelf[] = [
     icon: <ScrollText className="h-5 w-5" />,
     links: [
       {
-        label: "OCA — Prayers",
+        label: "OCA: Prayers",
         href: "https://www.oca.org/orthodoxy/prayers",
         note: "Use these texts for spoken prayer or personal recording.",
       },
@@ -71,7 +71,7 @@ const shelves: AudioShelf[] = [
     icon: <Mic2 className="h-5 w-5" />,
     links: [
       {
-        label: "OCA — The Orthodox Faith",
+        label: "OCA: The Orthodox Faith",
         href: "https://www.oca.org/orthodoxy/the-orthodox-faith",
         note: "Core Orthodox teaching to pair with audio study.",
       },

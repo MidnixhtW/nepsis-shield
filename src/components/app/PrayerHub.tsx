@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { BookOpen, Compass, Flower2, HeartHandshake, Home, Moon, MoonStar, NotebookPen, ScrollText, Sparkles, Sun, Sunset, Users } from "lucide-react";
+import { BookOpen, Flower2, HeartHandshake, Home, Moon, MoonStar, Sparkles, Sun, Sunset } from "lucide-react";
+import { useSettings } from "@/hooks/useSettings";
 import { CenserIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
 import { PrayerRule } from "@/components/app/PrayerRule";
@@ -21,7 +22,10 @@ import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } fr
 
 export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary";
 
-// The starting screen: every practice as a tile, one tap from praying. Each practice keeps its own URL (?tab=...).
+// The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
+// though they keep their /pray?tab=... addresses so old links and favorites still work.
+const ROSARY_TILE = { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
+
 const launcher: LauncherGroup[] = [
   {
     title: "Pray now",
@@ -37,35 +41,28 @@ const launcher: LauncherGroup[] = [
     tiles: [
       { to: "/pray?tab=services", label: "Services", hint: "Compline, the Hours, Akathist, Panikhida", icon: CenserIcon },
       { to: "/pray?tab=prayers", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: BookOpen },
-      { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 },
-      { to: "/pray?tab=names", label: "Names", hint: "The living and the departed", icon: ScrollText },
-      { to: "/pray?tab=groups", label: "Prayer groups", hint: "Pray for each other", icon: Users },
+      { to: "/pray?tab=prep", label: "Confession", hint: "Examine the heart", icon: HeartHandshake },
+      { to: "/pray?tab=communion", label: "Holy Communion", hint: "Before and after", icon: Sparkles },
     ],
   },
   {
-    title: "Home and rule",
+    title: "At home",
     tiles: [
-      { to: "/pray?tab=rule", label: "My rule", hint: "Length, steps and versions", icon: Compass },
       { to: "/pray?tab=family", label: "Family", hint: "Evening prayer and saint stories", icon: Home },
       { to: "/pray?tab=sleep", label: "Sleep", hint: "Quiet prayers for the night", icon: Moon },
     ],
   },
-  {
-    title: "Prepare",
-    tiles: [
-      { to: "/pray?tab=prep", label: "Confession", hint: "Examine the heart", icon: HeartHandshake },
-      { to: "/pray?tab=communion", label: "Holy Communion", hint: "Before and after", icon: Sparkles },
-      { to: "/pray?tab=journal", label: "Journal", hint: "Reflect on the day", icon: NotebookPen },
-    ],
-  },
 ];
+
+// These open from Me, so their back link returns there.
+const PERSONAL_TABS: PrayerTab[] = ["rule", "names", "groups", "journal"];
 
 const titles: Record<PrayerTab, string> = {
   daily: "Daily prayer",
-  rule: "My rule",
+  rule: "My prayer plan",
   family: "Family",
   prayers: "Prayer texts",
-  names: "Names",
+  names: "Prayer list",
   services: "Services",
   groups: "Prayer groups",
   counter: "Jesus Prayer",
@@ -97,18 +94,24 @@ const content: Record<PrayerTab, ReactNode> = {
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
+  const { settings } = useSettings();
   if (!tab) {
+    // The Rosary is for Western Rite parishes, so it shows only when that is turned on in Settings.
+    const groups = settings.westernRite
+      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE] } : group))
+      : launcher;
     return (
       <div className="grid min-w-0 gap-5">
         <LauncherIntro eyebrow="Pray" title="Make room for stillness." />
-        <SectionLauncher groups={launcher} />
+        <SectionLauncher groups={groups} />
       </div>
     );
   }
 
+  const personal = PERSONAL_TABS.includes(tab);
   return (
     <div className="grid min-w-0 gap-4 sm:gap-5">
-      <SectionBackBar backTo="/pray" backLabel="Pray" title={titles[tab]} favoriteTo={`/pray?tab=${tab}`} />
+      <SectionBackBar backTo={personal ? "/me" : "/pray"} backLabel={personal ? "Me" : "Pray"} title={titles[tab]} favoriteTo={`/pray?tab=${tab}`} />
       {content[tab]}
     </div>
   );

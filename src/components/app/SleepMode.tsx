@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CheckCircle2, MoonStar, Pause, Play, RotateCcw, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -76,21 +76,17 @@ export function SleepMode() {
 
   useEffect(() => {
     if (!running) return;
-
-    const id = window.setInterval(() => {
-      setRemaining((current) => {
-        if (current <= 1) {
-          window.clearInterval(id);
-          setRunning(false);
-          completeNight();
-          return 0;
-        }
-        return current - 1;
-      });
-    }, 1000);
-
+    const id = window.setInterval(() => setRemaining((current) => Math.max(current - 1, 0)), 1000);
     return () => window.clearInterval(id);
   }, [running]);
+
+  // Finish once, after the countdown reaches zero (not inside the state update, which React may run twice).
+  const completeNightRef = useRef<() => void>(() => {});
+  useEffect(() => {
+    if (!running || remaining > 0) return;
+    setRunning(false);
+    completeNightRef.current();
+  }, [running, remaining]);
 
   function updateStore(next: SleepStore) {
     setStore(next);
@@ -102,6 +98,7 @@ export function SleepMode() {
     updateStore({ ...store, preferredMinutes: value });
   }
 
+  completeNightRef.current = completeNight;
   function completeNight() {
     const nextDates = store.completedDates.includes(today)
       ? store.completedDates

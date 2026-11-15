@@ -2,16 +2,10 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
   ArrowRight,
-  Crosshair,
-  Download,
   HelpCircle,
-  Info,
   LifeBuoy,
   Menu,
   Search,
-  Settings as SettingsIcon,
-  Shield,
-  Users,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -30,7 +24,6 @@ import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { ProtectionPsalm } from "@/components/app/ProtectionPsalm";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { CenserIcon, SaintHaloIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
 import { START_TUTORIAL_EVENT } from "@/components/app/QuickStartDialog";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 
@@ -119,24 +112,7 @@ function MenuLinks() {
         </MenuSection>
       ) : (
         <>
-          <MenuSection title="Pray with the Church">
-            <MenuLink to="/pray?tab=services" icon={<CenserIcon className="h-4 w-4" />} label="Services" description="Compline, the Hours, the Akathist, Panikhida" />
-            <MenuLink to="/pray?tab=groups" icon={<Users className="h-4 w-4" />} label="Prayer groups" description="Pray for each other, privately" />
-            <MenuLink to="/pray?tab=family" icon={<VigilLampIcon className="h-4 w-4" />} label="Family prayer" description="Evening prayer and saint stories for children" />
-          </MenuSection>
-
-          <MenuSection title="Library">
-            <MenuLink to="/saints" icon={<SaintHaloIcon className="h-4 w-4" />} label="Saints" description="Patrons and intercession" />
-            <MenuLink to="/field-manual" icon={<Crosshair className="h-4 w-4" />} label="Life & Service Guide" description="Daily life, pressure, prayer, and recovery" />
-          </MenuSection>
-
-          <MenuSection title="App">
-            <MenuLink to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" description="Reminders, calendar, name day, text size" />
-            <MenuLink to="/privacy" icon={<Shield className="h-4 w-4" />} label="Privacy and backup" description="Your data stays on this device" />
-            <MenuLink to="/download" icon={<Download className="h-4 w-4" />} label="Install / Share" description="Android app, home screen, QR code" />
-            <MenuLink to="/about" icon={<Info className="h-4 w-4" />} label="About" description="Purpose, sources, and what's new" />
-          </MenuSection>
-
+          {/* Everything else has one home in the tabs: prayer in Pray, your own lists and Settings in Me. */}
           <MenuSection title="Appearance">
             <div className="px-1">
               <ThemeToggle variant="row" />

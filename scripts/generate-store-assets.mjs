@@ -39,8 +39,12 @@ const shots = [
     date: nativityDay,
     run: async (page) => {
       await page.goto(`${base}/today`, { waitUntil: "networkidle" });
-      await page.locator("#season-journey-title").scrollIntoViewIfNeeded();
-      await page.evaluate(() => window.scrollBy(0, -120));
+      await page.locator("#season-journey-title").waitFor();
+      await page.waitForTimeout(800); // let the icon load so the page stops moving
+      await page.evaluate(() => {
+        const title = document.querySelector("#season-journey-title");
+        window.scrollTo(0, window.scrollY + title.getBoundingClientRect().top - 140);
+      });
     },
   },
   {
@@ -80,6 +84,19 @@ const shots = [
     run: async (page) => {
       await page.goto(`${base}/read?read=daily`, { waitUntil: "networkidle" });
       await page.evaluate(() => window.scrollBy(0, 260));
+    },
+  },
+  {
+    name: "6-learn-by-heart",
+    date: nativityDay,
+    // The Creed, first section on the first-letters step, two sections already known.
+    seed: { "learn-by-heart:v1": { creed: { 0: { level: 2 }, 3: { level: 4, learned: true, step: 1, due: "2026-11-24" }, 4: { level: 4, learned: true, step: 0, due: "2026-11-22" } } } },
+    run: async (page) => {
+      await page.goto(`${base}/learn?tab=byheart&prayer=creed`, { waitUntil: "networkidle" });
+      await page.evaluate(() => {
+        const label = [...document.querySelectorAll("p")].find((el) => el.textContent === "Section 1 of 6");
+        window.scrollTo(0, window.scrollY + label.getBoundingClientRect().top - 120);
+      });
     },
   },
 ];

@@ -65,7 +65,7 @@ test("1024px tablet-width header stays uncluttered", async ({ page }) => {
 test("desktop navigation does not collide at its first breakpoint", async ({ page }) => {
   await page.setViewportSize({ width: 1120, height: 800 });
   await page.goto("/today", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: /^(Morning|Evening|Night) prayers$/, level: 1 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^(Morning|Evening|Night) prayers$/, level: 2 })).toBeVisible();
 
   // Browsers with classic scrollbars (Linux WebKit on CI) lose ~15px once the page is long
   // enough to scroll, which drops the layout just under 1120px and correctly switches to the
@@ -121,8 +121,8 @@ test("Learn tiles fit on a small phone and open their topics", async ({ page }) 
   await expect(page.getByRole("heading", { name: "Faith", level: 3 })).toBeVisible();
   await expectNoHorizontalOverflow(page);
 
-  await page.getByRole("link", { name: /^The Creed/ }).click();
-  await expect(page).toHaveURL(/tab=creed/);
+  await page.getByRole("link", { name: /^Learn by heart/ }).click();
+  await expect(page).toHaveURL(/tab=byheart/);
   await page.getByRole("link", { name: "Learn", exact: true }).click();
   await page.getByRole("link", { name: /^Questions and answers/ }).click();
   await expect(page).toHaveURL(/tab=qa/);

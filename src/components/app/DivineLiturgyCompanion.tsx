@@ -69,11 +69,11 @@ const beginnerCues = [
 
 const sourceLinks = [
   {
-    label: "OCA — The Divine Liturgy",
+    label: "OCA: The Divine Liturgy",
     href: "https://www.oca.org/orthodoxy/the-orthodox-faith/worship/the-divine-liturgy",
   },
   {
-    label: "GOARCH — Divine Liturgy text",
+    label: "GOARCH: Divine Liturgy text",
     href: "https://www.goarch.org/-/the-divine-liturgy-of-saint-john-chrysostom",
   },
   {
