@@ -4,6 +4,7 @@
 import { GroupError } from "./_lib/groups.js";
 import { fastCount, keepFast } from "./_lib/fasts.js";
 import { type Store, upstashStore } from "./_lib/store.js";
+import { clientIp, overLimit, readJsonBody } from "./_lib/guard.js";
 
 const ALLOWED_ORIGINS = new Set([
   "https://www.nepsisshield.com",
@@ -33,16 +34,11 @@ function reply(request: Request, status: number, body: unknown) {
   return new Response(JSON.stringify(body), { status, headers: headers(request) });
 }
 
-function clientIp(request: Request) {
-  return (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-}
-
 async function handle(request: Request, run: (store: Store) => Promise<unknown>, limit: number) {
   const store = upstashStore(process.env);
   if (!store) return reply(request, 503, { error: "The fast count is not switched on yet." });
   try {
-    const minute = Math.floor(Date.now() / 60_000);
-    if ((await store.incr(`rl:fasts:${clientIp(request)}:${minute}`, 120)) > limit) {
+    if (await overLimit(store, `fasts:${clientIp(request)}`, limit, 60)) {
       return reply(request, 429, { error: "Too many requests. Please wait a minute." });
     }
     return reply(request, 200, await run(store));
@@ -63,11 +59,7 @@ export function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  let body: Record<string, unknown>;
-  try {
-    body = (await request.json()) as Record<string, unknown>;
-  } catch {
-    return reply(request, 400, { error: "That request could not be read." });
-  }
+  const body = await readJsonBody(request);
+  if (!body) return reply(request, 400, { error: "That request could not be read." });
   return handle(request, (store) => keepFast(store, { fast: body.fast, year: body.year, deviceId: body.deviceId }), 10);
 }

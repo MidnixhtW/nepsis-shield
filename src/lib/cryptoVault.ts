@@ -9,6 +9,10 @@ export type EncryptedBlob = {
 };
 
 const ITERATIONS = 600_000;
+// A backup file says how many rounds were used. Refuse values outside this range so a tampered
+// file can neither freeze the device with billions of rounds nor pass off a weak key.
+const MIN_ITERATIONS = 100_000;
+const MAX_ITERATIONS = 5_000_000;
 
 function enc() {
   return new TextEncoder();
@@ -86,7 +90,11 @@ export async function decryptString(
   const salt = b64ToBytes(blob.saltB64);
   const iv = b64ToBytes(blob.ivB64);
   const ct = b64ToBytes(blob.ctB64);
-  const key = await deriveKey(passphrase, salt, blob.iter || ITERATIONS);
+  const iterations = blob.iter || ITERATIONS;
+  if (!Number.isInteger(iterations) || iterations < MIN_ITERATIONS || iterations > MAX_ITERATIONS) {
+    throw new Error("This backup file has unexpected encryption settings and was not opened.");
+  }
+  const key = await deriveKey(passphrase, salt, iterations);
 
   const pt = await crypto.subtle.decrypt(
     { name: "AES-GCM", iv },

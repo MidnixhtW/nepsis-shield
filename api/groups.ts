@@ -3,6 +3,7 @@
 //   POST /api/groups { action: "create" | "intention" | "remove" | "prayed" | "close", ... }
 import { GroupError, addIntention, closeGroup, createGroup, markPrayed, removeIntention, viewGroup } from "./_lib/groups.js";
 import { type Store, upstashStore } from "./_lib/store.js";
+import { clientIp, overLimit, readJsonBody } from "./_lib/guard.js";
 
 const ALLOWED_ORIGINS = new Set([
   "https://www.nepsisshield.com",
@@ -32,25 +33,32 @@ function reply(request: Request, status: number, body: unknown) {
   return new Response(JSON.stringify(body), { status, headers: headers(request) });
 }
 
-function clientIp(request: Request) {
-  return (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
-}
+/** New groups a single IP may create per day. Stops someone from filling storage with empty groups. */
+const CREATES_PER_DAY = 10;
 
-async function limited(store: Store, request: Request, kind: "read" | "write") {
-  const minute = Math.floor(Date.now() / 60_000);
-  const count = await store.incr(`rl:${kind}:${clientIp(request)}:${minute}`, 120);
-  return count > (kind === "read" ? 120 : 30);
+/** Returns a message when the caller has made too many requests, or null when the request may go ahead. */
+async function limited(store: Store, request: Request, kind: "read" | "write" | "create") {
+  const ip = clientIp(request);
+  if (kind === "create" && (await overLimit(store, `create:${ip}`, CREATES_PER_DAY, 86_400))) {
+    return "You have started a lot of groups today. Please try again tomorrow.";
+  }
+  const perMinute = kind === "read" ? 120 : 30;
+  if (await overLimit(store, `${kind === "read" ? "read" : "write"}:${ip}`, perMinute, 60)) {
+    return "Too many requests. Please wait a minute.";
+  }
+  return null;
 }
 
 function getStore() {
   return upstashStore(process.env);
 }
 
-async function handle(request: Request, run: (store: Store) => Promise<unknown>, kind: "read" | "write") {
+async function handle(request: Request, run: (store: Store) => Promise<unknown>, kind: "read" | "write" | "create") {
   const store = getStore();
   if (!store) return reply(request, 503, { error: "Prayer groups are not switched on yet." });
   try {
-    if (await limited(store, request, kind)) return reply(request, 429, { error: "Too many requests. Please wait a minute." });
+    const tooMany = await limited(store, request, kind);
+    if (tooMany) return reply(request, 429, { error: tooMany });
     return reply(request, 200, await run(store));
   } catch (error) {
     if (error instanceof GroupError) return reply(request, error.status, { error: error.message });
@@ -73,12 +81,8 @@ export function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  let body: Record<string, unknown>;
-  try {
-    body = (await request.json()) as Record<string, unknown>;
-  } catch {
-    return reply(request, 400, { error: "That request could not be read." });
-  }
+  const body = await readJsonBody(request);
+  if (!body) return reply(request, 400, { error: "That request could not be read." });
   return handle(
     request,
     (store) => {
@@ -97,6 +101,6 @@ export async function POST(request: Request) {
           throw new GroupError(400, "Unknown action.");
       }
     },
-    "write",
+    body.action === "create" ? "create" : "write",
   );
 }
