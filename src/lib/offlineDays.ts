@@ -126,14 +126,6 @@ export function fillOfflineWindow(mode: CalendarMode, now = new Date()): Promise
   return filling;
 }
 
-/** How many of the coming days are stored for this calendar. */
-export async function offlineDaysReady(mode: CalendarMode, now = new Date()) {
-  const keys = new Set((await allOfflineDays()).map((record) => record.key));
-  let ready = 0;
-  for (let offset = 0; offset < OFFLINE_DAYS; offset += 1) if (keys.has(offlineDayKey(mode, addDays(now, offset)))) ready += 1;
-  return ready;
-}
-
 /** Ask the service worker to refill the window in the background, where the browser supports periodic sync. */
 export async function registerBackgroundRefill() {
   try {

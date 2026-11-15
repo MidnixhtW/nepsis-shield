@@ -1,5 +1,3 @@
-import * as React from "react";
-
 /**
  * Military Orthodox cross: an Orthodox cross set into a field-shield silhouette.
  */

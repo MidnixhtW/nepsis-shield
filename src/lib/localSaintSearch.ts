@@ -176,10 +176,4 @@ export function searchLocalSaintLibrary(
   };
 }
 
-export function getLocalSaintIndexStats() {
-  const index = readDailySaintIndex();
-  const names = new Set(index.days.flatMap((day) => day.saints.map(normalizeName)));
-  return { days: index.days.length, saints: names.size };
-}
-
 export { findPatronNeeds };

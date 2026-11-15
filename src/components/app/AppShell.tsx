@@ -1,4 +1,4 @@
-import { type ComponentType, type ReactNode, useMemo, useState } from "react";
+import { type ComponentType, type ReactNode, useMemo } from "react";
 import { UserRound } from "lucide-react";
 import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
@@ -140,9 +140,4 @@ export function AppShell({
       </div>
     </div>
   );
-}
-
-export function useAppSection() {
-  const [section, setSection] = useState<AppSection>("today");
-  return { section, setSection };
 }

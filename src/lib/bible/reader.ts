@@ -94,11 +94,6 @@ export function bollsSlugForBase(base: TextTranslation) {
   return base === "web" ? "WEB" : "KJV";
 }
 
-export function bollsSlugForBook(bookName: string, base: TextTranslation) {
-  // Bolls has the NKJV and Brenton's English LXX (LXXE).
-  return bollsSlugForBase(base);
-}
-
 export type BookmarkSort = "recent" | "alpha";
 
 export function sortBookmarks(items: BookmarkItem[], mode: BookmarkSort) {

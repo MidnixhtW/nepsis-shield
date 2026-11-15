@@ -128,5 +128,3 @@ export function PreparationChecklist() {
     </Card>
   );
 }
-
-export default PreparationChecklist;

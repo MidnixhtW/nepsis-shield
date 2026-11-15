@@ -106,10 +106,6 @@ export function getLegacyPlaintextSensitiveNote(key: string): string | null {
   return typeof value === "string" ? value : null;
 }
 
-export function hasLegacyPlaintextSensitiveNote(key: string): boolean {
-  return getLegacyPlaintextSensitiveNote(key) !== null;
-}
-
 export function hasLegacyPlaintextSensitiveData(key: string): boolean {
   return getLegacyPlaintextSensitiveValue(key) !== null;
 }

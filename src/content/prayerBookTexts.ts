@@ -398,31 +398,6 @@ export const SAINT_FILTERS: Array<{ id: string; label: string; cats: SaintPrayer
   { id: "angels", label: "Angels", cats: ["angels"] },
 ];
 
-export const stMichael = [
-  "HOLY ARCHANGEL MICHAEL:",
-  "Holy Archangel Michael, pray to God for us.",
-];
-
-export const stNicholas = [
-  "SAINT NICHOLAS:",
-  "Holy Hierarch Nicholas, pray to God for us.",
-];
-
-export const stJohnForerunner = [
-  "SAINT JOHN THE FORERUNNER:",
-  "Holy Prophet and Forerunner John, pray to God for us.",
-];
-
-export const stGeorge = [
-  "SAINT GEORGE:",
-  "Holy Great Martyr George, pray to God for us.",
-];
-
-export const stMaryOfEgypt = [
-  "SAINT MARY OF EGYPT:",
-  "Venerable Mother Mary of Egypt, pray to God for us.",
-];
-
 export const jesus = ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."];
 
 export const sharedPrayerBasics = [

@@ -415,5 +415,3 @@ export function ConfessionPrep() {
     </Card>
   );
 }
-
-export default ConfessionPrep;

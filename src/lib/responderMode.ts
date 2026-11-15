@@ -22,17 +22,6 @@ export const responderModeLabels: Record<ResponderMode, string> = {
   civilian: "Everyday life",
 };
 
-export const responderModeShortLabels: Record<ResponderMode, string> = {
-  military: "Military",
-  law: "Law",
-  fire: "Fire",
-  ems: "EMS",
-  dispatch: "Dispatch",
-  custody: "Custody",
-  chaplain: "Chaplain",
-  civilian: "Everyday",
-};
-
 export const responderModeAccentClasses: Record<ResponderMode, {
   card: string;
   badge: string;
