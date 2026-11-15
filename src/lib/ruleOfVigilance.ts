@@ -190,7 +190,7 @@ export const ruleVariants: Record<VigilanceNeed, RuleVariant[]> = {
       id: "compline",
       label: "Compline rule",
       description: "The Church’s prayer at the close of day.",
-      pastoralNote: "Small Compline gathers the day into the Church’s evening prayer. Keep it as a gift, not a burden.",
+      pastoralNote: "Small Compline gathers the day into the Church’s evening prayer. Keep it gently, even on tired nights.",
       practice: "Pray Small Compline, or a portion of it, before bed.",
       primaryAction: "Begin evening prayer",
       target: { section: "pray", tab: "prayers" },

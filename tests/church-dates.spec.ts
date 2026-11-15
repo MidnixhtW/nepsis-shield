@@ -66,3 +66,17 @@ test("the home-screen widget gets two weeks of days", async () => {
   expect(christmas.headline).toBe("Christ is born! Glorify Him!");
   expect(buildWidgetDays(d("2026-11-10"), "gregorian")[0].headline).toBe("Nativity Fast begins in 5 days");
 });
+
+test("the Church Year theme follows the season", async () => {
+  const { liturgicalSeason } = await import("../src/lib/liturgicalSeason");
+  const day = (y: number, m: number, d: number) => new Date(y, m - 1, d, 12);
+  expect(liturgicalSeason(day(2026, 11, 9), "gregorian")).toBe("ordinary");
+  expect(liturgicalSeason(day(2026, 11, 21), "gregorian")).toBe("theotokos");
+  expect(liturgicalSeason(day(2026, 11, 30), "gregorian")).toBe("nativity-fast");
+  expect(liturgicalSeason(day(2026, 12, 25), "gregorian")).toBe("nativity");
+  expect(liturgicalSeason(day(2027, 3, 15), "gregorian")).toBe("lent");
+  expect(liturgicalSeason(day(2027, 3, 25), "gregorian")).toBe("theotokos");
+  expect(liturgicalSeason(day(2027, 5, 2), "gregorian")).toBe("pascha");
+  expect(liturgicalSeason(day(2027, 6, 20), "gregorian")).toBe("pentecost");
+  expect(liturgicalSeason(day(2027, 1, 7), "julian")).toBe("nativity");
+});

@@ -5,7 +5,7 @@ import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 export type DailyHabitKey = "prayer" | "reading" | "reflection" | "mercy";
 export type PrayerTimeKey = "morning" | "evening" | "night" | "personal";
 export type PrayerModeKey = "short" | "standard" | "long" | "seraphim" | "watch" | "personal";
-export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry";
+export type QuickStateKey = "anxious" | "tired" | "tempted" | "grateful" | "angry" | "dry" | "lonely" | "sleepless" | "scrolling";
 
 export type ResumeTarget = {
   section?: "today" | "pray" | "read" | "learn" | "me";
@@ -275,7 +275,7 @@ export function savePrayerResume(resume: Omit<PrayerResume, "date" | "updatedAt"
     };
     store.globalResume = {
       label: "Continue prayer",
-      helper: `${resume.title} — step ${resume.stepIndex + 1} of ${resume.totalSteps}`,
+      helper: `${resume.title} · step ${resume.stepIndex + 1} of ${resume.totalSteps}`,
       target: { section: "pray", tab: "daily" },
       updatedAt: Date.now(),
     };

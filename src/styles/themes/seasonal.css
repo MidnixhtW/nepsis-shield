@@ -1,0 +1,202 @@
+/*
+ * Church Year: a dark theme whose colors follow the liturgical season (set as data-season on <html> by
+ * SeasonalThemeSync). It uses the Olive & Brass structure like the other dark variants; only colors change.
+ * A service role (data-role) then tints the primary color, so a firefighter in Lent sees violet with red.
+ * Imported after dark-variants.css; high-contrast mode still wins.
+ */
+@layer base {
+  /* Ordinary time: charcoal and night blue with icon gold. */
+  .seasonal {
+    --background: 222 22% 6%;
+    --foreground: 40 30% 90%;
+    --card: 222 20% 9%;
+    --card-foreground: 40 30% 90%;
+    --popover: 222 20% 8%;
+    --popover-foreground: 40 30% 90%;
+    --primary: 213 52% 64%;
+    --primary-foreground: 222 40% 8%;
+    --secondary: 222 16% 15%;
+    --secondary-foreground: 40 28% 90%;
+    --muted: 222 14% 13%;
+    --muted-foreground: 220 10% 70%;
+    --accent: 42 62% 60%;
+    --accent-foreground: 222 40% 8%;
+    --destructive: 356 62% 58%;
+    --destructive-foreground: 40 30% 96%;
+    --border: 222 14% 21%;
+    --input: 222 14% 23%;
+    --ring: 42 62% 62%;
+    --icon-gold: 42 62% 60%;
+    --liturgical-warm: 42 62% 60%;
+    --byzantine-blue: 213 52% 54%;
+    --cinnabar: 356 62% 58%;
+    --success: 140 30% 58%;
+    --season-glow: 213 52% 54%;
+    --sidebar-background: 222 22% 7%;
+    --sidebar-foreground: 40 30% 90%;
+    --sidebar-primary: 213 52% 64%;
+    --sidebar-primary-foreground: 222 40% 8%;
+    --sidebar-accent: 222 16% 15%;
+    --sidebar-accent-foreground: 40 28% 90%;
+    --sidebar-border: 222 14% 21%;
+    --sidebar-ring: 42 62% 62%;
+  }
+
+  /* Great Lent and Holy Week: deep violet and gold. */
+  .seasonal[data-season="lent"] {
+    --background: 268 22% 6%;
+    --card: 268 18% 9%;
+    --popover: 268 20% 8%;
+    --primary: 272 38% 68%;
+    --primary-foreground: 268 30% 8%;
+    --secondary: 268 14% 15%;
+    --muted: 268 12% 13%;
+    --muted-foreground: 270 10% 70%;
+    --border: 268 14% 22%;
+    --input: 268 14% 24%;
+    --season-glow: 272 38% 58%;
+    --sidebar-background: 268 22% 7%;
+    --sidebar-primary: 272 38% 68%;
+    --sidebar-accent: 268 14% 15%;
+    --sidebar-border: 268 14% 22%;
+  }
+
+  /* Pascha to the Leave-taking: paschal crimson and bright gold. */
+  .seasonal[data-season="pascha"] {
+    --background: 356 26% 6%;
+    --card: 356 22% 9%;
+    --popover: 356 24% 8%;
+    --primary: 356 70% 60%;
+    --primary-foreground: 356 40% 8%;
+    --secondary: 356 16% 15%;
+    --muted: 356 14% 13%;
+    --muted-foreground: 20 12% 72%;
+    --accent: 44 82% 62%;
+    --ring: 44 82% 64%;
+    --icon-gold: 44 82% 62%;
+    --liturgical-warm: 44 82% 62%;
+    --border: 356 16% 22%;
+    --input: 356 16% 24%;
+    --season-glow: 44 82% 52%;
+    --sidebar-background: 356 26% 7%;
+    --sidebar-primary: 356 70% 60%;
+    --sidebar-accent: 356 16% 15%;
+    --sidebar-border: 356 16% 22%;
+  }
+
+  /* Pentecost and the week after: green, the color of the Holy Spirit's feast. */
+  .seasonal[data-season="pentecost"] {
+    --background: 150 22% 5%;
+    --card: 150 18% 8%;
+    --popover: 150 20% 7%;
+    --primary: 145 42% 54%;
+    --primary-foreground: 150 40% 6%;
+    --secondary: 150 14% 14%;
+    --muted: 150 12% 12%;
+    --muted-foreground: 140 8% 70%;
+    --border: 150 14% 20%;
+    --input: 150 14% 22%;
+    --season-glow: 145 42% 44%;
+    --sidebar-background: 150 22% 6%;
+    --sidebar-primary: 145 42% 54%;
+    --sidebar-accent: 150 14% 14%;
+    --sidebar-border: 150 14% 20%;
+  }
+
+  /* Feasts of the Theotokos and the Dormition Fast: blue. */
+  .seasonal[data-season="theotokos"] {
+    --background: 216 38% 6%;
+    --card: 216 32% 10%;
+    --popover: 216 34% 8%;
+    --primary: 208 70% 64%;
+    --primary-foreground: 216 50% 8%;
+    --secondary: 216 22% 16%;
+    --muted: 216 20% 14%;
+    --muted-foreground: 212 14% 72%;
+    --border: 216 22% 23%;
+    --input: 216 22% 25%;
+    --season-glow: 208 70% 54%;
+    --sidebar-background: 216 38% 7%;
+    --sidebar-primary: 208 70% 64%;
+    --sidebar-accent: 216 22% 16%;
+    --sidebar-border: 216 22% 23%;
+  }
+
+  /* The Nativity Fast: deep wine red, waiting for the feast. */
+  .seasonal[data-season="nativity-fast"] {
+    --background: 345 24% 6%;
+    --card: 345 20% 9%;
+    --popover: 345 22% 8%;
+    --primary: 348 52% 62%;
+    --primary-foreground: 345 40% 8%;
+    --secondary: 345 14% 15%;
+    --muted: 345 12% 13%;
+    --muted-foreground: 340 8% 70%;
+    --border: 345 14% 22%;
+    --input: 345 14% 24%;
+    --season-glow: 348 52% 50%;
+    --sidebar-background: 345 24% 7%;
+    --sidebar-primary: 348 52% 62%;
+    --sidebar-accent: 345 14% 15%;
+    --sidebar-border: 345 14% 22%;
+  }
+
+  /* Nativity to Theophany: bright gold and white on warm dark. */
+  .seasonal[data-season="nativity"] {
+    --background: 38 22% 6%;
+    --card: 38 18% 9%;
+    --popover: 38 20% 8%;
+    --primary: 44 80% 64%;
+    --primary-foreground: 38 40% 8%;
+    --secondary: 38 14% 15%;
+    --muted: 38 12% 13%;
+    --muted-foreground: 40 10% 72%;
+    --accent: 46 88% 70%;
+    --ring: 46 88% 70%;
+    --icon-gold: 46 88% 70%;
+    --liturgical-warm: 46 88% 70%;
+    --border: 38 14% 22%;
+    --input: 38 14% 24%;
+    --season-glow: 44 80% 54%;
+    --sidebar-background: 38 22% 7%;
+    --sidebar-primary: 44 80% 64%;
+    --sidebar-accent: 38 14% 15%;
+    --sidebar-border: 38 14% 22%;
+  }
+
+  /* A service role tints the primary color (buttons, the selected tab). Everyday life keeps the season's. */
+  .seasonal[data-role="military"] { --primary: 80 34% 56%; --sidebar-primary: 80 34% 56%; --primary-foreground: 75 30% 6%; }
+  .seasonal[data-role="law"] { --primary: 217 72% 64%; --sidebar-primary: 217 72% 64%; --primary-foreground: 222 50% 8%; }
+  .seasonal[data-role="fire"] { --primary: 4 76% 60%; --sidebar-primary: 4 76% 60%; --primary-foreground: 4 50% 8%; }
+  .seasonal[data-role="ems"] { --primary: 0 0% 94%; --sidebar-primary: 0 0% 94%; --primary-foreground: 222 30% 8%; }
+  .seasonal[data-role="dispatch"] { --primary: 262 62% 70%; --sidebar-primary: 262 62% 70%; --primary-foreground: 262 40% 8%; }
+  .seasonal[data-role="custody"] { --primary: 215 18% 74%; --sidebar-primary: 215 18% 74%; --primary-foreground: 222 30% 8%; }
+  .seasonal[data-role="chaplain"] { --primary: 38 82% 60%; --sidebar-primary: 38 82% 60%; --primary-foreground: 38 40% 8%; }
+
+  html.seasonal body {
+    background-image:
+      radial-gradient(circle at 78% -4%, hsl(var(--season-glow) / 0.12), transparent 34rem),
+      radial-gradient(circle at 8% 82%, hsl(var(--accent) / 0.05), transparent 30rem),
+      linear-gradient(170deg, hsl(var(--background)), hsl(var(--card)) 140%) !important;
+  }
+
+  html.seasonal ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+}
+
+@layer components {
+  html.seasonal .premium-hero-shell {
+    background: hsl(var(--background)) !important;
+  }
+
+  html.seasonal .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(var(--background) / 0.97), hsl(var(--card) / 0.88) 50%, hsl(var(--card) / 0.5)) !important;
+  }
+}
+
+@layer utilities {
+  html.seasonal .bg-primary {
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.82)) !important;
+  }
+}

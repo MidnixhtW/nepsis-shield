@@ -5,7 +5,7 @@ import { LIGHT_THEMES } from "@/components/app/ThemeProvider";
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "dark" } = useTheme();
+  const { theme = "seasonal" } = useTheme();
   const toasterTheme: ToasterProps["theme"] = LIGHT_THEMES.includes(theme) ? "light" : "dark";
 
   return (

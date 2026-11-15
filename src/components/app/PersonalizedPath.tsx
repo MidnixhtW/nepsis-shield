@@ -148,7 +148,7 @@ export function PersonalizedPath() {
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Recommended</p>
           <h3 className="mt-1 text-xl font-semibold tracking-tight">Your {minutes}-minute path</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Start with {main.label.toLowerCase()}. Keep it small enough to actually do.
+            Start with {main.label.toLowerCase()}. Keep it small enough to do every day.
           </p>
 
           <div className="mt-4 grid gap-2">

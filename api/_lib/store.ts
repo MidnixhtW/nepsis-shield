@@ -8,6 +8,8 @@ export type Store = {
   hset(key: string, field: string, value: string, ttlSeconds: number): Promise<void>;
   hgetall(key: string): Promise<Record<string, string>>;
   hdel(key: string, field: string): Promise<void>;
+  /** How many fields a hash has. */
+  hlen(key: string): Promise<number>;
   expire(key: string, ttlSeconds: number): Promise<void>;
   /** Increments a counter that expires after ttlSeconds; returns the new value. */
   incr(key: string, ttlSeconds: number): Promise<number>;
@@ -58,6 +60,10 @@ export function upstashStore(env: Env): Store | null {
     async hdel(key, field) {
       await pipeline([["HDEL", key, field]]);
     },
+    async hlen(key) {
+      const [count] = await pipeline([["HLEN", key]]);
+      return Number(count ?? 0);
+    },
     async expire(key, ttl) {
       await pipeline([["EXPIRE", key, ttl]]);
     },
@@ -94,6 +100,9 @@ export function memoryStore(): Store {
     },
     async hdel(key, field) {
       hashes.get(key)?.delete(field);
+    },
+    async hlen(key) {
+      return hashes.get(key)?.size ?? 0;
     },
     async expire() {},
     async incr(key) {

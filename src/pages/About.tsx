@@ -9,6 +9,7 @@ import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { APK_ARTIFACTS_URL, APK_CHANNEL, APK_CHANNEL_LABEL, APK_DOWNLOAD_IS_DIRECT } from "@/lib/apkDownload";
 import { CURRENT_VERSION } from "@/lib/releaseInfo";
+import { CONTACT_URL } from "@/lib/publicSite";
 
 export default function About() {
 
@@ -154,6 +155,15 @@ export default function About() {
               <p className="mt-1 text-xs text-muted-foreground">
                 Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life, family and work stress, first response, public safety, and service under pressure.
               </p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Free, with no ads, purchases or accounts. Questions, corrections and privacy requests:{" "}
+                <a href={CONTACT_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground underline underline-offset-2">
+                  the project's GitHub page<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+                . See the <Link to="/privacy-policy" className="font-semibold text-foreground underline underline-offset-2">Privacy Policy</Link>,{" "}
+                <Link to="/terms" className="font-semibold text-foreground underline underline-offset-2">Terms of Use</Link> and{" "}
+                <Link to="/cookies" className="font-semibold text-foreground underline underline-offset-2">Cookie Policy</Link>.
+              </p>
               <Button asChild size="sm" variant="outline" className="mt-3 rounded-2xl border-border/60">
                 <Link to="/release-notes">What's new in version {CURRENT_VERSION}</Link>
               </Button>
@@ -208,6 +218,15 @@ export default function About() {
                   </a>
                 </Button>
               </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+              <p className="font-semibold">Icons and Scripture</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                The icons on Today are public-domain works from Wikimedia Commons, kept on this site; each one links to its Commons page. New King
+                James Version® copyright © 1982 by Thomas Nelson. Brenton's Septuagint, the KJV, the WEB and the Douay-Rheims are in the public
+                domain. Prayers are credited where they appear.
+              </p>
             </div>
 
             <p className="text-xs leading-relaxed text-muted-foreground">

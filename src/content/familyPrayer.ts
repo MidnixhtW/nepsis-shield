@@ -50,7 +50,7 @@ export const EVENING_PRAYER: FamilyStep[] = [
   },
 ];
 
-export const CHILD_PRAYERS: { text: string; when: string; source?: string }[] = [
+export const CHILD_PRAYERS: { text: string; when: string; source?: string; learnId?: string }[] = [
   { text: "In the name of the Father, and of the Son, and of the Holy Spirit. Amen.", when: "With the sign of the Cross, when we wake, before we eat, and before we sleep." },
   { text: "Glory to Thee, O God, glory to Thee!", when: "When something good happens." },
   { text: "Lord, have mercy.", when: "When we are sorry, or when someone needs help." },
@@ -62,11 +62,13 @@ export const CHILD_PRAYERS: { text: string; when: string; source?: string }[] = 
     text: "O Christ God, bless the food and drink of Thy servants, for Thou art holy, always, now and ever and unto ages of ages. Amen.",
     when: "Before meals.",
     source: ST_TIKHON,
+    learnId: "meal-blessing",
   },
   {
     text: "Angel of Christ, my holy guardian, the protector of my soul and body: forgive me for all the sins I have committed this day. Deliver me from all the evil of my militant Enemy, that I may not anger my God by any sin. Pray for me, your sinful and unworthy servant, that you may show me worthy of the goodness and mercy of the All-Holy Trinity, the Mother of my Lord Jesus Christ and all the Saints. Amen.",
     when: "The longer prayer to the Guardian Angel, for older children at bedtime.",
     source: ST_TIKHON,
+    learnId: "guardian-angel",
   },
 ];
 

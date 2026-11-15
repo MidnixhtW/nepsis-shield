@@ -17,6 +17,8 @@ import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
 import { useNavigate } from "react-router";
 import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { useEffect } from "react";
+import { markHabitComplete } from "@/lib/dailyHabits";
 
 function ReadingsSkeleton() {
   return (
@@ -100,6 +102,11 @@ function ReadingCard({
 export function DailyReadings() {
   const navigate = useNavigate();
   const { today, query: q, retry } = useDailyCalendar();
+  // Opening today's readings fills the Readings step of the day on Today.
+  const loaded = !!q.data;
+  useEffect(() => {
+    if (loaded) markHabitComplete("reading");
+  }, [loaded]);
   const reading = useReadAloud();
   const listenTitle = "Today's Epistle and Gospel";
   const listening = reading.title === listenTitle;

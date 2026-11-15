@@ -85,20 +85,14 @@ export function RuleOfVigilanceCard({
       <Card className="flex flex-wrap items-center gap-3 rounded-[1.5rem] border p-4 sm:p-5">
         <Compass className="h-5 w-5 shrink-0 text-accent" />
         <p className="min-w-0 flex-1 text-sm">
-          <span className="text-muted-foreground">Your rule: </span>
+          <span className="text-muted-foreground">Your prayer plan: </span>
           <span className="font-semibold">{rule.title}</span>
           <span className="text-muted-foreground"> · {rule.variantLabel}</span>
         </p>
-        <div className="flex gap-2">
-          <Button type="button" variant="outline" size="sm" className="rounded-full" aria-expanded={false} onClick={() => setExpanded(true)}>
-            Show rule
-          </Button>
-          {onNavigate ? (
-            <Button type="button" size="sm" className="rounded-full" onClick={begin}>
-              Begin <ArrowRight className="ml-1.5 h-4 w-4" />
-            </Button>
-          ) : null}
-        </div>
+        {/* Pray now above already begins the prayers, so this line only opens the rule. */}
+        <Button type="button" variant="outline" size="sm" className="rounded-full" aria-expanded={false} onClick={() => setExpanded(true)}>
+          Show rule
+        </Button>
       </Card>
     );
   }
@@ -108,7 +102,7 @@ export function RuleOfVigilanceCard({
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
         <div className="min-w-0">
           <div className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
-            <Compass className="mr-1.5 h-3.5 w-3.5" /> Today’s Rule
+            <Compass className="mr-1.5 h-3.5 w-3.5" /> Daily prayer plan · Rule of prayer
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
           <button

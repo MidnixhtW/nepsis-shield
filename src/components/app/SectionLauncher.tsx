@@ -14,7 +14,7 @@ export type LauncherTile = {
 
 export type LauncherGroup = { title: string; tiles: LauncherTile[] };
 
-// The starting screen of Pray and Learn: large tiles in a few groups, each one tap from its practice.
+// The starting screen of Pray and Learn: a two-column grid of tiles in a few groups, each one tap from its practice.
 export function SectionLauncher({ groups }: { groups: LauncherGroup[] }) {
   return (
     <div className="grid gap-6">
@@ -23,22 +23,22 @@ export function SectionLauncher({ groups }: { groups: LauncherGroup[] }) {
           <h3 id={`launcher-${group.title}`} className="mb-2.5 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             {group.title}
           </h3>
-          <ul className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-2 gap-2.5 lg:grid-cols-3">
             {group.tiles.map(({ to, label, hint, icon: Icon }) => (
               <li key={to} className="relative">
                 <Link
                   to={to}
-                  className="group flex h-full min-h-[4.5rem] items-center gap-3 rounded-2xl border border-border/60 bg-card py-3 pl-3.5 pr-12 transition-colors hover:border-accent/45 hover:bg-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="group flex h-full min-h-[8.5rem] flex-col gap-3 rounded-2xl border border-border/60 bg-card p-3.5 transition-colors hover:border-accent/45 hover:bg-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-accent/30 bg-accent/10 text-accent">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-accent/30 bg-accent/10 text-accent transition-transform group-hover:scale-105">
                     <Icon className="h-5 w-5" />
                   </span>
-                  <span className="min-w-0 flex-1">
+                  <span className="min-w-0 pr-1">
                     <span className="block font-semibold leading-tight">{label}</span>
-                    <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{hint}</span>
+                    <span className="mt-1 block text-xs leading-snug text-muted-foreground">{hint}</span>
                   </span>
                 </Link>
-                <FavoriteStar to={to} label={label} className="absolute right-1.5 top-1/2 -translate-y-1/2" />
+                <FavoriteStar to={to} label={label} className="absolute right-1 top-1" />
               </li>
             ))}
           </ul>
