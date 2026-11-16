@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, Info, RotateCcw, Square, Volume2 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, Info, Moon, RotateCcw, Square, Volume2 } from "lucide-react";
+import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
+import { RosaryBeads } from "@/components/app/RosaryBeads";
+import { isRosaryMarker, rosaryUnits } from "@/lib/rosaryBeads";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { angelus, marianAntiphonNarration, mysterySets, reginaCaeli, rosaryNarration, rosarySteps, type MysterySetId } from "@/content/rosary";
@@ -11,11 +13,8 @@ import { clipUrl, useReader } from "@/lib/narration";
 import { spokenText } from "@/lib/narrationText";
 import { canPlayItems, startNarration, stopReadAloud, useReadAloud, type ReadAloudPart } from "@/lib/readAloud";
 import { dayKey, mysteryDays, mysterySetForDay, useRosaryPattern, type RosaryPattern } from "@/lib/rosarySchedule";
+import { knotHaptic, markerHaptic } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-
-function haptic() {
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(12);
-}
 
 /** From Pascha through Pentecost the Regina Caeli is said in place of the Angelus. */
 function isPaschaltide(date: Date) {
@@ -64,6 +63,8 @@ function RosaryCounter() {
   const reading = useReadAloud();
   const [reader] = useReader();
   const narration = useMemo(() => listen(reader, rosaryNarration(setId)), [reader, setId]);
+  const units = useMemo(() => rosaryUnits(steps), [steps]);
+  const [dark, setDark] = useState(false);
 
   const finished = stepIndex >= steps.length;
   const step = steps[Math.min(stepIndex, steps.length - 1)];
@@ -105,14 +106,33 @@ function RosaryCounter() {
   }
 
   function advance() {
-    haptic();
+    if (finished) return;
+    const arriving = done + 1;
+    if (arriving >= units.length || isRosaryMarker(units[arriving])) markerHaptic();
+    else knotHaptic();
     if (bead + 1 < step.repeat) {
       setBead(bead + 1);
       return;
     }
     setStepIndex(stepIndex + 1);
     setBead(0);
+    if (stepIndex + 1 >= steps.length) setDark(false);
   }
+
+  // The dark screen keeps one handler for its whole life, so it always reaches the latest bead.
+  const advanceRef = useRef(advance);
+  advanceRef.current = advance;
+  const darkKnot = useCallback(() => advanceRef.current(), []);
+  const closeDark = useCallback(() => setDark(false), []);
+
+  const decade = units.slice(0, done + 1).filter((kind) => kind === "large").length - 1;
+  const beadLabel = finished
+    ? "Amen"
+    : step.repeat === 10
+      ? `${bead + 1} of 10`
+      : decade >= 1 && decade <= 5
+        ? `Decade ${decade}`
+        : "";
 
   function back() {
     if (bead > 0) {
@@ -192,7 +212,7 @@ function RosaryCounter() {
 
       <Separator className="my-4" />
 
-      <Progress value={(done / totalBeads) * 100} aria-label="Progress through the Rosary" className="h-1.5" />
+      <RosaryBeads units={units} current={finished ? totalBeads : done} label={beadLabel} onTap={advance} />
 
       {finished ? (
         <div className="mt-5 grid gap-3 text-center">
@@ -209,20 +229,6 @@ function RosaryCounter() {
             {step.note ? <p className="mt-1 text-sm italic text-muted-foreground">{step.note}</p> : null}
           </div>
 
-          {step.repeat > 1 ? (
-            <div className="flex flex-wrap gap-2" role="img" aria-label={`Bead ${bead + 1} of ${step.repeat}`}>
-              {Array.from({ length: step.repeat }, (_, index) => (
-                <span
-                  key={index}
-                  className={cn(
-                    "h-4 w-4 rounded-full border",
-                    index < bead ? "border-primary bg-primary" : index === bead ? "border-accent bg-accent/60" : "border-border bg-muted/30",
-                  )}
-                />
-              ))}
-            </div>
-          ) : null}
-
           <p className="whitespace-pre-line rounded-2xl border border-border/60 bg-background/50 p-4 text-[15px] leading-relaxed">{step.text}</p>
 
           <div className="flex gap-2">
@@ -233,8 +239,37 @@ function RosaryCounter() {
               {step.repeat > 1 ? `Next bead (${bead + 1} of ${step.repeat})` : "Next"}
             </Button>
           </div>
+
+          <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
+            <div className="flex items-start gap-3">
+              <Moon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">Pray in the dark</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  The screen goes fully black. Tap anywhere for each bead, and feel a firm pulse after the tenth Hail Mary
+                  of every decade. Hold for a second to leave; you pick up where you left off.
+                </p>
+              </div>
+            </div>
+            <Button type="button" variant="outline" className="mt-3 h-11 w-full rounded-2xl" onClick={() => setDark(true)}>
+              <Moon className="mr-2 h-4 w-4" /> Begin in the dark
+            </Button>
+          </div>
         </div>
       )}
+      {dark && !finished ? (
+        <DarkPrayerRope
+          count={done}
+          every={10}
+          onKnot={darkKnot}
+          onClose={closeDark}
+          haptics={false}
+          name="Rosary"
+          unit="beads"
+          shownLabel={beadLabel || step.title}
+          footer="A firm pulse after each decade"
+        />
+      ) : null}
     </Card>
   );
 }
