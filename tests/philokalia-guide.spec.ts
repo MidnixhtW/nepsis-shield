@@ -1,5 +1,8 @@
 import { expect, test } from "./fixtures";
 
+// The app's service worker would take over /api/guide, and WebKit then skips the routes below.
+test.use({ serviceWorkers: "block" });
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("nepsis-shield:philokalia-guide-unlocked", "true"));
 });
