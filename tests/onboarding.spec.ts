@@ -12,8 +12,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
     name: "Quiet your heart. Begin with one faithful step.",
   })).toBeVisible();
 
-  await onboarding.getByRole("button", { name: "Continue" }).click();
-  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme (keep Church Year)
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
   // Every role keeps the same look; a role only tints the accent color.
   const html = page.locator("html");
   await onboarding.getByRole("button", { name: /^Military/ }).click();
@@ -22,13 +21,14 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await onboarding.getByRole("button", { name: /EMS \/ medical/ }).click();
   await expect(html).toHaveClass(/seasonal/);
   await expect(html).toHaveAttribute("data-role", "ems");
-  await onboarding.getByRole("button", { name: "Continue" }).click();
-  await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar (keep New Calendar)
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // calling and calendar (keep New Calendar)
 
   await onboarding.getByRole("button", { name: /Discipline in prayer/ }).click();
+  // The rule takes shape on screen as choices are made.
+  await expect(onboarding.getByLabel("Your rule so far")).toContainText("Rule for Steady Prayer");
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
-  await onboarding.getByRole("button", { name: /Smallest faithful step/ }).click();
+  await onboarding.getByRole("button", { name: /Two-minute rule/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
   await expect(onboarding.getByText("Your daily prayer plan")).toBeVisible();
@@ -46,7 +46,8 @@ test("a first visit in a hard moment can skip setup and go straight to Help", as
     localStorage.clear();
     sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
   });
-  await page.goto("/");
+  // "/" is the homepage for a first visit; the app itself opens on Today.
+  await page.goto("/today");
   const onboarding = page.getByRole("dialog", { name: /Set up your daily rule/ });
   await onboarding.getByRole("button", { name: /Need a moment of quiet right now/ }).click();
   await expect(onboarding).toBeHidden();

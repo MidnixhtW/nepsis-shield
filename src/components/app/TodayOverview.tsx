@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { ArrowRight, BookOpen, ExternalLink, Leaf, LifeBuoy, Shield } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
@@ -15,7 +14,7 @@ import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { MemorialsCard } from "@/components/app/MemorialsCard";
 import { NameDayCard } from "@/components/app/NameDay";
 import { FeastGreetingCard } from "@/components/app/FeastGreetingCard";
-import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { GroundResetButton } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { PrayNowCard } from "@/components/app/PrayNowCard";
@@ -43,8 +42,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     void saveWidgetSnapshot(today, settings.calendarMode, fastToday);
   }, [today, settings.calendarMode, fastToday]);
 
-  // The "Ground Me Now" app shortcut links to /today#ground, so open the reset when that is the target.
-  const groundDefault = typeof window !== "undefined" && window.location.hash === "#ground" ? "ground" : undefined;
+  // The "Ground Me Now" app shortcut links to /today#ground, so open the reset straight away when that is the target.
+  const groundOnLoad = typeof window !== "undefined" && window.location.hash === "#ground";
 
   // "Pray now" leads. Below it, two columns on desktop: the day's occasions (at most two open) and the rule on the left,
   // help and the calendar on the right. On phones the columns stack in the same order.
@@ -81,12 +80,16 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             I'm feeling…
           </Button>
         </div>
-        <Accordion type="single" collapsible defaultValue={groundDefault} className="border-t">
-          <AccordionItem value="ground" className="border-0">
-            <AccordionTrigger className="text-left">Ground me now · guided reset</AccordionTrigger>
-            <AccordionContent><GroundMeNow /></AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <div id="ground" className="flex flex-wrap items-center gap-3 border-t py-4">
+          <HeartPulse aria-hidden className="h-5 w-5 shrink-0 text-primary" />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold">Under pressure?</p>
+            <p className="text-xs text-muted-foreground">Breathe, orient, pray, act. Four steps, about a minute.</p>
+          </div>
+          <GroundResetButton size="sm" className="rounded-full" defaultOpen={groundOnLoad}>
+            Start reset
+          </GroundResetButton>
+        </div>
       </section>
       <BackupReminderCard />
       <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />

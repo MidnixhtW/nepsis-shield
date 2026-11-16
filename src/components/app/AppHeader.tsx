@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
   ArrowRight,
+  HeartPulse,
   HelpCircle,
   LifeBuoy,
   Menu,
@@ -20,7 +21,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { GroundMeNow, GroundResetButton } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { ProtectionPsalm } from "@/components/app/ProtectionPsalm";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
@@ -239,6 +240,15 @@ export function AppHeader() {
       </Link>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
+        {/* The reset is one tap from every screen, for the moment pressure rises. */}
+        <GroundResetButton
+          variant="ghost"
+          aria-label="60-second reset"
+          className="h-10 gap-1.5 rounded-md border border-primary/30 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary sm:px-3"
+        >
+          <HeartPulse className="h-[18px] w-[18px] text-primary" />
+          <span className="hidden text-sm font-bold sm:inline">Reset</span>
+        </GroundResetButton>
         <HelpNowButton />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>

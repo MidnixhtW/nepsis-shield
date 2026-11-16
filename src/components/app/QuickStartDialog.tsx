@@ -38,13 +38,10 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
-import { useTheme } from "next-themes";
 import { useSettings } from "@/hooks/useSettings";
-import { themeOptions } from "@/components/app/ThemeToggle";
-import { DEFAULT_THEME } from "@/components/app/ThemeProvider";
 import type { CalendarMode } from "@/lib/settings";
 
-const ONBOARDING_KEY = "onboarding:quickstart_done";
+export const ONBOARDING_KEY = "onboarding:quickstart_done";
 // "Look around first": setup waits until the next visit, and a small button on Today brings it back.
 const DEFERRED_KEY = "onboarding:deferred";
 
@@ -65,7 +62,8 @@ function defer() {
 }
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-type OnboardingStep = "welcome" | "theme" | "role" | "calendar" | "need" | "rhythm" | "rule";
+// Five short screens. Theme lives in the menu, and the calendar shares a screen with the calling.
+type OnboardingStep = "welcome" | "about" | "need" | "rhythm" | "rule";
 
 type NeedOption = {
   id: VigilanceNeed;
@@ -81,21 +79,7 @@ type RhythmOption = {
   icon: React.ReactNode;
 };
 
-const steps: OnboardingStep[] = ["welcome", "theme", "role", "calendar", "need", "rhythm", "rule"];
-
-// A small mock screen in the theme's own colors, so the choice is visible before it is made.
-function ThemePreview({ colors }: { colors: [string, string, string] }) {
-  const [background, text, accent] = colors;
-  return (
-    <span aria-hidden className="grid h-full w-full place-items-center rounded-2xl" style={{ background }}>
-      <span className="grid gap-1">
-        <span className="block h-1 w-5 rounded-full" style={{ background: accent }} />
-        <span className="block h-1 w-6 rounded-full" style={{ background: text }} />
-        <span className="block h-1 w-4 rounded-full" style={{ background: text, opacity: 0.6 }} />
-      </span>
-    </span>
-  );
-}
+const steps: OnboardingStep[] = ["welcome", "about", "need", "rhythm", "rule"];
 
 // Fasts, feasts, readings, and journeys all follow this choice.
 const calendarOptions: Array<{ id: CalendarMode; title: string; description: string }> = [
@@ -183,8 +167,8 @@ const rhythmOptions: RhythmOption[] = [
   },
   {
     id: "small",
-    title: "Smallest faithful step",
-    description: "A rule for busy seasons: short, honest, and repeatable.",
+    title: "Two-minute rule",
+    description: "Three short check-ins for commutes, shifts, classes, and busy weeks.",
     icon: <Heart className="h-5 w-5" />,
   },
 ];
@@ -254,13 +238,18 @@ function SelectionCard({
   );
 }
 
+// The pressure line is written "Under pressure: ...", which repeats the row's own label.
+function withoutLabel(text: string) {
+  return text.replace(/^Under pressure:\s*/i, "");
+}
+
 function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVariantChange: (variant: string) => void }) {
   const rows = [
     ...(rule.practice ? [[rule.variantLabel ?? "Focus", rule.practice]] : []),
     ["Morning", rule.morning],
     ["Midday", rule.midday],
     ["Evening", rule.evening],
-    ["Under pressure", rule.underPressure],
+    ["Under pressure", withoutLabel(rule.underPressure)],
     ...(rule.also ?? []).map((item) => [`Also: ${item.label}`, item.body]),
   ];
 
@@ -280,6 +269,29 @@ function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVaria
         ))}
       </div>
     </div>
+  );
+}
+
+// A small, live view of the rule while choices are still being made.
+function RuleSoFar({ rule }: { rule: RuleOfVigilance }) {
+  const rows = [
+    ["Morning", rule.morning],
+    ["Evening", rule.evening],
+    ["Under pressure", withoutLabel(rule.underPressure)],
+  ];
+  return (
+    <aside aria-label="Your rule so far" aria-live="polite" className="rounded-[1.75rem] border border-primary/20 bg-card/50 p-4 sm:p-5">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your rule so far</p>
+      <p className="mt-1 text-lg font-semibold tracking-tight">{rule.title}</p>
+      <dl className="mt-3 grid gap-2 sm:grid-cols-3">
+        {rows.map(([label, body]) => (
+          <div key={label} className="rounded-2xl bg-background/45 p-3">
+            <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</dt>
+            <dd className="mt-1 text-sm leading-snug text-foreground/90">{body}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
   );
 }
 
@@ -306,9 +318,6 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
-  const { theme, setTheme } = useTheme();
-  // Every role keeps the Church Year look; the role only tints its accent color (see seasonal.css).
-  const [themePicked, setThemePicked] = useState(false);
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
@@ -363,8 +372,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
 
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
+    // Every role keeps the same look; the role only tints its accent color (see seasonal.css).
     setStoredResponderMode(role);
-    if (!themePicked) setTheme(DEFAULT_THEME);
   }
 
   function finish() {
@@ -499,7 +508,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                 Quiet your heart. Begin with one faithful step.
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                We’ll shape a simple Orthodox rhythm for your day: prayer, Scripture, watchfulness, and a gentle return when pressure rises.
+                Nepsis is the old Christian practice of watchfulness: guarding your attention and your heart in a noisy world. In a few
+                questions we’ll shape a small Orthodox rule of prayer and Scripture you can keep.
               </p>
               <button
                 type="button"
@@ -516,44 +526,15 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
             </section>
           ) : null}
 
-          {step === "theme" ? (
+          {step === "about" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Appearance</p>
-                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  How should Nepsis Shield look?
-                </h1>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Tap one to see it now. Dark themes are easier on the eyes at night; Parchment is easiest to read in daylight. You can change it anytime from the menu, under Appearance.
-                </p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {themeOptions.map((option) => (
-                  <SelectionCard
-                    key={option.value}
-                    selected={(theme ?? DEFAULT_THEME) === option.value}
-                    icon={<ThemePreview colors={option.preview} />}
-                    title={option.label}
-                    description={option.description}
-                    onClick={() => {
-                      setTheme(option.value);
-                      setThemePicked(true);
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          {step === "role" ? (
-            <section>
-              <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your path</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">About you</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   Is there a calling the app should keep in mind?
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Most people choose Everyday life. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, choose it here and the app adds support for your work.
+                  Most people choose Everyday life. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, choose it and the app adds support for your work.
                 </p>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -566,28 +547,17 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                       icon={<ShieldCheck className={cn("h-5 w-5", selected ? "text-primary" : "text-muted-foreground")} />}
                       title={responderModeLabels[role]}
                       description={roleDescriptions[role]}
-
                       onClick={() => chooseRole(role)}
                     />
                   );
                 })}
-
               </div>
-            </section>
-          ) : null}
 
-          {step === "calendar" ? (
-            <section>
-              <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your calendar</p>
-                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  Which calendar does your parish keep?
-                </h1>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Fasts, feasts, readings, and seasonal journeys follow it. Not sure? If your parish celebrates Nativity on December 25, choose New Calendar; on January 7, Old Calendar. You can change this later in Settings.
-                </p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <h2 className="mt-10 text-xl font-semibold tracking-tight sm:text-2xl">Which calendar does your parish keep?</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Fasts, feasts, and readings follow it. Nativity on December 25 is New Calendar; on January 7, Old Calendar. Not sure? Keep New Calendar.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {calendarOptions.map((option) => (
                   <SelectionCard
                     key={option.id}
@@ -610,7 +580,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   Choose where you most need watchfulness.
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your Rule of Vigilance; the others add a practice each. You can change it later by replaying onboarding from the menu.
+                  Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your rule; the others add a practice each.
                 </p>
                 <p role="status" className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
                   {selectedNeeds.length ? `${selectedNeeds.length} of ${MAX_VIGILANCE_NEEDS} chosen` : "Choose at least one"}
@@ -633,6 +603,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   );
                 })}
               </div>
+              {selectedNeeds.length ? <div className="mt-6"><RuleSoFar rule={rule} /></div> : null}
             </section>
           ) : null}
 
@@ -659,6 +630,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   />
                 ))}
               </div>
+              <div className="mt-6"><RuleSoFar rule={rule} /></div>
             </section>
           ) : null}
 
@@ -674,11 +646,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
       <div className="relative z-[71] shrink-0 border-t border-primary/15 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <div className="hidden min-w-0 flex-1 sm:block">
-            <p className="truncate text-sm font-medium text-foreground">
-              {step === "rule" ? rule.title : "Your daily rule is being shaped gently."}
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {step === "rule" ? rule.pastoralNote : "One choice per screen. You can change any of it later."}
+            <p className="truncate text-sm text-muted-foreground">
+              {step === "rule" ? rule.title : `Step ${stepIndex + 1} of ${steps.length} · change anything later`}
             </p>
           </div>
           <Button

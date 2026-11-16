@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Analytics, type BeforeSendEvent } from "@vercel/analytics/react";
 import Index from "./pages/Index";
+import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
@@ -71,7 +72,7 @@ const App = () => (
             <ReminderTapRouter />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Home />} />
               <Route path="/privacy" element={<Privacy />} />
 
               <Route path="/about" element={<About />} />

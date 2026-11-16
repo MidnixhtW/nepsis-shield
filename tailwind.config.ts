@@ -105,10 +105,16 @@ export default {
             height: "0",
           },
         },
+        // A slow candle-like drift for the homepage glow.
+        drift: {
+          "0%, 100%": { transform: "translate3d(-50%, 0, 0) scale(1)", opacity: "0.55" },
+          "50%": { transform: "translate3d(-46%, 1.5rem, 0) scale(1.12)", opacity: "0.85" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        drift: "drift 14s ease-in-out infinite",
       },
     },
   },
