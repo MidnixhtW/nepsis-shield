@@ -60,7 +60,7 @@ export default function About() {
               <p className="mt-1 text-sm text-muted-foreground">
                 {APK_CHANNEL === "release"
                   ? "Install the signed Android app directly."
-                  : "Install the Android testing build directly. A signed release is on its way."}
+                  : "Install the public beta directly. A signed release is on its way."}
               </p>
             </div>
             <BadgeCheck className="h-5 w-5 text-muted-foreground" />
@@ -260,4 +260,4 @@ export default function About() {
       </div>
     </PageContainer>
   );
-}
+}

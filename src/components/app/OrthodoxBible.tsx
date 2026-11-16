@@ -210,7 +210,8 @@ export function OrthodoxBible() {
       const fromBibleApi = async () => {
         const data = await fetchJsonCached<BibleApiResponse>(browseUrl, undefined, {
           key: `cache:bible-api:${browseUrl}`,
-          ttlMs: 1000 * 60 * 60 * 8, // 8h
+          ttlMs: 1000 * 60 * 60 * 48,
+          keep: true,
         });
         setBrowseSource("bible-api");
         return data;
@@ -276,7 +277,8 @@ export function OrthodoxBible() {
           undefined,
           {
             key: `cache:bible-api:${refUrl}`,
-            ttlMs: 1000 * 60 * 60 * 8,
+            ttlMs: 1000 * 60 * 60 * 48,
+            keep: true,
           },
         );
         setRefSource("bible-api");

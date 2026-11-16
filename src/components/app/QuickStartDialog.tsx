@@ -10,6 +10,7 @@ import {
   Compass,
   Flame,
   Heart,
+  LifeBuoy,
   MoonStar,
   ShieldCheck,
   Sparkles,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { openHelpPanel } from "@/lib/appEvents";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import {
   getStoredResponderMode,
@@ -355,6 +357,14 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
     setOpen(false);
   }
 
+  // For someone who opens the app for the first time in a hard moment: leave setup (as "Begin later" does) and go
+  // straight to the Help panel. The header mounts once the dialog closes, so the panel opens on the next frame.
+  function helpNow() {
+    skip();
+    navigate("/today");
+    window.requestAnimationFrame(() => window.setTimeout(openHelpPanel, 0));
+  }
+
   function next() {
     if (step === "rule") {
       finish();
@@ -419,6 +429,18 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
                 We’ll shape a simple Orthodox rhythm for your day: prayer, Scripture, watchfulness, and a gentle return when pressure rises.
               </p>
+              <button
+                type="button"
+                onClick={helpNow}
+                className="tap mx-auto mt-8 flex w-full max-w-md items-center gap-3 rounded-2xl border border-accent/45 bg-card/80 px-4 py-3 text-left shadow-sm transition-colors hover:border-accent/70 hover:bg-accent/10"
+              >
+                <LifeBuoy className="h-5 w-5 shrink-0 text-accent" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">Need a moment of quiet right now?</span>
+                  <span className="block text-xs text-muted-foreground">Skip setup and go straight to prayer. You can set up your rule later.</span>
+                </span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </button>
             </section>
           ) : null}
 

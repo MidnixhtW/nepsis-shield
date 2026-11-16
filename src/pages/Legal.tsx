@@ -351,7 +351,7 @@ const COOKIES: Section[] = [
             </>,
             <>
               <span className="font-semibold text-foreground">IndexedDB:</span> the next two weeks of the Church calendar, so Today works without a
-              signal.
+              signal, and the Bible chapters you have opened (the most recent few hundred, for up to 30 days), so they open again without one.
             </>,
             <>
               <span className="font-semibold text-foreground">Cache storage:</span> the app's own files, and any recordings you save for offline

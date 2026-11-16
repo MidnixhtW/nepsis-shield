@@ -103,7 +103,7 @@ function ApkDownloadCard() {
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
         {APK_CHANNEL === "release"
           ? "Download the signed Android app and install it directly."
-          : "Download the Android testing build for device testing and sideload installs. Android may warn about it until the signed release is published."}
+          : "Download the public beta and install it directly. It has everything the website has, works offline, and updates as new builds go out. Until the signed release is published, Android will ask you to allow installs from your browser."}
       </p>
 
       <Separator className="my-5" />

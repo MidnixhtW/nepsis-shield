@@ -40,3 +40,16 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await page.getByRole("button", { name: "Show rule" }).click();
   await expect(page.getByRole("heading", { name: "Rule for Steady Prayer" })).toBeVisible();
 });
+
+test("a first visit in a hard moment can skip setup and go straight to Help", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.clear();
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/");
+  const onboarding = page.getByRole("dialog", { name: /Set up your daily rule/ });
+  await onboarding.getByRole("button", { name: /Need a moment of quiet right now/ }).click();
+  await expect(onboarding).toBeHidden();
+  await expect(page).toHaveURL(/\/today$/);
+  await expect(page.getByRole("dialog", { name: "Need help now?" })).toBeVisible();
+});
