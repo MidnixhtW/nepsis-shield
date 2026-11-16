@@ -214,11 +214,11 @@ function SelectionCard({
       aria-pressed={multiple ? selected : undefined}
       className={cn(
         "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
-        "bg-card/60 shadow-[0_18px_55px_hsl(35_91%_48%/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
+        "bg-card/60 shadow-[0_18px_55px_hsl(var(--accent)/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
     >
-      <span className="pointer-events-none absolute inset-x-6 -top-10 h-20 rounded-full bg-amber-500/10 blur-3xl" />
+      <span className="pointer-events-none absolute inset-x-6 -top-10 h-20 rounded-full bg-accent/10 blur-3xl" />
       <span className="relative flex items-start justify-between gap-3">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
           {icon}
@@ -459,7 +459,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
         >
           <Dialog.Title className="sr-only">Set up your daily rule · Step {stepIndex + 1} of {steps.length}</Dialog.Title>
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute bottom-20 right-[-8rem] h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       </div>
 

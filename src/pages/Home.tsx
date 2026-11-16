@@ -134,7 +134,7 @@ export default function Home() {
         {/* 1. Hero */}
         <section className="relative overflow-hidden">
           <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute left-1/2 top-[-10rem] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-amber-500/20 blur-3xl motion-safe:animate-drift" />
+            <div className="absolute left-1/2 top-[-10rem] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-accent/20 blur-3xl motion-safe:animate-drift" />
             <div className="absolute bottom-[-12rem] right-[-10rem] h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           </div>
           <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-16 text-center sm:px-8 sm:pb-28 sm:pt-24">
