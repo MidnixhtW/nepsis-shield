@@ -53,3 +53,38 @@ test("a first visit in a hard moment can skip setup and go straight to Help", as
   await expect(page).toHaveURL(/\/today$/);
   await expect(page.getByRole("dialog", { name: "Need help now?" })).toBeVisible();
 });
+
+test("from a public page, Back to app opens Today to look around, and setup is one tap away", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("test:cleared")) {
+      localStorage.clear();
+      sessionStorage.setItem("test:cleared", "1");
+    }
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/about");
+  await page.getByRole("link", { name: "Back to app" }).click();
+  await expect(page).toHaveURL(/\/today$/);
+  await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toHaveCount(0);
+
+  await page.getByRole("button", { name: "Set up your daily rule" }).click();
+  await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toBeVisible();
+});
+
+test("Look around first closes setup for now and leaves a way back", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("test:cleared")) {
+      localStorage.clear();
+      sessionStorage.setItem("test:cleared", "1");
+    }
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/today");
+  const setup = page.getByRole("dialog", { name: /Set up your daily rule/ });
+  await setup.getByRole("button", { name: "Look around first" }).click();
+  await expect(setup).toHaveCount(0);
+  // Still not set up, so a new visit to Today in this session stays open, and the button stays.
+  await page.reload();
+  await expect(setup).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Set up your daily rule" })).toBeVisible();
+});

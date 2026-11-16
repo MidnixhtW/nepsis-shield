@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import { BadgeCheck, CalendarDays, ListChecks } from "lucide-react";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +21,7 @@ export default function ReleaseNotes() {
         icon={<OrthodoxCrossIcon className="h-6 w-6" />}
         actions={
           <>
-            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>
             <Button asChild className="rounded-2xl"><Link to="/download">Download APK</Link></Button>
           </>
         }

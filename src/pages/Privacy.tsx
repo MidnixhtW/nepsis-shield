@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 
 import {
   Download,
@@ -363,7 +364,7 @@ export default function Privacy() {
         title="Your data stays in your hands"
         description="Control what the app stores on this device, and move your local data with encrypted export and import."
         icon={<Shield className="h-5 w-5" />}
-        actions={<Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>}
+        actions={<Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>}
       />
       <p className="mx-1 mt-3 text-xs leading-relaxed text-muted-foreground">
         <span className="font-semibold text-foreground">Independent project:</span> Nepsis Shield is not an official app of the Orthodox Church in America.

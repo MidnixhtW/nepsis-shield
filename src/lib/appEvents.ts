@@ -9,3 +9,6 @@ export function openHelpPanel() {
 export function openAppMenu() {
   window.dispatchEvent(new Event(OPEN_MENU_EVENT));
 }
+
+/** Link state that opens the app without the setup screens, for "Back to app" on the public pages. */
+export const LOOK_AROUND_STATE = { lookAround: true } as const;

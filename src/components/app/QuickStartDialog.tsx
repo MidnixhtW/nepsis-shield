@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
   ArrowLeft,
   BookOpen,
@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Sparkles,
   Sun,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,24 @@ import { DEFAULT_THEME } from "@/components/app/ThemeProvider";
 import type { CalendarMode } from "@/lib/settings";
 
 const ONBOARDING_KEY = "onboarding:quickstart_done";
+// "Look around first": setup waits until the next visit, and a small button on Today brings it back.
+const DEFERRED_KEY = "onboarding:deferred";
+
+function isDeferred() {
+  try {
+    return window.sessionStorage.getItem(DEFERRED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function defer() {
+  try {
+    window.sessionStorage.setItem(DEFERRED_KEY, "1");
+  } catch {
+    // Without session storage the setup simply shows again on the next page.
+  }
+}
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
 type OnboardingStep = "welcome" | "theme" | "role" | "calendar" | "need" | "rhythm" | "rule";
@@ -277,7 +296,13 @@ const roleDescriptions: Record<ResponderMode, string> = {
 
 export function QuickStartDialog({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(() => !getStoredItem<boolean>(ONBOARDING_KEY));
+  const location = useLocation();
+  const done = () => Boolean(getStoredItem<boolean>(ONBOARDING_KEY));
+  const [open, setOpen] = useState(() => {
+    if (done()) return false;
+    if ((location.state as { lookAround?: boolean } | null)?.lookAround) defer();
+    return !isDeferred();
+  });
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
@@ -373,7 +398,47 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
 
-  if (!open) return <>{children}</>;
+  const [pillHidden, setPillHidden] = useState(false);
+
+  function lookAround() {
+    defer();
+    setOpen(false);
+  }
+
+  if (!open) {
+    return (
+      <>
+        {children}
+        {!done() && !pillHidden ? (
+          <div className="pointer-events-none fixed inset-x-0 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] z-40 flex justify-center px-4">
+            <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-background/80 p-1 shadow-lg backdrop-blur">
+              <Button
+                type="button"
+                className="gold-foil h-10 rounded-full px-4 text-sm font-bold text-primary-foreground"
+                onClick={() => {
+                  setStepIndex(0);
+                  setOpen(true);
+                }}
+              >
+                Set up your daily rule
+                <ChevronRight className="ml-1.5 h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full text-muted-foreground"
+                aria-label="Hide for now"
+                onClick={() => setPillHidden(true)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        ) : null}
+      </>
+    );
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={(nextOpen) => { if (!nextOpen) skip(); }}>
@@ -406,9 +471,16 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
             ) : null}
             <StepDots index={stepIndex} />
           </div>
-          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
-            Begin later
-          </Button>
+          <div className="flex items-center gap-1">
+            {stepIndex === 0 ? (
+              <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={lookAround}>
+                Look around first
+              </Button>
+            ) : null}
+            <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
+              Begin later
+            </Button>
+          </div>
         </header>
 
         <div ref={scrollArea} className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-6 sm:py-8">
