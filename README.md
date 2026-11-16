@@ -31,12 +31,13 @@ The debug workflow uploads an artifact named:
 
 It also publishes these release assets:
 
-- `ortho-companion-latest-debug.apk` - stable direct-download filename used by the app.
+- `nepsis-shield-beta.apk` - stable direct-download filename used by the app (labelled "Public beta").
+- `ortho-companion-latest-debug.apk` - the same file under its old name, kept so older links still work.
 - `ortho-companion-debug-<run-number>.apk` - run-specific debug APK copy.
 
 Stable debug APK URL format:
 
-- `https://github.com/<owner>/<repo>/releases/download/android-debug-latest/ortho-companion-latest-debug.apk`
+- `https://github.com/<owner>/<repo>/releases/download/android-debug-latest/nepsis-shield-beta.apk`
 
 The release workflow accepts a version number and can publish:
 
@@ -58,7 +59,7 @@ To publish the first signed release:
 2. Turn it into text for GitHub: `base64 -w0 nepsis-release.keystore` (macOS: `base64 -i nepsis-release.keystore`).
 3. In GitHub, Settings > Secrets and variables > Actions, add the four secrets above.
 4. Run the **Publish Android Release** workflow. It publishes a numbered release and keeps the newest signed APK at the fixed `android-release-latest` release.
-5. On Vercel, set `VITE_APK_CHANNEL=release` and redeploy. The Download button then points to the signed APK and is labelled "Signed release" instead of "Testing build".
+5. On Vercel, set `VITE_APK_CHANNEL=release` and redeploy. The Download button then points to the signed APK and is labelled "Signed release" instead of "Public beta".
 
 The app has a dedicated `/download` page and a visible **Download APK** button in the header, footer, About page, and Download page. By default, the app points to this repository's rolling APK release:
 

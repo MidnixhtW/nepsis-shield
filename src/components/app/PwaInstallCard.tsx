@@ -72,7 +72,7 @@ export function PwaInstallCard() {
   }, []);
 
   const browserHint = useMemo(() => {
-    const ua = window.navigator.userAgent.toLowerCase();
+    const ua = typeof navigator === "undefined" ? "" : navigator.userAgent.toLowerCase();
     if (ua.includes("iphone") || ua.includes("ipad")) return "On iPhone/iPad: tap Share, then Add to Home Screen.";
     if (ua.includes("android")) return "On Android: tap Install if it appears, or open the browser menu and choose Add to Home screen.";
     return "On desktop: use this button when available, or click the install icon in the address bar.";

@@ -1,3 +1,5 @@
+import { TEXT_KEEP_MS, keepText, readKeptText } from "@/lib/textCache";
+
 type CacheEntry<T> = {
   v: 1;
   ts: number;
@@ -10,6 +12,8 @@ type CacheOptions = {
   ttlMs: number;
   forceRefresh?: boolean;
   staleIfError?: boolean;
+  /** Also keep a copy on the device (IndexedDB) that outlives the session and stands in when the network fails. */
+  keep?: boolean;
   onCacheUsed?: (savedAt: number, stale: boolean) => void;
 };
 
@@ -45,6 +49,13 @@ export async function fetchJsonCached<T>(
     return cached.data;
   }
 
+  const kept = cache?.keep && !cache.forceRefresh ? await readKeptText<T>(cache.key) : undefined;
+  if (kept && cache && kept.savedAt + cache.ttlMs > Date.now()) {
+    writeCache(cache.key, kept.data, kept.savedAt + cache.ttlMs - Date.now());
+    cache.onCacheUsed?.(kept.savedAt, false);
+    return kept.data;
+  }
+
   try {
     const res = await fetch(url, {
       ...opts,
@@ -56,11 +67,17 @@ export async function fetchJsonCached<T>(
     if (!ct.includes("application/json")) throw new Error("Unexpected content type");
     const data = (await res.json()) as T;
     if (cache) writeCache(cache.key, data, cache.ttlMs);
+    if (cache?.keep) void keepText(cache.key, data);
     return data;
   } catch (error) {
     if (cache?.staleIfError && cached) {
       cache.onCacheUsed?.(cached.ts, true);
       return cached.data;
+    }
+    const fallback = kept ?? (cache?.keep ? await readKeptText<T>(cache.key) : undefined);
+    if (cache && fallback && fallback.savedAt + TEXT_KEEP_MS > Date.now()) {
+      cache.onCacheUsed?.(fallback.savedAt, true);
+      return fallback.data;
     }
     throw error;
   }

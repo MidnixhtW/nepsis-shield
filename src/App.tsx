@@ -14,6 +14,7 @@ import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
 import { ReminderTapRouter } from "@/components/app/ReminderTapRouter";
+import { RouteMetaSync } from "@/components/app/RouteMetaSync";
 
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
@@ -66,6 +67,7 @@ const App = () => (
           <BrowserRouter>
             <ConnectionStatusBanner />
             <ScrollToTop />
+            <RouteMetaSync />
             <ReminderTapRouter />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
@@ -94,4 +96,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App;
+export default App;
