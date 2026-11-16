@@ -65,5 +65,14 @@ for (const meta of entry.PUBLIC_ROUTES) {
   written += 1;
 }
 
+// A sitemap, so crawlers find every public page even if they never follow a footer link.
+const sitemapUrls = [`${entry.SITE_ORIGIN}/`, ...entry.PUBLIC_ROUTES.map((meta) => entry.canonicalUrl(meta))];
+await writeFile(
+  path.join(dist, "sitemap.xml"),
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls
+    .map((url) => `  <url><loc>${url}</loc></url>`)
+    .join("\n")}\n</urlset>\n`,
+);
+
 await rm(serverOut, { recursive: true, force: true });
-console.log(`prerender: wrote ${written} pages`);
+console.log(`prerender: wrote ${written} pages and sitemap.xml`);

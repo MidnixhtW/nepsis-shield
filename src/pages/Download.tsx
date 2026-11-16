@@ -1,5 +1,6 @@
 import { INSTALL_PAGE_URL } from "@/lib/publicSite";
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import {
   CheckCircle2,
   Download as DownloadIcon,
@@ -150,7 +151,7 @@ export default function Download() {
         icon={<OrthodoxCrossIcon className="h-6 w-6" />}
         actions={
           <>
-            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>
             <Button asChild variant="outline" className="premium-action"><Link to="/about">About</Link></Button>
           </>
         }

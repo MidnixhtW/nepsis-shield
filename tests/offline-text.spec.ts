@@ -69,3 +69,10 @@ test("the built privacy page has its own canonical link and text before any scri
   expect(html).not.toContain("Loading…");
   await context.close();
 });
+
+test("the sitemap lists the policy pages", async ({ page }) => {
+  const xml = await (await page.request.get("/sitemap.xml")).text();
+  for (const path of ["/privacy-policy", "/terms", "/cookies", "/privacy", "/about"]) {
+    expect(xml).toContain(`<loc>https://www.nepsisshield.com${path}</loc>`);
+  }
+});

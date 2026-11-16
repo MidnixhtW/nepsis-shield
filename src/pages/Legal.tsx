@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -402,7 +403,7 @@ export default function Legal({ doc }: { doc: LegalDoc }) {
         icon={<FileText className="h-5 w-5" />}
         actions={
           <Button asChild variant="outline" className="premium-action">
-            <Link to="/today">Back to app</Link>
+            <Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link>
           </Button>
         }
       />

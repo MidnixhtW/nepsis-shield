@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import type { ReactNode } from "react";
 import {
   AlertTriangle,
@@ -207,7 +208,7 @@ export default function FieldManual() {
         icon={<Crosshair className="h-5 w-5" />}
         actions={
           <>
-            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>
             <Button asChild className="rounded-2xl"><Link to="/pray?tab=prayers">Open prayer book</Link></Button>
           </>
         }
