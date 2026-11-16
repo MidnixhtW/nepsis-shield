@@ -7,23 +7,23 @@ const BOOKS = [
   "Genesis", "Exodus", "Psalms", "Psalm", "Matthew", "Mark", "Luke", "John",
 ].map((name, index) => ({ bookid: index + 1, name, chapters: 150 }));
 
+const CORS = { "access-control-allow-origin": "*" };
+
 async function serveBible(page: Page) {
   await page.route("https://bible-api.com/**", (route) =>
     route.fulfill({
-      contentType: "application/json",
-      body: JSON.stringify({
+      headers: CORS,
+      json: {
         reference: "John 1",
         verses: [{ book_name: "John", chapter: 1, verse: 1, text: MARKER }],
         text: MARKER,
         translation_id: "kjv",
         translation_name: "KJV",
-      }),
+      },
     }),
   );
-  await page.route("https://bolls.life/get-books/**", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify(BOOKS) }));
-  await page.route("https://bolls.life/get-text/**", (route) =>
-    route.fulfill({ contentType: "application/json", body: JSON.stringify([{ pk: 1, verse: 1, text: MARKER }]) }),
-  );
+  await page.route("https://bolls.life/get-books/**", (route) => route.fulfill({ headers: CORS, json: BOOKS }));
+  await page.route("https://bolls.life/get-text/**", (route) => route.fulfill({ headers: CORS, json: [{ pk: 1, verse: 1, text: MARKER }] }));
 }
 
 test("a Bible chapter read once still opens when the Bible sites are down", async ({ context }) => {

@@ -27,14 +27,21 @@ function openDb(): Promise<IDBDatabase> {
   return dbPromise;
 }
 
+/** A slow or stuck device store must never hold up reading online, so a lookup gives up after a moment. */
+const READ_TIMEOUT_MS = 1500;
+
 export async function readKeptText<T>(key: string): Promise<KeptText<T> | undefined> {
-  try {
+  const lookup = (async () => {
     const db = await openDb();
-    return await new Promise((resolve, reject) => {
+    return await new Promise<KeptText<T> | undefined>((resolve, reject) => {
       const request = db.transaction(STORE, "readonly").objectStore(STORE).get(key);
       request.onsuccess = () => resolve(request.result as KeptText<T> | undefined);
       request.onerror = () => reject(request.error);
     });
+  })();
+  const timeout = new Promise<undefined>((resolve) => setTimeout(() => resolve(undefined), READ_TIMEOUT_MS));
+  try {
+    return await Promise.race([lookup, timeout]);
   } catch {
     return undefined;
   }
