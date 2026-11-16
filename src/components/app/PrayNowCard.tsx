@@ -64,7 +64,7 @@ export function PrayNowCard() {
       aria-labelledby="pray-now-title"
       data-season={churchDay.season}
       data-sky={phase}
-      className="relative overflow-hidden rounded-3xl border border-accent/30 bg-card p-5 sm:p-6"
+      className="relative overflow-hidden rounded-3xl border border-primary/40 bg-card p-5 shadow-[0_18px_50px_hsl(var(--primary)/0.12)] sm:p-6"
     >
       {/* The light of this hour of the day, and the color of this season of the Church. */}
       <div aria-hidden className="pointer-events-none absolute inset-0" style={{ backgroundImage: SKY_GRADIENT[phase] }} />

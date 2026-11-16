@@ -86,7 +86,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             <p className="text-sm font-semibold">Under pressure?</p>
             <p className="text-xs text-muted-foreground">Breathe, orient, pray, act. Four steps, about a minute.</p>
           </div>
-          <GroundResetButton size="sm" className="rounded-full" defaultOpen={groundOnLoad}>
+          <GroundResetButton variant="outline" size="sm" className="rounded-full" defaultOpen={groundOnLoad}>
             Start reset
           </GroundResetButton>
         </div>
@@ -95,8 +95,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
       <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
       <div className="grid items-start gap-5 md:grid-cols-2 lg:grid-cols-1">
         <Card className="rounded-3xl p-5 sm:p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Readings · {format(today, "MMMM d")}</p>
-          <h2 className="mt-2 text-2xl font-semibold">Receive today’s Scripture.</h2>
+          <p className="text-xs font-medium text-muted-foreground">{format(today, "EEEE, MMMM d")}</p>
+          <h2 className="mt-1 text-lg font-semibold">Today’s readings</h2>
           {q.isLoading ? <Skeleton className="mt-4 h-16 w-full rounded-xl" /> : q.data ? (
             <div className="mt-4 grid gap-2 text-sm">
               {[q.data.readings.epistle, q.data.readings.gospel].filter(Boolean).map((reading, index) => (
@@ -104,12 +104,12 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
               ))}
             </div>
           ) : <p className="mt-4 text-sm text-muted-foreground">Daily details are unavailable. Open the readings or the trusted calendar source below.</p>}
-          <Button className="mt-5 rounded-xl" onClick={() => onNavigate?.({ section: "read", read: "daily" })}>
+          <Button variant="outline" className="mt-5 rounded-xl" onClick={() => onNavigate?.({ section: "read", read: "daily" })}>
             <BookOpen className="mr-2 h-4 w-4" /> Open readings <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Card>
         <Card id="saints-fast" className="scroll-mt-24 rounded-3xl p-5 sm:p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Saints and fast</p>
+          <h2 className="text-lg font-semibold">Saints and fast</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="secondary">{settings.calendarMode === "julian" ? "Old Calendar" : "New Calendar"}</Badge>
             {q.data?.tone?.value ? <Badge variant="secondary">Tone {q.data.tone.value}</Badge> : null}

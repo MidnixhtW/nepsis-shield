@@ -2,11 +2,18 @@
  * Church Year: a dark theme whose colors follow the liturgical season (set as data-season on <html> by
  * SeasonalThemeSync). It uses the Olive & Brass structure like the other dark variants; only colors change.
  * A service role (data-role) then tints the primary color, so a firefighter in Lent sees violet with red.
+ *
+ * Two colors, two jobs, like a vestment and its trim:
+ * - The season's color is for actions: solid buttons use --season-solid, a deep vestment tone with light text,
+ *   and --primary is a lighter tint of the same hue for text, icons and selected states on the dark background.
+ * - Gold (--accent) is the trim: small labels, icon marks and ornament.
  * Imported after dark-variants.css; high-contrast mode still wins.
  */
 @layer base {
   /* Ordinary time: charcoal and night blue with icon gold. */
   .seasonal {
+    --season-solid: 213 55% 40%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 222 22% 6%;
     --foreground: 40 30% 90%;
     --card: 222 20% 9%;
@@ -44,6 +51,8 @@
 
   /* Great Lent and Holy Week: deep violet and gold. */
   .seasonal[data-season="lent"] {
+    --season-solid: 272 40% 42%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 268 22% 6%;
     --card: 268 18% 9%;
     --popover: 268 20% 8%;
@@ -63,6 +72,8 @@
 
   /* Pascha to the Leave-taking: paschal crimson and bright gold. */
   .seasonal[data-season="pascha"] {
+    --season-solid: 356 72% 44%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 356 26% 6%;
     --card: 356 22% 9%;
     --popover: 356 24% 8%;
@@ -86,6 +97,8 @@
 
   /* Pentecost and the week after: green, the color of the Holy Spirit's feast. */
   .seasonal[data-season="pentecost"] {
+    --season-solid: 148 48% 32%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 150 22% 5%;
     --card: 150 18% 8%;
     --popover: 150 20% 7%;
@@ -105,6 +118,8 @@
 
   /* Feasts of the Theotokos and the Dormition Fast: blue. */
   .seasonal[data-season="theotokos"] {
+    --season-solid: 208 68% 40%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 216 38% 6%;
     --card: 216 32% 10%;
     --popover: 216 34% 8%;
@@ -124,25 +139,29 @@
 
   /* The Nativity Fast: deep wine red, waiting for the feast. */
   .seasonal[data-season="nativity-fast"] {
+    --season-solid: 348 62% 36%;
+    --season-solid-foreground: 40 30% 96%;
     --background: 345 24% 6%;
     --card: 345 20% 9%;
     --popover: 345 22% 8%;
-    --primary: 348 52% 62%;
+    --primary: 352 62% 66%;
     --primary-foreground: 345 40% 8%;
     --secondary: 345 14% 15%;
     --muted: 345 12% 13%;
     --muted-foreground: 340 8% 70%;
     --border: 345 14% 22%;
     --input: 345 14% 24%;
-    --season-glow: 348 52% 50%;
+    --season-glow: 348 62% 40%;
     --sidebar-background: 345 24% 7%;
-    --sidebar-primary: 348 52% 62%;
+    --sidebar-primary: 352 62% 66%;
     --sidebar-accent: 345 14% 15%;
     --sidebar-border: 345 14% 22%;
   }
 
   /* Nativity to Theophany: bright gold and white on warm dark. */
   .seasonal[data-season="nativity"] {
+    --season-solid: 42 72% 54%;
+    --season-solid-foreground: 38 40% 8%;
     --background: 38 22% 6%;
     --card: 38 18% 9%;
     --popover: 38 20% 8%;
@@ -165,13 +184,13 @@
   }
 
   /* A service role tints the primary color (buttons, the selected tab). Everyday life keeps the season's. */
-  .seasonal[data-role="military"] { --primary: 80 34% 56%; --sidebar-primary: 80 34% 56%; --primary-foreground: 75 30% 6%; }
-  .seasonal[data-role="law"] { --primary: 217 72% 64%; --sidebar-primary: 217 72% 64%; --primary-foreground: 222 50% 8%; }
-  .seasonal[data-role="fire"] { --primary: 4 76% 60%; --sidebar-primary: 4 76% 60%; --primary-foreground: 4 50% 8%; }
-  .seasonal[data-role="ems"] { --primary: 0 0% 94%; --sidebar-primary: 0 0% 94%; --primary-foreground: 222 30% 8%; }
-  .seasonal[data-role="dispatch"] { --primary: 262 62% 70%; --sidebar-primary: 262 62% 70%; --primary-foreground: 262 40% 8%; }
-  .seasonal[data-role="custody"] { --primary: 215 18% 74%; --sidebar-primary: 215 18% 74%; --primary-foreground: 222 30% 8%; }
-  .seasonal[data-role="chaplain"] { --primary: 38 82% 60%; --sidebar-primary: 38 82% 60%; --primary-foreground: 38 40% 8%; }
+  .seasonal[data-role="military"] { --primary: 80 34% 56%; --sidebar-primary: 80 34% 56%; --primary-foreground: 75 30% 6%; --season-solid: 80 30% 34%; --season-solid-foreground: 60 30% 95%; }
+  .seasonal[data-role="law"] { --primary: 217 72% 64%; --sidebar-primary: 217 72% 64%; --primary-foreground: 222 50% 8%; --season-solid: 217 62% 42%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal[data-role="fire"] { --primary: 4 76% 60%; --sidebar-primary: 4 76% 60%; --primary-foreground: 4 50% 8%; --season-solid: 4 70% 44%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal[data-role="ems"] { --primary: 0 0% 94%; --sidebar-primary: 0 0% 94%; --primary-foreground: 222 30% 8%; --season-solid: 0 0% 92%; --season-solid-foreground: 222 30% 8%; }
+  .seasonal[data-role="dispatch"] { --primary: 262 62% 70%; --sidebar-primary: 262 62% 70%; --primary-foreground: 262 40% 8%; --season-solid: 262 48% 46%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal[data-role="custody"] { --primary: 215 18% 74%; --sidebar-primary: 215 18% 74%; --primary-foreground: 222 30% 8%; --season-solid: 215 16% 38%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal[data-role="chaplain"] { --primary: 38 82% 60%; --sidebar-primary: 38 82% 60%; --primary-foreground: 38 40% 8%; --season-solid: 38 76% 52%; --season-solid-foreground: 38 40% 8%; }
 
   html.seasonal body {
     background-image:
@@ -196,7 +215,16 @@
 }
 
 @layer utilities {
-  html.seasonal .bg-primary {
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.82)) !important;
+  html.seasonal :is(.bg-primary, .gold-foil) {
+    background-color: hsl(var(--season-solid)) !important;
+    background-image: linear-gradient(160deg, hsl(var(--season-solid)), hsl(var(--season-solid) / 0.86)) !important;
+    color: hsl(var(--season-solid-foreground)) !important;
+    box-shadow:
+      inset 0 1px 0 hsl(var(--accent) / 0.28),
+      0 8px 22px hsl(var(--season-solid) / 0.28) !important;
+  }
+
+  html.seasonal :is(.bg-primary, .gold-foil) :is(svg, .text-primary-foreground) {
+    color: inherit !important;
   }
 }
