@@ -1,6 +1,9 @@
 import { expect, test } from "./fixtures";
 import type { Page } from "@playwright/test";
 
+// The app's service worker would take over the page's requests, and WebKit then skips the routes below.
+test.use({ serviceWorkers: "block" });
+
 const MARKER = "In the beginning was the Word, kept for a day with no signal.";
 
 const BOOKS = [
