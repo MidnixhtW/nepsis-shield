@@ -34,7 +34,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))),
+      // Only old copies of the app shell go. Recordings saved for offline live in "nepsis-audio-v1" (src/lib/offlineAudio.ts)
+      // and must survive app updates.
+      Promise.all(keys.filter((key) => key.startsWith("nepsis-shield-pwa-") && key !== CACHE_NAME).map((key) => caches.delete(key))),
     ).then(() => self.clients.claim()),
   );
 });
