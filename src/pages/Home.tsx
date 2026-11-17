@@ -4,14 +4,11 @@ import { Capacitor } from "@capacitor/core";
 import {
   ArrowRight,
   BellRing,
-  BookOpen,
   BriefcaseBusiness,
   CalendarDays,
   CloudOff,
   GraduationCap,
-  Leaf,
   MoonStar,
-  ScrollText,
   ShieldCheck,
   Smartphone,
 } from "lucide-react";
@@ -33,7 +30,7 @@ function shouldSkipHome() {
 }
 
 function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">{children}</p>;
+  return <p className="text-balance text-xs font-semibold uppercase tracking-[0.2em] text-primary">{children}</p>;
 }
 
 function StartButtons({ center = false }: { center?: boolean }) {
@@ -56,22 +53,22 @@ function StartButtons({ center = false }: { center?: boolean }) {
 // Real situations the app is built around. These are descriptions, not quotes from users.
 const lives = [
   {
-    icon: <BriefcaseBusiness className="h-5 w-5" />,
+    icon: <BriefcaseBusiness className="h-4 w-4" />,
     title: "Early career",
     body: "Five minutes of morning prayer before the inbox, and a way back to calm when a meeting goes badly.",
   },
   {
-    icon: <GraduationCap className="h-5 w-5" />,
+    icon: <GraduationCap className="h-4 w-4" />,
     title: "Studying",
     body: "A two-minute rule that survives exam weeks, and evening prayers that help you put the phone down.",
   },
   {
-    icon: <ShieldCheck className="h-5 w-5" />,
+    icon: <ShieldCheck className="h-4 w-4" />,
     title: "Serving",
     body: "Military, police, fire, EMS, dispatch and chaplains get shift-length prayers and a reset built for the job.",
   },
   {
-    icon: <MoonStar className="h-5 w-5" />,
+    icon: <MoonStar className="h-4 w-4" />,
     title: "Late nights",
     body: "Compline, the Jesus Prayer with a prayer-rope counter, and a stillness timer for when sleep won’t come.",
   },
@@ -79,17 +76,14 @@ const lives = [
 
 const features = [
   {
-    icon: <ScrollText className="h-5 w-5" />,
     title: "Your rule, simplified",
     body: "Morning, evening and night prayers in four lengths, prayed full-screen one step at a time, with read-aloud. You never lose your place.",
   },
   {
-    icon: <BookOpen className="h-5 w-5" />,
     title: "The mind of the Church",
     body: "The day’s Epistle and Gospel, the saints and feasts, and the whole Bible, following the Church calendar, New or Old.",
   },
   {
-    icon: <Leaf className="h-5 w-5" />,
     title: "Fasting made clear",
     body: "Today’s fast at a glance, and a day-by-day companion through Great Lent and every fast of the year, with a short prayer for each day.",
   },
@@ -123,7 +117,7 @@ export default function Home() {
           <span className="premium-icon-mark h-10 w-10">
             <OrthodoxCrossIcon className="h-5 w-5" />
           </span>
-          <span className="font-serif text-base font-semibold tracking-[-0.02em]">Nepsis Shield</span>
+          <span className="font-display text-base font-semibold tracking-[-0.02em]">Nepsis Shield</span>
         </Link>
         <Button asChild variant="ghost" className="rounded-full">
           <Link to="/today" state={LOOK_AROUND_STATE}>Open the app</Link>
@@ -138,7 +132,7 @@ export default function Home() {
             <div className="absolute bottom-[-12rem] right-[-10rem] h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
           </div>
           <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-16 text-center sm:px-8 sm:pb-28 sm:pt-24">
-            <Eyebrow>Orthodox prayer · Scripture · Watchfulness</Eyebrow>
+            <Eyebrow>Prayer · Scripture · Watchfulness</Eyebrow>
             <h1 className="mt-5 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">Ancient faith for modern focus.</h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
               A companion for Orthodox prayer, the day&rsquo;s Scripture, and a daily rule small enough to keep. Built for your pocket.
@@ -154,17 +148,19 @@ export default function Home() {
         <section aria-labelledby="real-life" className="border-y border-border/50 bg-card/30">
           <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 sm:py-20">
             <div className="max-w-2xl">
-              <Eyebrow>Built for real life</Eyebrow>
+              <Eyebrow>Who it&rsquo;s for</Eyebrow>
               <h2 id="real-life" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">Built for the realities of modern life.</h2>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
                 Early-career burnout, university stress, military service, or a phone that never stops: Nepsis Shield keeps your prayer rule close.
               </p>
             </div>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {lives.map((item) => (
-                <article key={item.title} className="rounded-3xl border border-primary/15 bg-background/50 p-5">
-                  <span className="grid h-11 w-11 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">{item.icon}</span>
-                  <h3 className="mt-4 text-lg font-semibold tracking-tight">{item.title}</h3>
+                <article key={item.title} className="border-l-2 border-primary/40 py-1 pl-5">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
+                    <span aria-hidden className="text-primary">{item.icon}</span>
+                    {item.title}
+                  </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
                 </article>
               ))}
@@ -178,14 +174,32 @@ export default function Home() {
             <Eyebrow>Everything you need, nothing extra</Eyebrow>
             <h2 id="features" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">Prayer, Scripture and the fasts in one quiet place.</h2>
           </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {features.map((item) => (
-              <article key={item.title} className="candlelight-card rounded-[2rem] border p-6 backdrop-blur">
-                <span className="grid h-11 w-11 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">{item.icon}</span>
-                <h3 className="mt-5 text-xl font-semibold tracking-tight">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-              </article>
-            ))}
+          {/* The real Today screen beside the three things it holds, instead of a row of icon cards. */}
+          <div className="mt-10 grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            <ol className="grid gap-8">
+              {features.map((item, index) => (
+                <li key={item.title} className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-5">
+                  <span aria-hidden className="font-display text-4xl font-semibold leading-none text-primary/70 tabular-nums">{index + 1}</span>
+                  <div>
+                    <h3 className="text-xl font-semibold tracking-tight">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
+              <div className="rounded-[2.75rem] border border-primary/25 bg-black p-2.5 shadow-[0_40px_90px_hsl(0_0%_0%/0.45)]">
+                <img
+                  src="/home/today.jpg"
+                  alt="The Today screen: the day's icon and feast, Pray now with morning prayers, and the fasting season's day."
+                  width={540}
+                  height={1080}
+                  loading="lazy"
+                  decoding="async"
+                  className="block h-auto w-full rounded-[2.2rem]"
+                />
+              </div>
+            </div>
           </div>
         </section>
 
