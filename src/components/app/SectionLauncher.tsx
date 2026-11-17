@@ -21,8 +21,8 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
     <div className="grid gap-6">
       {lead ? <LeadCard eyebrow={lead.eyebrow} tile={lead.tile} /> : null}
       {groups.map((group) => (
-        <section key={group.title} aria-labelledby={`launcher-${group.title}`}>
-          <h3 id={`launcher-${group.title}`} className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <section key={group.title} aria-labelledby={groupId(group.title)}>
+          <h3 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             {group.title}
           </h3>
           <ul className="grid overflow-hidden rounded-2xl border border-border/60 bg-card sm:grid-cols-2">
@@ -46,6 +46,11 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
       ))}
     </div>
   );
+}
+
+// aria-labelledby takes a space-separated list of ids, so an id must not contain spaces ("Pray now" -> launcher-pray-now).
+function groupId(title: string) {
+  return `launcher-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 }
 
 function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {

@@ -12,7 +12,8 @@ test("names added to the list are prayed in the daily prayer flow", async ({ pag
   await expect(page.getByRole("button", { name: "Remove Helen" })).toBeVisible();
 
   await page.goto("/pray");
-  await page.getByRole("link", { name: /Morning prayers/ }).click();
+  // The lead card can also name Morning prayers, so pick the row in the "Pray now" list.
+  await page.getByRole("region", { name: "Pray now" }).getByRole("link", { name: /Morning prayers/ }).click();
   const prayer = page.getByRole("dialog");
   await prayer.getByRole("button", { name: "Begin prayer" }).click();
   // Step through until the commemoration step appears (it sits just before the closing prayer).
