@@ -1,5 +1,7 @@
 import { Capacitor } from "@capacitor/core";
 import { LocalNotifications, type LocalNotificationsPlugin } from "@capacitor/local-notifications";
+import { buildWidgetDays } from "@/lib/widgetSnapshot";
+import { getSettings } from "@/lib/settings";
 
 export type SystemReminderResult =
   | { ok: true; native: true }
@@ -22,14 +24,52 @@ const REMINDER_TEXT: Record<keyof typeof REMINDER_IDS, { title: string; body: st
 
 export type PrayerReminderKey = keyof typeof REMINDER_IDS;
 
-function nextReminderDate(time: string) {
-  const [rawHours, rawMinutes] = time.split(":").map(Number);
-  const hours = Number.isFinite(rawHours) ? rawHours : 0;
-  const minutes = Number.isFinite(rawMinutes) ? rawMinutes : 0;
-  const at = new Date();
-  at.setHours(hours, minutes, 0, 0);
-  if (at.getTime() <= Date.now()) at.setDate(at.getDate() + 1);
-  return at;
+// The next two weeks of reminders are scheduled one by one, each naming its day ("Nativity Fast, day 5 of 40",
+// "Christ is born! Glorify Him!"), from the same on-device calendar the widget uses. After them the plain daily
+// reminder takes over, so nothing goes quiet if the app is not opened; each app open rolls the two weeks forward.
+const NAMED_DAYS = 14;
+const PLAIN_HEADLINE = "Watch and pray";
+
+function namedDayIds(key: PrayerReminderKey) {
+  return Array.from({ length: NAMED_DAYS }, (_, index) => REMINDER_IDS[key] * 100 + index);
+}
+
+function atTime(date: string, time: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  const [hours, minutes] = time.split(":").map(Number);
+  return new Date(year, month - 1, day, hours, minutes, 0, 0);
+}
+
+// "Nativity Fast · Day 5 of 40" reads as "Nativity Fast, day 5 of 40."; a greeting keeps its own "!".
+function sentence(headline: string) {
+  const text = headline.replace(/ · Day /g, ", day ").replace(/ · /g, ", ");
+  return /[.!?]$/.test(text) ? text : `${text}.`;
+}
+
+function reminderNotifications(key: PrayerReminderKey, time: string) {
+  const text = REMINDER_TEXT[key];
+  const now = Date.now();
+  const days = buildWidgetDays(new Date(), getSettings().calendarMode);
+  const named = days
+    .map((day, index) => ({
+      id: namedDayIds(key)[index],
+      title: text.title,
+      body: day.headline && day.headline !== PLAIN_HEADLINE ? `${sentence(day.headline)} ${text.body}` : text.body,
+      extra: { to: text.to },
+      schedule: { at: atTime(day.date, time) },
+    }))
+    .filter((notification) => notification.schedule.at.getTime() > now);
+  // The plain repeating reminder starts the day after the last named one.
+  const plainStart = atTime(days[days.length - 1].date, time);
+  plainStart.setDate(plainStart.getDate() + 1);
+  const plain = {
+    id: REMINDER_IDS[key],
+    title: text.title,
+    body: text.body,
+    extra: { to: text.to },
+    schedule: { at: plainStart, every: "day" as const },
+  };
+  return [...named, plain];
 }
 
 /** True in the installed Android app, where reminders are real notifications. In a browser they are calendar files. */
@@ -88,26 +128,24 @@ export async function scheduleSystemPrayerReminder({
     const allowed = await ensurePermission(plugin);
     if (!allowed) return { ok: false, native: false, reason: "permission-denied" };
 
-    const id = REMINDER_IDS[key];
-    await plugin.cancel({ notifications: [{ id }] });
-    await plugin.schedule({
-      notifications: [
-        {
-          id,
-          title: REMINDER_TEXT[key].title,
-          body: REMINDER_TEXT[key].body,
-          extra: { to: REMINDER_TEXT[key].to },
-          schedule: {
-            at: nextReminderDate(time),
-            every: "day",
-          },
-        },
-      ],
-    });
+    await plugin.cancel({ notifications: [REMINDER_IDS[key], ...namedDayIds(key)].map((id) => ({ id })) });
+    await plugin.schedule({ notifications: reminderNotifications(key, time) });
 
     return { ok: true, native: true };
   } catch {
     return { ok: false, native: false, reason: "failed" };
+  }
+}
+
+/** Re-schedules every daily reminder that is on, so the next two weeks always name their days. Android app only. */
+export async function refreshPrayerReminders() {
+  const plugin = await getLocalNotifications();
+  if (!plugin) return;
+  // Never ask for permission here: if it was taken away, leave things as they are.
+  if ((await plugin.checkPermissions()).display !== "granted") return;
+  const scheduled = await getScheduledPrayerReminders();
+  for (const [key, value] of Object.entries(scheduled) as Array<[PrayerReminderKey, { time?: string }]>) {
+    if (value.time) await scheduleSystemPrayerReminder({ key, time: value.time });
   }
 }
 
@@ -122,7 +160,7 @@ export async function cancelSystemPrayerReminder(key: PrayerReminderKey): Promis
   }
 
   try {
-    await plugin.cancel({ notifications: [{ id: REMINDER_IDS[key] }] });
+    await plugin.cancel({ notifications: [REMINDER_IDS[key], ...namedDayIds(key)].map((id) => ({ id })) });
     return { ok: true, native: true };
   } catch {
     return { ok: false, native: false, reason: "failed" };
