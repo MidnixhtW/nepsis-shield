@@ -146,6 +146,18 @@ export function currentSeason(day: Date, calendar: ChurchCalendar) {
   return null;
 }
 
+/** A fast that ended within the last `withinDays` days (its feast is day 1), for the ending shown on Today. */
+export function recentlyEndedFast(day: Date, calendar: ChurchCalendar, withinDays = 3) {
+  const today = dateOnly(day);
+  const endings: SeasonId[] = ["holy-week", "apostles-fast", "dormition-fast", "nativity-fast"];
+  for (const season of nearbySeasons(today, calendar)) {
+    if (!endings.includes(season.id)) continue;
+    const since = daysBetween(season.end, today);
+    if (since >= 1 && since <= withinDays) return { season, daysSince: since };
+  }
+  return null;
+}
+
 /** The next season to begin after this day, with the number of days until it starts. */
 export function nextSeason(day: Date, calendar: ChurchCalendar) {
   const today = dateOnly(day);

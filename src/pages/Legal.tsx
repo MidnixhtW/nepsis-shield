@@ -127,7 +127,9 @@ const PRIVACY: Section[] = [
         <p>
           <span className="font-semibold text-foreground">Keeping a fast together (only if you tap "I'm keeping it").</span> The app sends which
           fast it is and a random number made on your device, tied to nothing about you. Only the total is ever shown. The numbers are deleted
-          about four months later.
+          about four months later. If you keep the fasts with a parish, the app also sends that parish&rsquo;s code, a random string made when
+          someone created the parish link, so the parish&rsquo;s own total can be shown. The parish&rsquo;s name is never sent to our server: it
+          stays in the link and on the phones that open it.
         </p>
         <p>
           <span className="font-semibold text-foreground">Our hosting.</span> The website and the server above run on{" "}
