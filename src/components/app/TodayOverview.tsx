@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { ArrowRight, BookOpen, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
+import { BookOpen, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,6 +11,8 @@ import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
 import { SetupRuleCard, isRuleSetUp } from "@/components/app/SetupRuleCard";
+import { TodayLamps } from "@/components/app/TodayLamps";
+import { ChurchYearLookBack } from "@/components/app/ChurchYearLookBack";
 import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { MemorialsCard } from "@/components/app/MemorialsCard";
 import { NameDayCard } from "@/components/app/NameDay";
@@ -51,6 +53,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   return (
     <div className="grid gap-5 sm:gap-6">
     <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} />
+    <ChurchYearLookBack today={today} calendar={settings.calendarMode} />
     <PrayNowCard />
     <SetupRuleCard />
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
@@ -65,6 +68,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
         />
         {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
         {/* Until setup is done the SetupRuleCard above stands in, so Today never names a plan the user hasn't chosen. */}
+        <TodayLamps />
         {isRuleSetUp() ? <RuleOfVigilanceCard onNavigate={onNavigate} compact /> : null}
         <WeekDots />
         <LearnReviewCard />
@@ -108,7 +112,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             </div>
           ) : <p className="mt-4 text-sm text-muted-foreground">Daily details are unavailable. Open the readings or the trusted calendar source below.</p>}
           <Button variant="outline" className="mt-5 rounded-xl" onClick={() => onNavigate?.({ section: "read", read: "daily" })}>
-            <BookOpen className="mr-2 h-4 w-4" /> Open readings <ArrowRight className="ml-2 h-4 w-4" />
+            <BookOpen className="mr-2 h-4 w-4" /> Open readings
           </Button>
         </Card>
         <Card id="saints-fast" className="scroll-mt-24 rounded-3xl p-5 sm:p-6">
@@ -125,7 +129,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
                   <li key={saint}>
                     {saint}
                     {isWarriorSaint(saint) ? (
-                      <span className="mt-1 flex w-fit items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.08em] text-accent">
+                      <span className="mt-1 flex w-fit items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
                         <Shield aria-hidden className="h-3 w-3" /> Patron of those who serve
                       </span>
                     ) : null}

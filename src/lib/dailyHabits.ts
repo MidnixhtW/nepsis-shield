@@ -154,6 +154,22 @@ function keptRule(record: DailyRecord | undefined) {
   return !!record && Object.values(record.prayers).some(Boolean);
 }
 
+/** Days a prayer rule was kept between two dates (from inclusive, to exclusive), and how often each prayer was prayed. */
+export function prayerDaysBetween(from: Date, to: Date) {
+  const store = getStore();
+  const fromKey = dayKey(from);
+  const toKey = dayKey(to);
+  const totals = { days: 0, morning: 0, evening: 0, night: 0 };
+  for (const [key, record] of Object.entries(store.records)) {
+    if (key < fromKey || key >= toKey || !keptRule(record)) continue;
+    totals.days += 1;
+    if (record.prayers.morning) totals.morning += 1;
+    if (record.prayers.evening) totals.evening += 1;
+    if (record.prayers.night) totals.night += 1;
+  }
+  return totals;
+}
+
 const LOG_WEEKS = 12;
 
 function buildLog(store: HabitStore) {
