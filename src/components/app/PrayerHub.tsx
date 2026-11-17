@@ -19,6 +19,7 @@ import { FamilyPrayer } from "@/components/app/FamilyPrayer";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
+import { t } from "@/i18n";
 
 export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary";
 
@@ -53,6 +54,15 @@ const launcher: LauncherGroup[] = [
     ],
   },
 ];
+
+/** The daily prayers that fit the hour: morning until noon, evening until eight, then night prayers. */
+function prayerForHour(now: Date) {
+  const [morning, evening, night] = launcher[0].tiles;
+  const hour = now.getHours();
+  if (hour >= 4 && hour < 12) return morning;
+  if (hour >= 12 && hour < 20) return evening;
+  return night;
+}
 
 // These open from Me, so their back link returns there.
 const PERSONAL_TABS: PrayerTab[] = ["rule", "names", "groups", "journal"];
@@ -102,8 +112,8 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
       : launcher;
     return (
       <div className="grid min-w-0 gap-5">
-        <LauncherIntro eyebrow="Pray" title="Make room for stillness." />
-        <SectionLauncher groups={groups} />
+        <LauncherIntro eyebrow={t("pray.eyebrow")} title={t("pray.title")} />
+        <SectionLauncher groups={groups} lead={{ eyebrow: t("pray.lead"), tile: prayerForHour(new Date()) }} />
       </div>
     );
   }

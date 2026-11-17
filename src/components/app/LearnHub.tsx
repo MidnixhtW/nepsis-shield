@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { BookMarked, BookHeart, DoorOpen, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Shield } from "lucide-react";
 import { ChurchDomeIcon, SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
-import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
+import { continueTile, LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -21,8 +21,10 @@ import { ForThoseWhoServe } from "@/components/app/ForThoseWhoServe";
 import { BecomingOrthodox } from "@/components/app/BecomingOrthodox";
 import { SaintStoriesFeed } from "@/components/app/SaintStoriesFeed";
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
+import { useRecentPlaces } from "@/lib/recentPlaces";
 import { useResponderMode } from "@/lib/responderMode";
 import { cn } from "@/lib/utils";
+import { t } from "@/i18n";
 
 export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |"guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories";
 
@@ -218,17 +220,15 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
   const [role] = useResponderMode();
   const serving = role !== "civilian";
   const philokalia = isPhilokaliaUnlocked();
+  const recent = useRecentPlaces();
+  const groups = buildLauncher(serving, philokalia);
+  const lead = continueTile(groups, recent);
 
   if (!tab) {
     return (
       <div className="grid min-w-0 gap-5">
-        <LauncherIntro eyebrow="Learn" title="Grow with steadiness." />
-        <SectionLauncher groups={buildLauncher(serving, philokalia)} />
-        {philokalia ? null : (
-          <p className="px-1 text-xs leading-relaxed text-muted-foreground">
-            One more guide, on the Fathers and watchfulness, is hidden in the app. Hint: tap the shield at the top seven times.
-          </p>
-        )}
+        <LauncherIntro eyebrow={t("learn.eyebrow")} title={t("learn.title")} />
+        <SectionLauncher groups={groups} lead={lead ? { eyebrow: t("learn.lead"), tile: lead } : null} />
       </div>
     );
   }

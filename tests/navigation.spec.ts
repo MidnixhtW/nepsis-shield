@@ -1,6 +1,6 @@
 import { expect, test } from "./fixtures";
 
-test("Me holds the prayer log and Settings, and the menu holds search and the theme picker", async ({ page }) => {
+test("Me holds the prayer log and Settings, and the header menu holds search and the theme picker", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/today");
   await page.getByRole("navigation", { name: "Mobile primary navigation" }).getByRole("radio", { name: /Go to Me/ }).click();
@@ -8,7 +8,7 @@ test("Me holds the prayer log and Settings, and the menu holds search and the th
   await expect(page.getByRole("heading", { name: "Your prayer life" })).toBeVisible();
   await expect(page.getByRole("region", { name: /Prayer log/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /^Settings/ }).first()).toBeVisible();
-  await page.getByRole("button", { name: "Menu, search and themes" }).click();
+  await page.getByRole("button", { name: "Open menu" }).click();
   const menu = page.getByRole("dialog");
   await expect(menu.getByRole("searchbox", { name: "Go to a part of the app" })).toBeVisible();
   await expect(menu.getByRole("button", { name: /Theme: Church Year/ })).toBeVisible();
@@ -45,9 +45,10 @@ test("the Rosary shows on Pray only for Western Rite parishes", async ({ page })
 
 test("a starred practice shows on Me and Today, and Recently opened lists it", async ({ page }) => {
   await page.goto("/pray");
-  await page.getByRole("button", { name: "Add Services to favorites" }).click();
+  // The star lives on the practice's own screen, beside its title.
   await page.getByRole("link", { name: /^Services/ }).click();
   await expect(page.getByRole("heading", { name: "Pray with the whole Church." })).toBeVisible();
+  await page.getByRole("button", { name: "Add Services to favorites" }).click();
   await page.goto("/me");
   await expect(page.getByRole("link", { name: /Services Pray$/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Services Services ·|Services Pray ·/ })).toBeVisible();

@@ -1,16 +1,15 @@
 import type { ComponentType, ReactNode } from "react";
 import { Link } from "react-router";
-import { Bookmark, ChevronRight, Clock, Compass, Download, Info, Menu, NotebookPen, ScrollText, Settings as SettingsIcon, Shield, Sparkles, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Bookmark, ChevronRight, Clock, Compass, Download, Info, NotebookPen, Pin, ScrollText, Settings as SettingsIcon, Shield, Users } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
 import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
 import { PrayerPartner } from "@/components/app/PrayerPartner";
-import { openAppMenu } from "@/lib/appEvents";
 import { useFavorites } from "@/lib/favorites";
 import { useRecentPlaces } from "@/lib/recentPlaces";
 import { CURRENT_VERSION } from "@/lib/releaseInfo";
 import { PolicyLinks } from "@/components/app/PolicyLinks";
+import { t } from "@/i18n";
 
 function Row({ to, icon: Icon, label, hint, trailing }: { to: string; icon: ComponentType<{ className?: string }>; label: string; hint?: string; trailing?: ReactNode }) {
   return (
@@ -57,14 +56,10 @@ export function MeHub() {
 
   return (
     <div className="mx-auto grid w-full max-w-3xl gap-4 sm:gap-5">
-      <div className="flex items-start justify-between gap-3 px-1">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Me</p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Your prayer life</h2>
-        </div>
-        <Button asChild variant="outline" size="icon" className="h-10 w-10 shrink-0 rounded-full" aria-label="Settings">
-          <Link to="/settings"><SettingsIcon className="h-[18px] w-[18px]" /></Link>
-        </Button>
+      {/* Settings has one home, the App list below; the header menu covers search and themes on every screen. */}
+      <div className="px-1">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{t("me.eyebrow")}</p>
+        <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t("me.title")}</h2>
       </div>
 
       <WatchfulnessLog />
@@ -80,7 +75,7 @@ export function MeHub() {
           </ul>
         ) : (
           <p className="px-3 pb-3 text-sm leading-relaxed text-muted-foreground">
-            Tap the star on any prayer, service or topic to keep it here and on Today.
+            Tap the star on any prayer, service or topic to add it to Favorites, here and on Today.
           </p>
         )}
       </Section>
@@ -101,7 +96,7 @@ export function MeHub() {
           <Row to="/pray?tab=names" icon={ScrollText} label="Prayer list" hint="Names of the living and the departed" />
           <Row to="/pray?tab=journal" icon={NotebookPen} label="Journal" hint="Reflections and the day's examen" />
           <Row to="/pray?tab=groups" icon={Users} label="Prayer groups" hint="Groups you have joined" />
-          <Row to="/pray?tab=prayers" icon={Sparkles} label="Pinned prayers" hint="Prayers you starred" />
+          <Row to="/pray?tab=prayers" icon={Pin} label="Pinned prayers" hint="Prayer texts you pinned" />
         </ul>
       </Section>
 
@@ -112,10 +107,7 @@ export function MeHub() {
           <Row to="/download" icon={Download} label="Install / share" hint="Android app, home screen, QR code" />
           <Row to="/about" icon={Info} label="About" hint="Purpose, sources and what's new" />
         </ul>
-        <div className="flex flex-wrap items-center justify-between gap-2 px-3 pb-2 pt-1">
-          <Button type="button" variant="ghost" size="sm" className="rounded-full px-2.5" onClick={openAppMenu}>
-            <Menu className="mr-2 h-4 w-4" /> Menu, search and themes
-          </Button>
+        <div className="flex justify-end px-3 pb-2 pt-1">
           <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Version {CURRENT_VERSION}</span>
         </div>
       </Section>
