@@ -7,20 +7,21 @@ import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ReadAloudBar } from "@/components/app/ReadAloudBar";
 import { useReadAloud } from "@/lib/readAloud";
+import { t, type MessageKey } from "@/i18n";
 
 export type AppSection = "today" | "pray" | "read" | "learn" | "me";
 
 type SectionItem = [
   AppSection,
-  { label: string; icon: ComponentType<{ className?: string }>; aria: string },
+  { label: MessageKey; icon: ComponentType<{ className?: string }>; aria: MessageKey },
 ];
 
 const sectionMeta: Record<AppSection, SectionItem[1]> = {
-  today: { label: "Today", icon: OrthodoxCrossIcon, aria: "Go to Today" },
-  pray: { label: "Pray", icon: CenserIcon, aria: "Go to Prayer" },
-  read: { label: "Read", icon: GospelBookIcon, aria: "Go to Readings" },
-  learn: { label: "Learn", icon: ChurchDomeIcon, aria: "Go to learning and tools" },
-  me: { label: "Me", icon: UserRound, aria: "Go to Me: your rule, favorites and recent" },
+  today: { label: "nav.today", icon: OrthodoxCrossIcon, aria: "nav.today.aria" },
+  pray: { label: "nav.pray", icon: CenserIcon, aria: "nav.pray.aria" },
+  read: { label: "nav.read", icon: GospelBookIcon, aria: "nav.read.aria" },
+  learn: { label: "nav.learn", icon: ChurchDomeIcon, aria: "nav.learn.aria" },
+  me: { label: "nav.me", icon: UserRound, aria: "nav.me.aria" },
 };
 
 function ShellNavigation({
@@ -36,7 +37,7 @@ function ShellNavigation({
 }) {
   return (
     <nav
-      aria-label={desktop ? "Primary navigation" : "Mobile primary navigation"}
+      aria-label={desktop ? t("nav.primary") : t("nav.primaryMobile")}
       className={cn(
         "orthodox-nav-frame mx-auto grid w-full grid-cols-5 items-center gap-1 border border-primary/25 bg-card/90 p-1.5 shadow-xl",
         desktop ? "max-w-[34rem] rounded-xl" : "max-w-[29rem] rounded-md",
@@ -55,7 +56,7 @@ function ShellNavigation({
             <ToggleGroupItem
               key={key}
               value={key}
-              aria-label={meta.aria}
+              aria-label={t(meta.aria)}
               className={cn(
                 "w-full justify-center whitespace-nowrap rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
                 desktop ? "h-10" : "h-12",
@@ -64,7 +65,7 @@ function ShellNavigation({
               <div className={cn("flex w-full items-center justify-center", desktop ? "gap-2" : "flex-col gap-1.5")}>
                 <Icon className={cn("h-[17px] w-[17px] shrink-0", active ? "text-primary-foreground" : "text-muted-foreground")} />
                 <span className={cn("font-bold leading-none", desktop ? "text-sm" : "text-xs", active ? "text-primary-foreground" : "text-muted-foreground")}>
-                  {meta.label}
+                  {t(meta.label)}
                 </span>
               </div>
             </ToggleGroupItem>

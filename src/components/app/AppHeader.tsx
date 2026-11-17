@@ -35,6 +35,7 @@ import { searchDestinations } from "@/lib/destinations";
 import { CURRENT_VERSION } from "@/lib/releaseInfo";
 import { useResponderMode } from "@/lib/responderMode";
 import { showSuccess } from "@/utils/toast";
+import { t } from "@/i18n";
 
 function startTutorial() {
 
@@ -162,11 +163,11 @@ function HelpNowButton() {
         <Button
           type="button"
           variant="ghost"
-          aria-label="Need help now"
+          aria-label={t("header.help.aria")}
           className="h-10 gap-1.5 rounded-md border border-accent/45 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-accent/70 hover:bg-accent/10 hover:text-accent sm:px-3"
         >
           <LifeBuoy className="h-[18px] w-[18px] text-accent" />
-          <span className="text-sm font-bold">Help</span>
+          <span className="text-sm font-bold">{t("header.help")}</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="flex h-dvh w-[min(26rem,100vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0">
@@ -231,7 +232,7 @@ export function AppHeader() {
           <p className="truncate font-display text-base font-semibold tracking-[-0.02em] text-foreground">Nepsis Shield</p>
           <p
             className="truncate text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground tabular-nums max-[340px]:hidden"
-            title={`The hour of prayer: ${hourName}`}
+            title={t("header.hourTitle", { hour: hourName })}
           >
             {clockDate}
             <span className="hidden sm:inline"> · {hourName}</span>
@@ -243,7 +244,7 @@ export function AppHeader() {
         {/* The reset is one tap from every screen, for the moment pressure rises. */}
         <GroundResetButton
           variant="ghost"
-          aria-label="60-second reset"
+          aria-label={t("header.reset.aria")}
           className="h-10 gap-1.5 rounded-md border border-primary/30 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary sm:px-3"
         >
           <HeartPulse className="h-[18px] w-[18px] text-primary" />
@@ -252,10 +253,10 @@ export function AppHeader() {
         <HelpNowButton />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
-            <Button aria-label="Open menu" size="icon" variant="ghost" className="h-10 w-10 rounded-md border border-primary/30 bg-card/75 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary">
+            <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-md border border-primary/30 bg-card/75 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary">
               <Menu className="h-[18px] w-[18px]" />
 
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">{t("header.menu")}</span>
             </Button>
 
           </SheetTrigger>
