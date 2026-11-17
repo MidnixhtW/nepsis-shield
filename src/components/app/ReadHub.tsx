@@ -25,10 +25,10 @@ export function ReadHub({
       />
 
       <Tabs value={tab} onValueChange={(value) => onTabChange(value as ReadTab)}>
-        <TabsList className="premium-tabs">
-          <TabsTrigger value="daily" className="premium-tab flex-1">Daily</TabsTrigger>
-          <TabsTrigger value="bible" className="premium-tab flex-1">Bible</TabsTrigger>
-          <TabsTrigger value="plans" className="premium-tab flex-1">Plans</TabsTrigger>
+        <TabsList className="premium-tabs flex h-auto w-full gap-1 p-1.5 sm:gap-1.5">
+          <TabsTrigger value="daily" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Daily</TabsTrigger>
+          <TabsTrigger value="bible" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Bible</TabsTrigger>
+          <TabsTrigger value="plans" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Plans</TabsTrigger>
         </TabsList>
         <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyReadings /></TabsContent>
         <TabsContent value="bible" className="mt-4 sm:mt-5"><OrthodoxBible /></TabsContent>

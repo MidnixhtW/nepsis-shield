@@ -60,10 +60,6 @@
     backdrop-filter: blur(22px);
   }
 
-  .premium-tabs {
-    padding: 0.35rem;
-  }
-
   .premium-card-stack > [class*="rounded-3xl"],
   .premium-card-stack > [class*="rounded-2xl"] {
     box-shadow: 0 18px 52px hsl(232 45% 3% / 0.15) !important;

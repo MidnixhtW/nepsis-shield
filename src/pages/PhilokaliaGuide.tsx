@@ -391,11 +391,11 @@ export default function PhilokaliaGuide() {
       <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
 
           <Tabs defaultValue="ask" className="min-w-0 w-full">
-            <TabsList className="premium-tabs">
-              <TabsTrigger value="ask" className="premium-tab flex-1">Ask</TabsTrigger>
-              <TabsTrigger value="patrons" className="premium-tab flex-1">Patrons</TabsTrigger>
-              <TabsTrigger value="sources" className="premium-tab flex-1">Sources</TabsTrigger>
-              <TabsTrigger value="rule" className="premium-tab flex-1">Rule</TabsTrigger>
+            <TabsList className="premium-tabs flex h-auto w-full gap-1 p-1.5 sm:gap-1.5">
+              <TabsTrigger value="ask" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Ask</TabsTrigger>
+              <TabsTrigger value="patrons" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Patrons</TabsTrigger>
+              <TabsTrigger value="sources" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Sources</TabsTrigger>
+              <TabsTrigger value="rule" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Rule</TabsTrigger>
             </TabsList>
 
             <TabsContent value="ask" className="mt-4 min-w-0">

@@ -124,7 +124,6 @@
 
   .premium-eyebrow {
     color: hsl(var(--primary)) !important;
-    font-weight: 800;
   }
 
   .premium-icon-mark {
@@ -179,7 +178,6 @@
   .premium-tab,
   .premium-tabs > [role="tab"] {
     border-radius: 0.35rem !important;
-    font-weight: 800;
     letter-spacing: 0.035em;
   }
 
