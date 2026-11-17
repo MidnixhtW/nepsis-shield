@@ -68,7 +68,7 @@ test("from a public page, Back to app opens Today to look around, and setup is o
   await expect(page).toHaveURL(/\/today$/);
   await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Set up your daily rule" }).click();
+  await page.getByRole("region", { name: "Set up your daily rule" }).getByRole("button", { name: "Set up", exact: true }).click();
   await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toBeVisible();
 });
 
@@ -84,8 +84,8 @@ test("Look around first closes setup for now and leaves a way back", async ({ pa
   const setup = page.getByRole("dialog", { name: /Set up your daily rule/ });
   await setup.getByRole("button", { name: "Look around first" }).click();
   await expect(setup).toHaveCount(0);
-  // Still not set up, so a new visit to Today in this session stays open, and the button stays.
+  // Still not set up, so a new visit to Today in this session stays open, and the inline setup card stays.
   await page.reload();
   await expect(setup).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Set up your daily rule" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Set up your daily rule" }).getByRole("button", { name: "Set up", exact: true })).toBeVisible();
 });

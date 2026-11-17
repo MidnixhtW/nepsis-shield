@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   Sparkles,
   Sun,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -38,6 +37,7 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { useSettings } from "@/hooks/useSettings";
 import type { CalendarMode } from "@/lib/settings";
 
@@ -286,7 +286,7 @@ function RuleSoFar({ rule }: { rule: RuleOfVigilance }) {
       <dl className="mt-3 grid gap-2 sm:grid-cols-3">
         {rows.map(([label, body]) => (
           <div key={label} className="rounded-2xl bg-background/45 p-3">
-            <dt className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</dt>
+            <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</dt>
             <dd className="mt-1 text-sm leading-snug text-foreground/90">{body}</dd>
           </div>
         ))}
@@ -407,47 +407,13 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   }
 
-  const [pillHidden, setPillHidden] = useState(false);
-
+  // "Look around first": setup waits, and the inline SetupRuleCard on Today brings it back (no floating button over content).
   function lookAround() {
     defer();
     setOpen(false);
   }
 
-  if (!open) {
-    return (
-      <>
-        {children}
-        {!done() && !pillHidden ? (
-          <div className="pointer-events-none fixed inset-x-0 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] z-40 flex justify-center px-4">
-            <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-background/80 p-1 shadow-lg backdrop-blur">
-              <Button
-                type="button"
-                className="gold-foil h-10 rounded-full px-4 text-sm font-bold text-primary-foreground"
-                onClick={() => {
-                  setStepIndex(0);
-                  setOpen(true);
-                }}
-              >
-                Set up your daily rule
-                <ChevronRight className="ml-1.5 h-4 w-4" />
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="h-9 w-9 rounded-full text-muted-foreground"
-                aria-label="Hide for now"
-                onClick={() => setPillHidden(true)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        ) : null}
-      </>
-    );
-  }
+  if (!open) return <>{children}</>;
 
   return (
     <Dialog.Root open={open} onOpenChange={(nextOpen) => { if (!nextOpen) skip(); }}>
@@ -481,14 +447,16 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
             <StepDots index={stepIndex} />
           </div>
           <div className="flex items-center gap-1">
+            {/* One way out per screen: on the welcome screen it is "Look around first"; once questions start, "Begin later". */}
             {stepIndex === 0 ? (
               <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={lookAround}>
                 Look around first
               </Button>
-            ) : null}
-            <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
-              Begin later
-            </Button>
+            ) : (
+              <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
+                Begin later
+              </Button>
+            )}
           </div>
         </header>
 
@@ -496,13 +464,10 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           <div className={cn("grid min-h-full gap-6", step === "welcome" ? "content-center" : "content-start")}>
           {step === "welcome" ? (
             <section className="mx-auto max-w-3xl text-center">
-              <img
-                src="/military-orthodox-cross.svg"
-                alt=""
-                width={112}
-                height={112}
-                className="mx-auto h-28 w-28 drop-shadow-[0_24px_48px_hsl(42_52%_40%/0.28)]"
-              />
+              {/* The same mark as the header, drawn in the active theme's colors, so it never clashes with the palette. */}
+              <div className="premium-icon-mark mx-auto !h-24 !w-24 shadow-[0_24px_48px_hsl(var(--primary)/0.22)]">
+                <OrthodoxCrossIcon className="h-12 w-12" strokeWidth={1.4} />
+              </div>
               <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Nepsis Shield</p>
               <h1 id="onboarding-title" className="mt-3 text-4xl font-semibold tracking-tight sm:text-6xl">
                 Quiet your heart. Begin with one faithful step.

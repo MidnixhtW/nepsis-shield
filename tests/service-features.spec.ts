@@ -3,13 +3,15 @@ import { expect, test } from "./fixtures";
 test("the header shows the hour of prayer, in 24-hour time for service roles", async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 9, 1, 15, 30)); // 15:30, the Ninth Hour
   await page.goto("/today");
-  await expect(page.getByText("Thu, Oct 1 · Ninth Hour")).toBeVisible();
+  // The hour name sits in the clock's title on every width, and in the line itself from the sm breakpoint up.
+  const clock = page.getByTitle("The hour of prayer: Ninth Hour");
+  await expect(clock).toContainText("Thu, Oct 1");
 
   await page.evaluate(() =>
     localStorage.setItem("nepsis:responder-mode", JSON.stringify({ __wrapped: 1, v: "military", ts: Date.now() })),
   );
   await page.reload();
-  await expect(page.getByText("1530 · Ninth Hour · Oct 1")).toBeVisible();
+  await expect(clock).toContainText("1530 · Oct 1");
 });
 
 test("the Help panel offers Psalm 90", async ({ page }) => {

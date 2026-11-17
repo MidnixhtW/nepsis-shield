@@ -74,7 +74,7 @@ function MenuLink({
 function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-t border-border/35 pt-4 first:border-t-0 first:pt-0">
-      <h3 className="px-3 pb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+      <h3 className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
         {title}
       </h3>
       <div className="grid gap-1">{children}</div>
@@ -140,7 +140,7 @@ function MenuLinks() {
         </>
       )}
 
-      <p className="border-t border-border/45 pt-3 text-center text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="border-t border-border/45 pt-3 text-center text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
         Version {CURRENT_VERSION}
       </p>
     </div>
@@ -206,9 +206,8 @@ export function AppHeader() {
   }, []);
   const hourName = prayerHourName(now);
   // Service roles read the clock as 0600; everyone else sees the date with the hour of prayer.
-  const clockLine = usesTwentyFourHourTime(role)
-    ? `${format(now, "HHmm")} · ${hourName} · ${format(now, "MMM d")}`
-    : `${format(now, "EEE, MMM d")} · ${hourName}`;
+  // On phones the hour name drops out so the date never gets cut off; it returns from the sm breakpoint up.
+  const clockDate = usesTwentyFourHourTime(role) ? `${format(now, "HHmm")} · ${format(now, "MMM d")}` : format(now, "EEE, MMM d");
 
   function handleSecretTap() {
     const now = Date.now();
@@ -229,12 +228,13 @@ export function AppHeader() {
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="truncate font-serif text-[15px] font-semibold tracking-[-0.02em] text-foreground sm:text-base">Nepsis Shield</p>
+          <p className="truncate font-display text-base font-semibold tracking-[-0.02em] text-foreground">Nepsis Shield</p>
           <p
-            className="truncate text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground tabular-nums max-[340px]:hidden sm:text-[11px]"
+            className="truncate text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground tabular-nums max-[340px]:hidden"
             title={`The hour of prayer: ${hourName}`}
           >
-            {clockLine}
+            {clockDate}
+            <span className="hidden sm:inline"> · {hourName}</span>
           </p>
         </div>
       </Link>

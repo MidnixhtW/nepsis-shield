@@ -290,32 +290,35 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           >
             <Check className="mr-2 h-4 w-4" /> {keptToday ? "Kept today" : "Mark today as kept"}
           </Button>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {kept.length} of {season.length} days kept · only you see this
           </span>
         </div>
         <Progress value={(kept.length / season.length) * 100} aria-label={`${kept.length} of ${season.length} days kept`} className="mt-3 h-1.5" />
 
-        <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-          <Leaf className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}
+        <p className="mt-4 flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
+          <Leaf className="mt-1 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="button"
-            aria-expanded={showAll}
-            onClick={() => setShowAll((open) => !open)}
-            className="inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
-          </button>
-          <div className="flex flex-wrap items-center gap-2">
-            <ShareSeasonButton season={season} />
-            <FastRemindersButton today={today} calendar={calendar} />
-          </div>
-        </div>
         <KeepingTogether season={season} />
-        {showAll ? <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} /> : null}
+        {/* One main action stays in view; sharing and reminders live with the full journey. */}
+        <button
+          type="button"
+          aria-expanded={showAll}
+          onClick={() => setShowAll((open) => !open)}
+          className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
+        </button>
+        {showAll ? (
+          <>
+            <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} />
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-4">
+              <ShareSeasonButton season={season} />
+              <FastRemindersButton today={today} calendar={calendar} />
+            </div>
+          </>
+        ) : null}
       </Card>
     );
   }

@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { AppSection } from "@/components/app/AppShell";
 import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
+import { SetupRuleCard, isRuleSetUp } from "@/components/app/SetupRuleCard";
 import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { MemorialsCard } from "@/components/app/MemorialsCard";
 import { NameDayCard } from "@/components/app/NameDay";
@@ -51,6 +52,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     <div className="grid gap-5 sm:gap-6">
     <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} />
     <PrayNowCard />
+    <SetupRuleCard />
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
         <TodayMoments
@@ -62,7 +64,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           ]}
         />
         {/* Compact by default so Today stays short; "Show rule" opens the full rule. */}
-        <RuleOfVigilanceCard onNavigate={onNavigate} compact />
+        {/* Until setup is done the SetupRuleCard above stands in, so Today never names a plan the user hasn't chosen. */}
+        {isRuleSetUp() ? <RuleOfVigilanceCard onNavigate={onNavigate} compact /> : null}
         <WeekDots />
         <LearnReviewCard />
         <FathersSayingCard today={today} />
@@ -122,7 +125,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
                   <li key={saint}>
                     {saint}
                     {isWarriorSaint(saint) ? (
-                      <span className="mt-1 flex w-fit items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-accent">
+                      <span className="mt-1 flex w-fit items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-[0.08em] text-accent">
                         <Shield aria-hidden className="h-3 w-3" /> Patron of those who serve
                       </span>
                     ) : null}
