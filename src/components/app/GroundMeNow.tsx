@@ -67,7 +67,7 @@ export function GroundResetPanel({ onExit, inDialog = false }: { onExit: () => v
             <HeartPulse className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-xs font-semibold text-muted-foreground">
               60-second reset · Step {stepIndex + 1}/{steps.length}
             </p>
             <Title className="mt-1 text-2xl font-semibold leading-tight">{current.title}</Title>
@@ -158,7 +158,7 @@ export function GroundMeNow() {
     <Card id="ground" className={cn("scroll-mt-24 rounded-3xl p-5 shadow-sm sm:p-6", theme.card)}>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0 break-words">
-          <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold uppercase leading-tight tracking-[0.12em]", theme.badge)}>
+          <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold leading-tight", theme.badge)}>
             <HeartPulse className="mr-1.5 h-3.5 w-3.5 shrink-0" /> Ground Me Now
           </Badge>
           <h2 className="mt-3 text-xl font-semibold tracking-tight">Emergency reset for {responderModeLabels[mode]}</h2>

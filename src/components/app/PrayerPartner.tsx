@@ -125,7 +125,7 @@ export function PrayerPartner() {
 
   return (
     <Card className="rounded-3xl border p-5">
-      <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Prayer partner</h3>
+      <h3 className="text-xs font-semibold text-muted-foreground">Prayer partner</h3>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         Pray for one friend every day. Each of you taps "I prayed for you", and the other sees it. First names only, no account.
       </p>

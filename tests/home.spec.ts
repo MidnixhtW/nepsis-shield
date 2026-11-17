@@ -6,12 +6,12 @@ test("a first visit lands on the homepage, and Start opens setup", async ({ page
     sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Ancient faith for modern focus." })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Build consistency without the guilt." })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Orthodox prayer for every day" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "No streaks, no guilt" })).toBeVisible();
 
   await page.getByRole("link", { name: /Start now/ }).first().click();
   await expect(page).toHaveURL(/\/today$/);
-  await expect(page.getByRole("heading", { name: "Quiet your heart. Begin with one faithful step." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "A small rule of prayer you can keep" })).toBeVisible();
 });
 
 test("someone who has set up their rule goes straight to Today", async ({ page }) => {

@@ -112,7 +112,7 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
       : launcher;
     return (
       <div className="grid min-w-0 gap-5">
-        <LauncherIntro eyebrow={t("pray.eyebrow")} title={t("pray.title")} />
+        <LauncherIntro title={t("pray.title")} />
         <SectionLauncher groups={groups} lead={{ eyebrow: t("pray.lead"), tile: prayerForHour(new Date()) }} />
       </div>
     );

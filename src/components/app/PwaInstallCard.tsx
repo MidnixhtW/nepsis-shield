@@ -124,7 +124,7 @@ export function PwaInstallCard() {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <MonitorSmartphone className="h-5 w-5 text-primary" />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Web install</p>
+            <p className="text-xs font-semibold text-muted-foreground">Web install</p>
             <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs">
               {installStatus}
             </Badge>

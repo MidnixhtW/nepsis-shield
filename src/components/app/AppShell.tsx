@@ -107,7 +107,7 @@ export function AppShell({
           main.focus();
           main.scrollIntoView();
         }}
-        className="sr-only fixed left-3 top-3 z-50 rounded-sm bg-primary px-4 py-2 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-sm focus:not-sr-only"
+        className="sr-only fixed left-3 top-3 z-50 rounded-sm bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-sm focus:not-sr-only"
       >
         Skip to content
       </a>

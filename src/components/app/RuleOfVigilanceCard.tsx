@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, ChevronDown, Clock3, Compass, Eye, MoonStar, Plus, ShieldCheck, Sun } from "lucide-react";
+import { ChevronDown, Clock3, Compass, Eye, MoonStar, Plus, ShieldCheck, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
@@ -29,7 +29,7 @@ function RuleRow({ icon, label, body }: { icon: React.ReactNode; label: string; 
     <div className="rounded-3xl bg-background/45 p-4 shadow-[inset_0_1px_0_hsl(42_92%_58%/0.10)]">
       <div className="flex items-center gap-2 text-primary">
         {icon}
-        <p className="text-xs font-semibold uppercase tracking-[0.16em]">{label}</p>
+        <p className="text-xs font-semibold">{label}</p>
       </div>
       <p className="mt-2 text-sm leading-relaxed text-foreground/90">{body}</p>
     </div>
@@ -101,7 +101,7 @@ export function RuleOfVigilanceCard({
     <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-7">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
         <div className="min-w-0">
-          <div className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+          <div className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
             <Compass className="mr-1.5 h-3.5 w-3.5" /> Daily prayer plan · Rule of prayer
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
@@ -121,7 +121,6 @@ export function RuleOfVigilanceCard({
           {onNavigate ? (
             <Button type="button" className="gold-foil mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
               {rule.primaryAction}
-              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
             <div className="mt-6 inline-flex min-h-12 items-center rounded-full border border-dashed border-border/70 bg-muted/30 px-6 text-sm font-semibold text-muted-foreground">

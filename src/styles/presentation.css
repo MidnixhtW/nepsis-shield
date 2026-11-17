@@ -65,8 +65,7 @@
   }
 
   .premium-eyebrow {
-    @apply text-xs font-semibold uppercase text-primary;
-    letter-spacing: 0.2em;
+    @apply text-sm font-semibold text-primary;
   }
 
 

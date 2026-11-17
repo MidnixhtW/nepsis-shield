@@ -6,10 +6,31 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The app reads like a prayer book: headings in Literata, controls in Barlow. Service roles (<html data-role>) keep
+   the field-manual voice, condensed Barlow, which suits the duty tools. */
+:root {
+  --font-heading: "Literata", Georgia, "Times New Roman", serif;
+  --heading-weight: 600;
+  --heading-tracking: -0.01em;
+  --font-ui: "Barlow", ui-sans-serif, system-ui, sans-serif;
+}
+
+html[data-role] {
+  --font-heading: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+  --heading-weight: 700;
+  --heading-tracking: 0.015em;
+  --font-ui: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+}
+
 h1, h2, h3, .font-display {
-  font-family: 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.015em;
+  font-family: var(--font-heading);
+  font-weight: var(--heading-weight);
+  letter-spacing: var(--heading-tracking);
+}
+
+/* The radar and scanlines belong to the field manual, so they show only in a service role. */
+html:not([data-role]) .tactical-radar-field {
+  display: none;
 }
 
 .candle-glow {

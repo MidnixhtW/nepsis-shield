@@ -9,7 +9,7 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
 
   const onboarding = page.getByRole("dialog");
   await expect(onboarding.getByRole("heading", {
-    name: "Quiet your heart. Begin with one faithful step.",
+    name: "A small rule of prayer you can keep",
   })).toBeVisible();
 
   await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome

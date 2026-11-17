@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ArrowRight, Check, Star } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
@@ -77,7 +77,7 @@ export function PrayNowCard() {
       ) : null}
       <div className="relative">
         <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{done ? "Prayed today" : "Pray now"}</p>
+          <p className="text-xs font-semibold text-accent">{done ? "Prayed today" : "Pray now"}</p>
           <h2 id="pray-now-title" className="mt-1.5 text-2xl font-semibold tracking-tight sm:text-3xl">{LABELS[time].title}</h2>
           <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
             {done ? (next ? `Glory to God. ${LABELS[next].title} come later today.` : "Glory to God. Rest in peace tonight.") : `${LABELS[time].line} ${lengthFor(time, mode)}`}
@@ -110,7 +110,7 @@ export function PrayNowCard() {
           <Link to={`/pray?tab=daily&begin=${time}`}>
             {done ? <Check className="mr-2 h-4 w-4" /> : null}
             {done ? "Pray again" : "Begin"}
-            {done ? null : <ArrowRight className="ml-2 h-4 w-4" />}
+            
           </Link>
         </Button>
         <Button asChild variant="ghost" className="h-11 rounded-full px-4">

@@ -27,7 +27,7 @@ export function FeastGreetingCard({ today, calendar }: { today: Date; calendar: 
 
   return (
     <Card className="candlelight-card rounded-[1.5rem] border p-5 text-center" role="region" aria-label="Feast greeting">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{greeting.feast}</p>
+      <p className="text-xs font-semibold text-accent">{greeting.feast}</p>
       <p className="mt-2 text-3xl font-semibold tracking-tight">{greeting.greeting}</p>
       <p className="scripture-text mt-1 text-lg text-muted-foreground">{greeting.response}</p>
       <Button type="button" variant="outline" size="sm" className="mt-4 rounded-full" onClick={() => void share()}>

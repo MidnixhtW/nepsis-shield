@@ -218,7 +218,6 @@ function SelectionCard({
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
     >
-      <span className="pointer-events-none absolute inset-x-6 -top-10 h-20 rounded-full bg-accent/10 blur-3xl" />
       <span className="relative flex items-start justify-between gap-3">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
           {icon}
@@ -255,15 +254,15 @@ function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVaria
 
   return (
     <div className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your daily prayer plan</p>
+      <p className="text-xs font-semibold text-primary">Your daily prayer plan</p>
       <h2 id="onboarding-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
-      <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Choose a version</p>
+      <p className="mt-5 text-xs font-semibold text-muted-foreground">Choose a version</p>
       <RuleVariantPicker need={rule.need} value={rule.variant} onChange={onVariantChange} className="mt-2" />
       <div className="mt-6 grid gap-3">
         {rows.map(([label, body]) => (
           <div key={label} className="rounded-3xl bg-background/45 p-4 shadow-[inset_0_1px_0_hsl(42_92%_58%/0.10)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{label}</p>
+            <p className="text-xs font-semibold text-primary">{label}</p>
             <p className="mt-1 text-sm leading-relaxed text-foreground/90">{body}</p>
           </div>
         ))}
@@ -281,12 +280,12 @@ function RuleSoFar({ rule }: { rule: RuleOfVigilance }) {
   ];
   return (
     <aside aria-label="Your rule so far" aria-live="polite" className="rounded-[1.75rem] border border-primary/20 bg-card/50 p-4 sm:p-5">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your rule so far</p>
+      <p className="text-xs font-semibold text-primary">Your rule so far</p>
       <p className="mt-1 text-lg font-semibold tracking-tight">{rule.title}</p>
       <dl className="mt-3 grid gap-2 sm:grid-cols-3">
         {rows.map(([label, body]) => (
           <div key={label} className="rounded-2xl bg-background/45 p-3">
-            <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</dt>
+            <dt className="text-xs font-semibold text-muted-foreground">{label}</dt>
             <dd className="mt-1 text-sm leading-snug text-foreground/90">{body}</dd>
           </div>
         ))}
@@ -424,10 +423,6 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           onInteractOutside={(event) => event.preventDefault()}
         >
           <Dialog.Title className="sr-only">Set up your daily rule · Step {stepIndex + 1} of {steps.length}</Dialog.Title>
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-accent/20 blur-3xl" />
-        <div className="absolute bottom-20 right-[-8rem] h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
-      </div>
 
       <div className="relative mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
         <header className="flex shrink-0 items-center justify-between gap-4">
@@ -468,13 +463,13 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
               <div className="premium-icon-mark mx-auto !h-24 !w-24 shadow-[0_24px_48px_hsl(var(--primary)/0.22)]">
                 <OrthodoxCrossIcon className="h-12 w-12" strokeWidth={1.4} />
               </div>
-              <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Nepsis Shield</p>
+              <p className="mt-8 text-xs font-semibold text-primary">Nepsis Shield</p>
               <h1 id="onboarding-title" className="mt-3 text-4xl font-semibold tracking-tight sm:text-6xl">
-                Quiet your heart. Begin with one faithful step.
+                A small rule of prayer you can keep
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Nepsis is the old Christian practice of watchfulness: guarding your attention and your heart in a noisy world. In a few
-                questions we’ll shape a small Orthodox rule of prayer and Scripture you can keep.
+                Answer three short questions and we&rsquo;ll set out morning and evening prayers that fit your day. You can change them any
+                time.
               </p>
               <button
                 type="button"
@@ -494,7 +489,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           {step === "about" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">About you</p>
+                <p className="text-xs font-semibold text-primary">About you</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   Is there a calling the app should keep in mind?
                 </h1>
@@ -540,14 +535,14 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           {step === "need" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">What are you seeking?</p>
+                <p className="text-xs font-semibold text-primary">What are you seeking?</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   Choose where you most need watchfulness.
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
                   Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your rule; the others add a practice each.
                 </p>
-                <p role="status" className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                <p role="status" className="mt-2 text-xs font-semibold text-accent">
                   {selectedNeeds.length ? `${selectedNeeds.length} of ${MAX_VIGILANCE_NEEDS} chosen` : "Choose at least one"}
                 </p>
               </div>
@@ -575,7 +570,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           {step === "rhythm" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Daily rhythm</p>
+                <p className="text-xs font-semibold text-primary">Daily rhythm</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   When can prayer realistically take root?
                 </h1>

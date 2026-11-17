@@ -1,17 +1,6 @@
-import type { ReactNode } from "react";
 import { Link, Navigate } from "react-router";
 import { Capacitor } from "@capacitor/core";
-import {
-  ArrowRight,
-  BellRing,
-  BriefcaseBusiness,
-  CalendarDays,
-  CloudOff,
-  GraduationCap,
-  MoonStar,
-  ShieldCheck,
-  Smartphone,
-} from "lucide-react";
+import { Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ONBOARDING_KEY } from "@/components/app/QuickStartDialog";
@@ -29,16 +18,12 @@ function shouldSkipHome() {
   }
 }
 
-function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="text-balance text-xs font-semibold uppercase tracking-[0.2em] text-primary">{children}</p>;
-}
-
 function StartButtons({ center = false }: { center?: boolean }) {
   return (
     <div className={center ? "flex flex-col items-center gap-3 sm:flex-row sm:justify-center" : "flex flex-col gap-3 sm:flex-row"}>
       <Button asChild className="gold-foil h-14 rounded-full px-8 text-base font-bold text-primary-foreground">
         <Link to="/today">
-          Start now, it&rsquo;s free <ArrowRight className="ml-2 h-5 w-5" />
+          Start now, it&rsquo;s free
         </Link>
       </Button>
       <Button asChild variant="outline" className="h-14 rounded-full border-primary/35 bg-background/40 px-7 text-base backdrop-blur">
@@ -53,22 +38,18 @@ function StartButtons({ center = false }: { center?: boolean }) {
 // Real situations the app is built around. These are descriptions, not quotes from users.
 const lives = [
   {
-    icon: <BriefcaseBusiness className="h-4 w-4" />,
     title: "Early career",
     body: "Five minutes of morning prayer before the inbox, and a way back to calm when a meeting goes badly.",
   },
   {
-    icon: <GraduationCap className="h-4 w-4" />,
     title: "Studying",
     body: "A two-minute rule that survives exam weeks, and evening prayers that help you put the phone down.",
   },
   {
-    icon: <ShieldCheck className="h-4 w-4" />,
     title: "Serving",
     body: "Military, police, fire, EMS, dispatch and chaplains get shift-length prayers and a reset built for the job.",
   },
   {
-    icon: <MoonStar className="h-4 w-4" />,
     title: "Late nights",
     body: "Compline, the Jesus Prayer with a prayer-rope counter, and a stillness timer for when sleep won’t come.",
   },
@@ -76,32 +57,29 @@ const lives = [
 
 const features = [
   {
-    title: "Your rule, simplified",
+    title: "Prayers you can keep",
     body: "Morning, evening and night prayers in four lengths, prayed full-screen one step at a time, with read-aloud. You never lose your place.",
   },
   {
-    title: "The mind of the Church",
+    title: "Readings, saints and feasts",
     body: "The day’s Epistle and Gospel, the saints and feasts, and the whole Bible, following the Church calendar, New or Old.",
   },
   {
-    title: "Fasting made clear",
+    title: "The fasts, day by day",
     body: "Today’s fast at a glance, and a day-by-day companion through Great Lent and every fast of the year, with a short prayer for each day.",
   },
 ];
 
 const habits = [
   {
-    icon: <CalendarDays className="h-5 w-5" />,
-    title: "No streaks to protect",
+    title: "A quiet record",
     body: "A quiet week of dots shows the days you prayed. Miss one and it is simply empty; nothing resets, nothing scolds.",
   },
   {
-    icon: <BellRing className="h-5 w-5" />,
     title: "Reminders at your hours",
     body: "Morning, evening and night reminders in the Android app, whether you wake at five or finish a late shift.",
   },
   {
-    icon: <CloudOff className="h-5 w-5" />,
     title: "Works with no signal",
     body: "Prayers live on your phone, and the next two weeks of the calendar are saved ahead. No account, and your notes stay with you.",
   },
@@ -125,73 +103,66 @@ export default function Home() {
       </header>
 
       <main id="main-content">
-        {/* 1. Hero */}
-        <section className="relative overflow-hidden">
-          <div aria-hidden className="pointer-events-none absolute inset-0">
-            <div className="absolute left-1/2 top-[-10rem] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-accent/20 blur-3xl motion-safe:animate-drift" />
-            <div className="absolute bottom-[-12rem] right-[-10rem] h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        {/* The opening is a page of the prayer book itself: what the app is, before anything is said about it. */}
+        <section className="mx-auto max-w-3xl px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20">
+          <h1 className="text-balance text-4xl leading-[1.1] sm:text-6xl">Orthodox prayer for every day</h1>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year. Free, with no
+            account, and it works with no signal.
+          </p>
+          <div className="mt-8">
+            <StartButtons />
           </div>
-          <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-16 text-center sm:px-8 sm:pb-28 sm:pt-24">
-            <Eyebrow>Prayer · Scripture · Watchfulness</Eyebrow>
-            <h1 className="mt-5 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">Ancient faith for modern focus.</h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              A companion for Orthodox prayer, the day&rsquo;s Scripture, and a daily rule small enough to keep. Built for your pocket.
+
+          <figure className="mt-14 border-t border-border/60 pt-8" aria-label="From the morning prayers">
+            <p className="rubric">Make the sign of the Cross, and begin.</p>
+            <p className="scripture-text drop-cap mt-3 text-xl leading-relaxed sm:text-2xl">
+              In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
             </p>
-            <div className="mt-10">
-              <StartButtons center />
-            </div>
-            <p className="mt-5 text-sm text-muted-foreground">Free · No account · Works offline</p>
-          </div>
+            <p className="scripture-text mt-3 text-xl leading-relaxed sm:text-2xl">Glory to Thee, our God, glory to Thee.</p>
+            <p className="rubric mt-6">O Heavenly King</p>
+            <p className="scripture-text mt-2 text-lg leading-relaxed text-foreground/90">
+              O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings
+              and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.
+            </p>
+          </figure>
         </section>
 
-        {/* 2. Built for real life */}
         <section aria-labelledby="real-life" className="border-y border-border/50 bg-card/30">
-          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-8 sm:py-20">
-            <div className="max-w-2xl">
-              <Eyebrow>Who it&rsquo;s for</Eyebrow>
-              <h2 id="real-life" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">Built for the realities of modern life.</h2>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Early-career burnout, university stress, military service, or a phone that never stops: Nepsis Shield keeps your prayer rule close.
-              </p>
-            </div>
-            <div className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
+            <h2 id="real-life" className="max-w-2xl text-3xl sm:text-4xl">A rule small enough to keep</h2>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Each prayer comes in four lengths, from one minute to a full rule, so it fits a school day, a long shift or a sleepless night.
+            </p>
+            <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
               {lives.map((item) => (
-                <article key={item.title} className="border-l-2 border-primary/40 py-1 pl-5">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold tracking-tight">
-                    <span aria-hidden className="text-primary">{item.icon}</span>
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                <article key={item.title}>
+                  <h3 className="text-xl">{item.title}</h3>
+                  <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 3. Features */}
-        <section aria-labelledby="features" className="mx-auto max-w-6xl px-4 py-16 sm:px-8 sm:py-24">
-          <div className="max-w-2xl">
-            <Eyebrow>Everything you need, nothing extra</Eyebrow>
-            <h2 id="features" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">Prayer, Scripture and the fasts in one quiet place.</h2>
-          </div>
-          {/* The real Today screen beside the three things it holds, instead of a row of icon cards. */}
-          <div className="mt-10 grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-            <ol className="grid gap-8">
-              {features.map((item, index) => (
-                <li key={item.title} className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-5">
-                  <span aria-hidden className="font-display text-4xl font-semibold leading-none text-primary/70 tabular-nums">{index + 1}</span>
-                  <div>
-                    <h3 className="text-xl font-semibold tracking-tight">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">{item.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+        <section aria-labelledby="features" className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+            <div>
+              <h2 id="features" className="max-w-xl text-3xl sm:text-4xl">The day as the Church keeps it</h2>
+              <ul className="mt-8 grid gap-7">
+                {features.map((item) => (
+                  <li key={item.title}>
+                    <h3 className="text-xl">{item.title}</h3>
+                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
-              <div className="rounded-[2.75rem] border border-primary/25 bg-black p-2.5 shadow-[0_40px_90px_hsl(0_0%_0%/0.45)]">
+              <div className="rounded-[2.75rem] border border-border/60 bg-black p-2.5">
                 <img
                   src="/home/today.jpg"
-                  alt="The Today screen: the day's icon and feast, Pray now with morning prayers, and the fasting season's day."
+                  alt="The Today screen: the day's icon and feast, the prayers for the hour, and the fasting season's day."
                   width={540}
                   height={1080}
                   loading="lazy"
@@ -203,11 +174,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 4. Habit and resilience */}
         <section aria-labelledby="consistency" className="border-y border-border/50 bg-card/30">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-8 sm:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          <div className="mx-auto grid max-w-5xl items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
             <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
-              <div className="rounded-[2.75rem] border border-primary/25 bg-black p-2.5 shadow-[0_40px_90px_hsl(0_0%_0%/0.45)]">
+              <div className="rounded-[2.75rem] border border-border/60 bg-black p-2.5">
                 <img
                   src="/home/full-screen-prayer.webp"
                   alt="The app showing the morning prayer full-screen, with read-aloud and Back and Next buttons."
@@ -220,16 +190,12 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <Eyebrow>Consistency</Eyebrow>
-              <h2 id="consistency" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">Build consistency without the guilt.</h2>
-              <ul className="mt-8 grid gap-5">
+              <h2 id="consistency" className="text-3xl sm:text-4xl">No streaks, no guilt</h2>
+              <ul className="mt-8 grid gap-7">
                 {habits.map((item) => (
-                  <li key={item.title} className="flex gap-4">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">{item.icon}</span>
-                    <div>
-                      <h3 className="text-lg font-semibold tracking-tight">{item.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-                    </div>
+                  <li key={item.title}>
+                    <h3 className="text-xl">{item.title}</h3>
+                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
                   </li>
                 ))}
               </ul>
@@ -237,17 +203,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. Closing call */}
-        <section aria-labelledby="begin" className="relative overflow-hidden">
-          <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
-          <div className="relative mx-auto max-w-3xl px-4 py-20 text-center sm:px-8 sm:py-28">
-            <h2 id="begin" className="text-3xl font-semibold tracking-tight sm:text-5xl">Take your prayer off the screen and into your day.</h2>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              <em>Nepsis</em> is watchfulness: a quiet, steady attention to God that the Church has practiced for centuries. Begin with two minutes.
-            </p>
-            <div className="mt-10">
-              <StartButtons center />
-            </div>
+        <section aria-labelledby="begin" className="mx-auto max-w-3xl px-5 py-20 sm:px-8 sm:py-24">
+          <h2 id="begin" className="text-3xl sm:text-4xl">Begin with two minutes</h2>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <em>Nepsis</em> is the Church&rsquo;s word for watchfulness: keeping the heart awake to God. Tomorrow morning, open the app and
+            pray the short morning prayers.
+          </p>
+          <div className="mt-8">
+            <StartButtons />
           </div>
         </section>
       </main>

@@ -43,6 +43,7 @@ import { SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 import { spokenText } from "@/lib/narrationText";
 import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
+import { PrayerLines } from "@/components/app/PrayerLines";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
 
@@ -322,10 +323,10 @@ export function DailyPrayerFlow() {
       >
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="text-xs font-semibold text-muted-foreground">
               Step {stepIndex + 1} of {steps.length}
             </p>
-            <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
+            <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl text-cinnabar focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {done ? (
@@ -359,9 +360,7 @@ export function DailyPrayerFlow() {
           }
         >
           <div className={"scripture-text " + (readerPrefs.largeText ? "space-y-4 text-xl" : "space-y-3 text-lg")}>
-            {current.body.map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
+            <PrayerLines lines={current.body} />
           </div>
         </div>
 
@@ -437,7 +436,7 @@ export function DailyPrayerFlow() {
             ) : (
             <>
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+              <p className="text-xs font-semibold text-accent">
                 {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
@@ -463,11 +462,9 @@ export function DailyPrayerFlow() {
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
               <div className="mx-auto w-full max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
-                <Dialog.Title className="text-3xl font-semibold tracking-tight sm:text-4xl">{current.title}</Dialog.Title>
+                <Dialog.Title className="text-3xl text-cinnabar sm:text-4xl">{current.title}</Dialog.Title>
                 <div className={"scripture-text mt-6 " + (readerPrefs.largeText ? "space-y-6 text-2xl" : "space-y-5 text-xl")}>
-                  {current.body.map((line, index) => (
-                    <p key={index}>{line}</p>
-                  ))}
+                  <PrayerLines lines={current.body} />
                 </div>
               </div>
             </div>

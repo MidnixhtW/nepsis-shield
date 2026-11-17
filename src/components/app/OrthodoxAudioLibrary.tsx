@@ -103,7 +103,7 @@ export function OrthodoxAudioLibrary() {
       <Card className="candlelight-card overflow-hidden rounded-[2rem] border p-5 shadow-[0_24px_80px_hsl(var(--accent)/0.10)] sm:p-7">
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Radio className="mr-1 h-3.5 w-3.5" /> Audio sanctuary
             </Badge>
             <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">

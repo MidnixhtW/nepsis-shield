@@ -227,7 +227,7 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
   if (!tab) {
     return (
       <div className="grid min-w-0 gap-5">
-        <LauncherIntro eyebrow={t("learn.eyebrow")} title={t("learn.title")} />
+        <LauncherIntro title={t("learn.title")} />
         <SectionLauncher groups={groups} lead={lead ? { eyebrow: t("learn.lead"), tile: lead } : null} />
       </div>
     );

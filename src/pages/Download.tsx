@@ -48,7 +48,7 @@ function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; inst
         <div>
           <div className="flex items-center gap-2 text-primary">
             <QrCode className="h-5 w-5" />
-            <p className="text-xs font-semibold uppercase tracking-[0.16em]">QR code</p>
+            <p className="text-xs font-semibold">QR code</p>
           </div>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to install</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">

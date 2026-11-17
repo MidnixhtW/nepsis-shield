@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from "react";
-import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
@@ -22,7 +22,7 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
       {lead ? <LeadCard eyebrow={lead.eyebrow} tile={lead.tile} /> : null}
       {groups.map((group) => (
         <section key={group.title} aria-labelledby={groupId(group.title)}>
-          <h3 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          <h3 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold text-muted-foreground">
             {group.title}
           </h3>
           <ul className="grid overflow-hidden rounded-2xl border border-border/60 bg-card sm:grid-cols-2">
@@ -64,11 +64,10 @@ function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {
         <Icon className="h-7 w-7" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-accent">{eyebrow}</span>
+        <span className="block text-xs font-semibold text-accent">{eyebrow}</span>
         <span className="mt-1 block text-xl font-semibold leading-tight tracking-tight">{tile.label}</span>
         <span className="mt-0.5 block text-sm text-muted-foreground">{tile.hint}</span>
       </span>
-      <ArrowRight aria-hidden className="h-5 w-5 shrink-0 text-accent transition-transform group-hover:translate-x-0.5" />
     </Link>
   );
 }
@@ -99,11 +98,11 @@ export function SectionBackBar({ backTo, backLabel, title, favoriteTo }: { backT
   );
 }
 
-export function LauncherIntro({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
+// A section's plain name at the top of its starting screen, the same word as its tab.
+export function LauncherIntro({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="px-1">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{eyebrow}</p>
-      <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h2>
+      <h2 className="text-3xl sm:text-4xl">{title}</h2>
       {children}
     </div>
   );

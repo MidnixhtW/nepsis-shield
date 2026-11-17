@@ -75,7 +75,7 @@ function MenuLink({
 function MenuSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-t border-border/35 pt-4 first:border-t-0 first:pt-0">
-      <h3 className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+      <h3 className="px-3 pb-2 text-xs font-semibold text-muted-foreground">
         {title}
       </h3>
       <div className="grid gap-1">{children}</div>
@@ -141,7 +141,7 @@ function MenuLinks() {
         </>
       )}
 
-      <p className="border-t border-border/45 pt-3 text-center text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="border-t border-border/45 pt-3 text-center text-xs font-medium text-muted-foreground">
         Version {CURRENT_VERSION}
       </p>
     </div>
@@ -231,7 +231,7 @@ export function AppHeader() {
         <div className="min-w-0">
           <p className="truncate font-display text-base font-semibold tracking-[-0.02em] text-foreground">Nepsis Shield</p>
           <p
-            className="truncate text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground tabular-nums max-[340px]:hidden"
+            className="truncate text-xs font-bold text-muted-foreground tabular-nums max-[340px]:hidden"
             title={t("header.hourTitle", { hour: hourName })}
           >
             {clockDate}

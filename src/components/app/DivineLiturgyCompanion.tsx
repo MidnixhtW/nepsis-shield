@@ -93,7 +93,7 @@ export function DivineLiturgyCompanion() {
 
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                 <Church className="mr-1 h-3.5 w-3.5" /> Liturgy mode
               </Badge>
               <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">

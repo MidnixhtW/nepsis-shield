@@ -1,0 +1,53 @@
+/* The light follows the hours of prayer, quietly: a pale light from above at dawn, an even light by day, the warm
+   lamp of Vespers low in the evening, and a deeper dark at night. <html data-hour> is set by ThemeProvider. Each layer
+   is faint enough to sit under every theme, light or dark. */
+@layer base {
+  html[data-hour] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    transition: background 1.5s ease;
+  }
+
+  html[data-hour="dawn"] body::before {
+    background: radial-gradient(ellipse 90% 55% at 50% -12%, hsl(44 80% 70% / 0.14), transparent 70%);
+  }
+
+  html[data-hour="day"] body::before {
+    background: radial-gradient(ellipse 100% 60% at 50% -15%, hsl(40 40% 85% / 0.07), transparent 70%);
+  }
+
+  html[data-hour="evening"] body::before {
+    background: radial-gradient(ellipse 70% 50% at 12% 105%, hsl(30 90% 55% / 0.15), transparent 70%);
+  }
+
+  html[data-hour="night"] body::before {
+    background: linear-gradient(180deg, hsl(230 45% 3% / 0.35), transparent 45%, hsl(230 45% 3% / 0.25));
+  }
+
+  /* A lit vigil lamp: a gold glow and a slow flicker, the one bit of ambient motion in the app. */
+  /* A flame is flame-coloured in every theme. */
+  .lamp-lit {
+    color: hsl(40 92% 62%);
+    filter: drop-shadow(0 0 6px hsl(40 92% 58% / 0.7));
+    animation: lamp-flicker 3.2s ease-in-out infinite;
+  }
+
+  @keyframes lamp-flicker {
+    0%, 100% { opacity: 1; }
+    45% { opacity: 0.86; }
+    60% { opacity: 0.96; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html[data-hour] body::before {
+      transition: none;
+    }
+
+    .lamp-lit {
+      animation: none;
+    }
+  }
+}

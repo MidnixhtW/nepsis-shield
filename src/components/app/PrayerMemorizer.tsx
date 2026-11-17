@@ -261,12 +261,12 @@ function PrayerPractice({ prayer }: { prayer: PrayerToLearn }) {
       <Card className="rounded-3xl border p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Learn by heart</p>
+            <p className="text-xs font-semibold text-primary">Learn by heart</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight">{prayer.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{prayer.hint}</p>
           </div>
           <p className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-2 text-right">
-            <span className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Known</span>
+            <span className="block text-xs font-semibold text-muted-foreground">Known</span>
             <span className="text-xl font-semibold text-primary">{known} / {total}</span>
           </p>
         </div>
@@ -275,7 +275,7 @@ function PrayerPractice({ prayer }: { prayer: PrayerToLearn }) {
 
       <Card className="rounded-3xl border p-5 sm:p-6">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Section {section + 1} of {total}</p>
+          <p className="text-xs font-semibold text-primary">Section {section + 1} of {total}</p>
           {total > 1 ? (
             <div className="flex gap-2">
               <Button variant="outline" size="icon" onClick={() => go(section - 1)} disabled={section === 0} aria-label="Previous section">
@@ -339,7 +339,7 @@ function ReviewSession() {
       </Link>
       <Card className="grid gap-4 rounded-3xl border p-5 sm:p-6">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Review {index + 1} of {queue.length}</p>
+          <p className="text-xs font-semibold text-primary">Review {index + 1} of {queue.length}</p>
           <h2 className="mt-1 text-xl font-semibold">
             {current.prayer.title}
             {current.prayer.sections.length > 1 ? <span className="text-muted-foreground"> · section {current.section + 1}</span> : null}
@@ -394,7 +394,7 @@ function PrayerList() {
       </Card>
       {PRAYER_GROUPS.map((group) => (
         <section key={group.id} aria-label={group.title} className="grid gap-2">
-          <h3 className="px-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{group.title}</h3>
+          <h3 className="px-1 text-xs font-semibold text-muted-foreground">{group.title}</h3>
           <ul className="grid gap-2 sm:grid-cols-2">
             {PRAYERS_TO_LEARN.filter((prayer) => prayer.group === group.id).map((prayer) => {
               const known = learnedCount(state, prayer);

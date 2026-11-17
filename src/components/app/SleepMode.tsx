@@ -119,7 +119,7 @@ export function SleepMode() {
     <Card className={dimmed ? "rounded-3xl border-primary/20 bg-black p-5 text-foreground shadow-sm sm:p-6" : "rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6"}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Sleep mode</p>
+          <p className="text-xs font-semibold text-primary">Sleep mode</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">End the day in prayer.</h2>
           <p className={dimmed ? "mt-2 max-w-2xl text-sm leading-relaxed text-foreground" : "mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground"}>
             A quiet night flow with short prayers, a dim screen, and a gentle Jesus Prayer timer.
@@ -141,7 +141,7 @@ export function SleepMode() {
         <div className={dimmed ? "rounded-3xl border border-border/[0.72] bg-card p-5" : "rounded-3xl border border-border/60 bg-muted/20 p-5"}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Step {stepIndex + 1} of {steps.length}</p>
+              <p className="text-xs font-semibold text-primary">Step {stepIndex + 1} of {steps.length}</p>
               <h3 className="mt-1 text-xl font-semibold tracking-tight">{step.title}</h3>
             </div>
             <Volume2 className={dimmed ? "h-5 w-5 text-foreground" : "h-5 w-5 text-muted-foreground"} />

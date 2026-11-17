@@ -337,7 +337,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
 
         <div className="relative grid grid-cols-[repeat(auto-fit,minmax(min(100%,22rem),1fr))] items-start gap-5">
           <div>
-            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] transition-colors duration-300", theme.badge)}>
+            <Badge className={cn("rounded-full border px-3 py-1 text-xs font-bold transition-colors duration-300", theme.badge)}>
               <Crosshair className="mr-1.5 h-3.5 w-3.5" /> Life & service modes
             </Badge>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight">Choose your mode</h2>
@@ -378,7 +378,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
                 <Icon className="h-5 w-5" />
               </span>
               <div className="min-w-0 break-words">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">{active.badge}</p>
+                <p className="text-xs font-bold text-muted-foreground">{active.badge}</p>
                 <h3 className="mt-1 text-lg font-semibold tracking-tight">{active.label}</h3>
               </div>
             </div>

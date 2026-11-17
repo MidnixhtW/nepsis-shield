@@ -46,7 +46,7 @@ function PracticalToolLink({ item }: { item: QA }) {
 
   return (
     <div className="rounded-2xl border border-primary/15 bg-primary/5 p-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Practice next</p>
+      <p className="text-xs font-semibold text-primary">Practice next</p>
       <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-relaxed text-muted-foreground">
           Connect this teaching to a concrete prayer or reading action inside the app.

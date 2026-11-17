@@ -56,7 +56,7 @@ export function BecomingOrthodox() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Becoming Orthodox</p>
+        <p className="text-xs font-semibold text-accent">Becoming Orthodox</p>
         <h2 className="mt-1.5 text-2xl font-semibold tracking-tight">Where are you on the way?</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Pick the step you are on. Parishes do things a little differently, so where your priest says something different, follow your priest. What you mark here stays on this device.
@@ -88,11 +88,11 @@ export function BecomingOrthodox() {
       </Card>
 
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Step {index + 1} of {JOURNEY_STAGES.length} · {stage.short}</p>
+        <p className="text-xs font-semibold text-muted-foreground">Step {index + 1} of {JOURNEY_STAGES.length} · {stage.short}</p>
         <h3 className="mt-1 text-xl font-semibold tracking-tight">{stage.title}</h3>
         <p className="mt-2 text-sm leading-relaxed text-foreground/90">{stage.about}</p>
 
-        <h4 className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">What to expect</h4>
+        <h4 className="mt-5 text-xs font-semibold text-muted-foreground">What to expect</h4>
         <ul className="mt-2 grid gap-2">
           {stage.expect.map((line) => (
             <li key={line} className="flex gap-2.5 text-sm leading-relaxed">
@@ -102,7 +102,7 @@ export function BecomingOrthodox() {
           ))}
         </ul>
 
-        <h4 className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Next steps</h4>
+        <h4 className="mt-5 text-xs font-semibold text-muted-foreground">Next steps</h4>
         <ul className="mt-2 grid gap-2">
           {stage.steps.map((step) => {
             const checked = store.done.includes(`${stage.id}:${step}`);

@@ -1,4 +1,4 @@
-import { ArrowRight, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -99,7 +99,7 @@ export function BibleBookmarksPanel({
                   className="rounded-2xl border-border/60"
                   onClick={() => onOpen(b)}
                 >
-                  Open <ArrowRight className="ml-2 h-4 w-4" />
+                  Open
                 </Button>
                 <Button
                   variant="ghost"

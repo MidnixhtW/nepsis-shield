@@ -12,7 +12,7 @@ export function WatchfulnessLog() {
   return (
     <section aria-labelledby="watchfulness-log-title" className="rounded-3xl border bg-card p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="watchfulness-log-title" className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <h2 id="watchfulness-log-title" className="text-xs font-semibold text-muted-foreground">
           Prayer log <span className="font-normal normal-case tracking-normal">(watchfulness)</span>
         </h2>
         <p className="text-xs text-muted-foreground">

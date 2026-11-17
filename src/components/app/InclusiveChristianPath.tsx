@@ -113,7 +113,7 @@ export function InclusiveChristianPath({ compact = false }: { compact?: boolean 
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
         <div className="relative p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+            <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <HeartHandshake className="mr-1 h-3.5 w-3.5" /> Welcome
             </Badge>
             <Badge className="rounded-full bg-muted/40 px-3 py-1 text-xs font-semibold text-muted-foreground">

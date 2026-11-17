@@ -39,7 +39,7 @@ export function SetupRuleCard() {
       <Compass aria-hidden className="h-5 w-5 shrink-0 text-accent" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold">Set up your daily rule</p>
-        <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">A few short questions shape a small rule of prayer you can keep.</p>
+        <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">Three short questions shape a small rule of prayer you can keep.</p>
       </div>
       <div className="flex basis-full justify-end gap-2 sm:basis-auto">
         <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={hide}>

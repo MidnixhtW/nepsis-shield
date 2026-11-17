@@ -15,6 +15,7 @@
 @import "./styles/themes/dark-variants.css";
 @import "./styles/themes/seasonal.css";
 @import "./styles/typography.css";
+@import "./styles/hour-light.css";
 @import "./styles/print.css";
 @import "./styles/themes/parchment.css";
 @import "./styles/themes/paschal.css";

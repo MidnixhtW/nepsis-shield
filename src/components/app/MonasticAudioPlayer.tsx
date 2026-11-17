@@ -110,7 +110,7 @@ export function MonasticAudioPlayer() {
             <span className="sr-only">Minimize player</span>
           </Button>
           <div className="text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">Vigil Sanctuary</p>
+            <p className="text-xs font-bold text-primary">Vigil Sanctuary</p>
             <p className="mt-1 text-xs text-muted-foreground">{currentTrack.category}</p>
           </div>
           <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => setOpen(false)}>
@@ -131,7 +131,7 @@ export function MonasticAudioPlayer() {
           </div>
 
           <section className="min-w-0 w-full text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Now praying</p>
+            <p className="text-xs font-bold text-primary">Now praying</p>
             <h1 className="mx-auto mt-3 max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl">{currentTrack.title}</h1>
             <p className="mx-auto mt-5 max-w-md text-lg italic leading-relaxed text-foreground/80">“{activeLine}”</p>
           </section>
@@ -208,7 +208,7 @@ export function MonasticAudioPlayer() {
 
             {showText ? (
               <div className="mt-5 rounded-3xl bg-background/45 p-5 text-left">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Prayer text</p>
+                <p className="text-xs font-semibold text-primary">Prayer text</p>
                 <div className="mt-3 space-y-3 text-sm leading-relaxed text-foreground/85">
                   {transcript.map((line) => (
                     <p key={line} className={line === activeLine ? "text-primary" : undefined}>{line}</p>

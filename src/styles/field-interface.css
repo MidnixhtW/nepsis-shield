@@ -30,13 +30,13 @@
   h3,
   h4,
   .font-display {
-    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.015em;
+    font-family: var(--font-heading);
+    font-weight: var(--heading-weight);
+    letter-spacing: var(--heading-tracking);
   }
 
   :where(button, [role="button"], nav, .premium-eyebrow) {
-    font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
+    font-family: var(--font-ui);
   }
 
   ::-webkit-scrollbar-track {

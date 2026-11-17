@@ -22,7 +22,8 @@ export default {
       // The fonts the app actually loads (see styles/foundation.css and styles/typography.css).
       fontFamily: {
         sans: ["Barlow", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["Barlow Condensed", "Arial Narrow", "ui-sans-serif", "sans-serif"],
+        // Literata, or condensed Barlow in a service role (see styles/foundation.css).
+        display: ["var(--font-heading)"],
         serif: ["Literata", "Georgia", "Times New Roman", "serif"],
       },
       // Every color comes from the active theme's variables (styles/themes/). Use these instead of Tailwind's

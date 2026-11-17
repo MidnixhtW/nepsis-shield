@@ -103,7 +103,7 @@ export function NeedHelpNow({
     <div className="min-w-0 rounded-3xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-sm sm:p-5">
       <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 break-words">
-          <p className="text-xs font-semibold uppercase leading-snug tracking-[0.12em] text-primary sm:tracking-[0.16em]">Need help now?</p>
+          <p className="text-xs font-semibold leading-snug text-primary">Need help now?</p>
           <h2 className="mt-1 text-lg font-semibold leading-tight tracking-tight sm:text-xl">Take 60 seconds. Breathe, pray, re-center.</h2>
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Choose what is happening and take one small action before you react.

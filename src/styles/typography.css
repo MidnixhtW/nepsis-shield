@@ -11,4 +11,24 @@
   .scripture-text :where(strong, b) {
     font-weight: 600;
   }
+
+  /* Rubrics, as in the Church's service books: titles, directions and repeat marks in cinnabar red. */
+  .rubric {
+    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: hsl(var(--cinnabar));
+  }
+
+  /* The red initial that opens a prayer: put on the paragraph, it styles the first letter. */
+  .drop-cap::first-letter {
+    float: left;
+    margin: 0.06em 0.12em 0 0;
+    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-size: 3.1em;
+    font-weight: 600;
+    line-height: 0.82;
+    color: hsl(var(--cinnabar));
+  }
 }

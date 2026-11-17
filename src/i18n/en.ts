@@ -21,14 +21,12 @@ export const en = {
   "header.menu": "Open menu",
   "header.hourTitle": "The hour of prayer: {hour}",
 
-  "pray.eyebrow": "Pray",
-  "pray.title": "Make room for stillness.",
+  "pray.title": "Pray",
   "pray.lead": "For this hour",
-  "learn.eyebrow": "Learn",
-  "learn.title": "Grow with steadiness.",
+  "learn.title": "Learn",
   "learn.lead": "Continue",
-  "me.eyebrow": "Me",
   "me.title": "Your prayer life",
+  "read.title": "Read",
 } as const;
 
 export type MessageKey = keyof typeof en;

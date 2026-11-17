@@ -407,7 +407,7 @@ export default function PhilokaliaGuide() {
                         key={`${message.role}-${index}`}
                         className={message.role === "guide" ? "rounded-2xl border border-border/60 bg-muted/25 p-4" : "rounded-2xl border border-primary/20 bg-primary/10 p-4"}
                       >
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                        <p className="text-xs font-semibold text-muted-foreground">
                           {message.role === "guide" ? "Philokalia Guide" : "You"}
                         </p>
                         <p className="mt-2 whitespace-pre-line text-sm leading-relaxed">{message.text}</p>

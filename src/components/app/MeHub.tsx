@@ -33,7 +33,7 @@ function Row({ to, icon: Icon, label, hint, trailing }: { to: string; icon: Comp
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <Card className="rounded-3xl border p-2 sm:p-3">
-      <h3 className="px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{title}</h3>
+      <h3 className="px-3 pb-1 pt-2 text-xs font-semibold text-muted-foreground">{title}</h3>
       {children}
     </Card>
   );
@@ -58,8 +58,7 @@ export function MeHub() {
     <div className="mx-auto grid w-full max-w-3xl gap-4 sm:gap-5">
       {/* Settings has one home, the App list below; the header menu covers search and themes on every screen. */}
       <div className="px-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{t("me.eyebrow")}</p>
-        <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">{t("me.title")}</h2>
+        <h2 className="text-3xl sm:text-4xl">{t("me.title")}</h2>
       </div>
 
       <WatchfulnessLog />
@@ -108,7 +107,7 @@ export function MeHub() {
           <Row to="/about" icon={Info} label="About" hint="Purpose, sources and what's new" />
         </ul>
         <div className="flex justify-end px-3 pb-2 pt-1">
-          <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Version {CURRENT_VERSION}</span>
+          <span className="text-xs font-medium text-muted-foreground">Version {CURRENT_VERSION}</span>
         </div>
       </Section>
       <PolicyLinks />

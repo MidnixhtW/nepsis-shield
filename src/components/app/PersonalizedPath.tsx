@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, BookOpen, CheckCircle2, Clock, Compass, Hand, Heart, MoonStar, ShieldAlert, Sparkles } from "lucide-react";
+import { BookOpen, CheckCircle2, Clock, Compass, Hand, Heart, MoonStar, ShieldAlert, Sparkles } from "lucide-react";
 import { Link } from "react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -97,7 +97,7 @@ export function PersonalizedPath() {
       <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Personal path</p>
+            <p className="text-xs font-semibold text-primary">Personal path</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight">Tell the app what you need.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Pick your main need and available time. The app will give you a simple starting path.
@@ -145,7 +145,7 @@ export function PersonalizedPath() {
         </Card>
 
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Recommended</p>
+          <p className="text-xs font-semibold text-primary">Recommended</p>
           <h3 className="mt-1 text-xl font-semibold tracking-tight">Your {minutes}-minute path</h3>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             Start with {main.label.toLowerCase()}. Keep it small enough to do every day.
@@ -162,7 +162,6 @@ export function PersonalizedPath() {
                       <span className="block text-sm font-semibold">{item.label}</span>
                       <span className="mt-0.5 block whitespace-normal text-xs font-normal opacity-80">{item.line}</span>
                     </span>
-                    <ArrowRight className="ml-2 h-4 w-4 shrink-0" />
                   </Link>
                 </Button>
               );
