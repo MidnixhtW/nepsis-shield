@@ -96,8 +96,16 @@ export function AppShell({
 
   return (
     <div className="youth-app-shell relative min-h-dvh min-w-0 bg-background text-foreground">
+      {/* Safari does not move focus to the target of an in-page link, so focus main ourselves. */}
       <a
         href="#main-content"
+        onClick={(event) => {
+          const main = document.getElementById("main-content");
+          if (!main) return;
+          event.preventDefault();
+          main.focus();
+          main.scrollIntoView();
+        }}
         className="sr-only fixed left-3 top-3 z-50 rounded-sm bg-primary px-4 py-2 text-sm font-bold uppercase tracking-wider text-primary-foreground shadow-sm focus:not-sr-only"
       >
         Skip to content

@@ -29,13 +29,17 @@ for (const route of routes) {
   });
 }
 
-test("keyboard users can reveal and use the skip link", async ({ page }) => {
+test("keyboard users can reveal and use the skip link", async ({ page, browserName }) => {
   await page.goto("/today", { waitUntil: "domcontentloaded" });
   // Wait for the app to mount; a Tab pressed while only the loading screen exists has nothing to focus.
   await expect(page.locator("#main-content")).toBeVisible();
-  await page.keyboard.press("Tab");
   const skipLink = page.getByRole("link", { name: "Skip to content" });
+  // Safari reaches links only with Option+Tab, which WebKit under test does not reliably honor; there, focus the link
+  // directly and check the part Safari users depend on: it shows, and Enter moves focus to the content.
+  if (browserName === "webkit") await skipLink.focus();
+  else await page.keyboard.press("Tab");
   await expect(skipLink).toBeFocused();
+  await expect(skipLink).toBeInViewport();
   await skipLink.press("Enter");
   await expect(page.locator("#main-content")).toBeFocused();
 });
