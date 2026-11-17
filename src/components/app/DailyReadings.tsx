@@ -1,6 +1,6 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
-import { BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
+import { AArrowDown, AArrowUp, BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -17,7 +17,9 @@ import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
 import { useNavigate } from "react-router";
 import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
+import { prefsKey, type ReadPrefs } from "@/lib/bible/reader";
 import { markHabitComplete } from "@/lib/dailyHabits";
 
 function ReadingsSkeleton() {
@@ -48,20 +50,42 @@ function ReadingsSkeleton() {
   );
 }
 
+// One text size for Scripture: the same saved preference as the Bible reader, so a change here carries over there.
+const MIN_SIZE = 14;
+const MAX_SIZE = 22;
+
+function useScriptureSize() {
+  const [size, setSize] = useState(() => {
+    const saved = getStoredItem<ReadPrefs>(prefsKey())?.fontSize;
+    return saved ? Math.max(MIN_SIZE, Math.min(MAX_SIZE, saved)) : 17;
+  });
+  function change(step: number) {
+    setSize((current) => {
+      const next = Math.max(MIN_SIZE, Math.min(MAX_SIZE, current + step));
+      const saved = getStoredItem<ReadPrefs>(prefsKey());
+      setStoredItem(prefsKey(), { lineWidth: saved?.lineWidth ?? "normal", fontSize: next }, { ttlMs: 1000 * 60 * 60 * 24 * 365 });
+      return next;
+    });
+  }
+  return { size, change };
+}
+
 function ReadingCard({
   label,
   display,
   text,
   onReadInApp,
+  size,
 }: {
-
   label: string;
   display?: string;
   text: string;
   onReadInApp?: () => void;
+  size: number;
 }) {
+  // On phones the reading sits straight on the outer card (a rule above it, no inner box) so lines get the full width.
   return (
-    <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+    <div className="border-t border-border/60 pt-4 sm:rounded-2xl sm:border sm:border-border/60 sm:bg-muted/20 sm:p-4">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">{label}</p>
@@ -75,7 +99,7 @@ function ReadingCard({
       </div>
 
       {text ? (
-        <p className="scripture-text mt-3 whitespace-pre-wrap text-[1.05rem] text-foreground/90">
+        <p className="scripture-text mt-3 whitespace-pre-wrap text-foreground/90" style={{ fontSize: `${size}px` }}>
           {text}
         </p>
       ) : (
@@ -108,6 +132,7 @@ export function DailyReadings() {
     if (loaded) markHabitComplete("reading");
   }, [loaded]);
   const reading = useReadAloud();
+  const { size, change } = useScriptureSize();
   const listenTitle = "Today's Epistle and Gospel";
   const listening = reading.title === listenTitle;
 
@@ -132,7 +157,7 @@ export function DailyReadings() {
 
   return (
     <div className="grid gap-4">
-      <Card className={hallowCardClass}>
+      <Card className={hallowCardClass + " max-sm:px-4"}>
         <div className={hallowGlowClass} />
 
         <div className="flex items-start justify-between gap-4">
@@ -151,6 +176,16 @@ export function DailyReadings() {
             <BookOpen className="h-5 w-5 text-muted-foreground" />
           )}
         </div>
+        {q.data ? (
+          <div role="group" aria-label="Text size" className="mt-3 flex items-center gap-1">
+            <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Smaller text" disabled={size <= MIN_SIZE} onClick={() => change(-1)}>
+              <AArrowDown aria-hidden className="h-5 w-5" />
+            </Button>
+            <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Larger text" disabled={size >= MAX_SIZE} onClick={() => change(1)}>
+              <AArrowUp aria-hidden className="h-5 w-5" />
+            </Button>
+          </div>
+        ) : null}
 
         <Separator className="my-4" />
         <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
@@ -167,6 +202,7 @@ export function DailyReadings() {
                   label="Epistle"
                   display={q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display}
                   text={full}
+                  size={size}
                   onReadInApp={() =>
                     openRef(
                       q.data.readings.epistle?.display ?? q.data.readings.epistle?.short_display,
@@ -183,6 +219,7 @@ export function DailyReadings() {
                   label="Gospel"
                   display={q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display}
                   text={full}
+                  size={size}
                   onReadInApp={() =>
                     openRef(
                       q.data.readings.gospel?.display ?? q.data.readings.gospel?.short_display,
