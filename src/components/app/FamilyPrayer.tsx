@@ -96,7 +96,7 @@ function PrayersToLearn() {
           <li key={prayer.text} className="rounded-2xl border border-border/60 bg-background/45 p-4">
             <p className="scripture-text text-[1.08rem] leading-relaxed">{prayer.text}</p>
             <p className="mt-1 text-sm text-muted-foreground">{prayer.when}</p>
-            {prayer.source ? <p className="mt-1 text-[11px] text-muted-foreground">From {prayer.source}</p> : null}
+            {prayer.source ? <p className="mt-1 text-xs text-muted-foreground">From {prayer.source}</p> : null}
             {prayer.learnId ? (
               <Link to={`/learn?tab=byheart&prayer=${prayer.learnId}`} className="mt-2 inline-block text-sm font-semibold text-primary underline-offset-4 hover:underline">
                 Practice it by heart

@@ -42,7 +42,7 @@ export function DayIconBanner({ today, calendar, saints }: { today: Date; calend
               fileName="today.png"
             />
           </div>
-          <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
+          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
             Icon:{" "}
             <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">
               {icon.credit}

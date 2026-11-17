@@ -89,7 +89,7 @@ export function DivineLiturgyCompanion() {
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
         <div className="relative p-5 sm:p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-amber-500/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-icon-gold/10" />
 
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2">

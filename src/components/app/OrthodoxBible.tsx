@@ -669,7 +669,7 @@ export function OrthodoxBible() {
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground">{textAvailabilityNote}</p>
-                    <p className="text-[11px] text-muted-foreground">Tip: focus the reading text, then use J/K to change chapters.</p>
+                    <p className="text-xs text-muted-foreground">Tip: focus the reading text, then use J/K to change chapters.</p>
                   </div>
                 </div>
 
@@ -735,8 +735,8 @@ export function OrthodoxBible() {
                       className={
                         "rounded-full px-3 py-1 text-xs font-semibold " +
                         (browseSource === "bolls"
-                          ? "bg-sky-500/15 text-sky-800 dark:text-sky-200"
-                          : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-200")
+                          ? "bg-accent/[0.14] text-accent dark:text-accent"
+                          : "bg-success/[0.14] text-success dark:text-success")
                       }
                     >
                       {browseSource === "bolls" ? "Source: bolls.life" : "Source: bible-api.com"}
@@ -849,8 +849,8 @@ export function OrthodoxBible() {
                       className={
                         "rounded-full px-3 py-1 text-xs font-semibold " +
                         (refSource === "bolls"
-                          ? "bg-sky-500/15 text-sky-800 dark:text-sky-200"
-                          : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-200")
+                          ? "bg-accent/[0.14] text-accent dark:text-accent"
+                          : "bg-success/[0.14] text-success dark:text-success")
                       }
                     >
                       {refSource === "bolls" ? "Source: bolls.life" : "Source: bible-api.com"}

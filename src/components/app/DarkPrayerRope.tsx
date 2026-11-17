@@ -103,13 +103,13 @@ export function DarkPrayerRope({
       onContextMenu={(event) => event.preventDefault()}
     >
       <div className="pointer-events-none flex h-full flex-col items-center justify-between py-[max(2rem,env(safe-area-inset-top))] text-center">
-        <p className="text-[11px] tracking-wide text-[#2a2a2a]">Tap anywhere · hold to leave</p>
+        <p className="text-xs tracking-wide text-[#2a2a2a]">Tap anywhere · hold to leave</p>
         <p aria-live="off" className="text-5xl font-light tabular-nums text-[#262626]">{showCount ? (shownLabel ?? count) : ""}</p>
-        <p className="text-[11px] text-[#2a2a2a]">{footer ?? `A pulse every ${every}`}</p>
+        <p className="text-xs text-[#2a2a2a]">{footer ?? `A pulse every ${every}`}</p>
       </div>
       <button
         type="button"
-        className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] rounded-full px-3 py-2 text-[11px] text-[#2f2f2f]"
+        className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] rounded-full px-3 py-2 text-xs text-[#2f2f2f]"
         onPointerDown={(event) => event.stopPropagation()}
         onPointerUp={(event) => {
           event.stopPropagation();

@@ -178,8 +178,8 @@ export function DailyReflection() {
   const saveStatusClass = !saveEnabled
     ? "bg-muted text-muted-foreground"
     : locked
-      ? "bg-amber-500/12 text-amber-800 dark:text-amber-200"
-      : "bg-emerald-500/12 text-emerald-800 dark:text-emerald-200";
+      ? "bg-secondary/[0.58] text-liturgical-warm dark:text-liturgical-warm"
+      : "bg-success/[0.14] text-success dark:text-success";
 
   const prompt = useMemo(() => {
 
@@ -229,22 +229,22 @@ export function DailyReflection() {
             {/* Collapsible privacy/settings to reduce visual clutter */}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="privacy" className="border-none">
-                <AccordionTrigger className="rounded-2xl border border-amber-200/70 bg-amber-50/70 px-4 text-left text-amber-900 hover:no-underline">
+                <AccordionTrigger className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] px-4 text-left text-liturgical-warm hover:no-underline">
                   <span className="inline-flex items-center gap-2">
-                    <ShieldAlert className="h-4 w-4 text-amber-800" /> Privacy & saving
+                    <ShieldAlert className="h-4 w-4 text-liturgical-warm" /> Privacy & saving
                   </span>
                 </AccordionTrigger>
                 <AccordionContent className="pt-3">
-                  <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-4 text-amber-900">
-                    <p className="text-xs leading-relaxed text-amber-900/80">
+                  <div className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] p-4 text-liturgical-warm">
+                    <p className="text-xs leading-relaxed text-liturgical-warm">
                       Journal notes are highly sensitive. If you enable saving, notes are always encrypted and stored on this device. Your passphrase is required to read them and is never stored.
                     </p>
 
                     <div className="mt-3 grid gap-2">
-                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-amber-200/70 bg-white/60 px-4 py-3">
+                      <div className="flex items-center justify-between gap-3 rounded-2xl border border-icon-gold/[0.58] bg-white/60 px-4 py-3">
                         <div>
                           <p className="text-sm font-medium">Save on this device (encrypted)</p>
-                          <p className="text-xs text-amber-900/70">Off by default. Always encrypted when enabled.</p>
+                          <p className="text-xs text-liturgical-warm">Off by default. Always encrypted when enabled.</p>
                         </div>
                         <Switch aria-label="Save reflection encrypted on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
                       </div>
@@ -253,7 +253,7 @@ export function DailyReflection() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="rounded-2xl border-amber-200 bg-white/70 text-amber-900 hover:bg-white"
+                          className="rounded-2xl border-icon-gold/[0.58] bg-white/70 text-liturgical-warm hover:bg-white"
                           onClick={() => {
                             clearStoredByPrefix("reflection:");
                             setNote("");
@@ -264,30 +264,30 @@ export function DailyReflection() {
                         >
                           <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
                         </Button>
-                        <p className="text-xs text-amber-900/70">Notes auto-expire after 30 days.</p>
+                        <p className="text-xs text-liturgical-warm">Notes auto-expire after 30 days.</p>
                       </div>
                     </div>
 
                     {saveEnabled ? (
-                      <div className="mt-3 rounded-2xl border border-amber-200/70 bg-white/60 p-4">
+                      <div className="mt-3 rounded-2xl border border-icon-gold/[0.58] bg-white/60 p-4">
                         {legacyPlaintextNote !== null ? (
                           <div className="mb-3 rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-xs leading-relaxed text-destructive">
                             A legacy plaintext journal note was found. It will stay hidden until you enter a passphrase and encrypt it.
                           </div>
                         ) : null}
-                        <p className="text-xs font-semibold tracking-wide text-amber-900/80">
+                        <p className="text-xs font-semibold tracking-wide text-liturgical-warm">
                           Passphrase (session-only)
                         </p>
                         <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
                           <div className="relative flex-1">
-                            <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-amber-900/60" />
+                            <KeyRound className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-liturgical-warm" />
                             <Input
                               type="password"
                               aria-label="Reflection encryption passphrase"
                               value={passphrase}
                               onChange={(e) => setPassphrase(e.target.value)}
                               placeholder="Enter a strong passphrase"
-                              className="h-11 rounded-2xl border-amber-200 bg-white/70 pl-10"
+                              className="h-11 rounded-2xl border-icon-gold/[0.58] bg-white/70 pl-10"
                             />
 
                           </div>
@@ -301,7 +301,7 @@ export function DailyReflection() {
                           </Button>
                         </div>
                         <PassphraseMeter passphrase={passphrase} className="mt-3" />
-                        <p className="mt-2 text-xs text-amber-900/70">
+                        <p className="mt-2 text-xs text-liturgical-warm">
                           Use a strong 12+ character passphrase. Short or common passphrases are vulnerable if someone gets your device storage or an export.
                         </p>
 

@@ -6,7 +6,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-h1, h2, h3, .font-serif {
+h1, h2, h3, .font-display {
   font-family: 'Barlow Condensed', 'Arial Narrow', ui-sans-serif, sans-serif;
   font-weight: 700;
   letter-spacing: 0.015em;
@@ -125,7 +125,7 @@ h1, h2, h3, .font-serif {
 
   @media (prefers-reduced-motion: no-preference) {
     .water-page {
-      animation: water-page-rise 260ms ease-out both;
+      animation: water-page-rise 160ms ease-out both;
     }
   }
 }

@@ -13,7 +13,7 @@ export function FathersSayingCard({ today }: { today: Date }) {
         <figcaption className="mt-2 text-sm font-semibold text-muted-foreground">{saying.who}</figcaption>
       </figure>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-[11px] text-muted-foreground">{SAYINGS_SOURCE}</p>
+        <p className="text-xs text-muted-foreground">{SAYINGS_SOURCE}</p>
         <ShareCardButton card={{ eyebrow: "A word from the Fathers", text: saying.text, attribution: saying.who }} fileName="word-from-the-fathers.png" />
       </div>
     </Card>

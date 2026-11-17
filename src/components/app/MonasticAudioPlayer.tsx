@@ -110,7 +110,7 @@ export function MonasticAudioPlayer() {
             <span className="sr-only">Minimize player</span>
           </Button>
           <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">Vigil Sanctuary</p>
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary">Vigil Sanctuary</p>
             <p className="mt-1 text-xs text-muted-foreground">{currentTrack.category}</p>
           </div>
           <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => setOpen(false)}>

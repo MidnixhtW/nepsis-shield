@@ -1,4 +1,4 @@
-/* Refinements: text selection, transitions, page crossfade and high-contrast colors. */
+/* Refinements: text selection, transitions and high-contrast colors. The page-enter fade lives in foundation.css. */
 @layer base {
 
   ::selection {
@@ -11,21 +11,12 @@
     transition-timing-function: ease-out;
   }
 
-  .water-page {
-    animation: contemporary-crossfade 360ms ease-out both !important;
-  }
-
   html.a11y-high-contrast {
     --foreground: 0 0% 100%;
     --muted-foreground: 0 0% 86%;
     --border: 46 80% 70%;
     --ring: 46 90% 68%;
   }
-}
-
-@keyframes contemporary-crossfade {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 @layer components {
@@ -97,8 +88,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .water-page {
-    animation: none !important;
-  }
-}

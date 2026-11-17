@@ -314,7 +314,7 @@ export function DailyPrayerFlow() {
         className={
           "rounded-3xl border-border/60 p-5 shadow-sm transition-colors " +
           (readerPrefs.night
-            ? "bg-slate-950 text-slate-100"
+            ? "bg-card text-foreground"
             : readerPrefs.focus
               ? "bg-background"
               : "bg-card")
@@ -329,7 +329,7 @@ export function DailyPrayerFlow() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {done ? (
-              <Badge className="w-fit rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">
+              <Badge className="w-fit rounded-full bg-success/[0.14] px-3 py-1 text-xs font-semibold text-success dark:text-success">
                 <Check className="mr-1 h-3.5 w-3.5" /> Complete
               </Badge>
             ) : null}
@@ -352,7 +352,7 @@ export function DailyPrayerFlow() {
           className={
             "rounded-2xl border p-4 " +
             (readerPrefs.night
-              ? "border-slate-700 bg-slate-900/80"
+              ? "border-border/[0.72] bg-card"
               : readerPrefs.focus
                 ? "border-border/50 bg-background"
                 : "border-border/60 bg-muted/20")
@@ -420,7 +420,7 @@ export function DailyPrayerFlow() {
             aria-describedby={undefined}
             className={
               "fixed inset-0 z-[70] flex h-dvh flex-col text-foreground outline-none " +
-              (readerPrefs.night ? "bg-slate-950 text-slate-100" : "bg-background")
+              (readerPrefs.night ? "bg-card text-foreground" : "bg-background")
             }
           >
             {/* The light of this hour, behind the prayer. */}

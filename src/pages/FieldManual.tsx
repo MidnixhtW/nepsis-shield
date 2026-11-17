@@ -347,7 +347,7 @@ export default function FieldManual() {
                 For sacramental questions, confession preparation, fasting, Communion, or reception into Orthodoxy, speak with an Orthodox priest. If you are not Orthodox, you are welcome to use these prayers devotionally and to speak with your pastor or chaplain.
               </p>
             </div>
-            <div className="rounded-2xl border border-amber-300/50 bg-amber-500/10 p-4 text-amber-900 shadow-sm backdrop-blur dark:text-amber-100">
+            <div className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] p-4 text-liturgical-warm shadow-sm backdrop-blur dark:text-liturgical-warm">
               <p className="text-sm leading-relaxed">
                 If you may harm yourself or someone else, seek immediate help from emergency services, a trusted leader, chaplain, clinician, or crisis line. Prayer and professional care belong together.
               </p>

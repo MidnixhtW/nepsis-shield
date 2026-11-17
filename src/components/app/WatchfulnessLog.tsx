@@ -20,7 +20,7 @@ export function WatchfulnessLog() {
         </p>
       </div>
       <div className="mt-4 flex gap-2">
-        <ol aria-hidden className="grid grid-rows-7 gap-[3px] text-[9px] leading-[11px] text-muted-foreground">
+        <ol aria-hidden className="grid grid-rows-7 gap-[3px] text-xs leading-[11px] text-muted-foreground">
           {WEEKDAYS.map((day, index) => (
             <li key={day} className={cn(index % 2 === 1 && "invisible")}>{day.slice(0, 1)}</li>
           ))}

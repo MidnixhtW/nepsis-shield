@@ -229,7 +229,7 @@ function PatronDetail({ patron, today }: { patron: MyPatron; today: Date }) {
     <div className="grid gap-3 text-sm leading-relaxed">
       <p className="text-muted-foreground">{patron.life}</p>
       <blockquote className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
-        <p className="font-serif text-[15px] italic">"{patron.line}"</p>
+        <p className="font-serif text-base italic">"{patron.line}"</p>
         <p className="mt-1 text-xs text-muted-foreground">{patron.lineSource}</p>
       </blockquote>
       <p><span className="font-semibold">Today: </span>{patron.practice}</p>

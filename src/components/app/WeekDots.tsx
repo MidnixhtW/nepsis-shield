@@ -23,7 +23,7 @@ export function WeekDots() {
                 day.isToday && "ring-2 ring-accent/35 ring-offset-2 ring-offset-card",
               )}
             />
-            <span className={cn("text-[11px]", day.isToday ? "font-semibold text-foreground" : "text-muted-foreground")}>{day.weekday.slice(0, 2)}</span>
+            <span className={cn("text-xs", day.isToday ? "font-semibold text-foreground" : "text-muted-foreground")}>{day.weekday.slice(0, 2)}</span>
           </li>
         ))}
       </ol>

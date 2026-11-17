@@ -171,7 +171,7 @@ export function ReadingPlans() {
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-semibold tracking-tight">{p.title}</p>
                       {done ? (
-                        <Badge className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-200">
+                        <Badge className="rounded-full bg-success/[0.14] px-3 py-1 text-xs font-semibold text-success dark:text-success">
                           Done
                         </Badge>
                       ) : null}

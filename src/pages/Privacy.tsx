@@ -481,7 +481,7 @@ export default function Privacy() {
             </AlertDescription>
           </Alert>
 
-          <Alert className="mt-3 rounded-2xl border-amber-300/50 bg-amber-50/70 dark:bg-amber-950/20">
+          <Alert className="mt-3 rounded-2xl border-icon-gold/[0.58] bg-secondary/[0.58] dark:bg-secondary/[0.58]">
             <Shield className="h-4 w-4" />
             <AlertTitle className="text-sm font-semibold">Backup reminder</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
@@ -569,4 +569,4 @@ export default function Privacy() {
       </div>
     </PageContainer>
   );
-}
+}

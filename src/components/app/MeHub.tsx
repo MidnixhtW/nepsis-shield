@@ -116,7 +116,7 @@ export function MeHub() {
           <Button type="button" variant="ghost" size="sm" className="rounded-full px-2.5" onClick={openAppMenu}>
             <Menu className="mr-2 h-4 w-4" /> Menu, search and themes
           </Button>
-          <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">Version {CURRENT_VERSION}</span>
+          <span className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">Version {CURRENT_VERSION}</span>
         </div>
       </Section>
       <PolicyLinks />

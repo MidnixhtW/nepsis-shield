@@ -150,7 +150,7 @@ function StepTrack({ level }: { level: number }) {
       {STEPS.map((step, index) => (
         <li key={step} aria-current={index === level ? "step" : undefined} className="grid gap-1.5">
           <span className={cn("h-1.5 rounded-full", index < level ? "bg-primary" : index === level ? "bg-primary/60" : "bg-muted")} />
-          <span className={cn("text-[11px] leading-tight", index === level ? "font-semibold text-foreground" : "text-muted-foreground")}>{step}</span>
+          <span className={cn("text-xs leading-tight", index === level ? "font-semibold text-foreground" : "text-muted-foreground")}>{step}</span>
         </li>
       ))}
     </ol>
@@ -266,7 +266,7 @@ function PrayerPractice({ prayer }: { prayer: PrayerToLearn }) {
             <p className="mt-1 text-sm text-muted-foreground">{prayer.hint}</p>
           </div>
           <p className="rounded-2xl border border-primary/20 bg-primary/5 px-4 py-2 text-right">
-            <span className="block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Known</span>
+            <span className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">Known</span>
             <span className="text-xl font-semibold text-primary">{known} / {total}</span>
           </p>
         </div>
