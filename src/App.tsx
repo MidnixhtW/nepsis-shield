@@ -15,6 +15,7 @@ import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
 import { ReminderTapRouter } from "@/components/app/ReminderTapRouter";
+import { WidgetRouteRouter } from "@/components/app/WidgetRouteRouter";
 import { RouteMetaSync } from "@/components/app/RouteMetaSync";
 
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
@@ -70,6 +71,7 @@ const App = () => (
             <ScrollToTop />
             <RouteMetaSync />
             <ReminderTapRouter />
+            <WidgetRouteRouter />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
               <Route path="/" element={<Home />} />

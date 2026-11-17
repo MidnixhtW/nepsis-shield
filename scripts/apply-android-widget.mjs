@@ -1,7 +1,8 @@
 // Adds the "Today" home-screen widget to the generated Android project (run after `capacitor sync`).
 // The web app saves two weeks of widget days in Capacitor Preferences (see src/lib/widgetSnapshot.ts);
 // the widget reads them, shows today's, refreshes every 30 minutes and whenever the app is left,
-// and opens the app when tapped.
+// and opens the app when tapped. A "Pray now" line names the prayers for the hour, and its Begin button opens them:
+// MainActivity saves the route in Preferences ("widget:route"), which the web app reads and clears (WidgetRouteRouter).
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 
@@ -53,6 +54,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import org.json.JSONArray;
@@ -62,6 +64,18 @@ import org.json.JSONObject;
 public class TodayWidgetProvider extends AppWidgetProvider {
     private static final String PREFS = "CapacitorStorage";
     private static final String KEY = "widget:today";
+    /** Where Begin goes; read and cleared by the web app (src/components/app/WidgetRouteRouter.tsx). */
+    private static final String ROUTE_KEY = "widget:route";
+    private static final String EXTRA_ROUTE = "nepsis_route";
+
+    /** Called by MainActivity for every intent: keeps a Begin route for the web app to open. */
+    public static void stashRoute(Context context, Intent intent) {
+        if (intent == null) return;
+        String route = intent.getStringExtra(EXTRA_ROUTE);
+        if (route == null || !route.startsWith("/")) return;
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(ROUTE_KEY, route).apply();
+        intent.removeExtra(EXTRA_ROUTE);
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
@@ -113,6 +127,18 @@ public class TodayWidgetProvider extends AppWidgetProvider {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent open = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.widget_root, open);
+
+        // The prayers for the hour, as on the Pray tab: morning until noon, evening until eight, then night.
+        // The label can lag a boundary by up to the 30-minute refresh.
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String begin = hour >= 4 && hour < 12 ? "morning" : hour >= 12 && hour < 20 ? "evening" : "night";
+        String label = begin.equals("morning") ? "Morning prayers" : begin.equals("evening") ? "Evening prayers" : "Night prayers";
+        views.setTextViewText(R.id.widget_now, label);
+        Intent beginIntent = new Intent(context, MainActivity.class);
+        beginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        beginIntent.putExtra(EXTRA_ROUTE, "/pray?tab=daily&begin=" + begin);
+        PendingIntent beginPending = PendingIntent.getActivity(context, 1, beginIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_begin, beginPending);
         return views;
     }
 
@@ -164,6 +190,40 @@ write(join(resDir, "layout", "widget_today.xml"), `
         android:textColor="#C8C2AE"
         android:textSize="12sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_now"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="#EFE8D2"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_begin"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/widget_today_button"
+            android:gravity="center"
+            android:minWidth="72dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Begin"
+            android:contentDescription="Begin the prayers for this hour"
+            android:textColor="#1C2116"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/widget_saying"
         android:layout_width="match_parent"
@@ -196,13 +256,21 @@ write(join(resDir, "drawable", "widget_today_background.xml"), `
 </shape>
 `);
 
+write(join(resDir, "drawable", "widget_today_button.xml"), `
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#C9A85C" />
+    <corners android:radius="20dp" />
+</shape>
+`);
+
 write(join(resDir, "xml", "widget_today_info.xml"), `
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_today_description"
     android:initialLayout="@layout/widget_today"
     android:minWidth="250dp"
-    android:minHeight="110dp"
+    android:minHeight="130dp"
     android:minResizeWidth="180dp"
     android:minResizeHeight="80dp"
     android:previewLayout="@layout/widget_today"
@@ -254,6 +322,19 @@ if (!activitySource.includes("TodayWidgetProvider.updateAll")) {
     const patched = activitySource.replace(
       plain,
       `public class MainActivity extends BridgeActivity {
+    // A widget Begin tap carries a route; keep it for the web app before the page loads or resumes.
+    @Override
+    public void onCreate(android.os.Bundle savedInstanceState) {
+        TodayWidgetProvider.stashRoute(this, getIntent());
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onNewIntent(android.content.Intent intent) {
+        super.onNewIntent(intent);
+        TodayWidgetProvider.stashRoute(this, intent);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -263,7 +344,7 @@ if (!activitySource.includes("TodayWidgetProvider.updateAll")) {
     );
     writeFileSync(mainActivity, patched, "utf8");
   } else {
-    console.warn("MainActivity has custom code; the widget will refresh on its 30-minute schedule only.");
+    console.warn("MainActivity has custom code; the widget will refresh on its 30-minute schedule only, and Begin opens the app without its prayer.");
   }
 }
 
