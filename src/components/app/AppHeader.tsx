@@ -164,10 +164,10 @@ function HelpNowButton() {
           type="button"
           variant="ghost"
           aria-label={t("header.help.aria")}
-          className="h-10 gap-1.5 rounded-md border border-accent/45 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-accent/70 hover:bg-accent/10 hover:text-accent sm:px-3"
+          className="h-10 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
         >
           <LifeBuoy className="h-[18px] w-[18px] text-accent" />
-          <span className="text-sm font-bold">{t("header.help")}</span>
+          <span className="text-sm font-semibold">{t("header.help")}</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="flex h-dvh w-[min(26rem,100vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0">
@@ -241,19 +241,20 @@ export function AppHeader() {
       </Link>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        {/* The reset is one tap from every screen, for the moment pressure rises. */}
+        {/* Reset, Help and the menu share one quiet style. The reset stays one tap from every screen, for the moment
+            pressure rises; Help holds the crisis resources. */}
         <GroundResetButton
           variant="ghost"
           aria-label={t("header.reset.aria")}
-          className="h-10 gap-1.5 rounded-md border border-primary/30 bg-card/75 px-2.5 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary sm:px-3"
+          className="h-10 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
         >
-          <HeartPulse className="h-[18px] w-[18px] text-primary" />
-          <span className="hidden text-sm font-bold sm:inline">Reset</span>
+          <HeartPulse className="h-[18px] w-[18px] text-accent" />
+          <span className="hidden text-sm font-semibold sm:inline">Reset</span>
         </GroundResetButton>
         <HelpNowButton />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
-            <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-md border border-primary/30 bg-card/75 text-foreground shadow-sm backdrop-blur hover:border-primary/55 hover:bg-primary/10 hover:text-primary">
+            <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-full text-foreground hover:bg-muted/60">
               <Menu className="h-[18px] w-[18px]" />
 
               <span className="sr-only">{t("header.menu")}</span>

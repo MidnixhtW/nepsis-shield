@@ -34,34 +34,8 @@
 
   .premium-page-header,
   .section-intro {
-    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/[0.65] p-4 shadow-sm backdrop-blur-xl sm:p-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-6;
-    box-shadow:
-      inset 0 1px 0 hsl(var(--icon-gold) / 0.14),
-      0 22px 70px hsl(var(--background) / 0.3);
-  }
-
-  .premium-page-header::before,
-  .section-intro::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: linear-gradient(90deg, hsl(var(--card) / 0.96) 0%, hsl(var(--card) / 0.84) 48%, hsl(var(--card) / 0.38) 100%);
-    opacity: 0.92;
-  }
-
-  .premium-page-header::after,
-
-  .section-intro::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    border-top: 1px solid hsl(var(--icon-gold) / 0.28);
-    background:
-      linear-gradient(90deg, hsl(var(--byzantine-blue) / 0.08), transparent 34%),
-      linear-gradient(270deg, hsl(var(--cinnabar) / 0.08), transparent 25%);
+    /* A plain surface: no gradient wash or corner watermark, just a border and the page's own heading. */
+    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-6;
   }
 
   .premium-eyebrow {

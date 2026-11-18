@@ -242,13 +242,12 @@
 }
 
 @layer utilities {
+  /* The season's colour, solid: no gradient and no glow on primary buttons. */
   html.seasonal :is(.bg-primary, .gold-foil) {
     background-color: hsl(var(--season-solid)) !important;
-    background-image: linear-gradient(160deg, hsl(var(--season-solid)), hsl(var(--season-solid) / 0.86)) !important;
+    background-image: none !important;
     color: hsl(var(--season-solid-foreground)) !important;
-    box-shadow:
-      inset 0 1px 0 hsl(var(--accent) / 0.28),
-      0 8px 22px hsl(var(--season-solid) / 0.28) !important;
+    box-shadow: none !important;
   }
 
   html.seasonal :is(.bg-primary, .gold-foil) :is(svg, .text-primary-foreground) {

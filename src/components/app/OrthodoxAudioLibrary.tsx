@@ -100,7 +100,7 @@ export function OrthodoxAudioLibrary() {
 
   return (
     <div className="grid gap-6">
-      <Card className="candlelight-card overflow-hidden rounded-[2rem] border p-5 shadow-[0_24px_80px_hsl(var(--accent)/0.10)] sm:p-7">
+      <Card className="candlelight-card overflow-hidden rounded-[2rem] border p-5 sm:p-7">
         <div className="relative">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -118,7 +118,7 @@ export function OrthodoxAudioLibrary() {
                 Enter a quiet, full-screen player for guided prayer, chant, transcripts, ambient stillness, and a sleep-friendly timer.
               </p>
             </div>
-            <Button type="button" className="gold-foil h-12 rounded-full px-6 font-bold text-primary-foreground shadow-[0_18px_55px_hsl(var(--accent)/0.24)] transition-transform duration-200 hover:scale-[1.03] active:scale-95" onClick={openSanctuary}>
+            <Button type="button" className="h-12 rounded-full px-6 font-bold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-95" onClick={openSanctuary}>
               <PlayCircle className="mr-2 h-5 w-5" /> Enter sanctuary
             </Button>
           </div>
@@ -127,7 +127,7 @@ export function OrthodoxAudioLibrary() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {shelves.map((shelf) => (
-          <Card key={shelf.title} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_20px_60px_hsl(var(--accent)/0.10)]">
+          <Card key={shelf.title} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/25">
 
             <div className="flex items-start gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary shadow-inner">

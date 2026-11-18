@@ -119,7 +119,7 @@ export function RuleOfVigilanceCard({
           ) : null}
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
           {onNavigate ? (
-            <Button type="button" className="gold-foil mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
+            <Button type="button" className="mt-6 h-12 rounded-full px-6 font-bold text-primary-foreground" onClick={begin}>
               {rule.primaryAction}
             </Button>
           ) : (

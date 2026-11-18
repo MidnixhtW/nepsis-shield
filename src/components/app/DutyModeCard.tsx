@@ -77,9 +77,9 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       reset: "border-primary/20 bg-primary/10 text-liturgical-warm dark:text-liturgical-warm",
       tag: "bg-primary/10 text-liturgical-warm dark:text-liturgical-warm",
       checklist: "border-primary/25 text-liturgical-warm dark:text-liturgical-warm",
-      primaryButton: "gold-foil text-primary-foreground hover:brightness-110",
+      primaryButton: "bg-primary text-primary-foreground hover:brightness-110",
       modeButton: "border-primary/20 hover:bg-primary/10 hover:text-primary",
-      modeButtonActive: "gold-foil border-primary text-primary-foreground hover:brightness-110",
+      modeButtonActive: "bg-primary border-primary text-primary-foreground hover:brightness-110",
     },
   },
   law: {

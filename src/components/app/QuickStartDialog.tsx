@@ -218,7 +218,7 @@ function SelectionCard({
       aria-pressed={multiple ? selected : undefined}
       className={cn(
         "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
-        "bg-card/60 shadow-[0_18px_55px_hsl(var(--accent)/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
+        "bg-card/60 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
     >
@@ -229,7 +229,7 @@ function SelectionCard({
         <span
           className={cn(
             "grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all",
-            selected ? "gold-foil border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
+            selected ? "bg-primary border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
           )}
         >
           {order ? <span className="text-sm font-bold">{order}</span> : <Check className="h-4 w-4" />}
@@ -475,7 +475,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           {step === "welcome" ? (
             <section className="mx-auto max-w-3xl text-center">
               {/* The same mark as the header, drawn in the active theme's colors, so it never clashes with the palette. */}
-              <div className="premium-icon-mark mx-auto !h-24 !w-24 shadow-[0_24px_48px_hsl(var(--primary)/0.22)]">
+              <div className="premium-icon-mark mx-auto !h-24 !w-24">
                 <OrthodoxCrossIcon className="h-12 w-12" strokeWidth={1.4} />
               </div>
               <p className="mt-8 text-xs font-semibold text-primary">Nepsis Shield</p>
@@ -643,7 +643,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           </div>
           <Button
             type="button"
-            className="gold-foil h-14 flex-1 rounded-full text-base font-bold text-primary-foreground disabled:opacity-50 sm:max-w-sm"
+            className="h-14 flex-1 rounded-full text-base font-bold text-primary-foreground disabled:opacity-50 sm:max-w-sm"
             onClick={next}
             disabled={step === "need" && selectedNeeds.length === 0}
           >

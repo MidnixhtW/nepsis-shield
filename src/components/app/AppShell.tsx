@@ -1,6 +1,5 @@
 import { type ComponentType, type ReactNode, useMemo, useState } from "react";
 import { UserRound } from "lucide-react";
-import { ByzantineDivider } from "@/components/app/ByzantineOrnament";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { CenserIcon, ChurchDomeIcon, GospelBookIcon } from "@/components/app/OrthodoxMotifs";
 import { cn } from "@/lib/utils";
@@ -58,7 +57,7 @@ function ShellNavigation({
               value={key}
               aria-label={t(meta.aria)}
               className={cn(
-                "w-full justify-center whitespace-nowrap rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_8px_24px_hsl(var(--primary)/0.22)]",
+                "w-full justify-center whitespace-nowrap rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:",
                 desktop ? "h-10" : "h-12",
               )}
             >
@@ -119,7 +118,7 @@ export function AppShell({
         <div className="absolute inset-x-0 top-0 h-px bg-primary/35" />
       </div>
 
-      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 shadow-[0_10px_35px_hsl(var(--primary)/0.12)] backdrop-blur-xl">
+      <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-6xl items-center gap-6 pb-3.5 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(0.875rem,env(safe-area-inset-top))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8">
           <div className="min-w-0 flex-1">{header}</div>
           <div className="hidden w-[34rem] shrink-0 min-[1120px]:block">
@@ -133,7 +132,6 @@ export function AppShell({
         tabIndex={-1}
         className={cn("water-page relative z-10 mx-auto w-full max-w-6xl pb-[calc(7.5rem+env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-5 sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] sm:pt-7 lg:px-8 lg:pt-9 min-[1120px]:pb-12", reading && "pb-[calc(11.5rem+env(safe-area-inset-bottom))] min-[1120px]:pb-28")}
       >
-        <ByzantineDivider className="mb-8 hidden opacity-45 lg:flex" />
         {children}
       </main>
 
