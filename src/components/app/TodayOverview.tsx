@@ -12,6 +12,7 @@ import { RuleOfVigilanceCard } from "@/components/app/RuleOfVigilanceCard";
 import { SeasonJourneyCard } from "@/components/app/SeasonJourneyCard";
 import { SetupRuleCard, isRuleSetUp } from "@/components/app/SetupRuleCard";
 import { TodayLamps } from "@/components/app/TodayLamps";
+import { ReminderOffer } from "@/components/app/ReminderOffer";
 import { ChurchYearLookBack } from "@/components/app/ChurchYearLookBack";
 import { BackupReminderCard } from "@/components/app/BackupReminderCard";
 import { MemorialsCard } from "@/components/app/MemorialsCard";
@@ -56,6 +57,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     <ChurchYearLookBack today={today} calendar={settings.calendarMode} />
     <PrayNowCard />
     <SetupRuleCard />
+    {/* Only once setup is done, so a newcomer sees one invitation at a time. */}
+    {isRuleSetUp() ? <ReminderOffer /> : null}
     <div className="grid items-start gap-5 sm:gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
       <div className="grid min-w-0 gap-5 sm:gap-6">
         <TodayMoments

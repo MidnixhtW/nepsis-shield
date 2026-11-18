@@ -37,6 +37,10 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
+import { Switch } from "@/components/ui/switch";
+import { nativeRemindersAvailable } from "@/lib/systemPrayerReminders";
+import { turnOnPrayerReminder } from "@/lib/prayerReminderPrefs";
+import { showSuccess } from "@/utils/toast";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { useSettings } from "@/hooks/useSettings";
 import type { CalendarMode } from "@/lib/settings";
@@ -321,6 +325,11 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
   const [selectedRhythm, setSelectedRhythm] = useState<VigilanceRhythm>("morning");
+  // In the Android app, the rhythm step offers a reminder for the prayers it leads to. Off until the person turns it on.
+  const canRemind = nativeRemindersAvailable();
+  const [remind, setRemind] = useState(false);
+  const reminderKey = selectedRhythm === "evening" ? "night" : "morning";
+  const [remindAt, setRemindAt] = useState<Record<"morning" | "night", string>>({ morning: "07:00", night: "21:30" });
   const scrollArea = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -379,6 +388,12 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
     setStoredResponderMode(selectedRole);
     setStoredRuleOfVigilance(rule);
     setStoredItem(ONBOARDING_KEY, true);
+    if (canRemind && remind) {
+      const time = remindAt[reminderKey];
+      void turnOnPrayerReminder(reminderKey, time).then((result) => {
+        if (result.ok) showSuccess(`${reminderKey === "night" ? "Night" : "Morning"} prayer reminder set for ${time}.`);
+      });
+    }
     setOpen(false);
     navigate("/today");
   }
@@ -590,6 +605,22 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   />
                 ))}
               </div>
+              {canRemind ? (
+                <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3">
+                  <Switch id="setup-remind" checked={remind} onCheckedChange={setRemind} />
+                  <label htmlFor="setup-remind" className="text-sm font-semibold">
+                    Remind me for {reminderKey === "night" ? "night prayers" : "morning prayers"} at
+                  </label>
+                  <input
+                    type="time"
+                    value={remindAt[reminderKey]}
+                    disabled={!remind}
+                    aria-label="Reminder time"
+                    onChange={(event) => setRemindAt((current) => ({ ...current, [reminderKey]: event.target.value || current[reminderKey] }))}
+                    className="h-11 rounded-xl border border-input bg-background px-3 text-sm disabled:opacity-50"
+                  />
+                </div>
+              ) : null}
               <div className="mt-6"><RuleSoFar rule={rule} /></div>
             </section>
           ) : null}
