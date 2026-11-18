@@ -10,11 +10,12 @@ const FAKE_DAY = {
   tone: 3,
 };
 
-test("Today switches between Standard, Short and the one-minute Watch rule", async ({ page }) => {
+test("the length chosen in the prayer is the one Today names and begins", async ({ page }) => {
+  await page.goto("/pray?tab=daily");
+  await page.getByRole("button", { name: /Length and reading options/ }).click();
+  await page.getByRole("radiogroup", { name: "Prayer rule length" }).getByRole("radio", { name: "Watch (1 min)" }).click();
   await page.goto("/today");
-  const rule = page.getByRole("radiogroup", { name: "Rule for today" });
-  await rule.getByRole("radio", { name: "Watch · 1 min" }).click();
-  await expect(page.getByText(/About a minute\./)).toBeVisible();
+  await expect(page.getByText(/The Watch rule, about a minute\./)).toBeVisible();
   await page.getByRole("link", { name: /^Begin/ }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByText(/Watch rule · 1 \//)).toBeVisible();

@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { SAYINGS_SOURCE, sayingForDay } from "@/content/fathersSayings";
 import { ShareCardButton } from "@/components/app/ShareCardButton";
 
@@ -6,16 +5,16 @@ import { ShareCardButton } from "@/components/app/ShareCardButton";
 export function FathersSayingCard({ today }: { today: Date }) {
   const saying = sayingForDay(today);
   return (
-    <Card className="rounded-3xl border p-5 sm:p-6" role="region" aria-label="A word from the Fathers">
-      <h2 className="text-sm font-semibold text-muted-foreground">A word from the Fathers</h2>
+    <section className="border-t border-border/60 px-1 py-7" role="region" aria-label="A word from the Fathers">
+      <h2 className="text-2xl text-cinnabar">A word from the Fathers</h2>
       <figure className="mt-3">
-        <blockquote className="scripture-text text-[1.05rem] leading-relaxed">{saying.text}</blockquote>
-        <figcaption className="mt-2 text-sm font-semibold text-muted-foreground">{saying.who}</figcaption>
+        <blockquote className="scripture-text text-xl leading-relaxed">{saying.text}</blockquote>
+        <figcaption className="mt-2 text-sm font-semibold text-foreground/80">{saying.who}</figcaption>
       </figure>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-xs text-muted-foreground">{SAYINGS_SOURCE}</p>
+        <p className="text-sm text-foreground/70">{SAYINGS_SOURCE}</p>
         <ShareCardButton card={{ eyebrow: "A word from the Fathers", text: saying.text, attribution: saying.who }} fileName="word-from-the-fathers.png" />
       </div>
-    </Card>
+    </section>
   );
 }

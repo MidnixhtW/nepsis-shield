@@ -382,8 +382,9 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
     }
 
     return (
-      <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-7" aria-labelledby="season-journey-title">
-        <h2 id="season-journey-title" className="text-3xl">{day.title}</h2>
+      <section className="border-t border-border/60 px-1 py-7" aria-labelledby="season-journey-title">
+        <p className="text-sm font-semibold text-cinnabar">The fast</p>
+        <h2 id="season-journey-title" className="mt-1 text-2xl sm:text-3xl">{day.title}</h2>
         <div className="mt-4">
           <DayBody day={day} />
         </div>
@@ -427,7 +428,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
             </div>
           </>
         ) : null}
-      </Card>
+      </section>
     );
   }
 
