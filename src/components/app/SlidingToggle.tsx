@@ -63,8 +63,13 @@ export function SlidingToggle<T extends string>({
       {box ? (
         <span
           aria-hidden
-          className="absolute left-0 top-0 rounded-full bg-accent/15 ring-1 ring-accent/50 transition-[transform,width] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] motion-reduce:transition-none"
-          style={{ width: box.width, height: box.height, transform: `translate(${box.left}px, ${box.top}px)` }}
+          className="absolute left-0 top-0 rounded-full bg-accent/15 ring-1 ring-accent/50 transition-[transform,width] duration-300 motion-reduce:transition-none"
+          style={{
+            width: box.width,
+            height: box.height,
+            transform: `translate(${box.left}px, ${box.top}px)`,
+            transitionTimingFunction: "cubic-bezier(0.34, 1.3, 0.64, 1)",
+          }}
         />
       ) : null}
       {options.map((option) => {
