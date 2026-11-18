@@ -17,6 +17,7 @@ import {
   useResponderMode,
   type ResponderMode,
 } from "@/lib/responderMode";
+import { BreathingRing } from "@/components/app/BreathingRing";
 
 const groundingLines: Record<ResponderMode, string> = {
   military: "Mission pause: regain breath, check your buddy, return to lawful next action.",
@@ -79,6 +80,7 @@ export function GroundResetPanel({ onExit, inDialog = false }: { onExit: () => v
       </div>
 
       <div className={cn("mt-5 rounded-3xl border p-5 text-lg leading-relaxed", theme.soft)}>
+        {stepIndex === 0 ? <BreathingRing /> : null}
         {current.body}
       </div>
       <CrisisResources />
