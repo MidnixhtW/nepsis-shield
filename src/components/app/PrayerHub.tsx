@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { BookOpen, Flower2, HeartHandshake, Home, Moon, MoonStar, Sparkles, Sun, Sunset } from "lucide-react";
+import { Flower2, Home, Moon, MoonStar, Sun, Sunset } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
-import { CenserIcon, VigilLampIcon } from "@/components/app/OrthodoxMotifs";
+import { CenserIcon, ChaliceIcon, GospelBookIcon, PrayerRopeIcon, ThreeBarCrossIcon } from "@/components/app/OrthodoxMotifs";
 import { DailyPrayerFlow } from "@/components/app/DailyPrayerFlow";
 import { PrayerRule } from "@/components/app/PrayerRule";
 import { PrayerBook } from "@/components/app/PrayerBook";
@@ -34,16 +34,16 @@ const launcher: LauncherGroup[] = [
       { to: "/pray?tab=daily&begin=morning", label: "Morning prayers", hint: "Offer the day to God", icon: Sun },
       { to: "/pray?tab=daily&begin=evening", label: "Evening prayers", hint: "Give thanks, ask forgiveness", icon: Sunset },
       { to: "/pray?tab=daily&begin=night", label: "Night prayers", hint: "Into Thy hands, O Lord", icon: MoonStar },
-      { to: "/pray?tab=counter", label: "Jesus Prayer", hint: "Prayer rope and stillness", icon: VigilLampIcon },
+      { to: "/pray?tab=counter", label: "Jesus Prayer", hint: "Prayer rope and stillness", icon: PrayerRopeIcon },
     ],
   },
   {
     title: "With the Church",
     tiles: [
       { to: "/pray?tab=services", label: "Services", hint: "Compline, the Hours, Akathist, Panikhida", icon: CenserIcon },
-      { to: "/pray?tab=prayers", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: BookOpen },
-      { to: "/pray?tab=prep", label: "Confession", hint: "Examine the heart", icon: HeartHandshake },
-      { to: "/pray?tab=communion", label: "Holy Communion", hint: "Before and after", icon: Sparkles },
+      { to: "/pray?tab=prayers", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: GospelBookIcon },
+      { to: "/pray?tab=prep", label: "Confession", hint: "Examine the heart", icon: ThreeBarCrossIcon },
+      { to: "/pray?tab=communion", label: "Holy Communion", hint: "Before and after", icon: ChaliceIcon },
     ],
   },
   {

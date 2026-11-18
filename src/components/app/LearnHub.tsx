@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router";
-import { BookMarked, BookHeart, DoorOpen, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, ScrollText, Shield } from "lucide-react";
-import { ChurchDomeIcon, SaintHaloIcon } from "@/components/app/OrthodoxMotifs";
+import { BookMarked, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, Shield } from "lucide-react";
+import { ChurchDomeIcon, GospelBookIcon, IconPanelIcon, SaintHaloIcon, ThreeBarCrossIcon } from "@/components/app/OrthodoxMotifs";
 import { continueTile, LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -37,13 +37,13 @@ function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
       title: "Start",
       tiles: [
         { to: "/learn?tab=path", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
-        { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: DoorOpen },
+        { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon },
       ],
     },
     {
       title: "Faith",
       tiles: [
-        { to: "/learn?tab=byheart", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: ScrollText },
+        { to: "/learn?tab=byheart", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: GospelBookIcon },
         { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
       ],
     },
@@ -57,7 +57,7 @@ function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
     {
       title: "Library",
       tiles: [
-        { to: "/learn?tab=stories", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: BookHeart },
+        { to: "/learn?tab=stories", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: IconPanelIcon },
         { to: "/saints", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
         serving
           ? { to: "/learn?tab=serve", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }

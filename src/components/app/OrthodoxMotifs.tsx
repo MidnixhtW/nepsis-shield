@@ -51,3 +51,51 @@ export function SaintHaloIcon({ className, ...props }: MotifProps) {
     </svg>
   );
 }
+
+// A prayer rope (chotki): a ring of knots with the cross and tassel below.
+export function PrayerRopeIcon({ className, ...props }: MotifProps) {
+  const knots = Array.from({ length: 10 }, (_, index) => {
+    const angle = (index / 10) * Math.PI * 2 - Math.PI / 2;
+    return [12 + 6.2 * Math.cos(angle), 9 + 6.2 * Math.sin(angle)] as const;
+  });
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      {knots.map(([cx, cy], index) => (
+        <circle key={index} cx={cx} cy={cy} r={index === 5 ? 1.4 : 1.05} stroke="currentColor" strokeWidth="1.2" />
+      ))}
+      <path d="M12 16.4v5.1M10.4 18h3.2" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// The chalice of Holy Communion.
+export function ChaliceIcon({ className, ...props }: MotifProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      <path d="M6.5 4h11c0 4.6-2.4 7.6-5.5 7.6S6.5 8.6 6.5 4Z" stroke="currentColor" strokeWidth="1.55" strokeLinejoin="round" />
+      <path d="M12 11.6v6.2M8.2 21h7.6M9.4 21c.4-1.7 1.3-2.9 2.6-3.2 1.3.3 2.2 1.5 2.6 3.2" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 5.6v3.6M10.4 7.1h3.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity=".7" />
+    </svg>
+  );
+}
+
+// The Orthodox cross: a short bar above, the crossbar, and the slanted footrest.
+export function ThreeBarCrossIcon({ className, ...props }: MotifProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      <path d="M12 2.5v19M9.6 5.5h4.8M7 9.2h10M9.2 16.8l5.6-1.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// An icon panel: a board with a haloed figure, for the saints' lives and stories.
+export function IconPanelIcon({ className, ...props }: MotifProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
+      <rect x="4.5" y="2.5" width="15" height="19" rx="1.6" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="12" cy="9" r="3.6" stroke="currentColor" strokeWidth="1.15" opacity=".65" />
+      <circle cx="12" cy="9.4" r="1.9" stroke="currentColor" strokeWidth="1.35" />
+      <path d="M7.8 18.5c.4-2.9 1.9-4.4 4.2-4.4s3.8 1.5 4.2 4.4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
