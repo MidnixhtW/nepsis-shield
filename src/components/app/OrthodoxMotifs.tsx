@@ -79,11 +79,12 @@ export function ChaliceIcon({ className, ...props }: MotifProps) {
   );
 }
 
-// The Orthodox cross: a short bar above, the crossbar, and the slanted footrest.
+// The Orthodox cross: the title board above, the crossbar, and the footrest. The footrest rises toward the viewer's
+// left, Christ's right, where the penitent thief was, as on the app's other crosses.
 export function ThreeBarCrossIcon({ className, ...props }: MotifProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true" {...props}>
-      <path d="M12 2.5v19M9.6 5.5h4.8M7 9.2h10M9.2 16.8l5.6-1.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M12 2.5v19M9.6 5.5h4.8M7 9.2h10M9.2 15.2l5.6 1.9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }
