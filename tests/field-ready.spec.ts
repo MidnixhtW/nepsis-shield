@@ -12,7 +12,7 @@ const FAKE_DAY = {
 
 test("Today switches between Standard, Short and the one-minute Watch rule", async ({ page }) => {
   await page.goto("/today");
-  const rule = page.getByRole("group", { name: "Rule for today" });
+  const rule = page.getByRole("radiogroup", { name: "Rule for today" });
   await rule.getByRole("radio", { name: "Watch · 1 min" }).click();
   await expect(page.getByText(/About a minute\./)).toBeVisible();
   await page.getByRole("link", { name: /^Begin/ }).click();
@@ -51,6 +51,26 @@ test("Watchfulness mode turns the screen black and counts taps anywhere", async 
   await expect(rope).toHaveAttribute("aria-label", /2 knots/);
   await page.keyboard.press("Escape");
   await expect(rope).toHaveCount(0);
+});
+
+test("the prayer rope counts knots pulled past the line, and waits at a marker when asked", async ({ page }) => {
+  await page.goto("/pray?tab=counter");
+  await page.getByRole("group", { name: "Pulse every" }).getByRole("radio", { name: "10", exact: true }).click();
+  await page.getByRole("switch", { name: "Pause at each marker" }).click();
+  await page.getByRole("radiogroup", { name: "How to count" }).getByRole("radio", { name: "Pull the rope" }).click();
+  const rope = page.getByRole("button", { name: /^Prayer rope, 0 knots/ });
+  // Three knots' worth of pull, in small steps as a thumb moves.
+  const box = (await rope.boundingBox())!;
+  await page.mouse.move(box.x + box.width / 2, box.y + 40);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2, box.y + 40 + 52 * 3 + 10, { steps: 12 });
+  await page.mouse.up();
+  await expect(page.getByRole("button", { name: /^Prayer rope, 3 knots/ })).toBeVisible();
+  // The keyboard counts too, up to the marker at 10, where the rope waits for the held cross.
+  for (let i = 0; i < 9; i += 1) await page.keyboard.press("ArrowDown");
+  await expect(page.getByRole("button", { name: "Prayer rope, held at the marker" })).toBeVisible();
+  await page.getByRole("button", { name: "Hold to continue" }).press("Enter");
+  await expect(page.getByRole("button", { name: /^Prayer rope, 10 knots/ })).toBeVisible();
 });
 
 test.describe("offline days", () => {
