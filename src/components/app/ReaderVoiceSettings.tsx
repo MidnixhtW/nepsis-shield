@@ -9,6 +9,8 @@ import { spokenText } from "@/lib/narrationText";
 import { canReadAloud, startNarration } from "@/lib/readAloud";
 import { onOfflineAudioChange, readerClipUrls, removeReaderOffline, saveReaderOffline, savedClipCount } from "@/lib/offlineAudio";
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { setIsonEnabled, useIsonEnabled } from "@/lib/ison";
 
 // The opening of the daily prayers, as a sample of each reader.
 const SAMPLE = shortFlows.morning[0].body;
@@ -74,6 +76,7 @@ function OfflineReader({ reader, name }: { reader: ReaderId; name: string }) {
 // Settings: who reads the prayers and stories aloud.
 export function ReaderVoiceSettings() {
   const [reader, setReader] = useReader();
+  const ison = useIsonEnabled();
 
   function sample(id: ReaderId) {
     startNarration(`Sample: ${READERS.find((item) => item.id === id)?.name}`, [{ text: spokenText(SAMPLE), audio: clipUrl(id, SAMPLE) }]);
@@ -128,6 +131,15 @@ export function ReaderVoiceSettings() {
           );
         })}
       </div>
+      <label className="mt-4 flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/45 p-4">
+        <span className="min-w-0">
+          <span className="block text-sm font-semibold">Ison under the reading</span>
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            A quiet held note beneath the prayers read aloud, as in Byzantine chant. Made on your phone; nothing to download.
+          </span>
+        </span>
+        <Switch aria-label="Ison under the reading" checked={ison} onCheckedChange={setIsonEnabled} />
+      </label>
       {reader !== "device" ? <OfflineReader reader={reader} name={READERS.find((item) => item.id === reader)?.name ?? "Reader"} /> : null}
     </Card>
   );

@@ -17,6 +17,7 @@ import { AudioProvider } from "@/components/app/AudioProvider";
 import { ReminderTapRouter } from "@/components/app/ReminderTapRouter";
 import { WidgetRouteRouter } from "@/components/app/WidgetRouteRouter";
 import { ParishLinkReceiver } from "@/components/app/ParishLinkReceiver";
+import { IsonSync } from "@/components/app/IsonSync";
 import { RouteMetaSync } from "@/components/app/RouteMetaSync";
 
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
@@ -74,6 +75,7 @@ const App = () => (
             <ReminderTapRouter />
             <WidgetRouteRouter />
             <ParishLinkReceiver />
+            <IsonSync />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
               <Route path="/" element={<Home />} />
