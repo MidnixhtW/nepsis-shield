@@ -11,6 +11,7 @@ import {
   currentSeason,
   journeyDay,
   nextSeason,
+  FEAST_AFTER_FAST,
   recentlyEndedFast,
   upcomingFasts,
   type ChurchCalendar,
@@ -249,13 +250,6 @@ function KeepingTogether({ season }: { season: SeasonInstance }) {
   );
 }
 
-// The feast that each fast leads to, for the ending card.
-const FEAST_AFTER: Partial<Record<SeasonInstance["id"], string>> = {
-  "holy-week": "Pascha",
-  "apostles-fast": "The Holy Apostles Peter and Paul",
-  "dormition-fast": "The Dormition of the Theotokos",
-  "nativity-fast": "The Nativity of Christ",
-};
 
 // For the first days after a fast: the feast it led to, and the journey kept, without a score. The feast's own greeting
 // ("Christ is born!") is on the feast-greeting card, so it is not repeated here.
@@ -263,7 +257,7 @@ function FastEnding({ season, kept }: { season: SeasonInstance; kept: number[] }
   return (
     <Card className="candlelight-card rounded-[2rem] border p-5 text-center sm:p-7" aria-labelledby="season-ending-title">
       <h2 id="season-ending-title" className="text-3xl text-cinnabar">
-        {FEAST_AFTER[season.id] ?? season.name}
+        {FEAST_AFTER_FAST[season.id] ?? season.name}
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">The {season.name} is complete.</p>
       <ol aria-label={`${kept.length} of ${season.length} days kept`} className="mx-auto mt-5 flex max-w-sm flex-wrap justify-center gap-1.5">

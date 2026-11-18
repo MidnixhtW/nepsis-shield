@@ -77,7 +77,7 @@ export function nativeRemindersAvailable() {
   return Capacitor.isNativePlatform() && Capacitor.isPluginAvailable("LocalNotifications");
 }
 
-async function getLocalNotifications(): Promise<LocalNotificationsPlugin | null> {
+export async function getLocalNotifications(): Promise<LocalNotificationsPlugin | null> {
   if (!nativeRemindersAvailable()) return null;
   return LocalNotifications;
 }
@@ -97,7 +97,7 @@ export async function getScheduledPrayerReminders(): Promise<ScheduledPrayerRemi
   return result;
 }
 
-async function ensurePermission(plugin: LocalNotificationsPlugin) {
+export async function ensurePermission(plugin: LocalNotificationsPlugin) {
   const current = await plugin.checkPermissions();
   if (current.display === "granted") return true;
 

@@ -146,6 +146,14 @@ export function currentSeason(day: Date, calendar: ChurchCalendar) {
   return null;
 }
 
+/** The feast each fast leads to. */
+export const FEAST_AFTER_FAST: Partial<Record<SeasonId, string>> = {
+  "holy-week": "Pascha",
+  "apostles-fast": "The Holy Apostles Peter and Paul",
+  "dormition-fast": "The Dormition of the Theotokos",
+  "nativity-fast": "The Nativity of Christ",
+};
+
 /** A fast that ended within the last `withinDays` days (its feast is day 1), for the ending shown on Today. */
 export function recentlyEndedFast(day: Date, calendar: ChurchCalendar, withinDays = 3) {
   const today = dateOnly(day);
