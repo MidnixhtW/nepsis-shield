@@ -325,23 +325,34 @@ function JourneyList({
   todayIndex: number;
   kept: number[];
 }) {
+  const [open, setOpen] = useState<number | null>(null);
   return (
-    <ol className="mt-3 grid max-h-80 gap-1 overflow-y-auto pr-1">
+    <ol className="mt-3 grid max-h-[28rem] gap-1 overflow-y-auto pr-1">
       {Array.from({ length: season.length }, (_, index) => {
         const day = journeyDay(season, index, calendar);
         const isToday = index === todayIndex;
+        const expanded = open === index;
         return (
-          <li
-            key={index}
-            aria-current={isToday ? "date" : undefined}
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2 text-sm",
-              isToday ? "bg-accent/10 text-foreground" : "text-muted-foreground",
-            )}
-          >
-            <span className="w-16 shrink-0 text-xs tabular-nums">{format(addDays(season.start, index), "EEE d MMM")}</span>
-            <span className="min-w-0 flex-1 truncate">{day.title}</span>
-            {kept.includes(index) ? <Check aria-label="Kept" className="h-4 w-4 shrink-0 text-accent" /> : null}
+          <li key={index} aria-current={isToday ? "date" : undefined}>
+            <button
+              type="button"
+              aria-expanded={expanded}
+              onClick={() => setOpen(expanded ? null : index)}
+              className={cn(
+                "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                isToday ? "bg-accent/10 text-foreground" : "text-muted-foreground",
+              )}
+            >
+              <span className="w-16 shrink-0 text-xs tabular-nums">{format(addDays(season.start, index), "EEE d MMM")}</span>
+              <span className="min-w-0 flex-1 truncate">{day.title}</span>
+              {kept.includes(index) ? <Check aria-label="Kept" className="h-4 w-4 shrink-0 text-accent" /> : null}
+              <ChevronDown aria-hidden className={cn("h-4 w-4 shrink-0 transition-transform", expanded && "rotate-180")} />
+            </button>
+            {expanded ? (
+              <div className="px-3 pb-3 pt-2">
+                <DayBody day={day} />
+              </div>
+            ) : null}
           </li>
         );
       })}

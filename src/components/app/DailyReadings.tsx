@@ -1,4 +1,5 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { format } from "date-fns";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { AArrowDown, AArrowUp, BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
 import {
@@ -17,7 +18,8 @@ import { hallowCardClass, hallowGlowClass } from "@/components/app/hallowCard";
 
 import { useNavigate } from "react-router";
 import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ShareSelectionButton } from "@/components/app/ShareSelectionButton";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { prefsKey, type ReadPrefs } from "@/lib/bible/reader";
 import { markHabitComplete } from "@/lib/dailyHabits";
@@ -83,6 +85,7 @@ function ReadingCard({
   onReadInApp?: () => void;
   size: number;
 }) {
+  const textRef = useRef<HTMLParagraphElement>(null);
   // On phones the reading sits straight on the outer card (a rule above it, no inner box) so lines get the full width.
   return (
     <div className="border-t border-border/60 pt-4 sm:rounded-2xl sm:border sm:border-border/60 sm:bg-muted/20 sm:p-4">
@@ -91,7 +94,8 @@ function ReadingCard({
           <p className="text-xs font-semibold tracking-wide text-muted-foreground">{label}</p>
           <p className="mt-1 text-sm font-semibold leading-snug">{display || ""}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          {text ? <ShareSelectionButton container={textRef} attribution={display || label} eyebrow={label} /> : null}
           <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
             OCA
           </Badge>
@@ -99,7 +103,7 @@ function ReadingCard({
       </div>
 
       {text ? (
-        <p className="scripture-text mt-3 whitespace-pre-wrap text-foreground/90" style={{ fontSize: `${size}px` }}>
+        <p ref={textRef} className="scripture-text mt-3 whitespace-pre-wrap text-foreground/90" style={{ fontSize: `${size}px` }}>
           {text}
         </p>
       ) : (
@@ -125,12 +129,14 @@ function ReadingCard({
 
 export function DailyReadings() {
   const navigate = useNavigate();
-  const { today, query: q, retry } = useDailyCalendar();
+  // Up to a week back, for a day that was missed; markHabitComplete only counts today's readings.
+  const [offset, setOffset] = useState(0);
+  const { today, query: q, retry } = useDailyCalendar(offset);
   // Opening today's readings fills the Readings step of the day on Today.
   const loaded = !!q.data;
   useEffect(() => {
-    if (loaded) markHabitComplete("reading");
-  }, [loaded]);
+    if (loaded && offset === 0) markHabitComplete("reading");
+  }, [loaded, offset]);
   const reading = useReadAloud();
   const { size, change } = useScriptureSize();
   const listenTitle = "Today's Epistle and Gospel";
@@ -163,6 +169,17 @@ export function DailyReadings() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Epistle & Gospel</h2>
+            <div className="mt-1 flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+              <span>{offset === 0 ? "Today" : format(today, "EEEE, MMMM d")}</span>
+              <Button type="button" variant="ghost" size="sm" className="h-9 rounded-full px-2" disabled={offset <= -7} onClick={() => setOffset((value) => value - 1)}>
+                Previous day
+              </Button>
+              {offset < 0 ? (
+                <Button type="button" variant="ghost" size="sm" className="h-9 rounded-full px-2" onClick={() => setOffset(0)}>
+                  Back to today
+                </Button>
+              ) : null}
+            </div>
             <p className="mt-1 text-sm text-muted-foreground">
               Read with attention. Keep a single line with you through the day.
             </p>
