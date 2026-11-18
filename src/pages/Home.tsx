@@ -257,6 +257,8 @@ export default function Home() {
 
       <footer className="border-t border-border/50">
         <nav aria-label="Site" className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 py-8 text-sm text-muted-foreground sm:px-8">
+          <Link to="/feasts" className="hover:text-foreground">Feasts and fasts</Link>
+          <Link to="/saint-prayers" className="hover:text-foreground">Prayers to the saints</Link>
           <Link to="/about" className="hover:text-foreground">About</Link>
           <Link to="/download" className="hover:text-foreground">Install</Link>
           <Link to="/privacy-policy" className="hover:text-foreground">Privacy</Link>

@@ -13,6 +13,7 @@ import { showError, showSuccess } from "@/utils/toast";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
 import { WesternSaintsCard } from "@/components/app/WesternSaintsCard";
+import { Link } from "react-router";
 
 async function copyPrayer(label: string, prayer: string) {
 
@@ -161,7 +162,11 @@ export default function Saints() {
             <div>
               <h2 className="text-lg font-semibold tracking-tight">Patron saints and prayers</h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                Compact guidance for common needs. Open a card to read and copy the prayer.
+                Compact guidance for common needs. Open a card to read and copy the prayer, or see{" "}
+                <Link to="/saint-prayers" className="font-semibold text-accent underline-offset-2 hover:underline">
+                  every saint&rsquo;s prayer on its own page
+                </Link>
+                .
               </p>
             </div>
             <Badge variant="outline" className="rounded-full border-border/60 bg-background/50">

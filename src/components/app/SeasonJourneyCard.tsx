@@ -421,6 +421,9 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
         </button>
         {showAll ? (
           <>
+            <Link to={`/fasts/${season.id}`} className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-2 hover:underline">
+              About the {season.name}: dates and how it is kept
+            </Link>
             <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} />
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-4">
               <ShareSeasonButton season={season} />
