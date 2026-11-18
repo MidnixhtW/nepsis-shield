@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { COMMEMORATIONS_CHANGED_EVENT, commemorationStep, getCommemorations } from "@/lib/commemorations";
 import {
@@ -49,6 +48,7 @@ import { spokenText } from "@/lib/narrationText";
 import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 import { PrayerLines } from "@/components/app/PrayerLines";
+import { SlidingToggle } from "@/components/app/SlidingToggle";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
 
@@ -261,33 +261,21 @@ export function DailyPrayerFlow() {
                 The Watch rule takes about a minute, St. Seraphim's rule suits shifts and deployments, short for busy days, standard for normal use, or longer when you have room.
               </p>
             </div>
-            <ToggleGroup
-              type="single"
-              aria-label="Prayer rule length"
+            <SlidingToggle
+              label="Prayer rule length"
+              options={[
+                { id: "watch" as PrayerMode, label: "Watch (1 min)" },
+                { id: "seraphim" as PrayerMode, label: "St. Seraphim" },
+                { id: "short" as PrayerMode, label: "Short" },
+                { id: "standard" as PrayerMode, label: "Standard" },
+                { id: "long" as PrayerMode, label: "Longer" },
+              ]}
               value={mode}
-              onValueChange={(value) => {
-                if (!value) return;
-                setMode(value as PrayerMode);
+              onChange={(value) => {
+                setMode(value);
                 setStepIndex(0);
               }}
-              className="flex-wrap justify-start gap-2"
-            >
-              {[
-                ["watch", "Watch (1 min)"],
-                ["seraphim", "St. Seraphim"],
-                ["short", "Short"],
-                ["standard", "Standard"],
-                ["long", "Longer"],
-              ].map(([value, label]) => (
-                <ToggleGroupItem
-                  key={value}
-                  value={value}
-                  className="rounded-2xl border border-border/60 px-3 data-[state=on]:border-primary/40 data-[state=on]:bg-primary/10"
-                >
-                  {label}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+            />
           </div>
 
           <div className="grid gap-2 sm:grid-cols-3">

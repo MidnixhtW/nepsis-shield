@@ -4,13 +4,13 @@ import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { buildFlow, knownPrayerMode, recommendedTime, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
 import { useNow } from "@/lib/prayerHours";
 import { DayTimeline } from "@/components/app/DayTimeline";
 import { useSettings } from "@/hooks/useSettings";
 import { dayInTheChurch, SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
+import { SlidingToggle } from "@/components/app/SlidingToggle";
 
 const LABELS: Record<PrayerTime, { title: string; line: string }> = {
   morning: { title: "Morning prayers", line: "Offer the day to God before the noise begins." },
@@ -84,27 +84,16 @@ export function PrayNowCard() {
           </p>
         </div>
       </div>
-      <ToggleGroup
-        type="single"
-        aria-label="Rule for today"
-        value={QUICK_MODES.some((item) => item.id === mode) ? mode : ""}
-        onValueChange={(value) => {
-          if (!value) return;
-          setMode(value as PrayerMode);
-          saveMode(value as PrayerMode);
+      <SlidingToggle
+        label="Rule for today"
+        options={QUICK_MODES}
+        value={mode}
+        onChange={(value) => {
+          setMode(value);
+          saveMode(value);
         }}
-        className="relative mt-4 flex flex-wrap justify-start gap-1.5"
-      >
-        {QUICK_MODES.map((item) => (
-          <ToggleGroupItem
-            key={item.id}
-            value={item.id}
-            className="h-9 rounded-full border border-border/60 px-3.5 text-sm data-[state=on]:border-accent/50 data-[state=on]:bg-accent/10"
-          >
-            {item.label}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
+        className="mt-4"
+      />
       <div className="relative mt-3 flex flex-wrap gap-2">
         <Button asChild className="h-11 rounded-full px-6 font-semibold" variant={done ? "outline" : "default"}>
           <Link to={`/pray?tab=daily&begin=${time}`}>
