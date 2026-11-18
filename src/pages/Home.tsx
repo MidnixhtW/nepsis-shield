@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router";
+import { DayIconBanner } from "@/components/app/DayIconBanner";
+import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { Capacitor } from "@capacitor/core";
 import { Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,7 +24,7 @@ function shouldSkipHome() {
 function StartButtons({ center = false }: { center?: boolean }) {
   return (
     <div className={center ? "flex flex-col items-center gap-3 sm:flex-row sm:justify-center" : "flex flex-col gap-3 sm:flex-row"}>
-      <Button asChild className="gold-foil h-14 rounded-full px-8 text-base font-bold text-primary-foreground">
+      <Button asChild className="h-14 rounded-full px-8 text-base font-bold text-primary-foreground">
         <Link to="/today">
           Start now, it&rsquo;s free
         </Link>
@@ -85,6 +88,39 @@ const habits = [
   },
 ];
 
+// Today's icon and day, as the app shows them, so a first visit sees the real Church calendar rather than a picture of it.
+function TodayInTheChurch() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? <TodayInTheChurchLive /> : null;
+}
+
+function TodayInTheChurchLive() {
+  const { today, settings, query } = useDailyCalendar();
+  const readings = query.data
+    ? [query.data.readings.epistle, query.data.readings.gospel]
+        .filter(Boolean)
+        .map((reading) => reading?.display ?? reading?.short_display ?? reading?.description)
+        .join(" and ")
+    : "";
+  return (
+    <section aria-labelledby="today-in-the-church" className="border-t border-border/50">
+      <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-20">
+        <h2 id="today-in-the-church" className="mb-8 text-center text-3xl sm:text-4xl">
+          Today in the Church
+        </h2>
+        <DayIconBanner today={today} calendar={settings.calendarMode} saints={query.data?.saints} tone={query.data?.tone?.value} />
+        {readings ? <p className="mt-4 text-center text-base text-foreground/85">The readings: {readings}.</p> : null}
+        <div className="mt-6 flex justify-center">
+          <Button asChild variant="outline" className="h-12 rounded-full px-6">
+            <Link to="/today" state={LOOK_AROUND_STATE}>Open today in the app</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   if (shouldSkipHome()) return <Navigate to="/today" replace />;
 
@@ -104,7 +140,8 @@ export default function Home() {
 
       <main id="main-content">
         {/* The opening is a page of the prayer book itself: what the app is, before anything is said about it. */}
-        <section className="mx-auto max-w-3xl px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20">
+        <section className="mx-auto grid max-w-6xl items-start gap-x-16 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div>
           <h1 className="text-balance text-4xl leading-[1.1] sm:text-6xl">Orthodox prayer for every day</h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year. Free, with no
@@ -113,8 +150,9 @@ export default function Home() {
           <div className="mt-8">
             <StartButtons />
           </div>
+          </div>
 
-          <figure className="mt-14 border-t border-border/60 pt-8" aria-label="From the morning prayers">
+          <figure className="mt-14 border-t border-border/60 pt-8 lg:mt-2 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0" aria-label="From the morning prayers">
             <p className="rubric">Make the sign of the Cross, and begin.</p>
             <p className="scripture-text drop-cap mt-3 text-xl leading-relaxed sm:text-2xl">
               In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
@@ -127,6 +165,8 @@ export default function Home() {
             </p>
           </figure>
         </section>
+
+        <TodayInTheChurch />
 
         <section aria-labelledby="real-life" className="border-y border-border/50 bg-card/30">
           <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
@@ -179,8 +219,8 @@ export default function Home() {
             <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
               <div className="rounded-[2.75rem] border border-border/60 bg-black p-2.5">
                 <img
-                  src="/home/full-screen-prayer.webp"
-                  alt="The app showing the morning prayer full-screen, with read-aloud and Back and Next buttons."
+                  src="/home/full-screen-prayer.jpg"
+                  alt="A morning prayer full-screen: its title and first letter in red, and Back, Listen and Next below."
                   width={540}
                   height={1080}
                   loading="lazy"
