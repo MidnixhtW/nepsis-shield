@@ -7,6 +7,15 @@ function vibrate(pattern: number | number[]) {
   if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(pattern);
 }
 
+/** The lightest touch, for turning a page of the prayers or lighting a lamp. */
+export function softHaptic() {
+  if (Capacitor.isNativePlatform()) {
+    Haptics.impact({ style: ImpactStyle.Light }).catch(() => vibrate(5));
+    return;
+  }
+  vibrate(5);
+}
+
 export function knotHaptic() {
   if (Capacitor.isNativePlatform()) {
     Haptics.impact({ style: ImpactStyle.Light }).catch(() => vibrate(8));

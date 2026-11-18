@@ -38,6 +38,11 @@ import { showSuccess } from "@/utils/toast";
 import { canPlayItems, startNarration, stopReadAloud } from "@/lib/readAloud";
 import { READERS, clipUrl, useReader } from "@/lib/narration";
 import { AudioRing } from "@/components/app/AudioRing";
+import { SilenceStep, isSilence, withSilence } from "@/components/app/SilenceStep";
+import { addIntention } from "@/lib/dailyHabits";
+import { lightLamp } from "@/lib/vigilLamps";
+import { softHaptic } from "@/lib/haptics";
+import { setIsonEnabled, useIsonEnabled } from "@/lib/ison";
 import { PrayerFinished } from "@/components/app/PrayerFinished";
 import { SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 import { spokenText } from "@/lib/narrationText";
@@ -127,13 +132,20 @@ export function DailyPrayerFlow() {
   }, []);
   // Names from the Names tab are prayed just before the closing prayer.
   const steps = useMemo(() => {
-    const flow = buildFlow(time, mode);
+    const built = buildFlow(time, mode);
+    const flow = mode === "standard" || mode === "long" ? withSilence(built) : built;
     const remember = commemorationStep(names);
     return remember ? [...flow.slice(0, -1), remember, flow[flow.length - 1]] : flow;
   }, [time, mode, names]);
   const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
+  // An intention for this prayer: a name from the prayer list (whose lamp is lit at the end) or a few words.
+  const [intention, setIntention] = useState<{ id?: string; label: string } | null>(null);
+  const [intentionText, setIntentionText] = useState("");
+  const [silenceLeft, setSilenceLeft] = useState(0);
+  const ison = useIsonEnabled();
   const done = completed[progressKey] ?? !!rhythm.today.prayers[time];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
+  const silent = isSilence(current);
   const progress = done ? 100 : Math.round(((stepIndex + 1) / steps.length) * 100);
 
   useEffect(() => {
@@ -148,10 +160,10 @@ export function DailyPrayerFlow() {
   const canListen = canPlayItems([{ audio: stepAudio }]);
   const [readingAloud, setReadingAloud] = useState(false);
   useEffect(() => {
-    if (!readingAloud || !immersive) return;
+    if (!readingAloud || !immersive || silent) return;
     startNarration(current.title, [{ text: stepAudio ? spokenText(current.body) : [current.title, ...current.body].join(". "), audio: stepAudio }]);
     return () => stopReadAloud();
-  }, [readingAloud, immersive, current, stepAudio]);
+  }, [readingAloud, immersive, current, stepAudio, silent]);
   useEffect(() => {
     if (!immersive) setReadingAloud(false);
   }, [immersive]);
@@ -179,9 +191,14 @@ export function DailyPrayerFlow() {
 
   function goNext() {
     focusNextStep.current = true;
+    softHaptic();
     if (stepIndex >= steps.length - 1) {
       setCompleted((prev) => ({ ...prev, [progressKey]: true }));
       markPrayerComplete(time, mode);
+      // The prayer was offered for someone: light their lamp, or keep the words among the intentions.
+      if (intention?.id) lightLamp(intention.id);
+      else if (intention) addIntention(intention.label);
+      setIntention(null);
       if (immersive) setFinished(true);
       else showSuccess("Prayer marked complete for today.");
       return;
@@ -191,6 +208,7 @@ export function DailyPrayerFlow() {
     setStepIndex((i) => i + 1);
   }
 
+  const nextDisabled = silent && silenceLeft > 0;
   const nextLabel = stepIndex >= steps.length - 1 ? "Mark complete" : stepIndex === 0 ? "Begin prayer" : "Next";
   const nextIcon = stepIndex >= steps.length - 1 ? <Check className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />;
 
@@ -311,6 +329,53 @@ export function DailyPrayerFlow() {
         </Accordion>
       </Card>
 
+      {stepIndex === 0 && !done ? (
+        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+          <h3 className="text-lg">Offer this prayer for</h3>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[...names.living, ...names.departed].slice(0, 8).map((entry) => (
+              <Button
+                key={entry.id}
+                type="button"
+                size="sm"
+                variant={intention?.id === entry.id ? "default" : "outline"}
+                aria-pressed={intention?.id === entry.id}
+                className="rounded-full"
+                onClick={() => setIntention(intention?.id === entry.id ? null : { id: entry.id, label: entry.name })}
+              >
+                {entry.name}
+              </Button>
+            ))}
+          </div>
+          <form
+            className="mt-3 flex gap-2"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const text = intentionText.trim().slice(0, 80);
+              if (text) setIntention({ label: text });
+            }}
+          >
+            <input
+              value={intentionText}
+              onChange={(event) => setIntentionText(event.target.value)}
+              placeholder="Or in a few words: my exam, a friend who is ill"
+              aria-label="Intention for this prayer"
+              maxLength={80}
+              className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-3 text-sm"
+            />
+            <Button type="submit" variant="outline" className="rounded-xl" disabled={!intentionText.trim()}>
+              Offer
+            </Button>
+          </form>
+          {intention ? (
+            <p className="rubric mt-3">
+              For {intention.label}
+              {intention.id ? ". Their lamp is lit when you finish." : "."}
+            </p>
+          ) : null}
+        </Card>
+      ) : null}
+
       <Card
         className={
           "rounded-3xl border-border/60 p-5 shadow-sm transition-colors " +
@@ -359,9 +424,13 @@ export function DailyPrayerFlow() {
                 : "border-border/60 bg-muted/20")
           }
         >
-          <div className={"scripture-text " + (readerPrefs.largeText ? "space-y-4 text-xl" : "space-y-3 text-lg")}>
-            <PrayerLines lines={current.body} />
-          </div>
+          {silent ? (
+            <SilenceStep key={`${progressKey}:${stepIndex}`} onRemaining={setSilenceLeft} />
+          ) : (
+            <div className={"scripture-text " + (readerPrefs.largeText ? "space-y-4 text-xl" : "space-y-3 text-lg")}>
+              <PrayerLines lines={current.body} />
+            </div>
+          )}
         </div>
 
 
@@ -376,10 +445,15 @@ export function DailyPrayerFlow() {
             >
               <ChevronLeft className="mr-2 h-4 w-4" /> Back
             </Button>
-            <Button type="button" className="rounded-2xl" onClick={goNext}>
+            <Button type="button" className="rounded-2xl" onClick={goNext} disabled={nextDisabled}>
               {nextLabel}
               {nextIcon}
             </Button>
+            {nextDisabled ? (
+              <Button type="button" variant="ghost" className="rounded-2xl" onClick={() => setSilenceLeft(0)}>
+                Skip the silence
+              </Button>
+            ) : null}
           </div>
           <Button
             type="button"
@@ -440,6 +514,17 @@ export function DailyPrayerFlow() {
                 {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={ison}
+                  title="A held note under the reading"
+                  className={"h-8 rounded-full px-3 text-xs font-semibold " + (ison ? "text-accent" : "text-muted-foreground")}
+                  onClick={() => setIsonEnabled(!ison)}
+                >
+                  Ison
+                </Button>
                 <select
                   aria-label="Reader"
                   value={reader}
@@ -462,10 +547,15 @@ export function DailyPrayerFlow() {
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
               <div className="mx-auto w-full max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
+                {intention ? <p className="rubric mb-2">For {intention.label}</p> : null}
                 <Dialog.Title className="text-3xl text-cinnabar sm:text-4xl">{current.title}</Dialog.Title>
-                <div className={"scripture-text mt-6 " + (readerPrefs.largeText ? "space-y-6 text-2xl" : "space-y-5 text-xl")}>
-                  <PrayerLines lines={current.body} />
-                </div>
+                {silent ? (
+                  <SilenceStep key={`${progressKey}:${stepIndex}`} onRemaining={setSilenceLeft} />
+                ) : (
+                  <div className={"scripture-text mt-6 " + (readerPrefs.largeText ? "space-y-6 text-2xl" : "space-y-5 text-xl")}>
+                    <PrayerLines lines={current.body} />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -475,9 +565,13 @@ export function DailyPrayerFlow() {
                   <ChevronLeft className="mr-2 h-4 w-4" /> Back
                 </Button>
                 {canListen ? <AudioRing on={readingAloud} onToggle={() => setReadingAloud((on) => !on)} /> : null}
-                <Button type="button" className="h-12 flex-1 rounded-2xl sm:flex-none sm:px-8" onClick={goNext}>
-                  {nextLabel}
-                  {nextIcon}
+                <Button
+                  type="button"
+                  className="h-12 flex-1 rounded-2xl sm:flex-none sm:px-8"
+                  onClick={() => (nextDisabled ? setSilenceLeft(0) : goNext())}
+                >
+                  {nextDisabled ? `Skip the silence (${silenceLeft})` : nextLabel}
+                  {nextDisabled ? null : nextIcon}
                 </Button>
               </div>
             </footer>

@@ -28,6 +28,11 @@ export function toggleLamp(id: string, now = new Date()) {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
+/** Lights a lamp (leaving it lit if it already is), as when a prayer was offered for that name. */
+export function lightLamp(id: string, now = new Date()) {
+  if (!litLamps(now).has(id)) toggleLamp(id, now);
+}
+
 /** Today's lit lamps, kept current when a lamp is lit anywhere in the app. */
 export function useLitLamps() {
   const [lit, setLit] = useState<Set<string>>(() => litLamps());
