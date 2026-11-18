@@ -281,6 +281,37 @@ write(join(resDir, "xml", "widget_today_info.xml"), `
     android:widgetCategory="home_screen" />
 `);
 
+// Long-press shortcuts on the app icon: the prayers, the prayer rope and the reset. Each opens MainActivity with the
+// same route extra as the widget's Begin button, so the web app opens the right page (WidgetRouteRouter).
+const shortcuts = [
+  ["morning", "Morning prayers", "Morning", "/pray?tab=daily&amp;begin=morning"],
+  ["night", "Night prayers", "Night", "/pray?tab=daily&amp;begin=night"],
+  ["jesus_prayer", "The Jesus Prayer", "Jesus Prayer", "/pray?tab=counter"],
+  ["reset", "60-second reset", "Reset", "/today#ground"],
+];
+write(join(resDir, "xml", "shortcuts.xml"), `
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+${shortcuts
+  .map(
+    ([id, , , route]) => `    <shortcut
+        android:shortcutId="${id}"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_${id}_short"
+        android:shortcutLongLabel="@string/shortcut_${id}_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="${pkg}"
+            android:targetClass="${pkg}.MainActivity">
+            <extra android:name="nepsis_route" android:value="${route}" />
+        </intent>
+    </shortcut>`,
+  )
+  .join("\n")}
+</shortcuts>
+`);
+
 // Strings for the widget picker.
 const stringsPath = join(resDir, "values", "strings.xml");
 if (!existsSync(stringsPath)) fail(`Missing ${relative(root, stringsPath)}`);
@@ -290,8 +321,14 @@ if (!strings.includes("widget_today_label")) {
     "</resources>",
     '    <string name="widget_today_label">Nepsis Shield: Today</string>\n    <string name="widget_today_description">The feast or fast of the day and a word from the Fathers.</string>\n</resources>',
   );
-  writeFileSync(stringsPath, strings, "utf8");
 }
+if (!strings.includes("shortcut_morning_short")) {
+  const lines = shortcuts
+    .map(([id, long, short]) => `    <string name="shortcut_${id}_short">${short}</string>\n    <string name="shortcut_${id}_long">${long}</string>`)
+    .join("\n");
+  strings = strings.replace("</resources>", `${lines}\n</resources>`);
+}
+writeFileSync(stringsPath, strings, "utf8");
 
 // Register the widget in the manifest.
 const manifestPath = join(mainDir, "AndroidManifest.xml");
@@ -312,6 +349,17 @@ if (!manifest.includes("TodayWidgetProvider")) {
     </application>`;
   if (!manifest.includes("</application>")) fail("Could not find </application> in AndroidManifest.xml.");
   manifest = manifest.replace("</application>", receiver.trimStart());
+  writeFileSync(manifestPath, manifest, "utf8");
+}
+
+// Point the launcher activity at the shortcuts.
+if (!manifest.includes("android.app.shortcuts")) {
+  const launcher = manifest.match(/<activity\b[^>]*android:name="(?:\.|[\w.]*\.)MainActivity"[^>]*>/);
+  if (!launcher) fail("Could not find MainActivity in AndroidManifest.xml.");
+  manifest = manifest.replace(
+    launcher[0],
+    `${launcher[0]}\n            <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />`,
+  );
   writeFileSync(manifestPath, manifest, "utf8");
 }
 

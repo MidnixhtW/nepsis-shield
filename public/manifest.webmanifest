@@ -4,14 +4,21 @@
   "short_name": "Nepsis Shield",
   "description": "A free, offline-ready Orthodox Christian companion for prayer, Scripture, the saints, and the fasts, for everyday life, with added support for those who serve and protect.",
   "start_url": "/today",
-
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "background_color": "#1b2113",
   "theme_color": "#2f3a1f",
   "orientation": "any",
-  "categories": ["lifestyle", "education", "books"],
+  "categories": [
+    "lifestyle",
+    "education",
+    "books"
+  ],
   "icons": [
     {
       "src": "/military-orthodox-cross.svg",
@@ -39,41 +46,57 @@
     }
   ],
   "shortcuts": [
-
     {
-      "name": "Today",
-      "short_name": "Today",
-      "description": "Open the daily dashboard.",
-      "url": "/today",
-      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "name": "Morning prayers",
+      "short_name": "Morning",
+      "description": "Begin the morning prayers.",
+      "url": "/pray?tab=daily&begin=morning",
+      "icons": [
+        {
+          "src": "/military-orthodox-cross.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     },
     {
-      "name": "Prayer",
-      "short_name": "Pray",
-      "description": "Open the prayer section.",
-      "url": "/pray?tab=daily",
-      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "name": "Night prayers",
+      "short_name": "Night",
+      "description": "Begin the prayers before sleep.",
+      "url": "/pray?tab=daily&begin=night",
+      "icons": [
+        {
+          "src": "/military-orthodox-cross.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     },
     {
-      "name": "Read",
-      "short_name": "Read",
-      "description": "Open daily readings.",
-      "url": "/read?read=daily",
-      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "name": "The Jesus Prayer",
+      "short_name": "Jesus Prayer",
+      "description": "Open the prayer rope.",
+      "url": "/pray?tab=counter",
+      "icons": [
+        {
+          "src": "/military-orthodox-cross.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     },
     {
-      "name": "Ground Me Now",
+      "name": "60-second reset",
       "short_name": "Reset",
-      "description": "Open the emergency grounding reset from Today.",
+      "description": "Breathe, orient, pray, act.",
       "url": "/today#ground",
-      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
-    },
-    {
-      "name": "Install / Share",
-      "short_name": "Share",
-      "description": "Open sharing, APK, web, and QR download options.",
-      "url": "/download",
-      "icons": [{ "src": "/military-orthodox-cross.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [
+        {
+          "src": "/military-orthodox-cross.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     }
   ],
   "prefer_related_applications": false
