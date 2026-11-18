@@ -1,7 +1,7 @@
 // After `vite build`: writes dist/<page>.html for each public page, with that page's title, description and canonical
 // link, and its text already rendered, so crawlers and link previews that skip JavaScript see the real page.
 // The app still starts as usual on top of it. Run by `npm run build`.
-import { readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "vite";
@@ -21,10 +21,16 @@ const entry = await import(pathToFileURL(path.join(serverOut, "entry.js")).href)
 
 // Vercel only serves these files if vercel.json sends the page there, so the two lists must match.
 const vercel = JSON.parse(await readFile(path.join(root, "vercel.json"), "utf8"));
+// Top-level pages ("/about") use the "/:page(...)" rewrite; guide pages ("/feasts/pascha") use "/:section(...)/:slug".
 const pageRewrite = vercel.rewrites.find((rule) => rule.destination === "/:page.html");
 const routed = new Set(pageRewrite?.source.match(/\(([^)]*)\)/)?.[1].split("|") ?? []);
-const missing = entry.PUBLIC_ROUTES.map((route) => route.path.slice(1)).filter((page) => !routed.has(page));
-if (missing.length) throw new Error(`prerender: add ${missing.join(", ")} to the "/:page(...)" rewrite in vercel.json`);
+const sectionRewrite = vercel.rewrites.find((rule) => rule.destination === "/:section/:slug.html");
+const sections = new Set(sectionRewrite?.source.match(/\(([^)]*)\)/)?.[1].split("|") ?? []);
+const missing = entry.PUBLIC_ROUTES.map((route) => route.path.slice(1)).filter((page) => {
+  const [first, slug] = page.split("/");
+  return slug ? !sections.has(first) : !routed.has(page);
+});
+if (missing.length) throw new Error(`prerender: add ${missing.join(", ")} to the page or section rewrite in vercel.json`);
 const shell = await readFile(path.join(dist, "index.html"), "utf8");
 
 function escape(text) {
@@ -61,7 +67,9 @@ for (const meta of entry.PUBLIC_ROUTES) {
     html = replaceOnce(html, /<div id="root">[\s\S]*?<\/div>\s*<\/div>/, `<div id="root">${body}</div>`, "#root boot shell");
   }
 
-  await writeFile(path.join(dist, `${meta.path.slice(1)}.html`), html);
+  const file = path.join(dist, `${meta.path.slice(1)}.html`);
+  await mkdir(path.dirname(file), { recursive: true });
+  await writeFile(file, html);
   written += 1;
 }
 

@@ -32,6 +32,7 @@ const ReleaseNotes = lazy(() => import("./pages/ReleaseNotes"));
 const Saints = lazy(() => import("@/pages/Saints"));
 const Settings = lazy(() => import("@/pages/Settings"));
 const PhilokaliaGuide = lazy(() => import("@/pages/PhilokaliaGuide"));
+const ChurchGuide = lazy(() => import("@/pages/ChurchGuide"));
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,11 @@ const App = () => (
               <Route path="/release-notes" element={<ReleaseNotes />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/saints" element={<Saints />} />
+              <Route path="/saints/:slug" element={<ChurchGuide />} />
+              <Route path="/feasts" element={<ChurchGuide />} />
+              <Route path="/feasts/:slug" element={<ChurchGuide />} />
+              <Route path="/fasts/:slug" element={<ChurchGuide />} />
+              <Route path="/saint-prayers" element={<ChurchGuide />} />
               <Route path="/philokalia" element={<PhilokaliaRoute />} />
               <Route path="/:section" element={<Index />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

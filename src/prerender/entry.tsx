@@ -12,8 +12,17 @@ import Legal from "@/pages/Legal";
 import Privacy from "@/pages/Privacy";
 import ReleaseNotes from "@/pages/ReleaseNotes";
 import Saints from "@/pages/Saints";
+import { ChurchGuidePage } from "@/pages/ChurchGuide";
+import { GUIDE_PAGES, guidePage } from "@/lib/churchGuide";
+import { PUBLIC_ROUTES as APP_ROUTES } from "@/lib/routeMeta";
 
-export { PUBLIC_ROUTES, canonicalUrl, SITE_ORIGIN } from "@/lib/routeMeta";
+export { canonicalUrl, SITE_ORIGIN } from "@/lib/routeMeta";
+
+// The app's own public pages, then the guide to the Church year (feasts, fasts, saints), which only the build lists.
+export const PUBLIC_ROUTES = [
+  ...APP_ROUTES,
+  ...GUIDE_PAGES.map(({ path, title, description }) => ({ path, title, description })),
+];
 
 const PAGES: Record<string, () => ReactNode> = {
   "/about": () => <About />,
@@ -28,7 +37,7 @@ const PAGES: Record<string, () => ReactNode> = {
 };
 
 export function render(path: string): string {
-  const page = PAGES[path];
+  const page = PAGES[path] ?? (guidePage(path) ? () => <ChurchGuidePage path={path} /> : undefined);
   if (!page) throw new Error(`No prerendered page for ${path}`);
   return renderToString(
     <QueryClientProvider client={new QueryClient()}>

@@ -1,12 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
-    "api/guide.ts": { "maxDuration": 60 }
+    "api/guide.ts": {
+      "maxDuration": 60
+    }
   },
   "rewrites": [
     {
-      "source": "/:page(about|privacy|privacy-policy|terms|cookies|download|field-manual|release-notes|saints)",
+      "source": "/:page(about|privacy|privacy-policy|terms|cookies|download|field-manual|release-notes|saints|feasts|saint-prayers)",
       "destination": "/:page.html"
+    },
+    {
+      "source": "/:section(feasts|fasts|saints)/:slug",
+      "destination": "/:section/:slug.html"
     },
     {
       "source": "/((?!api/).*)",
@@ -17,11 +23,26 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Referrer-Policy", "value": "no-referrer" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()" },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data:; connect-src 'self' https://orthocal.info https://bible-api.com https://bolls.life https://api.github.com; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; upgrade-insecure-requests"
