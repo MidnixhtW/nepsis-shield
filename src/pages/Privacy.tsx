@@ -102,6 +102,15 @@ const ALLOWED_APP_KEYS = new Set([
   "recent-places:v1",
   "read-aloud:voice",
   "learn-by-heart:v1",
+  "journey:becoming-orthodox:v1",
+  "rosary:pattern",
+  "services:font-size",
+  "jesus_prayer_pulse",
+  "jesus_prayer_view",
+  "jesus_prayer_marker_pause",
+  "parish:v1",
+  "app-reminders:v1",
+  "ison:on",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.
