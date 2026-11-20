@@ -50,7 +50,7 @@ import { fetchJsonCached } from "@/lib/privacyFetch";
 import { fetchBollsChapter, resolveBollsBookId } from "@/lib/bible/bolls";
 import { cn } from "@/lib/utils";
 import { BibleBookmarksPanel } from "@/components/app/BibleBookmarksPanel";
-import { bibleApiUrl, bookmarksKey, lastReadKey, saveEnabledKey, LAST_READ_TTL_MS, BOOKMARKS_TTL_MS, splitBookChapter, isInteractiveTarget, prefsKey, normalizeRefForBolls, bollsSlugForBase, bollsSlugForBook, sortBookmarks, type BibleApiVerse, type BibleApiResponse, type BookmarkItem, type BookmarkSort, type FallbackSource, type ReadPrefs } from "@/lib/bible/reader";
+import { bibleApiUrl, bookmarksKey, lastReadKey, saveEnabledKey, LAST_READ_TTL_MS, BOOKMARKS_TTL_MS, splitBookChapter, isInteractiveTarget, prefsKey, normalizeRefForBolls, bollsSlugForBase, sortBookmarks, type BibleApiVerse, type BibleApiResponse, type BookmarkItem, type BookmarkSort, type FallbackSource, type ReadPrefs } from "@/lib/bible/reader";
 
 const ORTHODOX_DEFAULT_KEY = "bible:orthodox-default:v1";
 
@@ -195,7 +195,7 @@ export function OrthodoxBible() {
     queryFn: async () => {
       const textBase = effectiveBase(book, base);
       const fromBolls = async () => {
-        const slug = bollsSlugForBook(bookName, textBase);
+        const slug = bollsSlugForBase(textBase);
         const id = await resolveBollsBookId(slug, [apiBookName, bookName]);
         if (!id) throw new Error("Book not available in this translation");
         const verses = await fetchBollsChapter(slug, id, chapter);
@@ -983,5 +983,3 @@ export function OrthodoxBible() {
     </div>
   );
 }
-
-export default OrthodoxBible;

@@ -116,7 +116,3 @@ export const BIBLE_BOOKS: BibleBook[] = [
 export function getBookByName(name: string) {
   return BIBLE_BOOKS.find((b) => b.name === name);
 }
-
-export function getBookById(id: string) {
-  return BIBLE_BOOKS.find((b) => b.id === id);
-}

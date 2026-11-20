@@ -128,5 +128,3 @@ export function StillnessTimer() {
     </Card>
   );
 }
-
-export default StillnessTimer;

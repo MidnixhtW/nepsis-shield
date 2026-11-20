@@ -70,7 +70,3 @@ export function clipUrl(reader: ReaderId, lines: string[], exact = false): strin
   const base = Capacitor.isNativePlatform() ? PUBLIC_SITE_URL : "";
   return `${base}/audio/${voice}/${id}.mp3`;
 }
-
-export function readerName(reader: ReaderId) {
-  return READERS.find((item) => item.id === reader)?.name ?? "Reader";
-}
