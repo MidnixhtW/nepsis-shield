@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { format, differenceInCalendarDays } from "date-fns";
 import { Link, useNavigate } from "react-router";
 import {
   BookOpen,
@@ -6,6 +7,8 @@ import {
   ExternalLink,
   HeartHandshake,
   Home,
+  KeyRound,
+  Loader2,
   Lock,
   Mic,
   MicOff,
@@ -13,8 +16,13 @@ import {
   Search,
   Send,
   ShieldCheck,
+  Sparkles,
   Sprout,
 } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
+import { MY_PATRONS, nextFeast, ocaLivesUrl, patronForDay, type MyPatron } from "@/content/myPatrons";
+import { GuideRequestError, askGuideServer, storeGuideCode, storedGuideCode, type GuideTurn } from "@/lib/guideClient";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -209,31 +217,124 @@ function CalmNote({ title, body }: { title: string; body: string }) {
   );
 }
 
+function feastLine(patron: MyPatron, today: Date) {
+  const feast = nextFeast(patron, today);
+  const days = differenceInCalendarDays(feast, today);
+  if (days === 0) return "His feast is today";
+  return `Feast ${format(feast, "MMMM d")} · in ${days} day${days === 1 ? "" : "s"}`;
+}
+
+function PatronDetail({ patron, today }: { patron: MyPatron; today: Date }) {
+  return (
+    <div className="grid gap-3 text-sm leading-relaxed">
+      <p className="text-muted-foreground">{patron.life}</p>
+      <blockquote className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+        <p className="font-serif text-base italic">"{patron.line}"</p>
+        <p className="mt-1 text-xs text-muted-foreground">{patron.lineSource}</p>
+      </blockquote>
+      <p><span className="font-semibold">Today: </span>{patron.practice}</p>
+      <p className="rounded-2xl border border-border/60 bg-background/55 p-4">{patron.prayer}</p>
+      <a
+        href={ocaLivesUrl(nextFeast(patron, today))}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-primary underline-offset-2 hover:underline"
+      >
+        His life and hymns on his feast (OCA) <ExternalLink className="h-3.5 w-3.5" />
+      </a>
+    </div>
+  );
+}
+
+function PatronShelf() {
+  const today = useMemo(() => new Date(), []);
+  const { patron, isFeast } = patronForDay(today);
+  return (
+    <div className="grid gap-4">
+      <SectionCard title={isFeast ? "Feast of your patron" : "Today's patron"} icon={<Sparkles className="h-4 w-4" />}>
+        <p className="text-base font-semibold">{patron.name}</p>
+        <p className="text-xs text-muted-foreground">{patron.title} · {feastLine(patron, today)}</p>
+        <div className="mt-4">
+          <PatronDetail patron={patron} today={today} />
+        </div>
+      </SectionCard>
+      <SectionCard title="Your patrons" icon={<ShieldCheck className="h-4 w-4" />}>
+        <Accordion type="single" collapsible>
+          {MY_PATRONS.map((item) => (
+            <AccordionItem key={item.id} value={item.id} className="last:border-0">
+              <AccordionTrigger className="text-left">
+                <span>
+                  <span className="block text-sm font-semibold">{item.name}</span>
+                  <span className="block text-xs font-normal text-muted-foreground">{feastLine(item, today)}</span>
+                </span>
+              </AccordionTrigger>
+              <AccordionContent>
+                <PatronDetail patron={item} today={today} />
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </SectionCard>
+    </div>
+  );
+}
+
+const GREETING_CONNECTED = "Peace be with you. Ask plainly. Answers come from Claude, guided to speak from Scripture and the Fathers. Bring anything weighty to your priest.";
+const GREETING_OFFLINE = "Peace be with you. Ask plainly; this guide will answer from its built-in Orthodox source notes.";
+
 export default function PhilokaliaGuide() {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "guide",
-      text: "Peace be with you. Ask plainly; this guide will answer from its built-in Orthodox source notes.",
-    },
+  const [code, setCode] = useState(storedGuideCode);
+  const [codeDraft, setCodeDraft] = useState("");
+  const [thinking, setThinking] = useState(false);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    { role: "guide", text: storedGuideCode() ? GREETING_CONNECTED : GREETING_OFFLINE },
   ]);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef<{ stop: () => void } | null>(null);
 
   const sourceSuggestions = useMemo(() => relatedSources(input || messages[messages.length - 1]?.text || ""), [input, messages]);
 
-  function askGuide(text = input) {
+  async function askGuide(text = input) {
     const trimmed = text.trim();
-    if (!trimmed) return;
-
-    const answer = guideResponse(trimmed);
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: trimmed },
-      { role: "guide", text: answer },
-    ]);
+    if (!trimmed || thinking) return;
+    const asked: Message[] = [...messages, { role: "user", text: trimmed }];
+    setMessages(asked);
     setInput("");
+
+    if (!code) {
+      setMessages([...asked, { role: "guide", text: guideResponse(trimmed) }]);
+      return;
+    }
+
+    setThinking(true);
+    try {
+      const turns: GuideTurn[] = asked.slice(1).map((m) => ({ role: m.role === "guide" ? "assistant" : "user", content: m.text }));
+      const answer = await askGuideServer(code, turns);
+      setMessages([...asked, { role: "guide", text: answer }]);
+    } catch (error) {
+      const status = error instanceof GuideRequestError ? error.status : 0;
+      if (status === 401) forgetCode();
+      const why = error instanceof Error ? error.message : "The guide could not answer just now.";
+      setMessages([...asked, { role: "guide", text: `${why} From the built-in notes instead:\n\n${guideResponse(trimmed)}` }]);
+    } finally {
+      setThinking(false);
+    }
+  }
+
+  function connect() {
+    const next = codeDraft.trim();
+    if (!next) return;
+    storeGuideCode(next);
+    setCode(next);
+    setCodeDraft("");
+    showSuccess("Guide connected on this device.");
+  }
+
+  function forgetCode() {
+    storeGuideCode("");
+    setCode("");
   }
 
   function startVoice() {
@@ -290,10 +391,11 @@ export default function PhilokaliaGuide() {
       <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)]">
 
           <Tabs defaultValue="ask" className="min-w-0 w-full">
-            <TabsList className="premium-tabs">
-              <TabsTrigger value="ask" className="premium-tab flex-1">Ask</TabsTrigger>
-              <TabsTrigger value="sources" className="premium-tab flex-1">Sources</TabsTrigger>
-              <TabsTrigger value="rule" className="premium-tab flex-1">Rule</TabsTrigger>
+            <TabsList className="premium-tabs flex h-auto w-full gap-1 p-1.5 sm:gap-1.5">
+              <TabsTrigger value="ask" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Ask</TabsTrigger>
+              <TabsTrigger value="patrons" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Patrons</TabsTrigger>
+              <TabsTrigger value="sources" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Sources</TabsTrigger>
+              <TabsTrigger value="rule" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Rule</TabsTrigger>
             </TabsList>
 
             <TabsContent value="ask" className="mt-4 min-w-0">
@@ -305,12 +407,17 @@ export default function PhilokaliaGuide() {
                         key={`${message.role}-${index}`}
                         className={message.role === "guide" ? "rounded-2xl border border-border/60 bg-muted/25 p-4" : "rounded-2xl border border-primary/20 bg-primary/10 p-4"}
                       >
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                        <p className="text-xs font-semibold text-muted-foreground">
                           {message.role === "guide" ? "Philokalia Guide" : "You"}
                         </p>
                         <p className="mt-2 whitespace-pre-line text-sm leading-relaxed">{message.text}</p>
                       </div>
                     ))}
+                    {thinking ? (
+                      <p role="status" className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" /> The guide is answering…
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="mt-4 grid gap-2">
@@ -321,7 +428,7 @@ export default function PhilokaliaGuide() {
                       className="min-h-28 rounded-2xl border-border/60 bg-background/70 text-foreground placeholder:text-muted-foreground"
                     />
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" className="rounded-2xl" onClick={() => askGuide()}>
+                      <Button type="button" className="rounded-2xl" onClick={() => void askGuide()} disabled={thinking}>
                         <Send className="mr-2 h-4 w-4" /> Ask
                       </Button>
                       <Button type="button" variant="outline" className="rounded-2xl border-border/60" onClick={listening ? stopVoice : startVoice}>
@@ -332,13 +439,44 @@ export default function PhilokaliaGuide() {
                   </div>
                 </SectionCard>
 
+                <SectionCard title={code ? "Guide connected" : "Connect the guide"} icon={<KeyRound className="h-4 w-4" />}>
+                  {code ? (
+                    <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
+                      <p>Questions go to Claude through your site. The access code is kept on this device only.</p>
+                      <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={forgetCode}>Forget code</Button>
+                    </div>
+                  ) : (
+                    <form
+                      className="grid gap-2"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        connect();
+                      }}
+                    >
+                      <p className="text-sm text-muted-foreground">Enter the access code you set as GUIDE_ACCESS_CODE on Vercel. Until then, answers come from the built-in notes.</p>
+                      <div className="flex gap-2">
+                        <Input
+                          type="password"
+                          autoComplete="off"
+                          value={codeDraft}
+                          onChange={(event) => setCodeDraft(event.target.value)}
+                          placeholder="Access code"
+                          aria-label="Guide access code"
+                          className="rounded-2xl"
+                        />
+                        <Button type="submit" className="rounded-2xl">Connect</Button>
+                      </div>
+                    </form>
+                  )}
+                </SectionCard>
+
                 <SectionCard title="Quiet prompts" icon={<ShieldCheck className="h-4 w-4" />}>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {promptCards.map((card) => (
                       <button
                         key={card.title}
                         type="button"
-                        onClick={() => askGuide(card.body)}
+                        onClick={() => void askGuide(card.body)}
                         className="rounded-2xl border border-border/60 bg-background/55 p-4 text-left transition-colors hover:border-primary/30 hover:bg-primary/5"
                       >
                         <span className="flex items-center gap-2 text-sm font-semibold">{card.icon}{card.title}</span>
@@ -348,6 +486,10 @@ export default function PhilokaliaGuide() {
                   </div>
                 </SectionCard>
               </div>
+            </TabsContent>
+
+            <TabsContent value="patrons" className="mt-4">
+              <PatronShelf />
             </TabsContent>
 
             <TabsContent value="sources" className="mt-4">

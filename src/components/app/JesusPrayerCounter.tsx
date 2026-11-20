@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { Minus, Moon, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
 import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
 import { CountRing } from "@/components/app/CountRing";
+import { HoldToContinue, RopeTrack } from "@/components/app/RopeTrack";
+import { SlidingToggle } from "@/components/app/SlidingToggle";
+import { knotHaptic, markerHaptic } from "@/lib/haptics";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,6 +37,10 @@ function goalKey() {
 }
 
 const PULSE_KEY = "jesus_prayer_pulse";
+// How the rope is counted here (the tap ring, or the rope pulled with the thumb), and whether a marker bead asks for
+// a held pause before the count goes on.
+const VIEW_KEY = "jesus_prayer_view";
+const MARKER_PAUSE_KEY = "jesus_prayer_marker_pause";
 const PULSE_OPTIONS = [10, 33, 50, 100];
 
 function saveEnabledKey() {
@@ -53,11 +60,6 @@ function isInteractiveTarget(target: EventTarget | null) {
   );
 }
 
-function prayerRopeHaptic() {
-  if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-    navigator.vibrate(12);
-  }
-}
 
 export function JesusPrayerCounter() {
 
@@ -74,6 +76,33 @@ export function JesusPrayerCounter() {
     return PULSE_OPTIONS.includes(saved) ? saved : 33;
   });
   const addKnot = useCallback(() => setCount((c) => c + 1), []);
+  const [view, setView] = useState<"ring" | "rope">(() => (getStoredItem<string>(VIEW_KEY) === "rope" ? "rope" : "ring"));
+  const [markerPause, setMarkerPause] = useState(() => getStoredItem<boolean>(MARKER_PAUSE_KEY) === true);
+  // The marker most recently held through; the count waits at any other marker while the pause is on.
+  const [heldMarker, setHeldMarker] = useState(0);
+  const waiting = markerPause && count > 0 && count % pulseEvery === 0 && heldMarker !== count;
+
+  // True when the next change to the count came from a tap, so loading today's saved count never buzzes.
+  const counted = useRef(false);
+  // One knot from the ring, the rope or the +1 button.
+  const knot = useCallback(() => {
+    if (waiting) return;
+    counted.current = true;
+    setCount((c) => c + 1);
+  }, [waiting]);
+
+  // The haptics follow the count: a small bump per knot, the firm double pulse on reaching a marker, one bump for +10.
+  // Watchfulness mode plays its own.
+  const lastCount = useRef(count);
+  useEffect(() => {
+    const added = count - lastCount.current;
+    lastCount.current = count;
+    const fromTap = counted.current;
+    counted.current = false;
+    if (added <= 0 || dark || !fromTap) return;
+    if (added === 1 && count % pulseEvery === 0) markerHaptic();
+    else knotHaptic();
+  }, [count, dark, pulseEvery]);
   const closeDark = useCallback(() => setDark(false), []);
 
   useEffect(() => {
@@ -229,14 +258,27 @@ export function JesusPrayerCounter() {
 
         <div className="grid gap-4">
           <div className="grid justify-items-center gap-3 rounded-2xl border border-border/60 bg-muted/25 p-5">
-            <CountRing
-              count={count}
-              goal={goal}
-              onTap={() => {
-                prayerRopeHaptic();
-                setCount((c) => c + 1);
+            <SlidingToggle
+              label="How to count"
+              options={[
+                { id: "ring", label: "Tap ring" },
+                { id: "rope", label: "Pull the rope" },
+              ]}
+              value={view}
+              onChange={(next) => {
+                setView(next);
+                setStoredItem(VIEW_KEY, next);
               }}
             />
+            {view === "ring" ? (
+              <CountRing count={count} goal={goal} onTap={knot} />
+            ) : (
+              <>
+                <p className="text-3xl tabular-nums">{count}</p>
+                <RopeTrack count={count} every={pulseEvery} onKnot={knot} locked={waiting} stopAtMarker={markerPause} />
+              </>
+            )}
+            {waiting ? <HoldToContinue onDone={() => setHeldMarker(count)} /> : null}
             <p className="text-xs text-muted-foreground">
               {pct}% of today's goal
               {saveEnabled ? (
@@ -256,10 +298,8 @@ export function JesusPrayerCounter() {
               <Minus className="mr-2 h-4 w-4" /> -1
             </Button>
             <Button
-              onClick={() => {
-                prayerRopeHaptic();
-                setCount((c) => c + 1);
-              }}
+              onClick={knot}
+              disabled={waiting}
               className="h-12 rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="mr-2 h-4 w-4" /> +1
@@ -277,7 +317,7 @@ export function JesusPrayerCounter() {
             </Button>
             <Button
               onClick={() => {
-                prayerRopeHaptic();
+                counted.current = true;
                 setCount((c) => c + 10);
               }}
               variant="outline"
@@ -287,6 +327,23 @@ export function JesusPrayerCounter() {
             </Button>
 
           </div>
+
+          <label className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/45 p-4">
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold">Pause at each marker</span>
+              <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                At every marker bead, hold the cross for one breath before the count goes on.
+              </span>
+            </span>
+            <Switch
+              aria-label="Pause at each marker"
+              checked={markerPause}
+              onCheckedChange={(on) => {
+                setMarkerPause(on);
+                setStoredItem(MARKER_PAUSE_KEY, on);
+              }}
+            />
+          </label>
 
           <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
             <div className="flex items-start gap-3">

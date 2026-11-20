@@ -82,7 +82,7 @@ export function ShareDistributionCard() {
         <div>
           <div className="flex items-center gap-2 text-primary">
             <Megaphone className="h-5 w-5" />
-            <p className="text-xs font-semibold uppercase tracking-[0.16em]">Share</p>
+            <p className="text-xs font-semibold">Share</p>
           </div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight">Share the app</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">

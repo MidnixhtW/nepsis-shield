@@ -1,12 +1,14 @@
 import { useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { useSettings } from "@/hooks/useSettings";
 import { fetchDailyData } from "@/lib/orthocal";
 
-export function useDailyCalendar() {
-  const today = useCurrentDay();
+/** The Church calendar for today, or for `offsetDays` before or after it (the readings can look back a week). */
+export function useDailyCalendar(offsetDays = 0) {
+  const current = useCurrentDay();
+  const today = offsetDays ? addDays(current, offsetDays) : current;
   const { settings } = useSettings();
   const forceRefresh = useRef(false);
   const query = useQuery({

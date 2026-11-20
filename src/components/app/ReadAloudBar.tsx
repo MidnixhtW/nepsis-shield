@@ -17,7 +17,7 @@ export function ReadAloudBar({ className }: { className?: string }) {
       <Volume2 aria-hidden className="h-4 w-4 shrink-0 text-accent" />
       <div className="min-w-0 flex-1 px-1.5">
         <p className="truncate text-sm font-semibold leading-tight">{title}</p>
-        <p className="text-[11px] tabular-nums text-muted-foreground" aria-live="polite">
+        <p className="text-xs tabular-nums text-muted-foreground" aria-live="polite">
           {playing ? "Reading" : "Paused"} · {index + 1} of {parts.length}
         </p>
       </div>

@@ -13,12 +13,11 @@ import {
   scheduleSystemPrayerReminder,
 } from "@/lib/systemPrayerReminders";
 import { showError, showSuccess } from "@/utils/toast";
+import { REMINDER_PREFS_KEY } from "@/lib/prayerReminderPrefs";
 
 type PrayerTime = "morning" | "evening" | "night" | "scroll";
 type ReminderPrefs = Record<PrayerTime, { enabled: boolean; time: string }>;
 
-// Same storage key the Daily Prayer Flow used, so existing reminder choices carry over.
-const REMINDER_PREFS_KEY = "daily_prayer_flow:reminders";
 
 // Off until the person turns one on, so a switch that looks on always means a reminder is set.
 const DEFAULT_REMINDERS: ReminderPrefs = {

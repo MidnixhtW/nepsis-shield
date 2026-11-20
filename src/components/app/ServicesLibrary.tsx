@@ -32,7 +32,7 @@ export function ServicesLibrary() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Services</p>
+        <p className="text-xs font-semibold text-accent">Services</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">Pray with the whole Church.</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           The services below are the Church's own prayer, said in monasteries and parishes every day. At home, read the parts marked for the Reader and the Choir, and leave out the priest's blessings. Your parish may use a different translation.
@@ -115,7 +115,7 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
         </Button>
       </div>
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{service.when}</p>
+        <p className="text-xs font-semibold text-accent">{service.when}</p>
         <div className="mt-1 flex items-start justify-between gap-2">
           <h2 id="service-title" className="text-2xl font-semibold tracking-tight">{service.title}</h2>
           <FavoriteStar to={`/pray?tab=services&service=${service.id}`} label={service.title} />
@@ -177,7 +177,7 @@ function ServiceBlockView({ block, index }: { block: ServiceBlock; index: number
         </h3>
       );
     case "subheading":
-      return <h4 className="mt-3 text-[0.75em] font-semibold uppercase tracking-[0.14em] text-accent">{block.text}</h4>;
+      return <h4 className="mt-3 text-[0.75em] font-semibold text-accent">{block.text}</h4>;
     case "rubric":
       return <p className="text-[0.82em] italic leading-relaxed text-muted-foreground">{block.text}</p>;
     case "refrain":
@@ -193,7 +193,7 @@ function ServiceBlockView({ block, index }: { block: ServiceBlock; index: number
     default:
       return (
         <p className="scripture-text leading-relaxed">
-          {block.who ? <span className="mr-2 text-[0.72em] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{block.who}</span> : null}
+          {block.who ? <span className="mr-2 text-[0.72em] font-semibold text-muted-foreground">{block.who}</span> : null}
           {block.text}
         </p>
       );

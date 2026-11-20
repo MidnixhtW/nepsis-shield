@@ -23,4 +23,19 @@ test.describe("production PWA", () => {
     await expect(page.locator("#main-content")).toBeVisible();
     await expect(page).toHaveURL(/\/today$/);
   });
+
+  test("an app update clears old app caches but keeps recordings saved for offline", async ({ page }) => {
+    // Before the service worker exists: an old app-shell cache and one saved recording.
+    await page.goto("/robots.txt");
+    await page.evaluate(async () => {
+      await (await caches.open("nepsis-shield-pwa-v0")).put("/old-shell", new Response("old"));
+      await (await caches.open("nepsis-audio-v1")).put("/audio/abba/saved.mp3", new Response("audio"));
+    });
+    await page.goto("/today", { waitUntil: "load" });
+    await page.evaluate(async () => {
+      await navigator.serviceWorker.ready;
+    });
+    await expect.poll(() => page.evaluate(() => caches.has("nepsis-shield-pwa-v0"))).toBe(false);
+    expect(await page.evaluate(async () => Boolean(await (await caches.open("nepsis-audio-v1")).match("/audio/abba/saved.mp3")))).toBe(true);
+  });
 });

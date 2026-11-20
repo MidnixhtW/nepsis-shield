@@ -19,24 +19,21 @@ export default {
       },
     },
     extend: {
+      // The fonts the app actually loads (see styles/foundation.css and styles/typography.css).
       fontFamily: {
-        serif: ["Cormorant Garamond", "serif"],
-        sans: ["Inter", "sans-serif"],
+        sans: ["Barlow", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Literata, or condensed Barlow in a service role (see styles/foundation.css).
+        display: ["var(--font-heading)"],
+        serif: ["Literata", "Georgia", "Times New Roman", "serif"],
       },
+      // Every color comes from the active theme's variables (styles/themes/). Use these instead of Tailwind's
+      // stock palette (red-500, lime-700, ...), which would ignore the theme.
       colors: {
-        stone: {
-          950: "#0a0908",
-          900: "#141210",
-          800: "#221f1c",
-        },
-        amber: {
-          500: "#d97706",
-          600: "#b45309",
-        },
-        violet: {
-          950: "#1e112c",
-          900: "#2e1545",
-        },
+        success: "hsl(var(--success))",
+        cinnabar: "hsl(var(--cinnabar))",
+        "icon-gold": "hsl(var(--icon-gold))",
+        "liturgical-warm": "hsl(var(--liturgical-warm))",
+        "byzantine-blue": "hsl(var(--byzantine-blue))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -105,10 +102,16 @@ export default {
             height: "0",
           },
         },
+        // A slow candle-like drift for the homepage glow.
+        drift: {
+          "0%, 100%": { transform: "translate3d(-50%, 0, 0) scale(1)", opacity: "0.55" },
+          "50%": { transform: "translate3d(-46%, 1.5rem, 0) scale(1.12)", opacity: "0.85" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        drift: "drift 14s ease-in-out infinite",
       },
     },
   },

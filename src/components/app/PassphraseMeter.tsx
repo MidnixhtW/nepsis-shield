@@ -16,12 +16,12 @@ export function PassphraseMeter({
     const on = s.score >= i + 1;
     const color =
       s.score <= 1
-        ? "bg-rose-500/70"
+        ? "bg-cinnabar/[0.14]"
         : s.score === 2
-          ? "bg-amber-500/70"
+          ? "bg-secondary/[0.58]"
           : s.score === 3
-            ? "bg-sky-500/70"
-            : "bg-emerald-500/70";
+            ? "bg-accent/[0.14]"
+            : "bg-success/[0.14]";
 
     return (
       <div
@@ -38,13 +38,13 @@ export function PassphraseMeter({
     <div className={cn("grid gap-2", className)}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex flex-1 gap-1.5">{bars}</div>
-        <span className="text-[11px] font-semibold text-muted-foreground">
+        <span className="text-xs font-semibold text-muted-foreground">
           {passphrase ? s.label : ""}
         </span>
       </div>
 
       {!compact && passphrase ? (
-        <div className="text-[11px] text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           {s.hints.length ? s.hints.join(" ") : "Looks good."}
         </div>
       ) : null}

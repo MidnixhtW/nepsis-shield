@@ -14,11 +14,26 @@ export function DarkPrayerRope({
   every,
   onKnot,
   onClose,
+  isMarker,
+  haptics = true,
+  shownLabel,
+  footer,
+  name = "Prayer rope",
+  unit = "knots",
 }: {
   count: number;
   every: number;
   onKnot: () => void;
   onClose: () => void;
+  /** Overrides the every-N rule for which count gets the firm pulse. */
+  isMarker?: (count: number) => boolean;
+  /** Off when the caller plays its own haptics. */
+  haptics?: boolean;
+  /** Shown in place of the bare number when the count is revealed. */
+  shownLabel?: string;
+  footer?: string;
+  name?: string;
+  unit?: string;
 }) {
   const [showCount, setShowCount] = useState(false);
   const holdTimer = useRef<number | null>(null);
@@ -48,12 +63,12 @@ export function DarkPrayerRope({
   // The pulse follows the count, so a knot that lands on a marker gets the firm pulse instead of the small bump.
   const previous = useRef(count);
   useEffect(() => {
-    if (count > previous.current) {
-      if (count % every === 0) markerHaptic();
+    if (haptics && count > previous.current) {
+      if (isMarker ? isMarker(count) : count % every === 0) markerHaptic();
       else knotHaptic();
     }
     previous.current = count;
-  }, [count, every]);
+  }, [count, every, haptics, isMarker]);
 
   function startHold() {
     held.current = false;
@@ -78,7 +93,7 @@ export function DarkPrayerRope({
     <div
       role="button"
       tabIndex={0}
-      aria-label={`Prayer rope, dark mode. ${count} knots. Tap anywhere to count a knot; hold to leave.`}
+      aria-label={`${name}, dark mode. ${count} ${unit}. Tap anywhere to count; hold to leave.`}
       className="fixed inset-0 z-[100] select-none touch-none bg-black outline-none"
       style={{ WebkitTapHighlightColor: "transparent" }}
       onPointerDown={startHold}
@@ -88,13 +103,13 @@ export function DarkPrayerRope({
       onContextMenu={(event) => event.preventDefault()}
     >
       <div className="pointer-events-none flex h-full flex-col items-center justify-between py-[max(2rem,env(safe-area-inset-top))] text-center">
-        <p className="text-[11px] tracking-wide text-[#2a2a2a]">Tap anywhere · hold to leave</p>
-        <p aria-live="off" className="text-5xl font-light tabular-nums text-[#262626]">{showCount ? count : ""}</p>
-        <p className="text-[11px] text-[#2a2a2a]">A pulse every {every}</p>
+        <p className="text-xs tracking-wide text-[#2a2a2a]">Tap anywhere · hold to leave</p>
+        <p aria-live="off" className="text-5xl font-light tabular-nums text-[#262626]">{showCount ? (shownLabel ?? count) : ""}</p>
+        <p className="text-xs text-[#2a2a2a]">{footer ?? `A pulse every ${every}`}</p>
       </div>
       <button
         type="button"
-        className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] rounded-full px-3 py-2 text-[11px] text-[#2f2f2f]"
+        className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top))] rounded-full px-3 py-2 text-xs text-[#2f2f2f]"
         onPointerDown={(event) => event.stopPropagation()}
         onPointerUp={(event) => {
           event.stopPropagation();

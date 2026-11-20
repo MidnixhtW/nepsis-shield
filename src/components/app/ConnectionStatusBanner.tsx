@@ -49,8 +49,8 @@ export function ConnectionStatusBanner() {
         className={
           "pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium shadow-lg backdrop-blur-xl " +
           (isOffline
-            ? "border-amber-400/40 bg-amber-950/90 text-amber-50"
-            : "border-emerald-400/40 bg-emerald-950/90 text-emerald-50")
+            ? "border-icon-gold/[0.58] bg-secondary/[0.58] text-liturgical-warm"
+            : "border-success/40 bg-success/[0.14] text-success")
         }
       >
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10">

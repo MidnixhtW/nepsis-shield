@@ -147,6 +147,7 @@ jobs:
         run: |
 
           mkdir -p release-files
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-files/nepsis-shield-beta.apk
           cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-latest-debug.apk
           cp android/app/build/outputs/apk/debug/app-debug.apk release-files/ortho-companion-debug-${{ github.run_number }}.apk
 
@@ -179,31 +180,31 @@ jobs:
 
         run: |
           cat > release-notes.md <<'EOF'
-          ## Latest debug APK
+          ## Nepsis Shield for Android: public beta
 
-          This release is updated automatically from the latest successful Android debug build.
+          The newest Android build of Nepsis Shield, updated automatically each time the app changes.
 
-          Direct APK URL:
-          https://github.com/${{ github.repository }}/releases/download/android-debug-latest/ortho-companion-latest-debug.apk
+          Download:
+          https://github.com/${{ github.repository }}/releases/download/android-debug-latest/nepsis-shield-beta.apk
 
-          Build metadata:
+          Android will ask you to allow installs from your browser, because this build comes from GitHub and not the Play Store. A signed release is on its way.
+
+          Build details:
           - Commit: ${{ github.sha }}
           - Run: ${{ github.run_number }}
           - Built at: ${{ github.run_started_at }}
-
-          This is a debug APK intended for testing and sideload installation.
           EOF
 
           if gh release view android-debug-latest --repo "${{ github.repository }}" >/dev/null 2>&1; then
             gh release edit android-debug-latest \
               --repo "${{ github.repository }}" \
-              --title "Nepsis Shield Latest Debug APK" \
+              --title "Nepsis Shield for Android (Public Beta)" \
               --notes-file release-notes.md \
               --prerelease
           else
             gh release create android-debug-latest \
               --repo "${{ github.repository }}" \
-              --title "Nepsis Shield Latest Debug APK" \
+              --title "Nepsis Shield for Android (Public Beta)" \
               --notes-file release-notes.md \
               --prerelease
           fi

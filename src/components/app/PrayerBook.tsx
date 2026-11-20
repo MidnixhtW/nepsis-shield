@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BookOpen, ExternalLink, Hand, MoonStar, Shield, Sparkles, Star, Sun, Utensils } from "lucide-react";
+import { BookOpen, ExternalLink, Hand, MoonStar, Pin, Shield, Sparkles, Sun, Utensils } from "lucide-react";
 
 import {
   Accordion,
@@ -82,10 +82,10 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Pinned prayers</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Star a few prayers you want one tap away.
+              Pin a few prayers to keep their full text one tap away.
             </p>
           </div>
-          <Star className="h-5 w-5 text-primary" />
+          <Pin aria-hidden className="h-5 w-5 text-primary" />
         </div>
         <Separator className="my-4" />
         <div className="flex flex-wrap gap-2">
@@ -100,7 +100,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 className="rounded-2xl border-border/60"
                 onClick={() => toggleFavoritePrayer(prayer.id)}
               >
-                <Star className={cn("mr-2 h-3.5 w-3.5", active ? "fill-current" : "")} />
+                <Pin aria-hidden className={cn("mr-2 h-3.5 w-3.5", active ? "fill-current" : "")} />
                 {prayer.title}
               </Button>
             );

@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import type { ReactNode } from "react";
 import {
   AlertTriangle,
@@ -207,7 +208,7 @@ export default function FieldManual() {
         icon={<Crosshair className="h-5 w-5" />}
         actions={
           <>
-            <Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>
+            <Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>
             <Button asChild className="rounded-2xl"><Link to="/pray?tab=prayers">Open prayer book</Link></Button>
           </>
         }
@@ -222,7 +223,7 @@ export default function FieldManual() {
             <OrthodoxCrossIcon className="absolute -right-8 bottom-2 h-44 w-44 text-primary/10" />
             <div className="relative p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="rounded-full border border-primary/20 bg-primary/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-sm">
+                <Badge className="rounded-full border border-primary/20 bg-primary/15 px-3 py-1 text-xs font-bold text-primary shadow-sm">
                   <Shield className="mr-1 h-3.5 w-3.5" /> Service Orthodox rhythm
                 </Badge>
                 <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
@@ -253,7 +254,7 @@ export default function FieldManual() {
         <Card className="ornate-card p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Mode sections</p>
+              <p className="text-xs font-bold text-primary">Mode sections</p>
               <h2 className="mt-1 text-xl font-bold tracking-tight">Life and service briefs</h2>
               <p className="mt-1 text-sm text-muted-foreground">Use these as quick daily, pre-shift, or post-call references.</p>
 
@@ -291,7 +292,7 @@ export default function FieldManual() {
         <Card className="ornate-card p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Ready reference</p>
+              <p className="text-xs font-bold text-primary">Ready reference</p>
               <h2 className="mt-1 text-xl font-bold tracking-tight">Prayers for daily life and pressure</h2>
 
               <p className="mt-1 text-sm text-muted-foreground">Open the situation you need. Keep it simple and attentive.</p>
@@ -311,11 +312,11 @@ export default function FieldManual() {
                 <AccordionContent className="pt-3">
                   <div className="grid gap-3 rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm backdrop-blur">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">{entry.subtitle}</p>
+                      <p className="text-xs font-bold text-muted-foreground">{entry.subtitle}</p>
                       <p className="mt-2 text-sm leading-relaxed text-foreground/90">{entry.prayer}</p>
                     </div>
                     <div className="rounded-2xl border border-border/60 bg-muted/25 p-4">
-                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Practice</p>
+                      <p className="text-xs font-bold text-primary">Practice</p>
                       <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
                         {entry.practice.map((item) => <li key={item}>{item}</li>)}
                       </ul>
@@ -333,7 +334,7 @@ export default function FieldManual() {
         <Card className="ornate-card p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Care matters</p>
+              <p className="text-xs font-bold text-primary">Care matters</p>
               <h2 className="mt-1 text-xl font-bold tracking-tight">Pastoral and safety note</h2>
               <p className="mt-1 text-sm text-muted-foreground">This page supports prayer; it does not replace care.</p>
             </div>
@@ -346,7 +347,7 @@ export default function FieldManual() {
                 For sacramental questions, confession preparation, fasting, Communion, or reception into Orthodoxy, speak with an Orthodox priest. If you are not Orthodox, you are welcome to use these prayers devotionally and to speak with your pastor or chaplain.
               </p>
             </div>
-            <div className="rounded-2xl border border-amber-300/50 bg-amber-500/10 p-4 text-amber-900 shadow-sm backdrop-blur dark:text-amber-100">
+            <div className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] p-4 text-liturgical-warm shadow-sm backdrop-blur dark:text-liturgical-warm">
               <p className="text-sm leading-relaxed">
                 If you may harm yourself or someone else, seek immediate help from emergency services, a trusted leader, chaplain, clinician, or crisis line. Prayer and professional care belong together.
               </p>

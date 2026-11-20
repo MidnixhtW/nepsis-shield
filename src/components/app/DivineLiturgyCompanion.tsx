@@ -89,11 +89,11 @@ export function DivineLiturgyCompanion() {
     <div className="grid gap-4">
       <Card className="overflow-hidden rounded-3xl border-border/60 bg-card shadow-sm">
         <div className="relative p-5 sm:p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-amber-500/10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-icon-gold/10" />
 
           <div className="relative">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+              <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
                 <Church className="mr-1 h-3.5 w-3.5" /> Liturgy mode
               </Badge>
               <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold">

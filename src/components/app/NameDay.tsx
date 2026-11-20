@@ -190,7 +190,7 @@ export function NameDayCard({ today }: { today: Date }) {
 
   return (
     <Card className="candlelight-card rounded-[1.5rem] border p-5" role="region" aria-label="Your name day">
-      <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+      <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent">
         <Sparkles aria-hidden className="h-3.5 w-3.5" /> {status === "today" ? "Your name day" : "Tomorrow is your name day"}
       </p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight">{patron.name}</h2>

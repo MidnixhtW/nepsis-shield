@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { format } from "date-fns";
 import { Link } from "react-router";
-import { ArrowRight, BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2, Users } from "lucide-react";
+import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -11,6 +11,8 @@ import {
   currentSeason,
   journeyDay,
   nextSeason,
+  FEAST_AFTER_FAST,
+  recentlyEndedFast,
   upcomingFasts,
   type ChurchCalendar,
   type JourneyDay,
@@ -20,7 +22,9 @@ import { createAllDayEventsIcs, downloadTextFile } from "@/lib/ics";
 import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { cn } from "@/lib/utils";
-import { COUNTED_FASTS, getFastCount, keepFastTogether, keptOnThisDevice } from "@/lib/fastCount";
+import { COUNTED_FASTS, getFastCount, keepFastTogether, keptOnThisDevice, type FastCounts } from "@/lib/fastCount";
+import { PARISH_CHANGED_EVENT, getParish, newParishCode, parishLink, setParish, type Parish } from "@/lib/parish";
+import { Input } from "@/components/ui/input";
 import { showError, showSuccess } from "@/utils/toast";
 
 const STORE_KEY = "fasting-journeys:v1";
@@ -119,25 +123,38 @@ function FastRemindersButton({ today, calendar }: { today: Date; calendar: Churc
 // "Keeping the fast together": an anonymous count of people keeping this fast with the app.
 // Hidden when the count service is off or unreachable.
 function KeepingTogether({ season }: { season: SeasonInstance }) {
-  const [count, setCount] = useState<number | null>(null);
+  const [counts, setCounts] = useState<FastCounts | null>(null);
   const [kept, setKept] = useState(() => keptOnThisDevice(season));
   const [busy, setBusy] = useState(false);
+  const [parish, setParishState] = useState<Parish | null>(getParish);
+  const [naming, setNaming] = useState(false);
+  const [parishName, setParishName] = useState("");
   const counted = COUNTED_FASTS.includes(season.id);
 
   useEffect(() => {
     if (!counted) return;
     let alive = true;
     void getFastCount(season).then((value) => {
-      if (alive) setCount(value);
+      if (alive) setCounts(value);
     });
     return () => {
       alive = false;
     };
-    // The season instance is rebuilt each render; its key names the same fast.
+    // The season instance is rebuilt each render; its key names the same fast. A new parish means new counts.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [season.key, counted]);
+  }, [season.key, counted, parish?.code]);
 
-  if (!counted || count === null) return null;
+  useEffect(() => {
+    const refresh = () => {
+      setParishState(getParish());
+      setKept(keptOnThisDevice(season));
+    };
+    window.addEventListener(PARISH_CHANGED_EVENT, refresh);
+    return () => window.removeEventListener(PARISH_CHANGED_EVENT, refresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [season.key]);
+
+  if (!counted || counts === null) return null;
 
   async function join() {
     setBusy(true);
@@ -147,29 +164,111 @@ function KeepingTogether({ season }: { season: SeasonInstance }) {
       showError("Couldn't add you right now. Please try again.");
       return;
     }
-    setCount(next);
+    setCounts(next);
     setKept(true);
   }
 
+  async function shareParish(target: Parish) {
+    const url = parishLink(target);
+    const text = `Keep the fasts with ${target.name} in Nepsis Shield. Open this link on your phone:`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: `${target.name}: keeping the fasts`, text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      showSuccess("Parish link copied. Send it to your parish group.");
+    } catch (error) {
+      if ((error as Error)?.name !== "AbortError") showError("Couldn't share right now.");
+    }
+  }
+
+  function startParish(event: FormEvent) {
+    event.preventDefault();
+    const name = parishName.trim().slice(0, 60);
+    if (!name) return;
+    const created = { code: newParishCode(), name };
+    setParish(created);
+    setNaming(false);
+    void shareParish(created);
+  }
+
+  const { count, parishCount } = counts;
   const others = Math.max(0, count - (kept ? 1 : 0));
-  const line = kept
-    ? others > 0
-      ? `You and ${others.toLocaleString()} ${others === 1 ? "other" : "others"} are keeping the ${season.name} together.`
-      : `You're the first keeping the ${season.name} here. Invite someone to join you.`
-    : count > 0
-      ? `${count.toLocaleString()} ${count === 1 ? "person is" : "people are"} keeping the ${season.name} with Nepsis Shield.`
-      : `Be the first to keep the ${season.name} together.`;
+  const parishOthers = Math.max(0, (parishCount ?? 0) - (kept ? 1 : 0));
+  const line = parish
+    ? kept
+      ? parishOthers > 0
+        ? `You and ${parishOthers.toLocaleString()} from ${parish.name} are keeping the ${season.name} together.`
+        : `You're the first from ${parish.name} keeping the ${season.name}. Share the parish link.`
+      : (parishCount ?? 0) > 0
+        ? `${(parishCount ?? 0).toLocaleString()} from ${parish.name} ${(parishCount ?? 0) === 1 ? "is" : "are"} keeping the ${season.name}.`
+        : `Be the first from ${parish.name} to keep the ${season.name}.`
+    : kept
+      ? others > 0
+        ? `You and ${others.toLocaleString()} ${others === 1 ? "other" : "others"} are keeping the ${season.name} together.`
+        : `You're the first keeping the ${season.name} here. Invite someone to join you.`
+      : count > 0
+        ? `${count.toLocaleString()} ${count === 1 ? "person is" : "people are"} keeping the ${season.name} with Nepsis Shield.`
+        : `Be the first to keep the ${season.name} together.`;
 
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-2xl border border-accent/25 bg-accent/5 px-3.5 py-2.5">
-      <Users aria-hidden className="h-4 w-4 shrink-0 text-accent" />
-      <p role="status" className="min-w-0 flex-1 text-sm">{line}</p>
-      {kept ? null : (
-        <Button type="button" size="sm" variant="outline" className="rounded-full" disabled={busy} onClick={() => void join()}>
-          I'm keeping it
+    <div className="mt-3 rounded-2xl border border-accent/25 bg-accent/5 px-3.5 py-2.5">
+      <div className="flex flex-wrap items-center gap-2">
+        <Users aria-hidden className="h-4 w-4 shrink-0 text-accent" />
+        <p role="status" className="min-w-0 flex-1 text-sm">{line}</p>
+        {kept ? null : (
+          <Button type="button" size="sm" variant="outline" className="rounded-full" disabled={busy} onClick={() => void join()}>
+            I'm keeping it
+          </Button>
+        )}
+      </div>
+      {parish ? (
+        <Button type="button" variant="link" size="sm" className="h-auto min-h-11 px-0 text-accent" onClick={() => void shareParish(parish)}>
+          Share the {parish.name} link
+        </Button>
+      ) : naming ? (
+        <form onSubmit={startParish} className="mt-2 flex flex-wrap gap-2">
+          <Input
+            value={parishName}
+            onChange={(event) => setParishName(event.target.value)}
+            placeholder="Parish name, e.g. St Nicholas"
+            aria-label="Parish name"
+            maxLength={60}
+            className="min-w-0 flex-1"
+          />
+          <Button type="submit" size="sm" className="rounded-full" disabled={!parishName.trim()}>
+            Make the link
+          </Button>
+        </form>
+      ) : (
+        <Button type="button" variant="link" size="sm" className="h-auto min-h-11 px-0 text-accent" onClick={() => setNaming(true)}>
+          Keep the fasts with your parish
         </Button>
       )}
     </div>
+  );
+}
+
+
+// For the first days after a fast: the feast it led to, and the journey kept, without a score. The feast's own greeting
+// ("Christ is born!") is on the feast-greeting card, so it is not repeated here.
+function FastEnding({ season, kept }: { season: SeasonInstance; kept: number[] }) {
+  return (
+    <Card className="candlelight-card rounded-[2rem] border p-5 text-center sm:p-7" aria-labelledby="season-ending-title">
+      <h2 id="season-ending-title" className="text-3xl text-cinnabar">
+        {FEAST_AFTER_FAST[season.id] ?? season.name}
+      </h2>
+      <p className="mt-1 text-sm text-muted-foreground">The {season.name} is complete.</p>
+      <ol aria-label={`${kept.length} of ${season.length} days kept`} className="mx-auto mt-5 flex max-w-sm flex-wrap justify-center gap-1.5">
+        {Array.from({ length: season.length }, (_, index) => (
+          <li key={index} aria-hidden className={cn("h-2.5 w-2.5 rounded-full", kept.includes(index) ? "bg-icon-gold" : "bg-muted")} />
+        ))}
+      </ol>
+      <p className="mt-3 text-sm text-muted-foreground">
+        {kept.length ? `You kept ${kept.length} of its ${season.length} days.` : "The feast is for everyone."}
+      </p>
+    </Card>
   );
 }
 
@@ -189,16 +288,16 @@ function DayBody({ day }: { day: JourneyDay }) {
       {day.prayer ? (
         <figure className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <blockquote className="scripture-text text-[1.05rem] text-foreground/95">{day.prayer.text}</blockquote>
-          <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">{day.prayer.source}</figcaption>
+          <figcaption className="mt-2 text-xs font-semibold text-accent">{day.prayer.source}</figcaption>
         </figure>
       ) : null}
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Today's practice</p>
+        <p className="text-xs font-semibold text-accent">Today's practice</p>
         <p className="mt-1 text-sm leading-relaxed text-foreground/90">{day.practice}</p>
       </div>
       {day.link?.href.startsWith("/") ? (
         <Link to={day.link.href} className="inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-accent underline-offset-2 hover:underline">
-          {day.link.label} <ArrowRight aria-hidden className="h-3.5 w-3.5" />
+          {day.link.label}
         </Link>
       ) : day.link ? (
         <a
@@ -226,23 +325,34 @@ function JourneyList({
   todayIndex: number;
   kept: number[];
 }) {
+  const [open, setOpen] = useState<number | null>(null);
   return (
-    <ol className="mt-3 grid max-h-80 gap-1 overflow-y-auto pr-1">
+    <ol className="mt-3 grid max-h-[28rem] gap-1 overflow-y-auto pr-1">
       {Array.from({ length: season.length }, (_, index) => {
         const day = journeyDay(season, index, calendar);
         const isToday = index === todayIndex;
+        const expanded = open === index;
         return (
-          <li
-            key={index}
-            aria-current={isToday ? "date" : undefined}
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2 text-sm",
-              isToday ? "bg-accent/10 text-foreground" : "text-muted-foreground",
-            )}
-          >
-            <span className="w-16 shrink-0 text-xs tabular-nums">{format(addDays(season.start, index), "EEE d MMM")}</span>
-            <span className="min-w-0 flex-1 truncate">{day.title}</span>
-            {kept.includes(index) ? <Check aria-label="Kept" className="h-4 w-4 shrink-0 text-accent" /> : null}
+          <li key={index} aria-current={isToday ? "date" : undefined}>
+            <button
+              type="button"
+              aria-expanded={expanded}
+              onClick={() => setOpen(expanded ? null : index)}
+              className={cn(
+                "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                isToday ? "bg-accent/10 text-foreground" : "text-muted-foreground",
+              )}
+            >
+              <span className="w-16 shrink-0 text-xs tabular-nums">{format(addDays(season.start, index), "EEE d MMM")}</span>
+              <span className="min-w-0 flex-1 truncate">{day.title}</span>
+              {kept.includes(index) ? <Check aria-label="Kept" className="h-4 w-4 shrink-0 text-accent" /> : null}
+              <ChevronDown aria-hidden className={cn("h-4 w-4 shrink-0 transition-transform", expanded && "rotate-180")} />
+            </button>
+            {expanded ? (
+              <div className="px-3 pb-3 pt-2">
+                <DayBody day={day} />
+              </div>
+            ) : null}
           </li>
         );
       })}
@@ -256,6 +366,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
   const [showAll, setShowAll] = useState(false);
   const active = useMemo(() => currentSeason(today, calendar), [today, calendar]);
   const upcoming = useMemo(() => (active ? null : nextSeason(today, calendar)), [active, today, calendar]);
+  const ended = useMemo(() => (active ? null : recentlyEndedFast(today, calendar)), [active, today, calendar]);
 
   if (active) {
     const { season, index } = active;
@@ -271,11 +382,9 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
     }
 
     return (
-      <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-7" aria-labelledby="season-journey-title">
-        <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-          <CalendarDays className="h-3.5 w-3.5" /> {season.name} · Day {index + 1} of {season.length}
-        </p>
-        <h2 id="season-journey-title" className="mt-3 text-3xl font-semibold tracking-tight">{day.title}</h2>
+      <section className="border-t border-border/60 px-1 py-7" aria-labelledby="season-journey-title">
+        <p className="text-sm font-semibold text-cinnabar">The fast</p>
+        <h2 id="season-journey-title" className="mt-1 text-2xl sm:text-3xl">{day.title}</h2>
         <div className="mt-4">
           <DayBody day={day} />
         </div>
@@ -290,34 +399,44 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           >
             <Check className="mr-2 h-4 w-4" /> {keptToday ? "Kept today" : "Mark today as kept"}
           </Button>
-          <span className="text-xs text-muted-foreground">
-            {kept.length} of {season.length} days kept · only you see this
+          <span className="text-sm text-muted-foreground">
+            {kept.length} of {season.length} days kept
           </span>
         </div>
         <Progress value={(kept.length / season.length) * 100} aria-label={`${kept.length} of ${season.length} days kept`} className="mt-3 h-1.5" />
 
-        <p className="mt-4 flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
-          <Leaf className="mt-0.5 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}
+        <p className="mt-4 flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
+          <Leaf className="mt-1 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="button"
-            aria-expanded={showAll}
-            onClick={() => setShowAll((open) => !open)}
-            className="inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
-          </button>
-          <div className="flex flex-wrap items-center gap-2">
-            <ShareSeasonButton season={season} />
-            <FastRemindersButton today={today} calendar={calendar} />
-          </div>
-        </div>
         <KeepingTogether season={season} />
-        {showAll ? <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} /> : null}
-      </Card>
+        {/* One main action stays in view; sharing and reminders live with the full journey. */}
+        <button
+          type="button"
+          aria-expanded={showAll}
+          onClick={() => setShowAll((open) => !open)}
+          className="mt-4 inline-flex min-h-11 items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          See the whole journey <ChevronDown className={cn("h-4 w-4 transition-transform", showAll && "rotate-180")} />
+        </button>
+        {showAll ? (
+          <>
+            <Link to={`/fasts/${season.id}`} className="mt-1 inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-2 hover:underline">
+              About the {season.name}: dates and how it is kept
+            </Link>
+            <JourneyList season={season} calendar={calendar} todayIndex={index} kept={kept} />
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-4">
+              <ShareSeasonButton season={season} />
+              <FastRemindersButton today={today} calendar={calendar} />
+            </div>
+          </>
+        ) : null}
+      </section>
     );
+  }
+
+  if (ended) {
+    return <FastEnding season={ended.season} kept={store[ended.season.key] ?? []} />;
   }
 
   if (upcoming && upcoming.daysUntil <= UPCOMING_WINDOW_DAYS) {
@@ -325,7 +444,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
     const firstDay = journeyDay(season, 0, calendar);
     return (
       <Card className="rounded-[2rem] border p-5 sm:p-6" aria-labelledby="season-journey-title">
-        <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+        <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent">
           <CalendarDays className="h-3.5 w-3.5" /> Coming up · {daysUntil === 1 ? "tomorrow" : `in ${daysUntil} days`}
         </p>
         <h2 id="season-journey-title" className="mt-2 text-2xl font-semibold tracking-tight">
@@ -350,7 +469,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
         {showAll ? (
           <div className="mt-4 grid gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Day 1</p>
+              <p className="text-xs font-semibold text-muted-foreground">Day 1</p>
               <h3 className="mt-1 text-xl font-semibold">{firstDay.title}</h3>
               <div className="mt-3">
                 <DayBody day={firstDay} />

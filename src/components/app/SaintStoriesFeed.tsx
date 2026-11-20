@@ -44,7 +44,7 @@ export function SaintStoriesFeed() {
                 aria-label={`${story.saint}: ${story.title}`}
                 className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-accent/25 bg-gradient-to-b from-primary/15 via-card to-card p-5 sm:p-7"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+                <p className="text-xs font-semibold text-accent">
                   {story.saint} · {story.day}
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{story.title}</h2>

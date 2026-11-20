@@ -1,5 +1,5 @@
 /* Presentation: page headers, section intros, surfaces, heroes, tabs and actions. */
-@layer utilities {
+@layer components {
   /* Unified premium presentation system */
   .premium-page {
     position: relative;
@@ -26,7 +26,7 @@
     z-index: -1;
     pointer-events: none;
     color: hsl(var(--icon-gold) / 0.045);
-    font-family: Georgia, serif;
+    font-family: "Literata", Georgia, serif;
     font-size: min(42vw, 28rem);
     line-height: 1;
     transform: rotate(8deg);
@@ -34,61 +34,14 @@
 
   .premium-page-header,
   .section-intro {
-    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card/[0.65] p-4 shadow-sm backdrop-blur-xl sm:p-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-6;
-    box-shadow:
-      inset 0 1px 0 hsl(var(--icon-gold) / 0.14),
-      0 22px 70px hsl(var(--background) / 0.3);
-  }
-
-  .premium-page-header::before,
-  .section-intro::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    background: linear-gradient(90deg, hsl(var(--card) / 0.96) 0%, hsl(var(--card) / 0.84) 48%, hsl(var(--card) / 0.38) 100%);
-    opacity: 0.92;
-  }
-
-  .premium-page-header::after,
-
-  .section-intro::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    border-top: 1px solid hsl(var(--icon-gold) / 0.28);
-    background:
-      linear-gradient(90deg, hsl(var(--byzantine-blue) / 0.08), transparent 34%),
-      linear-gradient(270deg, hsl(var(--cinnabar) / 0.08), transparent 25%);
+    /* A plain surface: no gradient wash or corner watermark, just a border and the page's own heading. */
+    @apply relative isolate flex flex-col gap-4 overflow-hidden rounded-[1.75rem] border border-border/45 bg-card p-4 sm:p-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6 lg:p-6;
   }
 
   .premium-eyebrow {
-    @apply text-[10px] font-semibold uppercase text-primary;
-    letter-spacing: 0.2em;
+    @apply text-sm font-semibold text-primary;
   }
 
-  .premium-icon-mark {
-    @apply relative grid h-11 w-11 shrink-0 place-items-center rounded-[1.1rem] border text-primary;
-    border-color: hsl(var(--icon-gold) / 0.38);
-
-    background:
-      radial-gradient(circle at 35% 25%, hsl(var(--icon-gold) / 0.26), transparent 46%),
-      linear-gradient(145deg, hsl(var(--byzantine-blue) / 0.24), hsl(var(--card) / 0.82));
-    box-shadow:
-      inset 0 1px 0 hsl(var(--icon-gold) / 0.24),
-      0 12px 34px hsl(var(--byzantine-blue) / 0.16);
-  }
-
-  .premium-icon-mark::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    pointer-events: none;
-    border: 1px solid hsl(var(--icon-gold) / 0.12);
-    border-radius: inherit;
-  }
 
   .premium-surface,
 
@@ -125,7 +78,7 @@
     top: 0.8rem;
     z-index: -1;
     color: hsl(var(--icon-gold) / 0.08);
-    font-family: Georgia, serif;
+    font-family: "Literata", Georgia, serif;
     font-size: 4.5rem;
     line-height: 1;
   }
@@ -277,5 +230,29 @@
     .premium-hero-veil {
       background: linear-gradient(90deg, hsl(225 52% 5% / 0.96), hsl(223 47% 7% / 0.76));
     }
+  }
+}
+
+/* The icon mark is a component: size classes in the markup (h-10, h-24, ...) must be able to override it. */
+@layer components {
+  .premium-icon-mark {
+    @apply relative grid h-11 w-11 shrink-0 place-items-center rounded-[1.1rem] border text-primary;
+    border-color: hsl(var(--icon-gold) / 0.38);
+
+    background:
+      radial-gradient(circle at 35% 25%, hsl(var(--icon-gold) / 0.26), transparent 46%),
+      linear-gradient(145deg, hsl(var(--byzantine-blue) / 0.24), hsl(var(--card) / 0.82));
+    box-shadow:
+      inset 0 1px 0 hsl(var(--icon-gold) / 0.24),
+      0 12px 34px hsl(var(--byzantine-blue) / 0.16);
+  }
+
+  .premium-icon-mark::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    border: 1px solid hsl(var(--icon-gold) / 0.12);
+    border-radius: inherit;
   }
 }

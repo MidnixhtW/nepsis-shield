@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 
 import {
   Download,
@@ -101,6 +102,15 @@ const ALLOWED_APP_KEYS = new Set([
   "recent-places:v1",
   "read-aloud:voice",
   "learn-by-heart:v1",
+  "journey:becoming-orthodox:v1",
+  "rosary:pattern",
+  "services:font-size",
+  "jesus_prayer_pulse",
+  "jesus_prayer_view",
+  "jesus_prayer_marker_pause",
+  "parish:v1",
+  "app-reminders:v1",
+  "ison:on",
 ]);
 
 // A few keys are written as raw strings rather than wrapped values; each gets its own strict check.
@@ -363,7 +373,7 @@ export default function Privacy() {
         title="Your data stays in your hands"
         description="Control what the app stores on this device, and move your local data with encrypted export and import."
         icon={<Shield className="h-5 w-5" />}
-        actions={<Button asChild variant="outline" className="premium-action"><Link to="/today">Back to app</Link></Button>}
+        actions={<Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>}
       />
       <p className="mx-1 mt-3 text-xs leading-relaxed text-muted-foreground">
         <span className="font-semibold text-foreground">Independent project:</span> Nepsis Shield is not an official app of the Orthodox Church in America.
@@ -480,7 +490,7 @@ export default function Privacy() {
             </AlertDescription>
           </Alert>
 
-          <Alert className="mt-3 rounded-2xl border-amber-300/50 bg-amber-50/70 dark:bg-amber-950/20">
+          <Alert className="mt-3 rounded-2xl border-icon-gold/[0.58] bg-secondary/[0.58] dark:bg-secondary/[0.58]">
             <Shield className="h-4 w-4" />
             <AlertTitle className="text-sm font-semibold">Backup reminder</AlertTitle>
             <AlertDescription className="mt-1 text-xs text-muted-foreground">
@@ -568,4 +578,4 @@ export default function Privacy() {
       </div>
     </PageContainer>
   );
-}
+}

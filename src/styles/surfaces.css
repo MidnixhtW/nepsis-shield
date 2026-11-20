@@ -1,5 +1,5 @@
 /* Surfaces: camouflage, field grid, radar scope and card textures. */
-@layer utilities {
+@layer components {
   .ocp-camo {
     background-position: 0 0, 116px 24px, 42px 134px, 190px 150px;
     background-size: 360px 300px, 380px 320px, 400px 340px, 370px 315px;

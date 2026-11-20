@@ -24,3 +24,13 @@ test("unknown fasts, far-off years and bad device ids are refused", async () => 
   await expect(keepFast(store, { fast: "nativity-fast", year: 2031, deviceId: ANNA }, NOW)).rejects.toThrow(GroupError);
   await expect(keepFast(store, { fast: "nativity-fast", year: 2026, deviceId: "me" }, NOW)).rejects.toThrow(GroupError);
 });
+
+test("a parish keeps its own count, and each keeper also counts toward the whole", async () => {
+  const store = memoryStore();
+  const parish = "stnick2026";
+  await keepFast(store, { fast: "nativity-fast", year: 2026, deviceId: ANNA, parish }, NOW);
+  await keepFast(store, { fast: "nativity-fast", year: 2026, deviceId: PETER }, NOW);
+  expect(await fastCount(store, { fast: "nativity-fast", year: 2026, parish }, NOW)).toMatchObject({ count: 2, parishCount: 1 });
+  expect(await fastCount(store, { fast: "nativity-fast", year: 2026, parish: "otherpar1" }, NOW)).toMatchObject({ parishCount: 0 });
+  await expect(keepFast(store, { fast: "nativity-fast", year: 2026, deviceId: ANNA, parish: "St Nick" }, NOW)).rejects.toThrow(GroupError);
+});

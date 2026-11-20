@@ -39,8 +39,8 @@ export function CountRing({ count, goal, onTap, className }: { count: number; go
       </svg>
       <span className="relative grid justify-items-center">
         <span className="text-5xl font-semibold tabular-nums tracking-tight">{count}</span>
-        <span className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">of {goal}</span>
-        <span className="mt-2 text-[11px] text-muted-foreground">{reached ? "Glory to God" : "Tap to count"}</span>
+        <span className="mt-1 text-xs font-semibold text-muted-foreground">of {goal}</span>
+        <span className="mt-2 text-xs text-muted-foreground">{reached ? "Glory to God" : "Tap to count"}</span>
       </span>
     </button>
   );

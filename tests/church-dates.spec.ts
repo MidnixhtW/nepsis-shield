@@ -2,6 +2,8 @@
 import { expect, test } from "@playwright/test";
 import { isoDate } from "../src/lib/fastingSeasons";
 import { feastGreeting } from "../src/lib/feastGreetings";
+import { greatFeast } from "../src/lib/greatFeasts";
+import { GUIDE_SAINTS, saintFeast } from "../src/lib/churchGuide";
 import { memorialsFor, soulSaturdays } from "../src/lib/memorials";
 import { nameDayStatus, nextNameDay } from "../src/lib/nameDay";
 
@@ -79,4 +81,25 @@ test("the Church Year theme follows the season", async () => {
   expect(liturgicalSeason(day(2027, 5, 2), "gregorian")).toBe("pascha");
   expect(liturgicalSeason(day(2027, 6, 20), "gregorian")).toBe("pentecost");
   expect(liturgicalSeason(day(2027, 1, 7), "julian")).toBe("nativity");
+});
+
+test("great feasts fall on their days on both calendars", () => {
+  expect(greatFeast(d("2026-12-25"), "gregorian")).toBe("The Nativity of Christ");
+  expect(greatFeast(d("2027-01-07"), "julian")).toBe("The Nativity of Christ");
+  expect(greatFeast(d("2026-12-25"), "julian")).toBeNull();
+  expect(greatFeast(d("2027-01-19"), "julian")).toBe("Theophany");
+  // Pascha 2027 is May 2: Palm Sunday April 25, Ascension June 10, Pentecost June 20, on both calendars.
+  expect(greatFeast(d("2027-05-02"), "julian")).toBe("Pascha, the Resurrection of Christ");
+  expect(greatFeast(d("2027-04-25"), "gregorian")).toBe("The Entry of the Lord into Jerusalem");
+  expect(greatFeast(d("2027-06-10"), "gregorian")).toBe("The Ascension of the Lord");
+  expect(greatFeast(d("2027-06-20"), "julian")).toBe("Pentecost");
+  expect(greatFeast(d("2026-11-18"), "gregorian")).toBeNull();
+});
+
+test("saint pages carry a feast day only when the name-day list clearly names the saint", () => {
+  const feast = (slug: string) => saintFeast(GUIDE_SAINTS.find((saint) => saint.slug === slug)!);
+  expect(feast("nicholas-the-wonderworker")).toEqual({ month: 12, day: 6 });
+  expect(feast("george-the-greatmartyr")).toEqual({ month: 4, day: 23 });
+  expect(feast("nektarios-of-aegina")).toEqual({ month: 11, day: 9 });
+  expect(feast("porphyrios-and-paisios")).toBeNull();
 });

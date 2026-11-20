@@ -154,7 +154,7 @@ export function PrayerChallenges() {
       <Card className="rounded-3xl border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Challenges</p>
+            <p className="text-xs font-semibold text-primary">Challenges</p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight">Choose a guided path.</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               Short Orthodox practice plans for prayer, Scripture, watchfulness, and mercy.

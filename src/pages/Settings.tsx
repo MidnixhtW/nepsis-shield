@@ -28,6 +28,7 @@ import { toast } from "@/hooks/use-toast";
 import { useSettings } from "@/hooks/useSettings";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PrayerReminders } from "@/components/app/PrayerReminders";
+import { OtherReminders } from "@/components/app/OtherReminders";
 import { PatronSaintSettings } from "@/components/app/NameDay";
 import { ReaderVoiceSettings } from "@/components/app/ReaderVoiceSettings";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
@@ -144,6 +145,7 @@ export default function Settings() {
       <div className="premium-card-stack mt-5 lg:grid-cols-2">
 
         <PrayerReminders />
+        <OtherReminders />
 
         <Card id="role" className={cn("scroll-mt-24 rounded-3xl p-5 shadow-sm", roleTheme.card)}>
           <div className="flex items-start justify-between gap-3">

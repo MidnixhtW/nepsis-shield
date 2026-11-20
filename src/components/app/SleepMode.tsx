@@ -116,12 +116,12 @@ export function SleepMode() {
   const recentCount = useMemo(() => store.completedDates.slice(0, 7).length, [store.completedDates]);
 
   return (
-    <Card className={dimmed ? "rounded-3xl border-primary/20 bg-black p-5 text-zinc-100 shadow-sm sm:p-6" : "rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6"}>
+    <Card className={dimmed ? "rounded-3xl border-primary/20 bg-black p-5 text-foreground shadow-sm sm:p-6" : "rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6"}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Sleep mode</p>
+          <p className="text-xs font-semibold text-primary">Sleep mode</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">End the day in prayer.</h2>
-          <p className={dimmed ? "mt-2 max-w-2xl text-sm leading-relaxed text-zinc-300" : "mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground"}>
+          <p className={dimmed ? "mt-2 max-w-2xl text-sm leading-relaxed text-foreground" : "mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground"}>
             A quiet night flow with short prayers, a dim screen, and a gentle Jesus Prayer timer.
           </p>
         </div>
@@ -135,18 +135,18 @@ export function SleepMode() {
         </div>
       </div>
 
-      <Separator className={dimmed ? "my-5 bg-zinc-800" : "my-5"} />
+      <Separator className={dimmed ? "my-5 bg-card" : "my-5"} />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-        <div className={dimmed ? "rounded-3xl border border-zinc-800 bg-zinc-950 p-5" : "rounded-3xl border border-border/60 bg-muted/20 p-5"}>
+        <div className={dimmed ? "rounded-3xl border border-border/[0.72] bg-card p-5" : "rounded-3xl border border-border/60 bg-muted/20 p-5"}>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Step {stepIndex + 1} of {steps.length}</p>
+              <p className="text-xs font-semibold text-primary">Step {stepIndex + 1} of {steps.length}</p>
               <h3 className="mt-1 text-xl font-semibold tracking-tight">{step.title}</h3>
             </div>
-            <Volume2 className={dimmed ? "h-5 w-5 text-zinc-400" : "h-5 w-5 text-muted-foreground"} />
+            <Volume2 className={dimmed ? "h-5 w-5 text-foreground" : "h-5 w-5 text-muted-foreground"} />
           </div>
-          <p className={dimmed ? "mt-4 text-lg leading-relaxed text-zinc-200" : "mt-4 text-lg leading-relaxed"}>{step.body}</p>
+          <p className={dimmed ? "mt-4 text-lg leading-relaxed text-foreground" : "mt-4 text-lg leading-relaxed"}>{step.body}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             <Button type="button" variant="outline" className="rounded-2xl" disabled={stepIndex === 0} onClick={() => setStepIndex((i) => i - 1)}>
               Back
@@ -169,7 +169,7 @@ export function SleepMode() {
 
         <div className="grid content-start gap-4">
           <div>
-            <p className={dimmed ? "text-xs font-semibold text-zinc-400" : "text-xs font-semibold text-muted-foreground"}>Timer length</p>
+            <p className={dimmed ? "text-xs font-semibold text-foreground" : "text-xs font-semibold text-muted-foreground"}>Timer length</p>
             <ToggleGroup type="single" value={String(minutes)} onValueChange={(v) => v && updateMinutes(Number(v) as typeof durations[number])} className="mt-2 grid grid-cols-2 gap-2">
               {durations.map((duration) => (
                 <ToggleGroupItem key={duration} value={String(duration)} className="rounded-2xl border border-border/60 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
@@ -179,7 +179,7 @@ export function SleepMode() {
             </ToggleGroup>
           </div>
 
-          <div className={dimmed ? "rounded-3xl border border-zinc-800 bg-zinc-950 p-4" : "rounded-3xl border border-border/60 bg-background/50 p-4"}>
+          <div className={dimmed ? "rounded-3xl border border-border/[0.72] bg-card p-4" : "rounded-3xl border border-border/60 bg-background/50 p-4"}>
             <p className="text-4xl font-semibold tabular-nums">{formatTime(remaining)}</p>
             <Progress value={progress} className="mt-3 h-2" />
             <div className="mt-4 flex gap-2">
@@ -193,7 +193,7 @@ export function SleepMode() {
             </div>
           </div>
 
-          <div className={dimmed ? "rounded-3xl border border-zinc-800 bg-zinc-950 p-4 text-sm text-zinc-300" : "rounded-3xl border border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground"}>
+          <div className={dimmed ? "rounded-3xl border border-border/[0.72] bg-card p-4 text-sm text-foreground" : "rounded-3xl border border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground"}>
             Completed {recentCount} night{recentCount === 1 ? "" : "s"} recently. If you fall asleep, that is okay.
           </div>
         </div>

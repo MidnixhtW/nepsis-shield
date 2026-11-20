@@ -1,6 +1,7 @@
 // /api/fasts: the anonymous "keeping the fast together" count (Vercel function). See api/_lib/fasts.ts.
 //   GET  /api/fasts?fast=nativity-fast&year=2026            -> { count }
 //   POST /api/fasts { fast, year, deviceId }                 -> { count }
+//   Either may add a parish code (?parish= or { parish }) and then also returns { parishCount }.
 import { GroupError } from "./_lib/groups.js";
 import { fastCount, keepFast } from "./_lib/fasts.js";
 import { type Store, upstashStore } from "./_lib/store.js";
@@ -59,7 +60,7 @@ export function OPTIONS(request: Request) {
 
 export function GET(request: Request) {
   const params = new URL(request.url).searchParams;
-  return handle(request, (store) => fastCount(store, { fast: params.get("fast"), year: params.get("year") }), 60);
+  return handle(request, (store) => fastCount(store, { fast: params.get("fast"), year: params.get("year"), parish: params.get("parish") }), 60);
 }
 
 export async function POST(request: Request) {
@@ -69,5 +70,5 @@ export async function POST(request: Request) {
   } catch {
     return reply(request, 400, { error: "That request could not be read." });
   }
-  return handle(request, (store) => keepFast(store, { fast: body.fast, year: body.year, deviceId: body.deviceId }), 10);
+  return handle(request, (store) => keepFast(store, { fast: body.fast, year: body.year, deviceId: body.deviceId, parish: body.parish }), 10);
 }

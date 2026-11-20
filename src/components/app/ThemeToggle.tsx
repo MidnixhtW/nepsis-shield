@@ -26,7 +26,7 @@ export const themeOptions: Array<{
     label: "Church Year",
     description: "Follows the season: violet in Lent, red at Pascha, green at Pentecost, blue for the Theotokos",
     swatch: "bg-[#6f9fd8]",
-    preview: ["#0c0f15", "#ede6d6", "#d6b45e"],
+    preview: ["#0c0f15", "#ede6d6", "#9fbbe0"],
   },
   {
     value: "dark",
@@ -119,7 +119,7 @@ export function ThemeToggle({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="max-h-[var(--radix-dropdown-menu-content-available-height)] w-64 overflow-y-auto border-primary/25 bg-popover/95 p-1.5 backdrop-blur-xl">
-        <DropdownMenuLabel className="px-2 py-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <DropdownMenuLabel className="px-2 py-2 text-xs text-muted-foreground">
           Interface palette
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

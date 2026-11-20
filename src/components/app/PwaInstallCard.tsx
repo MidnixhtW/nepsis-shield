@@ -72,7 +72,7 @@ export function PwaInstallCard() {
   }, []);
 
   const browserHint = useMemo(() => {
-    const ua = window.navigator.userAgent.toLowerCase();
+    const ua = typeof navigator === "undefined" ? "" : navigator.userAgent.toLowerCase();
     if (ua.includes("iphone") || ua.includes("ipad")) return "On iPhone/iPad: tap Share, then Add to Home Screen.";
     if (ua.includes("android")) return "On Android: tap Install if it appears, or open the browser menu and choose Add to Home screen.";
     return "On desktop: use this button when available, or click the install icon in the address bar.";
@@ -124,7 +124,7 @@ export function PwaInstallCard() {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <MonitorSmartphone className="h-5 w-5 text-primary" />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">Web install</p>
+            <p className="text-xs font-semibold text-muted-foreground">Web install</p>
             <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs">
               {installStatus}
             </Badge>

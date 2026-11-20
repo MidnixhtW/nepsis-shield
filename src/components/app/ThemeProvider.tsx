@@ -5,6 +5,7 @@ import { useCurrentDay } from "@/hooks/useCurrentDay";
 import { useSettings } from "@/hooks/useSettings";
 import { liturgicalSeason } from "@/lib/liturgicalSeason";
 import { useResponderMode } from "@/lib/responderMode";
+import { useNow } from "@/lib/prayerHours";
 
 export const APP_THEMES = ["seasonal", "dark", "parchment", "red-dark", "blue-cream", "lenten", "midnight", "paschal"] as const;
 
@@ -37,6 +38,24 @@ function ThemeClassSync() {
 
 // The Church Year theme reads the season and the service role from <html data-season data-role>.
 // Both are kept current here (the season changes at midnight, the role whenever it is changed).
+/** The light of the hour: dawn, day, evening (the lamp-lighting of Vespers) and night. Read by styles/hour-light.css. */
+export function hourLight(date: Date) {
+  const hour = date.getHours();
+  if (hour >= 4 && hour < 8) return "dawn";
+  if (hour >= 8 && hour < 17) return "day";
+  if (hour >= 17 && hour < 21) return "evening";
+  return "night";
+}
+
+function HourLightSync() {
+  const now = useNow();
+  const light = hourLight(now);
+  useEffect(() => {
+    document.documentElement.dataset.hour = light;
+  }, [light]);
+  return null;
+}
+
 function SeasonalThemeSync() {
   const today = useCurrentDay();
   const { settings } = useSettings();
@@ -66,6 +85,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     >
       <ThemeClassSync />
       <SeasonalThemeSync />
+      <HourLightSync />
       {children}
     </NextThemesProvider>
   );

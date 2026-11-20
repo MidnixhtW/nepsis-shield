@@ -92,7 +92,7 @@ export function MemorialsCard({ today }: { today: Date }) {
 
   return (
     <Card className="rounded-[1.5rem] border p-5" role="region" aria-label="Remembering the departed">
-      <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+      <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent">
         <Flame aria-hidden className="h-3.5 w-3.5" /> Remembering the departed
       </p>
       <ul className="mt-3 grid gap-2">

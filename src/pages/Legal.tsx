@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -126,7 +127,9 @@ const PRIVACY: Section[] = [
         <p>
           <span className="font-semibold text-foreground">Keeping a fast together (only if you tap "I'm keeping it").</span> The app sends which
           fast it is and a random number made on your device, tied to nothing about you. Only the total is ever shown. The numbers are deleted
-          about four months later.
+          about four months later. If you keep the fasts with a parish, the app also sends that parish&rsquo;s code, a random string made when
+          someone created the parish link, so the parish&rsquo;s own total can be shown. The parish&rsquo;s name is never sent to our server: it
+          stays in the link and on the phones that open it.
         </p>
         <p>
           <span className="font-semibold text-foreground">Our hosting.</span> The website and the server above run on{" "}
@@ -351,7 +354,7 @@ const COOKIES: Section[] = [
             </>,
             <>
               <span className="font-semibold text-foreground">IndexedDB:</span> the next two weeks of the Church calendar, so Today works without a
-              signal.
+              signal, and the Bible chapters you have opened (the most recent few hundred, for up to 30 days), so they open again without one.
             </>,
             <>
               <span className="font-semibold text-foreground">Cache storage:</span> the app's own files, and any recordings you save for offline
@@ -402,7 +405,7 @@ export default function Legal({ doc }: { doc: LegalDoc }) {
         icon={<FileText className="h-5 w-5" />}
         actions={
           <Button asChild variant="outline" className="premium-action">
-            <Link to="/today">Back to app</Link>
+            <Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link>
           </Button>
         }
       />

@@ -9,11 +9,10 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
 
   const onboarding = page.getByRole("dialog");
   await expect(onboarding.getByRole("heading", {
-    name: "Quiet your heart. Begin with one faithful step.",
+    name: "A small rule of prayer you can keep",
   })).toBeVisible();
 
-  await onboarding.getByRole("button", { name: "Continue" }).click();
-  await onboarding.getByRole("button", { name: "Continue" }).click(); // theme (keep Church Year)
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
   // Every role keeps the same look; a role only tints the accent color.
   const html = page.locator("html");
   await onboarding.getByRole("button", { name: /^Military/ }).click();
@@ -22,13 +21,14 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   await onboarding.getByRole("button", { name: /EMS \/ medical/ }).click();
   await expect(html).toHaveClass(/seasonal/);
   await expect(html).toHaveAttribute("data-role", "ems");
-  await onboarding.getByRole("button", { name: "Continue" }).click();
-  await onboarding.getByRole("button", { name: "Continue" }).click(); // calendar (keep New Calendar)
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // calling and calendar (keep New Calendar)
 
   await onboarding.getByRole("button", { name: /Discipline in prayer/ }).click();
+  // The rule takes shape on screen as choices are made.
+  await expect(onboarding.getByLabel("Your rule so far")).toContainText("Rule for Steady Prayer");
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
-  await onboarding.getByRole("button", { name: /Smallest faithful step/ }).click();
+  await onboarding.getByRole("button", { name: /Two-minute rule/ }).click();
   await onboarding.getByRole("button", { name: "Continue" }).click();
 
   await expect(onboarding.getByText("Your daily prayer plan")).toBeVisible();
@@ -39,4 +39,53 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   // Today shows the rule compactly; open it to see the whole rule.
   await page.getByRole("button", { name: "Show rule" }).click();
   await expect(page.getByRole("heading", { name: "Rule for Steady Prayer" })).toBeVisible();
+});
+
+test("a first visit in a hard moment can skip setup and go straight to Help", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.clear();
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  // "/" is the homepage for a first visit; the app itself opens on Today.
+  await page.goto("/today");
+  const onboarding = page.getByRole("dialog", { name: /Set up your daily rule/ });
+  await onboarding.getByRole("button", { name: /Need a moment of quiet right now/ }).click();
+  await expect(onboarding).toBeHidden();
+  await expect(page).toHaveURL(/\/today$/);
+  await expect(page.getByRole("dialog", { name: "Need help now?" })).toBeVisible();
+});
+
+test("from a public page, Back to app opens Today to look around, and setup is one tap away", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("test:cleared")) {
+      localStorage.clear();
+      sessionStorage.setItem("test:cleared", "1");
+    }
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/about");
+  await page.getByRole("link", { name: "Back to app" }).click();
+  await expect(page).toHaveURL(/\/today$/);
+  await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toHaveCount(0);
+
+  await page.getByRole("region", { name: "Set up your daily rule" }).getByRole("button", { name: "Set up", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toBeVisible();
+});
+
+test("Look around first closes setup for now and leaves a way back", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("test:cleared")) {
+      localStorage.clear();
+      sessionStorage.setItem("test:cleared", "1");
+    }
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/today");
+  const setup = page.getByRole("dialog", { name: /Set up your daily rule/ });
+  await setup.getByRole("button", { name: "Look around first" }).click();
+  await expect(setup).toHaveCount(0);
+  // Still not set up, so a new visit to Today in this session stays open, and the inline setup card stays.
+  await page.reload();
+  await expect(setup).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Set up your daily rule" }).getByRole("button", { name: "Set up", exact: true })).toBeVisible();
 });

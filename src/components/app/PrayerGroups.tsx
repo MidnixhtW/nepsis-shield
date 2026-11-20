@@ -119,7 +119,7 @@ export function PrayerGroups() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Prayer groups</p>
+        <p className="text-xs font-semibold text-accent">Prayer groups</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">Carry one another's burdens.</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           Make a small group for your family, parish, unit or friends. Share prayer requests, and see who has prayed today. There are no accounts and no feed.
@@ -211,7 +211,7 @@ function JoinGroup({ id, onJoined, onCancel }: { id: string; onJoined: (id: stri
   return (
     <Card className="grid gap-4 rounded-3xl border p-5 sm:p-6">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Invitation</p>
+        <p className="text-xs font-semibold text-accent">Invitation</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">Join a prayer group</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Someone invited you to pray with them. Choose the first name the group will see.</p>
       </div>
@@ -290,7 +290,7 @@ function GroupDetail({ group, onBack }: { group: SavedGroup; onBack: () => void 
         </Button>
       </div>
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Prayer group</p>
+        <p className="text-xs font-semibold text-accent">Prayer group</p>
         <h2 id="group-title" className="mt-1 text-2xl font-semibold tracking-tight">{view?.name ?? group.name}</h2>
         <p className="mt-1 text-sm text-muted-foreground">You pray here as {group.memberName}.</p>
         {problem ? <p className="mt-3 text-sm text-destructive" role="alert">{problem}</p> : null}

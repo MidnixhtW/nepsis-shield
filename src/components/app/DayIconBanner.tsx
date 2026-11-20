@@ -1,62 +1,69 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import type { ChurchCalendar } from "@/lib/fastingSeasons";
+import { currentSeason, type ChurchCalendar } from "@/lib/fastingSeasons";
 import { dayIcon } from "@/lib/dayIcon";
 import { ShareCardButton } from "@/components/app/ShareCardButton";
 
-// The top of Today: the day's feast or season with its icon, shown whole (icons are never cropped),
-// over a soft, blurred wash of the same icon.
-export function DayIconBanner({ today, calendar, saints }: { today: Date; calendar: ChurchCalendar; saints?: string[] }) {
+// The top of Today: the day's icon first, whole and large, the way one venerates the icon on entering church. Below
+// it, the day's feast or season in red, as feasts are printed in the Church's calendar, and one sentence for the rest
+// of the day: its tone, the day of the fast, the saint remembered. The date itself is in the header.
+export function DayIconBanner({
+  today,
+  calendar,
+  saints,
+  tone,
+}: {
+  today: Date;
+  calendar: ChurchCalendar;
+  saints?: string[];
+  tone?: number;
+}) {
   const icon = dayIcon(today, calendar);
   const [failed, setFailed] = useState(false);
   const firstSaint = saints?.find(Boolean);
   const ordinary = icon.title === "Today";
+  const heading = ordinary && firstSaint ? firstSaint : ordinary ? format(today, "EEEE, MMMM d") : icon.title;
+
+  const active = currentSeason(today, calendar);
+  const line = [
+    tone ? `Tone ${tone}` : "",
+    active
+      ? icon.title === active.season.name
+        ? `Day ${active.index + 1} of ${active.season.length}`
+        : `${active.season.name}, day ${active.index + 1} of ${active.season.length}`
+      : "",
+    !ordinary && firstSaint ? `We remember ${firstSaint}` : "",
+  ]
+    .filter(Boolean)
+    .map((part) => `${part}.`)
+    .join(" ");
 
   return (
-    <section aria-label="Today's feast or season" className="relative isolate overflow-hidden rounded-3xl border border-accent/25 bg-card">
+    <section aria-label="Today's feast or season" className="px-1 pb-2 pt-1 text-center">
       {!failed ? (
         <img
           src={icon.imageUrl}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 -z-10 h-full w-full scale-125 object-cover opacity-35 blur-2xl"
+          alt={icon.alt}
+          onError={() => setFailed(true)}
+          className="mx-auto h-auto max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
         />
       ) : null}
-      <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-card via-card/85 to-card/30" />
-      <div className="flex items-center gap-4 p-5 sm:gap-6 sm:p-6">
-        <div className="min-w-0 flex-1">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">{format(today, "EEEE, MMMM d")}</p>
-          <h1 className="mt-1.5 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">
-            {ordinary && firstSaint ? "Today we remember" : icon.title}
-          </h1>
-          {ordinary && firstSaint ? (
-            <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-foreground/85">{firstSaint}</p>
-          ) : null}
-          <div className="mt-3">
-            <ShareCardButton
-              card={{
-                eyebrow: format(today, "EEEE, MMMM d"),
-                text: ordinary && firstSaint ? `Today we remember ${firstSaint}` : icon.title,
-                imageUrl: icon.imageUrl,
-              }}
-              fileName="today.png"
-            />
-          </div>
-          <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
-            Icon:{" "}
-            <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">
-              {icon.credit}
-            </a>
-          </p>
-        </div>
-        {!failed ? (
-          <img
-            src={icon.imageUrl}
-            alt={icon.alt}
-            onError={() => setFailed(true)}
-            className="h-36 w-auto max-w-[42%] shrink-0 rounded-xl object-contain shadow-[0_12px_32px_hsl(0_0%_0%/0.45)] sm:h-48"
-          />
-        ) : null}
+      <h1 className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>
+        {heading}
+      </h1>
+      {line ? <p className="scripture-text mx-auto mt-2 max-w-xl text-balance text-base text-foreground/85">{line}</p> : null}
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-foreground/75">
+        <ShareCardButton
+          card={{
+            eyebrow: format(today, "EEEE, MMMM d"),
+            text: ordinary && firstSaint ? `Today we remember ${firstSaint}` : icon.title,
+            imageUrl: icon.imageUrl,
+          }}
+          fileName="today.png"
+        />
+        <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">
+          Icon: {icon.credit}
+        </a>
       </div>
     </section>
   );

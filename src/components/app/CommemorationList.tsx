@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { nextMemorial, parseDay } from "@/lib/memorials";
+import { LampButton } from "@/components/app/LampButton";
+import { useLitLamps } from "@/lib/vigilLamps";
 import { cn } from "@/lib/utils";
 import {
   getCommemorations,
@@ -65,6 +67,7 @@ function NameList({
   const [reposed, setReposed] = useState("");
   const departed = config.key === "departed";
   const today = new Date();
+  const lit = useLitLamps();
 
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -102,7 +105,8 @@ function NameList({
       {entries.length ? (
         <ul className="mt-4 grid gap-2">
           {entries.map((entry) => (
-            <li key={entry.id} className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/40 px-4 py-2.5">
+            <li key={entry.id} className="flex items-center gap-2 rounded-2xl border border-border/60 bg-background/40 py-1.5 pl-1.5 pr-3">
+              <LampButton id={entry.id} name={entry.name} lit={lit.has(entry.id)} />
               <span className="min-w-0 flex-1">
                 <span className="scripture-text block text-base">{entry.name}</span>
                 {entry.note ? <span className="block text-xs text-muted-foreground">{entry.note}</span> : null}
@@ -137,7 +141,7 @@ export function CommemorationList() {
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <h2 className="text-xl font-semibold tracking-tight">Names to remember</h2>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-          Orthodox Christians pray by name for the living and the departed, and bring these names to the priest to be remembered at the Liturgy. Names you add here are prayed in the daily prayer flow and stay only on this device.
+          Orthodox Christians pray by name for the living and the departed, and bring these names to the priest to be remembered at the Liturgy. Names you add here are prayed in the daily prayers. Light a lamp beside a name when you pray for them; it burns until morning. The list stays only on this device.
         </p>
         <div className="mt-4">
           <Button type="button" variant="outline" className="rounded-xl" disabled={!hasNames} onClick={() => window.print()}>

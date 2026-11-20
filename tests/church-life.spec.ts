@@ -58,7 +58,8 @@ test("a busy day shows two occasions and folds the rest", async ({ page }) => {
   await expect(page.getByRole("region", { name: "Your name day" })).toBeVisible();
   const memorials = page.getByRole("region", { name: "Remembering the departed" });
   await expect(memorials).toBeHidden();
-  const more = page.getByRole("button", { name: /Also today · Memorial days/ });
+  // The Nativity Fast's ending is also an occasion that day, so it folds with the memorials.
+  const more = page.getByRole("button", { name: /Also today · .*Memorial days/ });
   await more.click();
   await expect(memorials).toBeVisible();
   await expect(page.getByRole("button", { name: "Show less" })).toHaveAttribute("aria-expanded", "true");

@@ -77,3 +77,26 @@ test("left open past midnight, the Rosary moves to the next day's mysteries", as
   await page.clock.runFor(2 * 60_000);
   await expect(sets.getByRole("radio", { name: "Sorrowful" })).toHaveAttribute("aria-checked", "true");
 });
+
+test("the drawn Rosary follows the beads and a tap on it moves on", async ({ page }) => {
+  await page.goto("/pray?tab=rosary");
+  const beads = page.getByRole("button", { name: /^Rosary beads/ });
+  await expect(beads).toHaveAccessibleName(/1 of 67/);
+  await beads.click();
+  await expect(page.getByRole("heading", { name: "Our Father" })).toBeVisible();
+  await expect(beads).toHaveAccessibleName(/2 of 67/);
+  await page.getByRole("button", { name: /^Next/ }).click();
+  await expect(beads).toHaveAccessibleName(/3 of 67/);
+});
+
+test("the Rosary can be prayed in the dark, a tap for each bead", async ({ page }) => {
+  await page.goto("/pray?tab=rosary");
+  await page.getByRole("button", { name: "Begin in the dark" }).click();
+  const dark = page.getByRole("button", { name: /Rosary, dark mode/ });
+  await expect(dark).toBeVisible();
+  for (let i = 0; i < 6; i += 1) await dark.click();
+  await expect(dark).toHaveAccessibleName(/6 beads/);
+  await page.keyboard.press("Escape");
+  await expect(dark).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: /First .* Mystery/ })).toBeVisible();
+});

@@ -243,8 +243,8 @@ export function ConfessionPrep() {
   const saveStatusClass = !saveEnabled
     ? "bg-muted text-muted-foreground"
     : locked
-      ? "bg-amber-500/12 text-amber-800 dark:text-amber-200"
-      : "bg-emerald-500/12 text-emerald-800 dark:text-emerald-200";
+      ? "bg-secondary/[0.58] text-liturgical-warm dark:text-liturgical-warm"
+      : "bg-success/[0.14] text-success dark:text-success";
 
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">

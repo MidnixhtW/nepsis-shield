@@ -1,9 +1,9 @@
-import { BookOpen } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DailyReadings } from "@/components/app/DailyReadings";
 import { OrthodoxBible } from "@/components/app/OrthodoxBible";
 import { ReadingPlans } from "@/components/app/ReadingPlans";
-import { SectionIntro } from "@/components/app/SectionIntro";
+import { LauncherIntro } from "@/components/app/SectionLauncher";
+import { t } from "@/i18n";
 
 export type ReadTab = "daily" | "bible" | "plans";
 
@@ -17,18 +17,13 @@ export function ReadHub({
 }) {
   return (
     <div className="grid min-w-0 gap-4 sm:gap-5 lg:gap-6">
-      <SectionIntro
-        eyebrow="Scripture"
-        title="Attend to the Word."
-        description="Receive the appointed readings, browse Scripture, or follow a steady reading plan."
-        icon={<BookOpen className="h-4 w-4" />}
-      />
+      <LauncherIntro title={t("read.title")} />
 
       <Tabs value={tab} onValueChange={(value) => onTabChange(value as ReadTab)}>
-        <TabsList className="premium-tabs">
-          <TabsTrigger value="daily" className="premium-tab flex-1">Daily</TabsTrigger>
-          <TabsTrigger value="bible" className="premium-tab flex-1">Bible</TabsTrigger>
-          <TabsTrigger value="plans" className="premium-tab flex-1">Plans</TabsTrigger>
+        <TabsList className="premium-tabs flex h-auto w-full gap-1 p-1.5 sm:gap-1.5">
+          <TabsTrigger value="daily" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Daily</TabsTrigger>
+          <TabsTrigger value="bible" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Bible</TabsTrigger>
+          <TabsTrigger value="plans" className="premium-tab min-h-10 flex-1 px-3 py-2 text-xs font-medium sm:px-4 sm:text-sm">Plans</TabsTrigger>
         </TabsList>
         <TabsContent value="daily" className="mt-4 sm:mt-5"><DailyReadings /></TabsContent>
         <TabsContent value="bible" className="mt-4 sm:mt-5"><OrthodoxBible /></TabsContent>

@@ -40,7 +40,7 @@ export function DayTimeline() {
               >
                 {step.done ? <Check aria-hidden className="h-3.5 w-3.5" /> : null}
               </span>
-              <span className={cn("text-[11px]", step.current ? "font-semibold text-foreground" : "text-muted-foreground")}>{step.label}</span>
+              <span className={cn("text-xs", step.current ? "font-semibold text-foreground" : "text-muted-foreground")}>{step.label}</span>
             </Link>
           </li>
         ))}

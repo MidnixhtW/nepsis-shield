@@ -84,7 +84,7 @@ export function MonasticAudioPlayer() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="candlelight-card group flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left shadow-[0_22px_70px_hsl(35_91%_48%/0.22)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35"
+          className="candlelight-card group flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -110,7 +110,7 @@ export function MonasticAudioPlayer() {
             <span className="sr-only">Minimize player</span>
           </Button>
           <div className="text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">Vigil Sanctuary</p>
+            <p className="text-xs font-bold text-primary">Vigil Sanctuary</p>
             <p className="mt-1 text-xs text-muted-foreground">{currentTrack.category}</p>
           </div>
           <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => setOpen(false)}>
@@ -121,9 +121,9 @@ export function MonasticAudioPlayer() {
 
         <main className="flex flex-1 flex-col items-center justify-center gap-6 py-6 sm:gap-8 sm:py-8">
           <div className="relative mt-2 sm:mt-4">
-            <div className="absolute -inset-8 rounded-full bg-amber-500/20 blur-3xl sm:-inset-12" />
+            <div className="absolute -inset-8 rounded-full bg-accent/20 blur-3xl sm:-inset-12" />
             <div className="absolute -inset-3 animate-pulse rounded-full border border-primary/20 shadow-[0_0_80px_hsl(42_92%_58%/0.22)] sm:-inset-4" />
-            <div className="relative grid h-[min(16rem,68vw)] w-[min(16rem,68vw)] place-items-center rounded-full border border-primary/35 bg-[radial-gradient(circle_at_50%_35%,hsl(42_92%_58%/0.18),transparent_48%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))] shadow-[inset_0_1px_0_hsl(42_92%_76%/0.24),0_30px_100px_hsl(35_91%_48%/0.18)] sm:h-72 sm:w-72">
+            <div className="relative grid h-[min(16rem,68vw)] w-[min(16rem,68vw)] place-items-center rounded-full border border-primary/35 bg-[radial-gradient(circle_at_50%_35%,hsl(42_92%_58%/0.18),transparent_48%),linear-gradient(135deg,hsl(var(--card)),hsl(var(--background)))] sm:h-72 sm:w-72">
               <div className="grid h-[62%] w-[62%] place-items-center rounded-full border border-primary/25 bg-background/70 text-primary shadow-inner">
                 <OrthodoxCrossIcon className="h-16 w-16 sm:h-20 sm:w-20" />
               </div>
@@ -131,7 +131,7 @@ export function MonasticAudioPlayer() {
           </div>
 
           <section className="min-w-0 w-full text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">Now praying</p>
+            <p className="text-xs font-bold text-primary">Now praying</p>
             <h1 className="mx-auto mt-3 max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl">{currentTrack.title}</h1>
             <p className="mx-auto mt-5 max-w-md text-lg italic leading-relaxed text-foreground/80">“{activeLine}”</p>
           </section>
@@ -139,7 +139,7 @@ export function MonasticAudioPlayer() {
           <section className="candlelight-card w-full rounded-[2rem] border p-5 sm:p-6">
             <div className="space-y-2">
               <div className="h-1.5 overflow-hidden rounded-full bg-primary/15">
-                <div className="h-full w-[38%] rounded-full bg-primary gold-foil" />
+                <div className="h-full w-[38%] rounded-full bg-primary" />
               </div>
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>03:48</span>
@@ -152,7 +152,7 @@ export function MonasticAudioPlayer() {
                 <SkipBack className="h-5 w-5" />
                 <span className="sr-only">Previous sanctuary track</span>
               </Button>
-              <Button type="button" className="gold-foil h-20 w-20 rounded-full text-primary-foreground shadow-[0_18px_55px_hsl(35_91%_48%/0.28)] transition-transform duration-200 hover:scale-105 active:scale-95" onClick={togglePlay}>
+              <Button type="button" className="h-20 w-20 rounded-full text-primary-foreground transition-transform duration-200 hover:scale-105 active:scale-95" onClick={togglePlay}>
                 {isPlaying ? <Pause className="h-9 w-9" /> : <Play className="ml-1 h-9 w-9" />}
                 <span className="sr-only">{isPlaying ? "Pause" : "Play"}</span>
               </Button>
@@ -180,7 +180,7 @@ export function MonasticAudioPlayer() {
                         type="button"
                         className={cn(
                           "rounded-2xl border px-3 py-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
-                          active ? "border-primary/50 bg-primary/15 text-primary shadow-[0_12px_35px_hsl(35_91%_48%/0.14)]" : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary",
+                          active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary",
                         )}
                         onClick={() => setAmbientTrack(active ? null : option)}
                       >
@@ -208,7 +208,7 @@ export function MonasticAudioPlayer() {
 
             {showText ? (
               <div className="mt-5 rounded-3xl bg-background/45 p-5 text-left">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Prayer text</p>
+                <p className="text-xs font-semibold text-primary">Prayer text</p>
                 <div className="mt-3 space-y-3 text-sm leading-relaxed text-foreground/85">
                   {transcript.map((line) => (
                     <p key={line} className={line === activeLine ? "text-primary" : undefined}>{line}</p>
@@ -230,7 +230,7 @@ function ToolButton({ active, icon, label, onClick }: { active: boolean; icon: R
       onClick={onClick}
       className={cn(
         "flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
-        active ? "border-primary/50 bg-primary/15 text-primary shadow-[0_12px_35px_hsl(35_91%_48%/0.14)]" : "border-primary/15 bg-background/35 text-muted-foreground hover:border-primary/35 hover:text-primary",
+        active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 bg-background/35 text-muted-foreground hover:border-primary/35 hover:text-primary",
       )}
     >
       {icon}

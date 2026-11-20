@@ -39,7 +39,7 @@ function inferGitHubPagesRepository() {
 export function buildLatestDebugApkUrl(repository: string) {
   const normalized = normalizeGitHubRepository(repository);
   return normalized
-    ? `https://github.com/${normalized}/releases/download/android-debug-latest/ortho-companion-latest-debug.apk`
+    ? `https://github.com/${normalized}/releases/download/android-debug-latest/nepsis-shield-beta.apk`
     : "";
 }
 
@@ -75,7 +75,7 @@ export const APK_GITHUB_REPOSITORY = normalizeGitHubRepository(
 
 // "release" once a signed APK has been published (set VITE_APK_CHANNEL=release on the host); "testing" until then.
 export const APK_CHANNEL: "release" | "testing" = import.meta.env.VITE_APK_CHANNEL === "release" ? "release" : "testing";
-export const APK_CHANNEL_LABEL = APK_CHANNEL === "release" ? "Signed release" : "Testing build";
+export const APK_CHANNEL_LABEL = APK_CHANNEL === "release" ? "Signed release" : "Public beta";
 
 const latestDebugApkUrl =
   APK_CHANNEL === "release" ? buildLatestReleaseApkUrl(APK_GITHUB_REPOSITORY) : buildLatestDebugApkUrl(APK_GITHUB_REPOSITORY);

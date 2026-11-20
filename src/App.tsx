@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Analytics, type BeforeSendEvent } from "@vercel/analytics/react";
 import Index from "./pages/Index";
+import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
@@ -14,6 +15,10 @@ import { ScrollToTop } from "@/components/app/ScrollToTop";
 import { ConnectionStatusBanner } from "@/components/app/ConnectionStatusBanner";
 import { AudioProvider } from "@/components/app/AudioProvider";
 import { ReminderTapRouter } from "@/components/app/ReminderTapRouter";
+import { WidgetRouteRouter } from "@/components/app/WidgetRouteRouter";
+import { ParishLinkReceiver } from "@/components/app/ParishLinkReceiver";
+import { IsonSync } from "@/components/app/IsonSync";
+import { RouteMetaSync } from "@/components/app/RouteMetaSync";
 
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
@@ -27,6 +32,7 @@ const ReleaseNotes = lazy(() => import("./pages/ReleaseNotes"));
 const Saints = lazy(() => import("@/pages/Saints"));
 const Settings = lazy(() => import("@/pages/Settings"));
 const PhilokaliaGuide = lazy(() => import("@/pages/PhilokaliaGuide"));
+const ChurchGuide = lazy(() => import("@/pages/ChurchGuide"));
 
 const queryClient = new QueryClient();
 
@@ -66,10 +72,14 @@ const App = () => (
           <BrowserRouter>
             <ConnectionStatusBanner />
             <ScrollToTop />
+            <RouteMetaSync />
             <ReminderTapRouter />
+            <WidgetRouteRouter />
+            <ParishLinkReceiver />
+            <IsonSync />
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Home />} />
               <Route path="/privacy" element={<Privacy />} />
 
               <Route path="/about" element={<About />} />
@@ -81,6 +91,11 @@ const App = () => (
               <Route path="/release-notes" element={<ReleaseNotes />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/saints" element={<Saints />} />
+              <Route path="/saints/:slug" element={<ChurchGuide />} />
+              <Route path="/feasts" element={<ChurchGuide />} />
+              <Route path="/feasts/:slug" element={<ChurchGuide />} />
+              <Route path="/fasts/:slug" element={<ChurchGuide />} />
+              <Route path="/saint-prayers" element={<ChurchGuide />} />
               <Route path="/philokalia" element={<PhilokaliaRoute />} />
               <Route path="/:section" element={<Index />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -94,4 +109,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App;
+export default App;

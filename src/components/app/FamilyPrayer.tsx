@@ -26,7 +26,7 @@ export function FamilyPrayer() {
   return (
     <div className="grid gap-4">
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Family</p>
+        <p className="text-xs font-semibold text-accent">Family</p>
         <h2 className="mt-1 text-2xl font-semibold tracking-tight">Pray as a household.</h2>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           The home is a little church. A few minutes before the icons each evening, with simple prayers your children can say with you, is how faith is passed on.
@@ -69,7 +69,7 @@ function TonightPrayer() {
             </span>
             <div>
               <p className="font-semibold">{step.title}</p>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{step.who}</p>
+              <p className="text-xs font-semibold text-muted-foreground">{step.who}</p>
               {step.note ? <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{step.note}</p> : null}
               {step.say ? <p className="scripture-text mt-2 whitespace-pre-line text-[1.08rem] leading-relaxed">{step.say}</p> : null}
             </div>
@@ -96,7 +96,7 @@ function PrayersToLearn() {
           <li key={prayer.text} className="rounded-2xl border border-border/60 bg-background/45 p-4">
             <p className="scripture-text text-[1.08rem] leading-relaxed">{prayer.text}</p>
             <p className="mt-1 text-sm text-muted-foreground">{prayer.when}</p>
-            {prayer.source ? <p className="mt-1 text-[11px] text-muted-foreground">From {prayer.source}</p> : null}
+            {prayer.source ? <p className="mt-1 text-xs text-muted-foreground">From {prayer.source}</p> : null}
             {prayer.learnId ? (
               <Link to={`/learn?tab=byheart&prayer=${prayer.learnId}`} className="mt-2 inline-block text-sm font-semibold text-primary underline-offset-4 hover:underline">
                 Practice it by heart

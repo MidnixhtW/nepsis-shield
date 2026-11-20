@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {
   ArrowLeft,
   BookOpen,
@@ -10,6 +10,7 @@ import {
   Compass,
   Flame,
   Heart,
+  LifeBuoy,
   MoonStar,
   ShieldCheck,
   Sparkles,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { openHelpPanel } from "@/lib/appEvents";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import {
   getStoredResponderMode,
@@ -35,16 +37,37 @@ import {
   type VigilanceRhythm,
 } from "@/lib/ruleOfVigilance";
 import { RuleVariantPicker } from "@/components/app/RuleVariantPicker";
-import { useTheme } from "next-themes";
+import { Switch } from "@/components/ui/switch";
+import { nativeRemindersAvailable } from "@/lib/systemPrayerReminders";
+import { turnOnPrayerReminder } from "@/lib/prayerReminderPrefs";
+import { showSuccess } from "@/utils/toast";
+import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { useSettings } from "@/hooks/useSettings";
-import { themeOptions } from "@/components/app/ThemeToggle";
-import { DEFAULT_THEME } from "@/components/app/ThemeProvider";
 import type { CalendarMode } from "@/lib/settings";
 
-const ONBOARDING_KEY = "onboarding:quickstart_done";
+export const ONBOARDING_KEY = "onboarding:quickstart_done";
+// "Look around first": setup waits until the next visit, and a small button on Today brings it back.
+const DEFERRED_KEY = "onboarding:deferred";
+
+function isDeferred() {
+  try {
+    return window.sessionStorage.getItem(DEFERRED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function defer() {
+  try {
+    window.sessionStorage.setItem(DEFERRED_KEY, "1");
+  } catch {
+    // Without session storage the setup simply shows again on the next page.
+  }
+}
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-type OnboardingStep = "welcome" | "theme" | "role" | "calendar" | "need" | "rhythm" | "rule";
+// Five short screens. Theme lives in the menu, and the calendar shares a screen with the calling.
+type OnboardingStep = "welcome" | "about" | "need" | "rhythm" | "rule";
 
 type NeedOption = {
   id: VigilanceNeed;
@@ -60,21 +83,7 @@ type RhythmOption = {
   icon: React.ReactNode;
 };
 
-const steps: OnboardingStep[] = ["welcome", "theme", "role", "calendar", "need", "rhythm", "rule"];
-
-// A small mock screen in the theme's own colors, so the choice is visible before it is made.
-function ThemePreview({ colors }: { colors: [string, string, string] }) {
-  const [background, text, accent] = colors;
-  return (
-    <span aria-hidden className="grid h-full w-full place-items-center rounded-2xl" style={{ background }}>
-      <span className="grid gap-1">
-        <span className="block h-1 w-5 rounded-full" style={{ background: accent }} />
-        <span className="block h-1 w-6 rounded-full" style={{ background: text }} />
-        <span className="block h-1 w-4 rounded-full" style={{ background: text, opacity: 0.6 }} />
-      </span>
-    </span>
-  );
-}
+const steps: OnboardingStep[] = ["welcome", "about", "need", "rhythm", "rule"];
 
 // Fasts, feasts, readings, and journeys all follow this choice.
 const calendarOptions: Array<{ id: CalendarMode; title: string; description: string }> = [
@@ -162,8 +171,8 @@ const rhythmOptions: RhythmOption[] = [
   },
   {
     id: "small",
-    title: "Smallest faithful step",
-    description: "A rule for busy seasons: short, honest, and repeatable.",
+    title: "Two-minute rule",
+    description: "Three short check-ins for commutes, shifts, classes, and busy weeks.",
     icon: <Heart className="h-5 w-5" />,
   },
 ];
@@ -209,11 +218,10 @@ function SelectionCard({
       aria-pressed={multiple ? selected : undefined}
       className={cn(
         "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
-        "bg-card/60 shadow-[0_18px_55px_hsl(35_91%_48%/0.08)] hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
+        "bg-card/60 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
     >
-      <span className="pointer-events-none absolute inset-x-6 -top-10 h-20 rounded-full bg-amber-500/10 blur-3xl" />
       <span className="relative flex items-start justify-between gap-3">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary">
           {icon}
@@ -221,7 +229,7 @@ function SelectionCard({
         <span
           className={cn(
             "grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all",
-            selected ? "gold-foil border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
+            selected ? "bg-primary border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
           )}
         >
           {order ? <span className="text-sm font-bold">{order}</span> : <Check className="h-4 w-4" />}
@@ -233,32 +241,60 @@ function SelectionCard({
   );
 }
 
+// The pressure line is written "Under pressure: ...", which repeats the row's own label.
+function withoutLabel(text: string) {
+  return text.replace(/^Under pressure:\s*/i, "");
+}
+
 function RulePreview({ rule, onVariantChange }: { rule: RuleOfVigilance; onVariantChange: (variant: string) => void }) {
   const rows = [
     ...(rule.practice ? [[rule.variantLabel ?? "Focus", rule.practice]] : []),
     ["Morning", rule.morning],
     ["Midday", rule.midday],
     ["Evening", rule.evening],
-    ["Under pressure", rule.underPressure],
+    ["Under pressure", withoutLabel(rule.underPressure)],
     ...(rule.also ?? []).map((item) => [`Also: ${item.label}`, item.body]),
   ];
 
   return (
     <div className="candlelight-card rounded-[2rem] border p-5 sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your daily prayer plan</p>
+      <p className="text-xs font-semibold text-primary">Your daily prayer plan</p>
       <h2 id="onboarding-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">{rule.pastoralNote}</p>
-      <p className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Choose a version</p>
+      <p className="mt-5 text-xs font-semibold text-muted-foreground">Choose a version</p>
       <RuleVariantPicker need={rule.need} value={rule.variant} onChange={onVariantChange} className="mt-2" />
       <div className="mt-6 grid gap-3">
         {rows.map(([label, body]) => (
           <div key={label} className="rounded-3xl bg-background/45 p-4 shadow-[inset_0_1px_0_hsl(42_92%_58%/0.10)]">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{label}</p>
+            <p className="text-xs font-semibold text-primary">{label}</p>
             <p className="mt-1 text-sm leading-relaxed text-foreground/90">{body}</p>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+// A small, live view of the rule while choices are still being made.
+function RuleSoFar({ rule }: { rule: RuleOfVigilance }) {
+  const rows = [
+    ["Morning", rule.morning],
+    ["Evening", rule.evening],
+    ["Under pressure", withoutLabel(rule.underPressure)],
+  ];
+  return (
+    <aside aria-label="Your rule so far" aria-live="polite" className="rounded-[1.75rem] border border-primary/20 bg-card/50 p-4 sm:p-5">
+      <p className="text-xs font-semibold text-primary">Your rule so far</p>
+      <p className="mt-1 text-lg font-semibold tracking-tight">{rule.title}</p>
+      <dl className="mt-3 grid gap-2 sm:grid-cols-3">
+        {rows.map(([label, body]) => (
+          <div key={label} className="rounded-2xl bg-background/45 p-3">
+            <dt className="text-xs font-semibold text-muted-foreground">{label}</dt>
+            <dd className="mt-1 text-sm leading-snug text-foreground/90">{body}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
   );
 }
 
@@ -275,17 +311,25 @@ const roleDescriptions: Record<ResponderMode, string> = {
 
 export function QuickStartDialog({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(() => !getStoredItem<boolean>(ONBOARDING_KEY));
+  const location = useLocation();
+  const done = () => Boolean(getStoredItem<boolean>(ONBOARDING_KEY));
+  const [open, setOpen] = useState(() => {
+    if (done()) return false;
+    if ((location.state as { lookAround?: boolean } | null)?.lookAround) defer();
+    return !isDeferred();
+  });
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
-  const { theme, setTheme } = useTheme();
-  // Every role keeps the Church Year look; the role only tints its accent color (see seasonal.css).
-  const [themePicked, setThemePicked] = useState(false);
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
   const [selectedRhythm, setSelectedRhythm] = useState<VigilanceRhythm>("morning");
+  // In the Android app, the rhythm step offers a reminder for the prayers it leads to. Off until the person turns it on.
+  const canRemind = nativeRemindersAvailable();
+  const [remind, setRemind] = useState(false);
+  const reminderKey = selectedRhythm === "evening" ? "night" : "morning";
+  const [remindAt, setRemindAt] = useState<Record<"morning" | "night", string>>({ morning: "07:00", night: "21:30" });
   const scrollArea = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -336,14 +380,20 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
 
   function chooseRole(role: ResponderMode) {
     setSelectedRole(role);
+    // Every role keeps the same look; the role only tints its accent color (see seasonal.css).
     setStoredResponderMode(role);
-    if (!themePicked) setTheme(DEFAULT_THEME);
   }
 
   function finish() {
     setStoredResponderMode(selectedRole);
     setStoredRuleOfVigilance(rule);
     setStoredItem(ONBOARDING_KEY, true);
+    if (canRemind && remind) {
+      const time = remindAt[reminderKey];
+      void turnOnPrayerReminder(reminderKey, time).then((result) => {
+        if (result.ok) showSuccess(`${reminderKey === "night" ? "Night" : "Morning"} prayer reminder set for ${time}.`);
+      });
+    }
     setOpen(false);
     navigate("/today");
   }
@@ -355,12 +405,26 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
     setOpen(false);
   }
 
+  // For someone who opens the app for the first time in a hard moment: leave setup (as "Begin later" does) and go
+  // straight to the Help panel. The header mounts once the dialog closes, so the panel opens on the next frame.
+  function helpNow() {
+    skip();
+    navigate("/today");
+    window.requestAnimationFrame(() => window.setTimeout(openHelpPanel, 0));
+  }
+
   function next() {
     if (step === "rule") {
       finish();
       return;
     }
     setStepIndex((current) => Math.min(current + 1, steps.length - 1));
+  }
+
+  // "Look around first": setup waits, and the inline SetupRuleCard on Today brings it back (no floating button over content).
+  function lookAround() {
+    defer();
+    setOpen(false);
   }
 
   if (!open) return <>{children}</>;
@@ -374,10 +438,6 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           onInteractOutside={(event) => event.preventDefault()}
         >
           <Dialog.Title className="sr-only">Set up your daily rule · Step {stepIndex + 1} of {steps.length}</Dialog.Title>
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-[-8rem] h-80 w-80 -translate-x-1/2 rounded-full bg-amber-500/20 blur-3xl" />
-        <div className="absolute bottom-20 right-[-8rem] h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
-      </div>
 
       <div className="relative mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
         <header className="flex shrink-0 items-center justify-between gap-4">
@@ -396,70 +456,60 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
             ) : null}
             <StepDots index={stepIndex} />
           </div>
-          <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
-            Begin later
-          </Button>
+          <div className="flex items-center gap-1">
+            {/* One way out per screen: on the welcome screen it is "Look around first"; once questions start, "Begin later". */}
+            {stepIndex === 0 ? (
+              <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={lookAround}>
+                Look around first
+              </Button>
+            ) : (
+              <Button type="button" variant="ghost" className="rounded-full text-muted-foreground" onClick={skip}>
+                Begin later
+              </Button>
+            )}
+          </div>
         </header>
 
         <div ref={scrollArea} className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-6 sm:py-8">
           <div className={cn("grid min-h-full gap-6", step === "welcome" ? "content-center" : "content-start")}>
           {step === "welcome" ? (
             <section className="mx-auto max-w-3xl text-center">
-              <img
-                src="/military-orthodox-cross.svg"
-                alt=""
-                width={112}
-                height={112}
-                className="mx-auto h-28 w-28 drop-shadow-[0_24px_48px_hsl(42_52%_40%/0.28)]"
-              />
-              <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Nepsis Shield</p>
+              {/* The same mark as the header, drawn in the active theme's colors, so it never clashes with the palette. */}
+              <div className="premium-icon-mark mx-auto !h-24 !w-24">
+                <OrthodoxCrossIcon className="h-12 w-12" strokeWidth={1.4} />
+              </div>
+              <p className="mt-8 text-xs font-semibold text-primary">Nepsis Shield</p>
               <h1 id="onboarding-title" className="mt-3 text-4xl font-semibold tracking-tight sm:text-6xl">
-                Quiet your heart. Begin with one faithful step.
+                A small rule of prayer you can keep
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                We’ll shape a simple Orthodox rhythm for your day: prayer, Scripture, watchfulness, and a gentle return when pressure rises.
+                Answer three short questions and we&rsquo;ll set out morning and evening prayers that fit your day. You can change them any
+                time.
               </p>
+              <button
+                type="button"
+                onClick={helpNow}
+                className="tap mx-auto mt-8 flex w-full max-w-md items-center gap-3 rounded-2xl border border-accent/45 bg-card/80 px-4 py-3 text-left shadow-sm transition-colors hover:border-accent/70 hover:bg-accent/10"
+              >
+                <LifeBuoy className="h-5 w-5 shrink-0 text-accent" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">Need a moment of quiet right now?</span>
+                  <span className="block text-xs text-muted-foreground">Skip setup and go straight to prayer. You can set up your rule later.</span>
+                </span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </button>
             </section>
           ) : null}
 
-          {step === "theme" ? (
+          {step === "about" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Appearance</p>
-                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  How should Nepsis Shield look?
-                </h1>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Tap one to see it now. Dark themes are easier on the eyes at night; Parchment is easiest to read in daylight. You can change it anytime from the menu, under Appearance.
-                </p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
-                {themeOptions.map((option) => (
-                  <SelectionCard
-                    key={option.value}
-                    selected={(theme ?? DEFAULT_THEME) === option.value}
-                    icon={<ThemePreview colors={option.preview} />}
-                    title={option.label}
-                    description={option.description}
-                    onClick={() => {
-                      setTheme(option.value);
-                      setThemePicked(true);
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          {step === "role" ? (
-            <section>
-              <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your path</p>
+                <p className="text-xs font-semibold text-primary">About you</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   Is there a calling the app should keep in mind?
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Most people choose Everyday life. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, choose it here and the app adds support for your work.
+                  Most people choose Everyday life. If you serve in the military, police, fire, EMS, dispatch, corrections, or as a chaplain, choose it and the app adds support for your work.
                 </p>
               </div>
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -472,28 +522,17 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                       icon={<ShieldCheck className={cn("h-5 w-5", selected ? "text-primary" : "text-muted-foreground")} />}
                       title={responderModeLabels[role]}
                       description={roleDescriptions[role]}
-
                       onClick={() => chooseRole(role)}
                     />
                   );
                 })}
-
               </div>
-            </section>
-          ) : null}
 
-          {step === "calendar" ? (
-            <section>
-              <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Your calendar</p>
-                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
-                  Which calendar does your parish keep?
-                </h1>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Fasts, feasts, readings, and seasonal journeys follow it. Not sure? If your parish celebrates Nativity on December 25, choose New Calendar; on January 7, Old Calendar. You can change this later in Settings.
-                </p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <h2 className="mt-10 text-xl font-semibold tracking-tight sm:text-2xl">Which calendar does your parish keep?</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Fasts, feasts, and readings follow it. Nativity on December 25 is New Calendar; on January 7, Old Calendar. Not sure? Keep New Calendar.
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {calendarOptions.map((option) => (
                   <SelectionCard
                     key={option.id}
@@ -511,14 +550,14 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           {step === "need" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">What are you seeking?</p>
+                <p className="text-xs font-semibold text-primary">What are you seeking?</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   Choose where you most need watchfulness.
                 </h1>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your Rule of Vigilance; the others add a practice each. You can change it later by replaying onboarding from the menu.
+                  Pick up to {MAX_VIGILANCE_NEEDS}. Your first choice leads your rule; the others add a practice each.
                 </p>
-                <p role="status" className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                <p role="status" className="mt-2 text-xs font-semibold text-accent">
                   {selectedNeeds.length ? `${selectedNeeds.length} of ${MAX_VIGILANCE_NEEDS} chosen` : "Choose at least one"}
                 </p>
               </div>
@@ -539,13 +578,14 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   );
                 })}
               </div>
+              {selectedNeeds.length ? <div className="mt-6"><RuleSoFar rule={rule} /></div> : null}
             </section>
           ) : null}
 
           {step === "rhythm" ? (
             <section>
               <div className="max-w-2xl">
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Daily rhythm</p>
+                <p className="text-xs font-semibold text-primary">Daily rhythm</p>
                 <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
                   When can prayer realistically take root?
                 </h1>
@@ -565,6 +605,23 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   />
                 ))}
               </div>
+              {canRemind ? (
+                <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-card/70 px-4 py-3">
+                  <Switch id="setup-remind" checked={remind} onCheckedChange={setRemind} />
+                  <label htmlFor="setup-remind" className="text-sm font-semibold">
+                    Remind me for {reminderKey === "night" ? "night prayers" : "morning prayers"} at
+                  </label>
+                  <input
+                    type="time"
+                    value={remindAt[reminderKey]}
+                    disabled={!remind}
+                    aria-label="Reminder time"
+                    onChange={(event) => setRemindAt((current) => ({ ...current, [reminderKey]: event.target.value || current[reminderKey] }))}
+                    className="h-11 rounded-xl border border-input bg-background px-3 text-sm disabled:opacity-50"
+                  />
+                </div>
+              ) : null}
+              <div className="mt-6"><RuleSoFar rule={rule} /></div>
             </section>
           ) : null}
 
@@ -580,16 +637,13 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
       <div className="relative z-[71] shrink-0 border-t border-primary/15 bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:p-5">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <div className="hidden min-w-0 flex-1 sm:block">
-            <p className="truncate text-sm font-medium text-foreground">
-              {step === "rule" ? rule.title : "Your daily rule is being shaped gently."}
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {step === "rule" ? rule.pastoralNote : "One choice per screen. You can change any of it later."}
+            <p className="truncate text-sm text-muted-foreground">
+              {step === "rule" ? rule.title : `Step ${stepIndex + 1} of ${steps.length} · change anything later`}
             </p>
           </div>
           <Button
             type="button"
-            className="gold-foil h-14 flex-1 rounded-full text-base font-bold text-primary-foreground disabled:opacity-50 sm:max-w-sm"
+            className="h-14 flex-1 rounded-full text-base font-bold text-primary-foreground disabled:opacity-50 sm:max-w-sm"
             onClick={next}
             disabled={step === "need" && selectedNeeds.length === 0}
           >

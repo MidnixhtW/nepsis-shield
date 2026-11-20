@@ -8,6 +8,8 @@ import type { LearnTab } from "@/components/app/LearnHub";
 import type { PrayerTab } from "@/components/app/PrayerHub";
 import type { ReadTab } from "@/components/app/ReadHub";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+// Today is the first screen almost everyone sees, so it ships in the main bundle and never waits on a placeholder.
+import { TodayOverview } from "@/components/app/TodayOverview";
 import NotFound from "@/pages/NotFound";
 import { saveGlobalResume } from "@/lib/dailyHabits";
 import { recordVisit } from "@/lib/recentPlaces";
@@ -20,7 +22,6 @@ const loadMeHub = () => import("@/components/app/MeHub");
 const LearnHub = lazy(() => loadLearnHub().then((module) => ({ default: module.LearnHub })));
 const PrayerHub = lazy(() => loadPrayerHub().then((module) => ({ default: module.PrayerHub })));
 const ReadHub = lazy(() => loadReadHub().then((module) => ({ default: module.ReadHub })));
-const TodayOverview = lazy(() => import("@/components/app/TodayOverview").then((module) => ({ default: module.TodayOverview })));
 const MeHub = lazy(() => loadMeHub().then((module) => ({ default: module.MeHub })));
 
 // Fetch the other tabs once the first screen is up, so switching tabs never shows the loading placeholder.
@@ -206,8 +207,11 @@ const Index = () => {
   return (
     <QuickStartDialog>
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
-      <Suspense fallback={<SectionPlaceholder />}>
+      {/* The player loads on its own, so it never holds back the page behind the placeholder. */}
+      <Suspense fallback={null}>
         <MonasticAudioPlayer />
+      </Suspense>
+      <Suspense fallback={<SectionPlaceholder />}>
 
         <div className="grid gap-8 sm:gap-10 lg:gap-12">
           {section === "today" ? (
