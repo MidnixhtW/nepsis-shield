@@ -1,3 +1,5 @@
+import { litanyOfHumility } from "@/content/litanyOfHumility";
+import { SHARED_PRAYERS } from "@/content/sharedPrayers";
 // Prayer texts, saint prayers and trusted sources for the prayer book. Kept apart from the screen code.
 
 export const trisagion = [
@@ -500,6 +502,8 @@ export const favoritePrayerOptions = [
   { id: "st-michael", title: "St. Michael", lines: stMichaelInvocation },
   { id: "before-sleep", title: "Before sleep", lines: nightPrayer },
   { id: "theotokos", title: "Theotokos", lines: theotokosShort },
+  { id: "litany-of-humility", title: "Litany of Humility", lines: litanyOfHumility },
+  { id: "st-ephrem", title: "Prayer of St. Ephrem", lines: SHARED_PRAYERS.find((p) => p.id === "st-ephrem")?.lines ?? [] },
 ];
 
 export const prayerSources = [

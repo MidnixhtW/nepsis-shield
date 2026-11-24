@@ -46,7 +46,7 @@ import { PrayerFinished } from "@/components/app/PrayerFinished";
 import { SKY_GRADIENT, skyPhase } from "@/lib/dayInTheChurch";
 import { spokenText } from "@/lib/narrationText";
 import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
-import { buildFlow, knownPrayerMode, recommendedTime, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
+import { buildFlow, knownPrayerMode, recommendedTime, savedFlowExtras, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 import { PrayerLines } from "@/components/app/PrayerLines";
 import { SlidingToggle } from "@/components/app/SlidingToggle";
 
@@ -79,6 +79,7 @@ const prayerMeta: Record<PrayerTime, { label: string; icon: ReactNode; hint: str
 export function DailyPrayerFlow() {
   const [time, setTime] = useState<PrayerTime>(() => recommendedTime());
   const [mode, setMode] = useState<PrayerMode>("short");
+  const [humility, setHumility] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
   const [readerPrefs, setReaderPrefs] = useState<ReaderPrefs>(DEFAULT_READER_PREFS);
@@ -93,7 +94,8 @@ export function DailyPrayerFlow() {
   const rhythm = useDailyRhythm();
 
   useEffect(() => {
-    const saved = getStoredItem<{ time?: PrayerTime; mode?: PrayerMode; readerPrefs?: ReaderPrefs }>(FLOW_PREFS_KEY);
+    const saved = getStoredItem<{ time?: PrayerTime; mode?: PrayerMode; readerPrefs?: ReaderPrefs; humility?: boolean }>(FLOW_PREFS_KEY);
+    setHumility(savedFlowExtras(saved).humility === true);
     if (saved?.time) setTime(saved.time);
     const savedMode = knownPrayerMode(saved?.mode);
     if (savedMode) setMode(savedMode);
@@ -121,8 +123,8 @@ export function DailyPrayerFlow() {
 
   useEffect(() => {
     if (!hydrated) return;
-    setStoredItem(FLOW_PREFS_KEY, { time, mode, readerPrefs });
-  }, [hydrated, mode, readerPrefs, time]);
+    setStoredItem(FLOW_PREFS_KEY, { time, mode, readerPrefs, humility });
+  }, [hydrated, mode, readerPrefs, time, humility]);
 
   const [names, setNames] = useState(getCommemorations);
   useEffect(() => {
@@ -132,12 +134,12 @@ export function DailyPrayerFlow() {
   }, []);
   // Names from the Names tab are prayed just before the closing prayer.
   const steps = useMemo(() => {
-    const built = buildFlow(time, mode);
+    const built = buildFlow(time, mode, { humility });
     const flow = mode === "standard" || mode === "long" ? withSilence(built) : built;
     const remember = commemorationStep(names);
     return remember ? [...flow.slice(0, -1), remember, flow[flow.length - 1]] : flow;
-  }, [time, mode, names]);
-  const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}`;
+  }, [time, mode, names, humility]);
+  const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}${humility && time === "morning" ? ":humility" : ""}`;
   // An intention for this prayer: a name from the prayer list (whose lamp is lit at the end) or a few words.
   const [intention, setIntention] = useState<{ id?: string; label: string } | null>(null);
   const [intentionText, setIntentionText] = useState("");
@@ -311,6 +313,13 @@ export function DailyPrayerFlow() {
               />
             </label>
           </div>
+          <label className="mt-2 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-3 py-2">
+            <span className="min-w-0">
+              <span className="block text-sm font-medium">Litany of Humility</span>
+              <span className="block text-xs text-muted-foreground">Add it to morning prayers, before the close.</span>
+            </span>
+            <Switch aria-label="Add the Litany of Humility to morning prayers" checked={humility} onCheckedChange={setHumility} />
+          </label>
         </div>
             </AccordionContent>
           </AccordionItem>

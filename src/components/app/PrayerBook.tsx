@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router";
+import { SHARED_PRAYERS, WESTERN_PRAYERS, type SharedPrayer } from "@/content/sharedPrayers";
+import { litanyOfHumility, LITANY_OF_HUMILITY_NOTE } from "@/content/litanyOfHumility";
 import { BookOpen, ExternalLink, Hand, MoonStar, Pin, Shield, Sparkles, Sun, Utensils } from "lucide-react";
 
 import {
@@ -28,6 +31,20 @@ function PrayerBlock({ title, lines }: { title: string; lines: string[] }) {
       <div className="scripture-text mt-2 space-y-2 text-base">
         {lines.map((l, idx) => (
           <p key={idx}>{l}</p>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SharedPrayerBlock({ prayer }: { prayer: SharedPrayer }) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+      <p className="text-sm font-semibold">{prayer.title}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{prayer.origin}</p>
+      <div className="scripture-text mt-3 space-y-2 text-base">
+        {prayer.lines.map((line, index) => (
+          <p key={index}>{line}</p>
         ))}
       </div>
     </div>
@@ -153,6 +170,51 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="Grief and hope" lines={griefPrayer} />
                 <PrayerBlock title="Thanksgiving" lines={thanksgivingPrayer} />
                 <PrayerBlock title="Mercy today" lines={mercyPrayer} />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="catholic-orthodox" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" /> Shared by Catholics and Orthodox
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <p className="px-1 text-sm leading-relaxed text-muted-foreground">
+                  Prayers from the centuries before East and West divided. Both Churches still pray them.
+                </p>
+                {SHARED_PRAYERS.map((prayer) => (
+                  <SharedPrayerBlock key={prayer.id} prayer={prayer} />
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="western" className="mt-3 border-none">
+            <AccordionTrigger className="rounded-2xl border border-border/60 bg-muted/20 px-4 text-left hover:no-underline">
+              <span className="inline-flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" /> Western prayers and the Western Rite
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="pt-3">
+              <div className="grid gap-3">
+                <p className="px-1 text-sm leading-relaxed text-muted-foreground">
+                  Prayers of the Latin West. Western Rite Orthodox parishes, received into Orthodoxy since 1958, keep many of them, and Catholics pray them too. Practice differs between parishes, so follow yours.
+                </p>
+                <SharedPrayerBlock
+                  prayer={{ id: "litany-of-humility", title: "Litany of Humility", origin: LITANY_OF_HUMILITY_NOTE, lines: litanyOfHumility }}
+                />
+                {WESTERN_PRAYERS.map((prayer) => (
+                  <SharedPrayerBlock key={prayer.id} prayer={prayer} />
+                ))}
+                <Link
+                  to="/pray?tab=rosary"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-border/60 px-4 text-sm font-semibold hover:border-accent/50 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  The Rosary, the Angelus and the Regina Caeli
+                </Link>
               </div>
             </AccordionContent>
           </AccordionItem>

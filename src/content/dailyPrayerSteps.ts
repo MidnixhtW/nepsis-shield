@@ -1,4 +1,5 @@
 // The daily prayer offices: each time of day and rule length as a list of steps.
+import { litanyOfHumility } from "@/content/litanyOfHumility";
 
 export type PrayerTime = "morning" | "evening" | "night";
 
@@ -312,12 +313,29 @@ export function knownPrayerMode(mode: unknown): PrayerMode | undefined {
   return mode === "short" || mode === "standard" || mode === "long" || mode === "seraphim" || mode === "watch" ? mode : undefined;
 }
 
-export function buildFlow(time: PrayerTime, mode: PrayerMode) {
+export type FlowExtras = { humility?: boolean };
+
+/** Read the saved extras (set in the prayer's options), so every screen that sizes a prayer agrees with the reader. */
+export function savedFlowExtras(saved: { humility?: unknown } | undefined): FlowExtras {
+  return { humility: saved?.humility === true };
+}
+
+const humilityStep: PrayerStep = { title: "Litany of Humility", body: litanyOfHumility };
+
+function baseFlow(time: PrayerTime, mode: PrayerMode) {
   if (mode === "seraphim") return seraphimRule;
   if (mode === "watch") return watchRule;
   if (mode === "short") return shortFlows[time];
   if (mode === "standard") return [shortFlows[time][0], ...standardExtras[time], ...shortFlows[time].slice(1)];
   return [shortFlows[time][0], ...standardExtras[time], ...longExtras[time], ...shortFlows[time].slice(1)];
+}
+
+export function buildFlow(time: PrayerTime, mode: PrayerMode, extras: FlowExtras = {}) {
+  const flow = baseFlow(time, mode);
+  // The Litany of Humility, when chosen, comes in morning prayers just before the closing prayers. The two short
+  // rules (St. Seraphim's and the Watch) stay as they were given.
+  if (!extras.humility || time !== "morning" || mode === "seraphim" || mode === "watch") return flow;
+  return [...flow.slice(0, -1), humilityStep, flow[flow.length - 1]];
 }
 
 export function recommendedTime(now = new Date()): PrayerTime {
