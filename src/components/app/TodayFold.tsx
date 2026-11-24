@@ -1,15 +1,11 @@
 import { useId, useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
+import { startsOpenOnWideScreen } from "@/lib/wideScreen";
 
 // On a phone, Today keeps its secondary pieces folded so the page reads in a screen or two. The heading and one line
 // stay visible; a tap opens the rest. On wider screens there is room, so it starts open.
-function startsOpen() {
-  if (typeof window === "undefined" || !window.matchMedia) return true;
-  return window.matchMedia("(min-width: 1024px)").matches;
-}
-
 export function TodayFold({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
-  const [open, setOpen] = useState(startsOpen);
+  const [open, setOpen] = useState(startsOpenOnWideScreen);
   const panelId = useId();
 
   if (open) return <>{children}</>;

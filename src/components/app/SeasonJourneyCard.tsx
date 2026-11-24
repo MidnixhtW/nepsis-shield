@@ -22,6 +22,7 @@ import { createAllDayEventsIcs, downloadTextFile } from "@/lib/ics";
 import { PUBLIC_SITE_URL } from "@/lib/publicSite";
 import { isNativeReminderUnavailable, scheduleSeasonReminders } from "@/lib/systemPrayerReminders";
 import { cn } from "@/lib/utils";
+import { startsOpenOnWideScreen } from "@/lib/wideScreen";
 import { COUNTED_FASTS, getFastCount, keepFastTogether, keptOnThisDevice, type FastCounts } from "@/lib/fastCount";
 import { PARISH_CHANGED_EVENT, getParish, newParishCode, parishLink, setParish, type Parish } from "@/lib/parish";
 import { Input } from "@/components/ui/input";
@@ -364,6 +365,7 @@ function JourneyList({
 export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: ChurchCalendar }) {
   const [store, setStore] = useState<JourneyStore>(readStore);
   const [showAll, setShowAll] = useState(false);
+  const [bodyOpen, setBodyOpen] = useState(startsOpenOnWideScreen);
   const active = useMemo(() => currentSeason(today, calendar), [today, calendar]);
   const upcoming = useMemo(() => (active ? null : nextSeason(today, calendar)), [active, today, calendar]);
   const ended = useMemo(() => (active ? null : recentlyEndedFast(today, calendar)), [active, today, calendar]);
@@ -385,9 +387,22 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
       <section className="border-t border-border/60 px-1 py-7" aria-labelledby="season-journey-title">
         <p className="text-sm font-semibold text-cinnabar">The fast</p>
         <h2 id="season-journey-title" className="mt-1 text-2xl sm:text-3xl">{day.title}</h2>
-        <div className="mt-4">
-          <DayBody day={day} />
-        </div>
+        {bodyOpen ? (
+          <div id="season-day-body" className="mt-4">
+            <DayBody day={day} />
+          </div>
+        ) : (
+          // On a phone the day's verse and practice start folded, so the kept mark sits close to the title.
+          <button
+            type="button"
+            aria-expanded={false}
+            aria-controls="season-day-body"
+            onClick={() => setBodyOpen(true)}
+            className="mt-2 inline-flex min-h-11 items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            Today&rsquo;s verse and practice <ChevronDown aria-hidden className="h-4 w-4" />
+          </button>
+        )}
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <Button
