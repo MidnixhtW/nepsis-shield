@@ -4,6 +4,7 @@ import { BookOpen, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { PrayerTime } from "@/content/dailyPrayerSteps";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
+import { sayingAfterPrayer } from "@/content/fathersSayings";
 
 const NEXT_LINE: Record<PrayerTime, string> = {
   morning: "Evening prayers come later today.",
@@ -22,6 +23,8 @@ const CHURCH_LINE: Record<PrayerTime, string> = {
 export function PrayerFinished({ time, prayerName, onDone }: { time: PrayerTime; prayerName: string; onDone: () => void }) {
   const { query } = useDailyCalendar();
   const saint = query.data?.saints[0];
+  // A small gift for finishing: one saying of the Fathers, different after each prayer of the day.
+  const spark = sayingAfterPrayer(new Date(), time);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -33,6 +36,11 @@ export function PrayerFinished({ time, prayerName, onDone }: { time: PrayerTime;
           <Dialog.Title className="mt-6 text-4xl font-semibold tracking-tight">Glory to God</Dialog.Title>
           <p className="mt-3 text-base text-muted-foreground">You have prayed the {prayerName}.</p>
           <p className="scripture-text mt-8 text-xl leading-relaxed">{CHURCH_LINE[time]}</p>
+          <figure className="mt-10 w-full border-t border-border/50 pt-8">
+            <p className="text-sm font-semibold text-cinnabar">A word for the road</p>
+            <blockquote className="scripture-text mt-3 text-lg leading-relaxed">{spark.text}</blockquote>
+            <figcaption className="mt-2 text-sm text-muted-foreground">{spark.who}</figcaption>
+          </figure>
           {saint ? (
             <p className="mt-8 text-sm text-muted-foreground">
               Today: <span className="font-semibold text-foreground">{saint}</span>.

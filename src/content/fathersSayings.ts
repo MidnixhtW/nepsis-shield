@@ -123,6 +123,13 @@ export const SAYINGS: Saying[] = [
 ];
 
 /** The saying for a given day; the list repeats in order, a new saying each day. */
+/** A different saying after each prayer of the day, and never the one already on Today. */
+export function sayingAfterPrayer(day: Date, time: "morning" | "evening" | "night"): Saying {
+  const offset = { morning: 37, evening: 59, night: 83 }[time];
+  const today = SAYINGS.indexOf(sayingForDay(day));
+  return SAYINGS[(today + offset) % SAYINGS.length];
+}
+
 export function sayingForDay(day: Date): Saying {
   // Count calendar days in UTC so daylight-saving changes never repeat or skip a day.
   const dayOfYear = Math.round((Date.UTC(day.getFullYear(), day.getMonth(), day.getDate()) - Date.UTC(day.getFullYear(), 0, 0)) / 86_400_000);

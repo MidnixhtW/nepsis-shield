@@ -1,99 +1,14 @@
-import { BookOpen, Flame, Heart, Moon, MoonStar, ShieldAlert, Smartphone, Users, Wind } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { CrisisResources } from "@/components/app/CrisisResources";
-import type { AppSection } from "@/components/app/AppShell";
-import { saveGlobalResume, setQuickState, type QuickStateKey } from "@/lib/dailyHabits";
-
-type Target = { section: AppSection; tab?: string; read?: string };
-
-const helpItems: Array<{
-  key: QuickStateKey;
-  label: string;
-  line: string;
-  target: Target;
-  icon: typeof ShieldAlert;
-}> = [
-  {
-    key: "anxious",
-    label: "Anxious",
-    line: "Breathe. Jesus Prayer.",
-    target: { section: "pray", tab: "counter" },
-    icon: Wind,
-  },
-  {
-    key: "tempted",
-    label: "Tempted",
-    line: "Interrupt the spiral.",
-    target: { section: "pray", tab: "prep" },
-    icon: ShieldAlert,
-  },
-  {
-    key: "angry",
-    label: "Angry",
-    line: "Pause before acting.",
-    target: { section: "pray", tab: "prayers" },
-    icon: Flame,
-  },
-  {
-    key: "tired",
-    label: "Tired",
-    line: "Use the short rule.",
-    target: { section: "pray", tab: "daily" },
-    icon: MoonStar,
-  },
-  {
-    key: "lonely",
-    label: "Lonely",
-    line: "Pray for someone else.",
-    target: { section: "pray", tab: "groups" },
-    icon: Users,
-  },
-  {
-    key: "sleepless",
-    label: "Can't sleep",
-    line: "Quiet prayers for the night.",
-    target: { section: "pray", tab: "sleep" },
-    icon: Moon,
-  },
-  {
-    key: "scrolling",
-    label: "Stuck scrolling",
-    line: "Put it down for one minute.",
-    target: { section: "pray", tab: "counter" },
-    icon: Smartphone,
-  },
-  {
-    key: "dry",
-    label: "Dry",
-    line: "Read one passage.",
-    target: { section: "read", read: "daily" },
-    icon: BookOpen,
-  },
-  {
-    key: "grateful",
-    label: "Grateful",
-    line: "Write thanks.",
-    target: { section: "pray", tab: "journal" },
-    icon: Heart,
-  },
-];
-
-// Same URL shape Index uses, so the header's help panel can route without Today's navigator.
-function targetPath(target: Target) {
-  if (target.section === "today") return "/today";
-  const params = new URLSearchParams();
-  if (target.tab) params.set("tab", target.tab);
-  if (target.read) params.set("read", target.read);
-  const qs = params.toString();
-  return qs ? `/${target.section}?${qs}` : `/${target.section}`;
-}
+import { helpItems, rememberHelpChoice, targetPath, type HelpTarget } from "@/lib/shieldTriggers";
 
 export function NeedHelpNow({
   onNavigate,
   onChoose,
 }: {
-  onNavigate?: (to: Target) => void;
+  onNavigate?: (to: HelpTarget) => void;
   /** Called after a choice is made, e.g. to close the panel that holds this card. */
   onChoose?: () => void;
 }) {
@@ -123,12 +38,7 @@ export function NeedHelpNow({
               variant="outline"
               className="h-auto max-w-full justify-start whitespace-normal rounded-2xl border-border/60 bg-background/65 px-3 py-3 text-left hover:border-primary/40"
               onClick={() => {
-                setQuickState(item.key);
-                saveGlobalResume({
-                  label: `Return to ${item.label.toLowerCase()} support`,
-                  helper: item.line,
-                  target: item.target,
-                });
+                rememberHelpChoice(item);
                 if (onNavigate) onNavigate(item.target);
                 else navigate(targetPath(item.target));
                 onChoose?.();
