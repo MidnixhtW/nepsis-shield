@@ -57,7 +57,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     <div className="grid gap-10">
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
         <div className="grid min-w-0 gap-8 shortphone:gap-3 lg:sticky lg:top-28">
-          <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} tone={q.data?.tone?.value} />
+          <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} tone={q.data?.tone?.value} fasting={q.data?.fasting} />
           <PrayNowCard />
           <SetupRuleCard />
           {/* Only once setup is done, so a newcomer sees one invitation at a time. */}

@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getStoredItem } from "@/lib/deviceStorage";
-import { buildFlow, knownPrayerMode, recommendedTime, savedFlowExtras, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
+import { recommendedTime, type PrayerMode, type PrayerTime } from "@/content/dailyPrayerSteps";
+import { prayerMinutes, savedPrayerMode } from "@/lib/prayerLength";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
 import { useNow } from "@/lib/prayerHours";
@@ -17,8 +17,6 @@ const LABELS: Record<PrayerTime, { title: string; line: string }> = {
 
 const NEXT: Record<PrayerTime, PrayerTime | null> = { morning: "evening", evening: "night", night: null };
 
-const PREFS_KEY = "daily_prayer_flow:prefs";
-
 const MODE_NAMES: Record<PrayerMode, string> = {
   short: "Short",
   standard: "Standard",
@@ -27,16 +25,9 @@ const MODE_NAMES: Record<PrayerMode, string> = {
   watch: "The Watch rule",
 };
 
-function savedMode(): PrayerMode {
-  const saved = getStoredItem<{ mode?: PrayerMode }>(PREFS_KEY);
-  return knownPrayerMode(saved?.mode) ?? "short";
-}
-
-// About 110 words a minute, read slowly and aloud.
 function lengthFor(time: PrayerTime, mode: PrayerMode) {
-  if (mode === "watch") return "About a minute.";
-  const words = buildFlow(time, mode, savedFlowExtras(getStoredItem<{ humility?: boolean }>(PREFS_KEY))).reduce((sum, step) => sum + step.body.join(" ").split(/\s+/).length, 0);
-  return `About ${Math.max(2, Math.round(words / 110))} minutes.`;
+  const minutes = prayerMinutes(time, mode);
+  return minutes === 1 ? "About a minute." : `About ${minutes} minutes.`;
 }
 
 // The first thing on Today: the prayers for this hour, one tap from the full-screen reader.
@@ -46,7 +37,7 @@ export function PrayNowCard() {
   const favorites = useFavorites();
   const time = recommendedTime(now);
   // The length is chosen in the prayer itself (its options); Today names it and links there to change it.
-  const mode = savedMode();
+  const mode = savedPrayerMode();
   const done = !!rhythm.today.prayers[time];
   const next = NEXT[time];
 

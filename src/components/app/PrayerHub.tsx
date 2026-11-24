@@ -24,6 +24,7 @@ import { WesternCompline } from "@/components/app/WesternCompline";
 import { NovenaTracker } from "@/components/app/NovenaTracker";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
+import { prayerMinutes } from "@/lib/prayerLength";
 
 export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio" | "compline-west" | "novena";
 
@@ -62,6 +63,17 @@ const launcher: LauncherGroup[] = [
     ],
   },
 ];
+
+// Length badges on the daily prayers follow the length the person chose; Lectio Divina is about ten minutes.
+function withDurations(groups: LauncherGroup[]): LauncherGroup[] {
+  const minutes: Record<string, string> = {
+    "/pray?tab=daily&begin=morning": `${prayerMinutes("morning")} min`,
+    "/pray?tab=daily&begin=evening": `${prayerMinutes("evening")} min`,
+    "/pray?tab=daily&begin=night": `${prayerMinutes("night")} min`,
+    "/pray?tab=lectio": "10 min",
+  };
+  return groups.map((group) => ({ ...group, tiles: group.tiles.map((tile) => (minutes[tile.to] ? { ...tile, duration: minutes[tile.to] } : tile)) }));
+}
 
 /** The daily prayers that fit the hour: morning until noon, evening until eight, then night prayers. */
 function prayerForHour(now: Date) {
@@ -129,7 +141,7 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
     return (
       <div className="grid min-w-0 gap-5">
         <LauncherIntro title={t("pray.title")} />
-        <SectionLauncher groups={groups} lead={{ eyebrow: t("pray.lead"), tile: prayerForHour(new Date()) }} />
+        <SectionLauncher groups={withDurations(groups)} lead={{ eyebrow: t("pray.lead"), tile: withDurations([{ title: "", tiles: [prayerForHour(new Date())] }])[0].tiles[0] }} />
       </div>
     );
   }

@@ -10,6 +10,8 @@ export type LauncherTile = {
   label: string;
   hint: string;
   icon: ComponentType<{ className?: string }>;
+  /** How long it takes, as a short badge ("5 min"), when that is known. */
+  duration?: string;
 };
 
 export type LauncherGroup = { title: string; tiles: LauncherTile[] };
@@ -22,11 +24,11 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
       {lead ? <LeadCard eyebrow={lead.eyebrow} tile={lead.tile} /> : null}
       {groups.map((group) => (
         <section key={group.title} aria-labelledby={groupId(group.title)}>
-          <h3 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold text-muted-foreground">
+          <h2 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold text-muted-foreground">
             {group.title}
-          </h3>
+          </h2>
           <ul className="grid overflow-hidden rounded-2xl border border-border/60 bg-card sm:grid-cols-2">
-            {group.tiles.map(({ to, label, hint, icon: Icon }) => (
+            {group.tiles.map(({ to, label, hint, icon: Icon, duration }) => (
               <li key={to} className="border-b border-border/40 last:border-b-0 sm:[&:nth-last-child(2):nth-child(odd)]:border-b-0">
                 <Link
                   to={to}
@@ -37,6 +39,7 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
                     <span className="block font-semibold leading-tight">{label}</span>
                     <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">{hint}</span>
                   </span>
+                  {duration ? <DurationBadge value={duration} /> : null}
                   <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
                 </Link>
               </li>
@@ -45,6 +48,15 @@ export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lea
         </section>
       ))}
     </div>
+  );
+}
+
+// Hallow-style length badge: how long a practice takes, read at a glance before tapping.
+function DurationBadge({ value }: { value: string }) {
+  return (
+    <span className="shrink-0 rounded-full border border-border/70 px-2.5 py-1 text-sm font-medium tabular-nums text-foreground/85">
+      {value}
+    </span>
   );
 }
 
@@ -68,6 +80,7 @@ function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {
         <span className="mt-1 block text-xl font-semibold leading-tight tracking-tight">{tile.label}</span>
         <span className="mt-0.5 block text-sm text-muted-foreground">{tile.hint}</span>
       </span>
+      {tile.duration ? <DurationBadge value={tile.duration} /> : null}
     </Link>
   );
 }
@@ -102,7 +115,7 @@ export function SectionBackBar({ backTo, backLabel, title, favoriteTo }: { backT
 export function LauncherIntro({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="px-1">
-      <h2 className="text-3xl sm:text-4xl">{title}</h2>
+      <h1 className="text-3xl sm:text-4xl">{title}</h1>
       {children}
     </div>
   );
