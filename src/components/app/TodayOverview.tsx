@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { BookOpen, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AppSection } from "@/components/app/AppShell";
@@ -125,6 +125,25 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
                     </li>
                   ))}
                 </ul>
+                {(q.data.lives ?? []).length ? (
+                  <div className="grid gap-2">
+                    <p className="text-sm font-semibold text-muted-foreground">Lives of today&rsquo;s saints</p>
+                    {q.data.lives.map((life) => (
+                      <details key={life.title} className="group rounded-2xl border border-border/60 bg-muted/20">
+                        <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-2xl px-4 py-2 text-base font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                          {life.title}
+                          <ChevronDown aria-hidden className="h-4 w-4 shrink-0 text-accent transition-transform group-open:rotate-180" />
+                        </summary>
+                        <div className="scripture-text space-y-3 px-4 pb-4 text-base leading-relaxed">
+                          {life.paragraphs.map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                          ))}
+                        </div>
+                      </details>
+                    ))}
+                    <p className="text-xs text-muted-foreground">From orthocal.info. Saved on this device for the next two weeks, so the lives read with no signal.</p>
+                  </div>
+                ) : null}
                 {fastRule ? (
                   <p className="flex items-start gap-2 text-base">
                     <Leaf aria-hidden className="mt-1 h-4 w-4 shrink-0 text-accent" />

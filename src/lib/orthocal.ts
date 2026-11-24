@@ -26,6 +26,8 @@ export type OrthocalDay = {
   saints?: string[];
   /** The day's main commemorations (e.g. Greatmartyr George); not repeated in `saints`. */
   feasts?: string[];
+  /** Lives of the day's saints, as HTML (orthocal's commemoration stories). */
+  stories?: Array<{ title?: string; story?: string }>;
   readings?: OrthocalReading[];
   abbreviated_reading_indices?: number[];
 
@@ -44,6 +46,8 @@ export type DailyData = {
     exception?: string;
   };
   saints: string[];
+  /** The day's saints' lives as plain paragraphs, from the saved day, so they read offline too. */
+  lives: SaintLife[];
   readings: {
     epistle?: OrthocalReading;
     gospel?: OrthocalReading;
@@ -175,6 +179,7 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
     // Orthocal lists the day's main commemorations under `feasts`, so lead with them.
     saints: Array.from(new Set([...(day.feasts ?? []), ...(day.saints ?? [])].map((name) => name.trim()).filter(Boolean))),
 
+    lives: saintLives(day.stories),
     readings: extractPrimaryReadings(day),
     tone: toneValue || toneDesc ? { value: toneValue, description: toneDesc } : undefined,
     sources: {
@@ -182,6 +187,27 @@ export async function fetchDailyData(date: Date, mode: CalendarMode = "gregorian
       orthocalApiUrl,
     },
   };
+}
+
+export type SaintLife = { title: string; paragraphs: string[] };
+
+/**
+ * Turns orthocal's story HTML into plain paragraphs. The HTML is parsed, never inserted into the page: only the text of
+ * each block survives, so no markup, link or script from the source can reach the app.
+ */
+export function saintLives(stories: OrthocalDay["stories"]): SaintLife[] {
+  if (!Array.isArray(stories) || typeof DOMParser === "undefined") return [];
+  const parser = new DOMParser();
+  return stories
+    .map((entry) => {
+      const title = (entry?.title ?? "").replace(/\s+/g, " ").trim();
+      const doc = parser.parseFromString(entry?.story ?? "", "text/html");
+      const blocks = Array.from(doc.body.querySelectorAll("p, li"));
+      const texts = (blocks.length ? blocks : [doc.body]).map((node) => (node.textContent ?? "").replace(/\s+/g, " ").trim());
+      return { title, paragraphs: texts.filter((text) => text.length > 0) };
+    })
+    .filter((life) => life.title && life.paragraphs.length)
+    .slice(0, 8);
 }
 
 export function readingText(reading?: OrthocalReading, maxChars = 900) {
