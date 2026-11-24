@@ -1,14 +1,13 @@
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { format } from "date-fns";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
-import { AArrowDown, AArrowUp, BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
+import { BookOpen, ExternalLink, Square, Volume2 } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -96,9 +95,6 @@ function ReadingCard({
         </div>
         <div className="flex items-center gap-1">
           {text ? <ShareSelectionButton container={textRef} attribution={display || label} eyebrow={label} /> : null}
-          <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            OCA
-          </Badge>
         </div>
       </div>
 
@@ -161,6 +157,9 @@ export function DailyReadings() {
     navigate(`/read?read=bible&ref=${encodeURIComponent(ref)}`);
   }
 
+  // The Gospel's first sentence, for the line at the top of the page.
+  const gospelLine = q.data ? (readingText(q.data.readings.gospel, 400).match(/^.*?[.;:!?](\s|$)/)?.[0] ?? readingText(q.data.readings.gospel, 140)).trim() : "";
+
   return (
     <div className="grid gap-4">
       <Card className={hallowCardClass + " max-sm:px-4"}>
@@ -180,9 +179,6 @@ export function DailyReadings() {
                 </Button>
               ) : null}
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Read with attention. Keep a single line with you through the day.
-            </p>
           </div>
           {canReadAloud() && q.data ? (
             <Button type="button" variant="outline" size="sm" className="shrink-0 rounded-full" aria-pressed={listening} onClick={listen}>
@@ -194,14 +190,24 @@ export function DailyReadings() {
           )}
         </div>
         {q.data ? (
-          <div role="group" aria-label="Text size" className="mt-3 flex items-center gap-1">
-            <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Smaller text" disabled={size <= MIN_SIZE} onClick={() => change(-1)}>
-              <AArrowDown aria-hidden className="h-5 w-5" />
-            </Button>
-            <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Larger text" disabled={size >= MAX_SIZE} onClick={() => change(1)}>
-              <AArrowUp aria-hidden className="h-5 w-5" />
-            </Button>
-          </div>
+          <>
+            {/* The day's Gospel opens the page: its first line, large, to carry through the day. */}
+            {gospelLine ? (
+              <figure className="mt-6">
+                <blockquote className="scripture-text text-2xl leading-snug">&ldquo;{gospelLine}&rdquo;</blockquote>
+                <figcaption className="meta-label mt-2 text-muted-foreground">{q.data.readings.gospel?.short_display ?? q.data.readings.gospel?.display}</figcaption>
+              </figure>
+            ) : null}
+            <div role="group" aria-label="Text size" className="mt-4 flex items-center gap-1 text-muted-foreground">
+              <span className="mr-1 text-sm">Text size</span>
+              <Button type="button" variant="ghost" size="icon" className="h-11 w-11 rounded-full font-display text-sm" aria-label="Smaller text" disabled={size <= MIN_SIZE} onClick={() => change(-1)}>
+                A
+              </Button>
+              <Button type="button" variant="ghost" size="icon" className="h-11 w-11 rounded-full font-display text-xl" aria-label="Larger text" disabled={size >= MAX_SIZE} onClick={() => change(1)}>
+                A
+              </Button>
+            </div>
+          </>
         ) : null}
 
         <Separator className="my-4" />
@@ -295,16 +301,15 @@ export function DailyReadings() {
               </Accordion>
             ) : null}
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="text-xs text-muted-foreground">
-                Backed up by the OCA daily readings page.
-              </div>
-              <Button asChild variant="outline" className="rounded-2xl border-border/60">
-                <a href={q.data.sources.ocaDailyUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>
-                  Open on OCA <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
-            </div>
+            <a
+              href={q.data.sources.ocaDailyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-1.5 self-start text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              The full readings on oca.org <ExternalLink aria-hidden className="h-3.5 w-3.5" />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
           </div>
         ) : null}
       </Card>

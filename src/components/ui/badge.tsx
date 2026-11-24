@@ -29,7 +29,7 @@ export interface BadgeProps
 
 // Badges read as small tracked metadata (a feast rank, a fasting rule, a count), never as colored pills: typography
 // carries the hierarchy. A color given by the caller is kept.
-const METADATA = "rounded-none border-0 bg-transparent px-0 py-0 shadow-none text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-transparent";
+const METADATA = "rounded-none border-0 bg-transparent px-0 py-0 shadow-none text-xs font-semibold uppercase tracking-[0.14em] hover:bg-transparent";
 
 // Text colors meant for sitting on a filled pill would vanish on the open page, so they are dropped.
 function withoutPillText(className?: string) {

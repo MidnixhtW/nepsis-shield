@@ -29,8 +29,8 @@
 }
 
 /* No glows: the canvas is flat stone, and surfaces are told apart by lightness alone. !important in the base layer
-   outranks the older decorative rules (important declarations in earlier layers win). */
-@layer base {
+   outranks the older decorative rules: Tailwind emits the utilities bucket last. */
+@layer utilities {
   html.seasonal body {
     background-image: none !important;
     background-color: hsl(var(--background)) !important;
@@ -47,5 +47,44 @@
 @layer components {
   [data-section] > .justify-between:first-child > svg:last-child {
     display: none;
+  }
+}
+
+/* Tabs inside a page (Read: Daily, Bible, Plans) are a row of words with a short rule under the chosen one, the way a
+   printed book marks its sections. No filled pill. In the utilities bucket, emitted last, so it outranks the older
+   pill styles. */
+@layer utilities {
+  .premium-tabs {
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 1.5rem !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 1px solid hsl(var(--border)) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .premium-tab,
+  .premium-tabs > [role="tab"] {
+    flex: 0 0 auto !important;
+    min-height: 2.75rem !important;
+    padding: 0.5rem 0 0.7rem !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: hsl(var(--muted-foreground)) !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+  }
+
+  html .premium-tab[data-state="active"],
+  html .premium-tabs > [role="tab"][data-state="active"] {
+    background: transparent !important;
+    color: hsl(var(--foreground)) !important;
+    border-bottom: 2px solid hsl(var(--accent)) !important;
+    padding-bottom: calc(0.7rem - 2px) !important;
   }
 }

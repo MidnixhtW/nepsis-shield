@@ -21,6 +21,20 @@ export default {
     },
     extend: {
       // The fonts the app actually loads (see styles/foundation.css and styles/typography.css).
+      // Five steps and no more, the way a prayer book is set: small labels 12, controls 15, reading 17, section heads 20,
+      // titles 30 (36 and 48 only for the landing page on wide screens). Sizes in between snap to the nearest step.
+      fontSize: {
+        xs: ["0.75rem", { lineHeight: "1rem" }],
+        sm: ["0.9375rem", { lineHeight: "1.4rem" }],
+        base: ["1.0625rem", { lineHeight: "1.65rem" }],
+        lg: ["1.0625rem", { lineHeight: "1.65rem" }],
+        xl: ["1.25rem", { lineHeight: "1.75rem" }],
+        "2xl": ["1.25rem", { lineHeight: "1.75rem" }],
+        "3xl": ["1.875rem", { lineHeight: "2.25rem" }],
+        "4xl": ["1.875rem", { lineHeight: "2.25rem" }],
+        "5xl": ["2.25rem", { lineHeight: "2.5rem" }],
+        "6xl": ["3rem", { lineHeight: "1.05" }],
+      },
       fontFamily: {
         sans: ["Geist Variable", "ui-sans-serif", "system-ui", "sans-serif"],
         // Newsreader, or condensed Barlow in a service role (see styles/foundation.css).

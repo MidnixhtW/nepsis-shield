@@ -4,6 +4,7 @@ import { Bookmark, ChevronRight, Clock, Compass, Download, Info, NotebookPen, Pi
 import { Card } from "@/components/ui/card";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
 import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
+import { PatronOpening } from "@/components/app/PatronOpening";
 import { PrayerPartner } from "@/components/app/PrayerPartner";
 import { useFavorites } from "@/lib/favorites";
 import { useRecentPlaces } from "@/lib/recentPlaces";
@@ -60,6 +61,8 @@ export function MeHub() {
       <div className="px-1">
         <h1 className="text-3xl sm:text-4xl">{t("me.title")}</h1>
       </div>
+
+      <PatronOpening />
 
       <WatchfulnessLog />
 

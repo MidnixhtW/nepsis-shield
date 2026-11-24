@@ -39,9 +39,6 @@ export function WatchfulnessLog() {
           ))}
         </ol>
       </div>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        Private to this device. Any rule counts, even the one-minute Watch rule. If a day is missed, simply begin again.
-      </p>
     </section>
   );
 }

@@ -145,6 +145,12 @@ export function DailyPrayerFlow() {
   const [intentionText, setIntentionText] = useState("");
   const [silenceLeft, setSilenceLeft] = useState(0);
   const ison = useIsonEnabled();
+  // The one-line explanation of the chant drone shows until it has been tried once.
+  const [droneHintSeen, setDroneHintSeenState] = useState(() => getStoredItem<boolean>("reader:drone-hint-seen") === true);
+  const setDroneHintSeen = (seen: boolean) => {
+    setDroneHintSeenState(seen);
+    if (seen) setStoredItem("reader:drone-hint-seen", true);
+  };
   const done = completed[progressKey] ?? !!rhythm.today.prayers[time];
   const current = steps[Math.min(stepIndex, steps.length - 1)];
   const silent = isSilence(current);
@@ -508,7 +514,7 @@ export function DailyPrayerFlow() {
             ) : (
             <>
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-              <p className="text-xs font-semibold text-accent">
+              <p className="min-w-0 truncate whitespace-nowrap text-xs font-semibold text-accent">
                 {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
               </p>
               <div className="flex items-center gap-1">
@@ -517,17 +523,20 @@ export function DailyPrayerFlow() {
                   variant="ghost"
                   size="sm"
                   aria-pressed={ison}
-                  title="A held note under the reading"
-                  className={"h-8 rounded-full px-3 text-xs font-semibold " + (ison ? "text-accent" : "text-muted-foreground")}
-                  onClick={() => setIsonEnabled(!ison)}
+                  title="A low held note under the reading, as under Byzantine chant"
+                  className={"h-11 shrink-0 rounded-full px-2.5 text-sm font-medium " + (ison ? "text-accent" : "text-muted-foreground")}
+                  onClick={() => {
+                    setIsonEnabled(!ison);
+                    setDroneHintSeen(true);
+                  }}
                 >
-                  Ison
+                  {ison ? "Drone on" : "Chant drone"}
                 </Button>
                 <select
-                  aria-label="Reader"
+                  aria-label="Voice reading aloud"
                   value={reader}
                   onChange={(event) => setReader(event.target.value as typeof reader)}
-                  className="h-8 max-w-[6.5rem] rounded-full border border-border/60 bg-transparent px-2 text-xs font-semibold text-foreground"
+                  className="h-11 max-w-[6.5rem] cursor-pointer appearance-none border-0 bg-transparent px-2 text-sm font-medium text-muted-foreground underline decoration-border underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {READERS.map((item) => (
                     <option key={item.id} value={item.id} className="bg-background text-foreground">{item.id === "device" ? "Device" : item.name}</option>
@@ -542,6 +551,11 @@ export function DailyPrayerFlow() {
               </div>
             </header>
             <Progress value={progress} aria-hidden className="mx-auto mt-3 h-1 w-[min(42rem,calc(100%-2.5rem))]" />
+            {!droneHintSeen && stepIndex === 0 ? (
+              <p className="mx-auto mt-2 w-[min(42rem,calc(100%-2.5rem))] text-right text-sm text-muted-foreground">
+                Chant drone: a low held note under the reading, as in Byzantine chant.
+              </p>
+            ) : null}
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
               <div className="mx-auto w-full max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
