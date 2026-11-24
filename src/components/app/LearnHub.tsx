@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { BookMarked, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, Shield } from "lucide-react";
+import { useSettings } from "@/hooks/useSettings";
 import { ChurchDomeIcon, GospelBookIcon, IconPanelIcon, SaintHaloIcon, ThreeBarCrossIcon } from "@/components/app/OrthodoxMotifs";
 import { continueTile, LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { Button } from "@/components/ui/button";
@@ -31,13 +32,20 @@ export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |
 // The starting screen: topics as tiles, the same way Pray is laid out. Each topic keeps its own URL (?tab=...).
 // Older addresses still work: welcome, path and challenges are the three parts of "Your next step",
 // and guide and serve both open the one page for faith at work and on duty.
-function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
+// For a Melkite or Byzantine Catholic (chosen in Settings), the path into Orthodoxy is not their next step, so Start
+// leads with their own path and the Orthodox road moves to the Library, kept for anyone who wants to read it.
+const BECOMING_ORTHODOX = { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon };
+const ORTHODOX_FOR_REFERENCE = { to: "/learn?tab=welcome", label: "How people become Orthodox", hint: "The Orthodox road, for reference", icon: ThreeBarCrossIcon };
+
+function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = false): LauncherGroup[] {
   return [
     {
       title: "Start",
       tiles: [
         { to: "/learn?tab=path", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
-        { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon },
+        ...(easternCatholic
+          ? [{ to: "/learn?tab=liturgy", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
+          : [BECOMING_ORTHODOX]),
       ],
     },
     {
@@ -63,6 +71,7 @@ function buildLauncher(serving: boolean, philokalia: boolean): LauncherGroup[] {
           ? { to: "/learn?tab=serve", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }
           : { to: "/learn?tab=serve", label: "Faith at work", hint: "Prayer for work, stress and daily life", icon: Shield },
         { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
+        ...(easternCatholic ? [ORTHODOX_FOR_REFERENCE] : []),
         ...(philokalia ? [{ to: "/philokalia", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
       ],
     },
@@ -221,7 +230,8 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
   const serving = role !== "civilian";
   const philokalia = isPhilokaliaUnlocked();
   const recent = useRecentPlaces();
-  const groups = buildLauncher(serving, philokalia);
+  const { settings } = useSettings();
+  const groups = buildLauncher(serving, philokalia, settings.jurisdiction === "melkite" || settings.jurisdiction === "ruthenian");
   const lead = continueTile(groups, recent);
 
   if (!tab) {

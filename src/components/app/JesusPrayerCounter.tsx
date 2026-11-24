@@ -6,6 +6,7 @@ import { PrayerRopeLoop } from "@/components/app/PrayerRopeLoop";
 import { HoldToContinue, RopeTrack } from "@/components/app/RopeTrack";
 import { SlidingToggle } from "@/components/app/SlidingToggle";
 import { knotHaptic, markerHaptic, ruleDoneHaptic } from "@/lib/haptics";
+import { ropeClickOn, setRopeClick } from "@/lib/ropeSound";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,6 +68,7 @@ export function JesusPrayerCounter() {
   const [count, setCount] = useState(0);
   const [goal, setGoal] = useState(100);
   const [ruleOpen, setRuleOpen] = useState(false);
+  const [clickOn, setClickOn] = useState(ropeClickOn);
   const [goalDraft, setGoalDraft] = useState("100");
   const [saveEnabled, setSaveEnabled] = useState(true);
 
@@ -289,6 +291,25 @@ export function JesusPrayerCounter() {
               onCheckedChange={(on) => {
                 setMarkerPause(on);
                 setStoredItem(MARKER_PAUSE_KEY, on);
+              }}
+            />
+          </label>
+
+          <label className="flex items-start justify-between gap-4 rounded-2xl border border-border/60 bg-background/45 p-4">
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold">Click for each knot</span>
+              <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                A soft wooden click with each knot and a deeper one at each marker. For phones that cannot vibrate here,
+                like iPhone. Keep the sound low.
+              </span>
+            </span>
+            <Switch
+              aria-label="Click for each knot"
+              checked={clickOn}
+              onCheckedChange={(on) => {
+                setClickOn(on);
+                setRopeClick(on);
+                if (on) knotHaptic();
               }}
             />
           </label>

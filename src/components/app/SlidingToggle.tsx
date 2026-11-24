@@ -83,7 +83,7 @@ export function SlidingToggle<T extends string>({
             tabIndex={checked || (!options.some((item) => item.id === value) && option === options[0]) ? 0 : -1}
             onClick={() => onChange(option.id)}
             className={cn(
-              "relative z-10 h-9 whitespace-nowrap rounded-full px-3.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "relative z-10 h-11 whitespace-nowrap rounded-full px-3.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               checked ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground",
             )}
           >

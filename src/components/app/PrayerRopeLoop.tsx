@@ -72,6 +72,9 @@ export function PrayerRopeLoop({
   // Where the fingers are on the rope this time round. After a full round the rope starts again, all dark.
   const onRope = count % size;
   const reached = goal > 0 && count >= goal;
+  // When the rule is longer than the rope, say which time round this is, as one keeps count on a real rope.
+  const rounds = goal > size ? Math.ceil(goal / size) : 0;
+  const round = Math.min(rounds, Math.floor(count / size) + 1);
   const scale = knotSize / 16;
 
   return (
@@ -187,6 +190,11 @@ export function PrayerRopeLoop({
       <span className="pointer-events-none absolute inset-x-0 top-[37%] grid -translate-y-1/2 justify-items-center">
         <span className="text-5xl font-semibold tabular-nums tracking-tight">{count}</span>
         <span className="mt-1 text-sm font-semibold text-muted-foreground">of {goal}</span>
+        {rounds && !reached ? (
+          <span className="mt-1 text-sm tabular-nums text-foreground/80">
+            Round {round} of {rounds}, knot {onRope + 1}
+          </span>
+        ) : null}
         <span className="mt-1 text-sm text-muted-foreground">{reached ? "Glory to God" : "Tap to pray"}</span>
       </span>
     </button>

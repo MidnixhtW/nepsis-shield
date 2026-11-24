@@ -59,7 +59,7 @@ export function PrayNowCard() {
       </div>
       <p className="mt-3 text-sm text-foreground/75 shortphone:mt-2">
         {MODE_NAMES[mode]}, {lengthFor(time, mode).replace(/^About/, "about").replace(/\.$/, "")}.{" "}
-        <Link to="/pray?tab=daily" className="font-semibold text-accent underline-offset-2 hover:underline">
+        <Link to="/pray?tab=daily" className="inline-flex min-h-11 items-center font-semibold text-accent underline-offset-2 hover:underline">
           Change length
         </Link>
       </p>

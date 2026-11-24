@@ -163,7 +163,7 @@ export default function Saints() {
               <h2 className="text-lg font-semibold tracking-tight">Patron saints and prayers</h2>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 Compact guidance for common needs. Open a card to read and copy the prayer, or see{" "}
-                <Link to="/saint-prayers" className="font-semibold text-accent underline-offset-2 hover:underline">
+                <Link to="/saint-prayers" className="inline-flex min-h-11 items-center font-semibold text-accent underline-offset-2 hover:underline">
                   every saint&rsquo;s prayer on its own page
                 </Link>
                 .

@@ -4,7 +4,6 @@ import { Link } from "react-router";
 import { BellRing, CalendarDays, Check, ChevronDown, ExternalLink, Leaf, Share2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import {
   addDays,
@@ -261,13 +260,8 @@ function FastEnding({ season, kept }: { season: SeasonInstance; kept: number[] }
         {FEAST_AFTER_FAST[season.id] ?? season.name}
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">The {season.name} is complete.</p>
-      <ol aria-label={`${kept.length} of ${season.length} days kept`} className="mx-auto mt-5 flex max-w-sm flex-wrap justify-center gap-1.5">
-        {Array.from({ length: season.length }, (_, index) => (
-          <li key={index} aria-hidden className={cn("h-2.5 w-2.5 rounded-full", kept.includes(index) ? "bg-icon-gold" : "bg-muted")} />
-        ))}
-      </ol>
       <p className="mt-3 text-sm text-muted-foreground">
-        {kept.length ? `You kept ${kept.length} of its ${season.length} days.` : "The feast is for everyone."}
+        The feast is for everyone, whatever the fast was.
       </p>
     </Card>
   );
@@ -414,11 +408,8 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
           >
             <Check className="mr-2 h-4 w-4" /> {keptToday ? "Kept today" : "Mark today as kept"}
           </Button>
-          <span className="text-sm text-muted-foreground">
-            {kept.length} of {season.length} days kept
-          </span>
+          {keptToday ? <span className="text-sm text-muted-foreground">Glory to God.</span> : null}
         </div>
-        <Progress value={(kept.length / season.length) * 100} aria-label={`${kept.length} of ${season.length} days kept`} className="mt-3 h-1.5" />
 
         <p className="mt-4 flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
           <Leaf className="mt-1 h-3.5 w-3.5 shrink-0" /> {season.fastingNote}

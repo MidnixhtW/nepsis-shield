@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { cn } from "@/lib/utils";
+import { WoodBead, WoolKnot } from "@/components/app/RopeArt";
 
 const SPACING = 52; // pixels of pull per knot
 const SHOWN = 3; // knots shown above and below the current one
@@ -89,20 +90,8 @@ export function RopeTrack({
         className="absolute left-1/2 top-1/2"
         style={{ transform: `translate(-50%, -50%) translateY(${-(k - count) * SPACING}px)` }}
       >
-        {marker ? (
-          <span className={cn("grid h-9 w-9 place-items-center rounded-full border-2 border-icon-gold/70 bg-card text-icon-gold", current && "lamp-lit")}>
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none">
-              <path d="M12 3v18M9 6h6M7 10h10M9 16l6 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
-          </span>
-        ) : (
-          <span
-            className={cn(
-              "block h-6 w-6 rounded-full border-2 border-foreground/40 bg-muted shadow-[inset_0_-3px_0_hsl(0_0%_0%/0.35)]",
-              current && "border-icon-gold/80",
-            )}
-          />
-        )}
+        {/* Knots already prayed sit below the line and catch a little gold; a marker is an amber wood bead. */}
+        {marker ? <WoodBead size={34} current={current} /> : <WoolKnot size={46} lit={k < count} current={current} />}
       </div>,
     );
   }
@@ -123,7 +112,7 @@ export function RopeTrack({
       )}
     >
       {/* The cord, and the gold line a knot crosses to count. */}
-      <div aria-hidden className="absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-foreground/25" />
+      <div aria-hidden className="absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2 rounded-full bg-[#0e0e10]" />
       <div aria-hidden className="absolute inset-x-6 top-1/2 h-px bg-icon-gold/60" />
       <div
         className="absolute inset-0"
