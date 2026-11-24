@@ -138,10 +138,14 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
     const groups = settings.westernRite
       ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE, COMPLINE_WEST_TILE, NOVENA_TILE] } : group))
       : launcher;
+    const lead = prayerForHour(new Date());
     return (
       <div className="grid min-w-0 gap-5">
         <LauncherIntro title={t("pray.title")} />
-        <SectionLauncher groups={withDurations(groups)} lead={{ eyebrow: t("pray.lead"), tile: withDurations([{ title: "", tiles: [prayerForHour(new Date())] }])[0].tiles[0] }} />
+        <SectionLauncher
+          groups={withDurations(groups.map((group) => ({ ...group, tiles: group.tiles.filter((tile) => tile.to !== lead.to) })))}
+          lead={{ eyebrow: t("pray.lead"), tile: withDurations([{ title: "", tiles: [lead] }])[0].tiles[0] }}
+        />
       </div>
     );
   }

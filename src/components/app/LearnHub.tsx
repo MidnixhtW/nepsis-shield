@@ -42,44 +42,39 @@ function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = 
     {
       title: "Start",
       tiles: [
-        { to: "/learn?tab=path", art: "ladder", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
+        { to: "/learn?tab=path", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
         ...(easternCatholic
-          ? [{ to: "/learn?tab=liturgy", art: "anastasis", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
-          : [BECOMING_ORTHODOX]),
+          ? [{ to: "/learn?tab=liturgy", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
+          : [{ ...BECOMING_ORTHODOX, art: undefined }]),
       ],
     },
     {
-      title: "Faith",
-      tiles: [
-        { to: "/learn?tab=byheart", art: "pantocrator", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: GospelBookIcon },
-        { to: "/learn?tab=qa", art: "annunciation", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
-      ],
-    },
-    {
-      title: "Worship",
-      tiles: [
-        { to: "/learn?tab=liturgy", art: "anastasis", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
-        { to: "/learn?tab=hymns", art: "nativity", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
-      ],
-    },
-    {
-      title: "Library",
+      title: "Saints",
       tiles: [
         { to: "/learn?tab=stories", art: "george", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: IconPanelIcon },
-        { to: "/saints", art: "nicholas", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
+        { to: "/saints", art: "nicholas", label: "Lives and name days", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
         serving
           ? { to: "/learn?tab=serve", art: "michael", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }
           : { to: "/learn?tab=serve", art: "michael", label: "Faith at work", hint: "Prayer for work, stress and daily life", icon: Shield },
-        { to: "/learn?tab=parish", art: "dormition", label: "Find a parish", hint: "Churches near you", icon: MapPin },
-        ...(easternCatholic ? [ORTHODOX_FOR_REFERENCE] : []),
-        ...(philokalia ? [{ to: "/philokalia", art: "ladder", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
       ],
     },
     {
-      title: "More resources",
+      title: "Faith and worship",
       tiles: [
-        { to: "/learn?tab=audio", art: "theotokos", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
-        { to: "/learn?tab=library", art: "transfiguration", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
+        { to: "/learn?tab=byheart", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: GospelBookIcon },
+        { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
+        { to: "/learn?tab=liturgy", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
+        { to: "/learn?tab=hymns", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
+        ...(philokalia ? [{ to: "/philokalia", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
+      ],
+    },
+    {
+      title: "More",
+      tiles: [
+        { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
+        ...(easternCatholic ? [{ ...ORTHODOX_FOR_REFERENCE, art: undefined }] : []),
+        { to: "/learn?tab=audio", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
+        { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
       ],
     },
   ];
