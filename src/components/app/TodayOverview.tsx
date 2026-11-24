@@ -95,6 +95,9 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             <Button variant="outline" className="mt-4 rounded-full" onClick={() => onNavigate?.({ section: "read", read: "daily" })}>
               <BookOpen className="mr-2 h-4 w-4" /> Open readings
             </Button>
+            <Button variant="ghost" className="mt-4 rounded-full" onClick={() => onOpenRoute?.("/pray?tab=lectio")}>
+              Pray with this Gospel
+            </Button>
           </section>
 
           <section id="saints-fast" aria-labelledby="saints-fast-title" className="scroll-mt-24 border-t border-border/60 px-1 py-7">

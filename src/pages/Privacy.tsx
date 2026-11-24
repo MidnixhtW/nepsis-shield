@@ -444,6 +444,13 @@ export default function Privacy() {
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+              <p className="text-sm font-semibold">Prayer reminder notifications (only if you turn them on)</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                If you turn on prayer reminders in a browser or the web app, our server keeps what it needs to send them: the push address your browser gives us (it does not name you), your time zone, the reminder times you chose, and the date each reminder last went out. Turning every reminder off deletes it at once, and it is deleted automatically if you do not open the app for four months. The Android app's reminders never leave your phone.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Keeping a fast together (only if you tap "I'm keeping it")</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                 During a fast, Today can show how many people are keeping it with the app. If you add yourself, the app sends which fast and a random number made on this device, tied to nothing about you. Only the total is ever shown, and the numbers are deleted about four months later.

@@ -82,5 +82,9 @@ await writeFile(
     .join("\n")}\n</urlset>\n`,
 );
 
+// The current version, so the Android app can tell when a newer one is out (src/lib/appUpdate.ts).
+const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+await writeFile(path.join(dist, "version.json"), `${JSON.stringify({ version: pkg.version })}\n`);
+
 await rm(serverOut, { recursive: true, force: true });
-console.log(`prerender: wrote ${written} pages and sitemap.xml`);
+console.log(`prerender: wrote ${written} pages, sitemap.xml and version.json`);

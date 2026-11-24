@@ -81,7 +81,7 @@ const PRIVACY: Section[] = [
         items={[
           "There are no accounts. We never ask for your email, phone number, address or location.",
           "Your prayers, notes, progress and settings stay on your device. We cannot see them.",
-          "Only two optional features send anything you choose to our server: prayer groups, and adding yourself to the count of people keeping a fast.",
+          "Only three optional features send anything you choose to our server: prayer groups, prayer reminder notifications on the web, and adding yourself to the count of people keeping a fast.",
           "We do not sell your information, share it for advertising, show ads, or use tracking cookies.",
         ]}
       />
@@ -123,6 +123,10 @@ const PRIVACY: Section[] = [
           the group's link can read all of it. Requests are deleted after 30 days, daily prayer marks after 3 days, and a group left unused for 90
           days is deleted with everything in it. You can remove your own requests at any time, and the group's creator can remove any request or
           close the group, which deletes it at once.
+        </p>
+        <p>
+          <span className="font-semibold text-foreground">Prayer reminder notifications (only if you turn them on).</span> If you turn on prayer reminders in a browser or the web app, our server keeps what it needs to send them: the push address your browser gives us (it does not name you), your time zone, the reminder times you chose, and the date each reminder last went out. Turning every reminder off deletes it at once, and it is deleted automatically if you do not open the app for four months. The Android app's reminders never leave your phone. Notifications are
+          delivered through your browser's own push service (Google, Apple, Mozilla or Microsoft), which sees only an encrypted message.
         </p>
         <p>
           <span className="font-semibold text-foreground">Keeping a fast together (only if you tap "I'm keeping it").</span> The app sends which
@@ -172,7 +176,7 @@ const PRIVACY: Section[] = [
     body: (
       <List
         items={[
-          "Prayer groups and the fast count: your consent, which you can withdraw by removing your requests or no longer using the feature.",
+          "Prayer groups, web reminder notifications and the fast count: your consent, which you can withdraw by removing your requests, turning reminders off, or no longer using the feature.",
           "Keeping the service safe (rate limits) and counting website visits: our legitimate interest in running a small free service, kept to the minimum described above.",
         ]}
       />

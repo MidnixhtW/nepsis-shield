@@ -14,6 +14,19 @@ export const CURRENT_VERSION = __APP_VERSION__.replace(/\.0$/, "");
 // Newest first. Written for the people using the app, not for developers.
 export const RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: "1.4",
+    date: "November 24, 2026",
+    title: "Reminders that reach you",
+    changes: [
+      "Prayer reminders now arrive as real notifications in the browser and the web app too, not only in the Android app. On iPhone, add the app to your Home Screen first.",
+      "When a new version is ready, the app tells you and offers a refresh, so you never pray with an old copy.",
+      "Five shield prayers sit right under Begin on Today: Angry, Anxious, Tempted, Tired and Proud, one tap each.",
+      "Lectio Divina: pray slowly with today's Gospel in four steps, from Pray or from Today's readings.",
+      "Prayers shared by Catholics and Orthodox, a Western prayers section with the Litany of Humility, and the Way of the Cross. The Litany can be added to morning prayers, and Western Rite users can set an Angelus reminder at noon.",
+      "A saying of the Fathers after each prayer, an Offline ready badge when readings come from your saved copy, and larger buttons and clearer text throughout.",
+    ],
+  },
+  {
     version: "1.3",
     date: "November 6, 2026",
     title: "Ready with no signal",

@@ -19,10 +19,11 @@ import { FamilyPrayer } from "@/components/app/FamilyPrayer";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { StationsGuide } from "@/components/app/StationsGuide";
+import { LectioDivina } from "@/components/app/LectioDivina";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
 
-export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio";
 
 // The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
 // though they keep their /pray?tab=... addresses so old links and favorites still work.
@@ -37,6 +38,7 @@ const launcher: LauncherGroup[] = [
       { to: "/pray?tab=daily&begin=evening", label: "Evening prayers", hint: "Give thanks, ask forgiveness", icon: Sunset },
       { to: "/pray?tab=daily&begin=night", label: "Night prayers", hint: "Into Thy hands, O Lord", icon: MoonStar },
       { to: "/pray?tab=counter", label: "Jesus Prayer", hint: "Prayer rope and stillness", icon: PrayerRopeIcon },
+      { to: "/pray?tab=lectio", label: "Lectio Divina", hint: "Pray slowly with today's Gospel", icon: GospelBookIcon },
     ],
   },
   {
@@ -84,6 +86,7 @@ const titles: Record<PrayerTab, string> = {
   journal: "Journal",
   rosary: "Rosary and Angelus",
   stations: "Way of the Cross",
+  lectio: "Lectio Divina",
 };
 
 const content: Record<PrayerTab, ReactNode> = {
@@ -105,6 +108,7 @@ const content: Record<PrayerTab, ReactNode> = {
   journal: <DailyReflection />,
   rosary: <RosaryGuide />,
   stations: <StationsGuide />,
+  lectio: <LectioDivina />,
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {

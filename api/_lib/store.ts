@@ -13,6 +13,8 @@ export type Store = {
   expire(key: string, ttlSeconds: number): Promise<void>;
   /** Increments a counter that expires after ttlSeconds; returns the new value. */
   incr(key: string, ttlSeconds: number): Promise<number>;
+  /** Sets a value only if the key does not exist yet; true when this call set it. */
+  setIfAbsent(key: string, value: string): Promise<boolean>;
 };
 
 type Env = Record<string, string | undefined>;
@@ -71,6 +73,10 @@ export function upstashStore(env: Env): Store | null {
       const [count] = await pipeline([["INCR", key], ["EXPIRE", key, ttl, "NX"]]);
       return Number(count);
     },
+    async setIfAbsent(key, value) {
+      const [result] = await pipeline([["SET", key, value, "NX"]]);
+      return result === "OK";
+    },
   };
 }
 
@@ -109,6 +115,11 @@ export function memoryStore(): Store {
       const next = Number(strings.get(key) ?? 0) + 1;
       strings.set(key, String(next));
       return next;
+    },
+    async setIfAbsent(key, value) {
+      if (strings.has(key)) return false;
+      strings.set(key, value);
+      return true;
     },
   };
 }

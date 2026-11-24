@@ -12,6 +12,7 @@ const REMINDER_IDS = {
   evening: 7102,
   night: 7103,
   scroll: 7104,
+  angelus: 7105,
 } as const;
 
 // What each daily reminder says, and where tapping it opens.
@@ -20,6 +21,7 @@ const REMINDER_TEXT: Record<keyof typeof REMINDER_IDS, { title: string; body: st
   evening: { title: "Evening Prayer", body: "Give thanks and look back on the day.", to: "/pray?tab=daily&begin=evening" },
   night: { title: "Night Prayer", body: "Into Thy hands, O Lord.", to: "/pray?tab=daily&begin=night" },
   scroll: { title: "Before you scroll", body: "One minute of prayer first. Then the phone can wait.", to: "/pray?tab=daily&begin=night" },
+  angelus: { title: "The Angelus", body: "The Angel of the Lord declared unto Mary.", to: "/pray?tab=rosary" },
 };
 
 export type PrayerReminderKey = keyof typeof REMINDER_IDS;
