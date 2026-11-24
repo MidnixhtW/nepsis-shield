@@ -15,6 +15,8 @@ import { refreshWebPushOnOpen } from "@/lib/webPush";
 import { getStoredItem } from "@/lib/deviceStorage";
 import { REMINDER_PREFS_KEY } from "@/lib/prayerReminderPrefs";
 
+const TILE_ART = ["/icons/tiles/anastasis.webp", "/icons/tiles/annunciation.webp", "/icons/tiles/dormition.webp", "/icons/tiles/george.webp", "/icons/tiles/ladder.webp", "/icons/tiles/lamentation.webp", "/icons/tiles/michael.webp", "/icons/tiles/nativity.webp", "/icons/tiles/nicholas.webp", "/icons/tiles/pantocrator.webp", "/icons/tiles/pentecost.webp", "/icons/tiles/theophany.webp", "/icons/tiles/theotokos.webp", "/icons/tiles/transfiguration.webp"];
+
 createRoot(document.getElementById("root")!).render(<App />);
 
 // The Android app asks once a day whether a newer version is out.
@@ -41,6 +43,8 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
         // Twice, so the tabs fetched on idle after the first screen are kept too.
         setTimeout(send, 6000);
         setTimeout(send, 20000);
+        // The icons on Pray and Learn too, so those rows show pictures with no signal even if they were never opened.
+        setTimeout(() => ready.active?.postMessage({ type: "cache-urls", urls: TILE_ART }), 25000);
       }).catch(() => {});
       // Look for a new version whenever the app comes back to the screen, not only on a fresh load.
       document.addEventListener("visibilitychange", () => {

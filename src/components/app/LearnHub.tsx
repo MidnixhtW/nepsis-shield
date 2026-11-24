@@ -93,18 +93,25 @@ const NEXT_STEP_VIEWS: Array<{ tab: LearnTab; label: string }> = [
 
 // One page for the three ways in: a path chosen for you, the road into the Church, and short challenges.
 function NextStep({ tab }: { tab: LearnTab }) {
+  // A Melkite or Byzantine Catholic is not on the road into Orthodoxy, so that view is not offered as their next
+  // step; it stays reachable from the Library ("How people become Orthodox").
+  const { settings } = useSettings();
+  const easternCatholic = settings.jurisdiction === "melkite" || settings.jurisdiction === "ruthenian";
+  const views = NEXT_STEP_VIEWS.filter((view) => !(easternCatholic && view.tab === "welcome" && tab !== "welcome")).map((view) =>
+    easternCatholic && view.tab === "welcome" ? { ...view, label: "How people become Orthodox" } : view,
+  );
   return (
     <div className="grid gap-4">
-      <nav aria-label="Your next step" className="flex flex-wrap gap-1.5">
-        {NEXT_STEP_VIEWS.map((view) => (
+      <nav aria-label="Your next step" className="flex flex-wrap gap-x-6 border-b border-border/80">
+        {views.map((view) => (
           <Link
             key={view.tab}
             to={`/learn?tab=${view.tab}`}
             replace
             aria-current={view.tab === tab ? "page" : undefined}
             className={cn(
-              "inline-flex h-9 items-center rounded-full border px-3.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              view.tab === tab ? "border-accent/50 bg-accent/15 text-foreground" : "border-border/60 text-muted-foreground hover:text-foreground",
+              "-mb-px inline-flex min-h-11 items-center border-b-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              view.tab === tab ? "border-accent text-foreground" : "border-transparent text-muted-foreground hover:text-foreground",
             )}
           >
             {view.label}

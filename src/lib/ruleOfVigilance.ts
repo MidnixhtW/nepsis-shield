@@ -85,7 +85,7 @@ export const ruleVariants: Record<VigilanceNeed, RuleVariant[]> = {
       id: "gentle",
       label: "Gentle return",
       description: "Short prayers whenever the heart grows restless.",
-      pastoralNote: "Begin gently. The goal is not to feel perfect, but to return to Christ one breath at a time.",
+      pastoralNote: "Begin gently, and return to Christ one breath at a time.",
       practice: "When restless: 12 slow Jesus Prayers, breathing out on “have mercy on me.”",
       primaryAction: "Begin with one quiet prayer",
       target: { section: "pray", tab: "daily" },

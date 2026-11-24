@@ -3,7 +3,6 @@ import { BookOpen, CheckCircle2, Flame, Hand, HeartHandshake, RotateCcw, ShieldC
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { markHabitComplete } from "@/lib/dailyHabits";
@@ -107,7 +106,6 @@ export function PrayerChallenges() {
   const selectedState = store[selected.id] ?? { completedDays: [] };
   const completedCount = selectedState.completedDays.length;
   const nextDay = Math.min(completedCount + 1, selected.days.length);
-  const progress = Math.round((completedCount / selected.days.length) * 100);
   const Icon = selected.icon;
 
   const activeChallenges = useMemo(
@@ -184,7 +182,7 @@ export function PrayerChallenges() {
                 <span className="min-w-0">
                   <span className="block text-sm font-semibold leading-tight">{challenge.title}</span>
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    {count}/{challenge.days.length} complete
+                    {count ? `Day ${Math.min(count + 1, challenge.days.length)} of ${challenge.days.length}` : `${challenge.days.length} days`}
                   </span>
                 </span>
               </Button>
@@ -208,13 +206,10 @@ export function PrayerChallenges() {
             </Button>
           </div>
 
-          <div className="mt-5 grid gap-2">
-            <div className="flex justify-between text-xs font-medium text-muted-foreground">
-              <span>{completedCount} of {selected.days.length} days</span>
-              <span>{progress}%</span>
-            </div>
-            <Progress value={progress} aria-label="Challenge progress" className="h-2" />
-          </div>
+          {/* Where you are in the challenge, with no percent and no bar: a missed day just waits. */}
+          <p className="meta-label mt-5 text-muted-foreground">
+            {completedCount >= selected.days.length ? "Every day kept. Glory to God." : `Day ${completedCount + 1} of ${selected.days.length}`}
+          </p>
 
           <Separator className="my-5" />
 

@@ -147,7 +147,7 @@ const entries: ManualEntry[] = [
   {
     id: "for-courage",
     title: "For courage",
-    subtitle: "Not bravado, but faithfulness under fear.",
+    subtitle: "Faithfulness when you are afraid.",
     icon: <Crosshair className="h-4 w-4 text-primary" />,
     prayer: "Lord, teach me courage without cruelty, confidence without pride, and endurance without hardness of heart. Let me fear sin more than hardship, and let me love You above comfort. Amen.",
     practice: ["Remember: Christian courage is cruciform, not reckless.", "Ask for humility before asking for victory.", "Protect the vulnerable whenever it is within your power."],
