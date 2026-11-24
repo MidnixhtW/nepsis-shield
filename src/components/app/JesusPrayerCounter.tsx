@@ -2,10 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { Minus, Moon, Plus, RotateCcw, ShieldAlert, Target, Trash2 } from "lucide-react";
 import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
-import { CountRing } from "@/components/app/CountRing";
+import { PrayerRopeLoop } from "@/components/app/PrayerRopeLoop";
 import { HoldToContinue, RopeTrack } from "@/components/app/RopeTrack";
 import { SlidingToggle } from "@/components/app/SlidingToggle";
-import { knotHaptic, markerHaptic } from "@/lib/haptics";
+import { knotHaptic, markerHaptic, ruleDoneHaptic } from "@/lib/haptics";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -82,27 +82,26 @@ export function JesusPrayerCounter() {
   const [heldMarker, setHeldMarker] = useState(0);
   const waiting = markerPause && count > 0 && count % pulseEvery === 0 && heldMarker !== count;
 
-  // True when the next change to the count came from a tap, so loading today's saved count never buzzes.
-  const counted = useRef(false);
-  // One knot from the ring, the rope or the +1 button.
+  // The haptics go off inside the tap itself (phones only allow a buzz during a tap): a bump per knot, the firm
+  // double pulse on a marker, and three pulses when today's rule is prayed. Watchfulness mode plays its own.
+  const countRef = useRef(count);
+  countRef.current = count;
+  const buzzFor = useCallback(
+    (next: number, added: number) => {
+      if (dark) return;
+      if (goal > 0 && countRef.current < goal && next >= goal) ruleDoneHaptic();
+      else if (added === 1 && next % pulseEvery === 0) markerHaptic();
+      else knotHaptic();
+    },
+    [dark, goal, pulseEvery],
+  );
+  // One knot from the rope drawing, the pulled rope or the +1 button.
   const knot = useCallback(() => {
     if (waiting) return;
-    counted.current = true;
+    buzzFor(countRef.current + 1, 1);
+    countRef.current += 1;
     setCount((c) => c + 1);
-  }, [waiting]);
-
-  // The haptics follow the count: a small bump per knot, the firm double pulse on reaching a marker, one bump for +10.
-  // Watchfulness mode plays its own.
-  const lastCount = useRef(count);
-  useEffect(() => {
-    const added = count - lastCount.current;
-    lastCount.current = count;
-    const fromTap = counted.current;
-    counted.current = false;
-    if (added <= 0 || dark || !fromTap) return;
-    if (added === 1 && count % pulseEvery === 0) markerHaptic();
-    else knotHaptic();
-  }, [count, dark, pulseEvery]);
+  }, [waiting, buzzFor]);
   const closeDark = useCallback(() => setDark(false), []);
 
   useEffect(() => {
@@ -214,7 +213,7 @@ export function JesusPrayerCounter() {
             <SlidingToggle
               label="How to count"
               options={[
-                { id: "ring", label: "Tap ring" },
+                { id: "ring", label: "Whole rope" },
                 { id: "rope", label: "Pull the rope" },
               ]}
               value={view}
@@ -224,7 +223,7 @@ export function JesusPrayerCounter() {
               }}
             />
             {view === "ring" ? (
-              <CountRing count={count} goal={goal} onTap={knot} />
+              <PrayerRopeLoop count={count} goal={goal} markerEvery={pulseEvery} onTap={knot} />
             ) : (
               <>
                 <p className="text-3xl tabular-nums">{count}</p>
@@ -265,7 +264,8 @@ export function JesusPrayerCounter() {
             </Button>
             <Button
               onClick={() => {
-                counted.current = true;
+                buzzFor(countRef.current + 10, 10);
+                countRef.current += 10;
                 setCount((c) => c + 10);
               }}
               variant="outline"

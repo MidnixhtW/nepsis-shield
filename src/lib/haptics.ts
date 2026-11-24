@@ -1,5 +1,5 @@
 import { Capacitor } from "@capacitor/core";
-import { Haptics, ImpactStyle } from "@capacitor/haptics";
+import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 
 // A small bump for a knot, a firmer double pulse at a marker. The Android app uses the phone's haptic engine; in a
 // browser, Android vibrates and iPhone Safari stays silent (it has no vibration API).
@@ -16,12 +16,13 @@ export function softHaptic() {
   vibrate(5);
 }
 
+// A knot is a clear single bump. Phone motors barely spin up in under about 20 ms, so the browser buzz is 30 ms.
 export function knotHaptic() {
   if (Capacitor.isNativePlatform()) {
-    Haptics.impact({ style: ImpactStyle.Light }).catch(() => vibrate(12));
+    Haptics.impact({ style: ImpactStyle.Medium }).catch(() => vibrate(30));
     return;
   }
-  vibrate(12);
+  vibrate(30);
 }
 
 export function markerHaptic() {
@@ -29,8 +30,17 @@ export function markerHaptic() {
     Haptics.impact({ style: ImpactStyle.Heavy })
       .then(() => new Promise((resolve) => setTimeout(resolve, 140)))
       .then(() => Haptics.impact({ style: ImpactStyle.Heavy }))
-      .catch(() => vibrate([25, 40, 25]));
+      .catch(() => vibrate([60, 70, 60]));
     return;
   }
-  vibrate([25, 40, 25]);
+  vibrate([60, 70, 60]);
+}
+
+/** Today's rule prayed in full: three firm pulses. */
+export function ruleDoneHaptic() {
+  if (Capacitor.isNativePlatform()) {
+    Haptics.notification({ type: NotificationType.Success }).catch(() => vibrate([80, 80, 80, 80, 160]));
+    return;
+  }
+  vibrate([80, 80, 80, 80, 160]);
 }

@@ -3,3 +3,10 @@
   The app itself imports src/globals.css from src/main.tsx.
 */
 @import "./globals.css";
+
+/* The prayer rope gives a small tug down with each knot counted (PrayerRopeLoop). */
+@keyframes rope-tug {
+  0% { transform: translateY(0); }
+  35% { transform: translateY(3px); }
+  100% { transform: translateY(0); }
+}
