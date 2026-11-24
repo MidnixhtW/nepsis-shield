@@ -24,7 +24,7 @@ import { DayIconBanner } from "@/components/app/DayIconBanner";
 import { WeekDots } from "@/components/app/WeekDots";
 import { LearnReviewCard } from "@/components/app/LearnReviewCard";
 import { TodayFold } from "@/components/app/TodayFold";
-import { ShieldTriggers } from "@/components/app/ShieldTriggers";
+import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl, readingText } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
 import { saveWidgetSnapshot } from "@/lib/widgetSnapshot";
@@ -152,15 +152,15 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           <div className="grid min-w-0 gap-5">
             {/* Help is in the top bar on every screen, so Today keeps only a short pointer and the reset. */}
             <section aria-label="Help now" className="rounded-3xl border bg-card px-5">
-              <div className="grid gap-3 py-4">
-                <div className="flex items-start gap-3">
-                  <LifeBuoy aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">How are you, really?</p>
-                    <p className="text-sm text-foreground/75">Pick what is happening for a one-minute way back.</p>
-                  </div>
+              <div className="flex flex-wrap items-center gap-3 py-4">
+                <LifeBuoy aria-hidden className="h-5 w-5 shrink-0 text-accent" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold">How are you, really?</p>
+                  <p className="text-sm text-foreground/75">Lonely, can&rsquo;t sleep, stuck scrolling, dry: pick one for a one-minute way back.</p>
                 </div>
-                <ShieldTriggers />
+                <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={openHelpPanel}>
+                  I'm feeling…
+                </Button>
               </div>
               <div id="ground" className="flex flex-wrap items-center gap-3 border-t py-4">
                 <HeartPulse aria-hidden className="h-5 w-5 shrink-0 text-accent" />

@@ -45,7 +45,7 @@ export function DayIconBanner({
           src={icon.imageUrl}
           alt={icon.alt}
           onError={() => setFailed(true)}
-          className="mx-auto h-auto max-h-[min(15rem,30vh)] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
+          className="mx-auto h-auto max-h-[min(13rem,26vh)] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
         />
       ) : null}
       <h1 className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>

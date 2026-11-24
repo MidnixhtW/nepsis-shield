@@ -111,7 +111,7 @@ export const APK_ARTIFACTS_URL =
 
 export const APK_RELEASE_DATE =
   import.meta.env.VITE_APK_RELEASE_DATE ||
-  (APK_DOWNLOAD_IS_DIRECT ? "Latest GitHub APK release" : "Pending repository configuration");
+  (APK_DOWNLOAD_IS_DIRECT ? "Always the newest build" : "Coming soon");
 
 export const APK_DOWNLOAD_HOST = APK_DOWNLOAD_URL.startsWith("https://")
   ? new URL(APK_DOWNLOAD_URL).hostname

@@ -1,4 +1,4 @@
-import { BookOpen, Flame, Heart, Moon, MoonStar, ShieldAlert, Smartphone, Users, Wind } from "lucide-react";
+import { BookOpen, Crown, Flame, Heart, Moon, MoonStar, ShieldAlert, Smartphone, Users, Wind } from "lucide-react";
 import type { AppSection } from "@/components/app/AppShell";
 import { saveGlobalResume, setQuickState, type QuickStateKey } from "@/lib/dailyHabits";
 
@@ -35,6 +35,13 @@ export const helpItems: HelpItem[] = [
     line: "Pause before acting.",
     target: { section: "pray", tab: "prayers" },
     icon: Flame,
+  },
+  {
+    key: "proud",
+    label: "Proud",
+    line: "Ask for humility.",
+    target: { section: "pray", tab: "prayers" },
+    icon: Crown,
   },
   {
     key: "tired",

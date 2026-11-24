@@ -129,10 +129,10 @@ export function PwaInstallCard() {
               {installStatus}
             </Badge>
             <Badge variant="secondary" className="rounded-full bg-muted px-3 py-1 text-xs">
-              {swReady ? "Offline shell ready" : "Offline shell pending"}
+              {swReady ? "Works offline" : "Saving for offline…"}
             </Badge>
           </div>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight">Install the web app</h2>
+          <h2 className="mt-2 text-xl font-semibold tracking-tight">Install App (Works Offline)</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             Add Nepsis Shield to your home screen from the browser. If the install prompt is not available on this device, use the manual steps below.
           </p>
@@ -162,9 +162,9 @@ export function PwaInstallCard() {
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{browserHint}</p>
         </div>
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
-          <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-primary" /> Offline shell</p>
+          <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-primary" /> Works offline</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Install once while online; saved pages can still open if signal drops.
+            Install once with signal. After that, prayers and the next two weeks of readings open with no signal at all.
           </p>
         </div>
       </div>

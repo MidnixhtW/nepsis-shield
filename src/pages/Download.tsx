@@ -1,4 +1,5 @@
 import { INSTALL_PAGE_URL } from "@/lib/publicSite";
+import { CURRENT_VERSION } from "@/lib/releaseInfo";
 import { Link } from "react-router";
 import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import {
@@ -81,6 +82,9 @@ function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; inst
   );
 }
 
+// The version people see: the one set for the Android build, else the app's own version (never a build label).
+const SHOWN_VERSION = APK_VERSION === "web-preview" ? CURRENT_VERSION : APK_VERSION;
+
 function ApkDownloadCard() {
   return (
     <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
@@ -89,18 +93,18 @@ function ApkDownloadCard() {
           <Smartphone className="mr-1 h-3.5 w-3.5" /> Android only
         </Badge>
         <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          {APK_CHANNEL_LABEL} · Version {APK_VERSION}
+          {APK_CHANNEL_LABEL} · v{SHOWN_VERSION}
         </Badge>
         <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          {APK_DOWNLOAD_IS_DIRECT ? "Direct APK available" : "Awaiting hosted APK"}
+          {APK_DOWNLOAD_IS_DIRECT ? "Ready to install" : "Coming soon"}
         </Badge>
       </div>
 
-      <h2 className="mt-4 text-2xl font-semibold tracking-tight">{APK_CHANNEL === "release" ? "Android app file" : "Android public beta (optional)"}</h2>
+      <h2 className="mt-4 text-2xl font-semibold tracking-tight">Android Direct Install (v{SHOWN_VERSION})</h2>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
         {APK_CHANNEL === "release"
           ? "Download the signed Android app and install it directly."
-          : "Most people can simply install the web app above. On Android you can also install the public beta directly. It has everything the website has, works offline, and updates as new builds go out. Until the signed release is published, Android will ask you to allow installs from your browser."}
+          : "Optional. Most people only need the app above. On Android you can also install it directly: same app, works offline, and it updates as new versions come out."}
       </p>
 
       <Separator className="my-5" />
@@ -108,16 +112,16 @@ function ApkDownloadCard() {
       <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold">Nepsis Shield APK</p>
+            <p className="text-sm font-semibold">Nepsis Shield for Android</p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-              Release date: {APK_RELEASE_DATE}. Source: {APK_DOWNLOAD_HOST}.
+              {APK_RELEASE_DATE}. Downloads from {APK_DOWNLOAD_HOST}.
             </p>
           </div>
           {APK_DOWNLOAD_IS_DIRECT ? (
             <ApkDownloadButton className="rounded-2xl" label="Download APK" />
           ) : (
             <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 py-2 text-sm font-semibold text-muted-foreground">
-              APK not hosted yet
+              Coming soon
             </div>
           )}
         </div>
@@ -126,7 +130,7 @@ function ApkDownloadCard() {
       <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
         <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <p className="text-sm leading-relaxed text-muted-foreground">
-          Only install APKs from builds you trust. Android may ask you to allow installation from your browser or file manager.
+          This file comes straight from the Nepsis Shield project. Because it is not from the Play Store, Android asks once to allow installs from your browser. That is normal, and you can turn it back off after.
         </p>
       </div>
     </Card>

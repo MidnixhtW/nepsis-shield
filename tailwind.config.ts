@@ -87,21 +87,15 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        // Open and close with opacity and a small slide only (both run on the GPU). The panel takes its height at
+        // once, so nothing below has to re-lay out on every frame.
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { opacity: "0", transform: "translateY(-4px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { opacity: "1", transform: "translateY(0)" },
+          to: { opacity: "0", transform: "translateY(-4px)" },
         },
         // A slow candle-like drift for the homepage glow.
         drift: {

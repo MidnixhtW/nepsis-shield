@@ -7,6 +7,7 @@ import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useFavorites } from "@/lib/favorites";
 import { useNow } from "@/lib/prayerHours";
 import { DayTimeline } from "@/components/app/DayTimeline";
+import { ShieldTriggers } from "@/components/app/ShieldTriggers";
 
 const LABELS: Record<PrayerTime, { title: string; line: string }> = {
   morning: { title: "Morning prayers", line: "Offer the day to God before the noise begins." },
@@ -71,6 +72,9 @@ export function PrayNowCard() {
           Change length
         </Link>
       </p>
+      <div className="mt-4 text-left">
+        <ShieldTriggers />
+      </div>
       <div className="mt-5 text-left">
         <DayTimeline />
       </div>
