@@ -135,7 +135,7 @@ export function PatronSaintSettings() {
             id="patron-month"
             value={month}
             onChange={(event) => setMonth(Number(event.target.value))}
-            className="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 touch:min-h-11 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {MONTHS.map((label, index) => (
               <option key={label} value={index + 1}>{label}</option>

@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -115,5 +116,9 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [
+    tailwindcssAnimate,
+    // touch: styles for finger input only (phones, tablets), so tap targets can grow to 44px without changing the mouse layout.
+    plugin(({ addVariant }) => addVariant("touch", "@media (pointer: coarse)")),
+  ],
 } satisfies Config;

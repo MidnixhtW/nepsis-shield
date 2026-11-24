@@ -164,7 +164,7 @@ function HelpNowButton() {
           type="button"
           variant="ghost"
           aria-label={t("header.help.aria")}
-          className="h-10 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
+          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
         >
           <LifeBuoy className="h-[18px] w-[18px] text-accent" />
           <span className="text-sm font-semibold">{t("header.help")}</span>
@@ -224,7 +224,7 @@ export function AppHeader() {
 
   return (
     <header className="flex min-w-0 items-center justify-between gap-3">
-      <Link to="/today" className="group flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <Link to="/today" className="group flex min-h-11 min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
         <div className="premium-icon-mark h-10 w-10 transition-transform group-hover:scale-[1.04]">
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
@@ -246,7 +246,7 @@ export function AppHeader() {
         <GroundResetButton
           variant="ghost"
           aria-label={t("header.reset.aria")}
-          className="h-10 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
+          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
         >
           <HeartPulse className="h-[18px] w-[18px] text-accent" />
           <span className="hidden text-sm font-semibold sm:inline">Reset</span>

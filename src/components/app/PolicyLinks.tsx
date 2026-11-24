@@ -16,7 +16,7 @@ export function PolicyLinks({ className }: { className?: string }) {
         <Link
           key={link.to}
           to={link.to}
-          className="rounded py-1 underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="inline-flex min-h-11 items-center rounded underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {link.label}
         </Link>

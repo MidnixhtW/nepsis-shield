@@ -208,7 +208,7 @@ export function PrayerReminders() {
                 value={reminders[key].time}
                 disabled={busy !== null}
                 onChange={(event) => void changeTime(key, event.target.value)}
-                className="h-10 rounded-2xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                className="h-10 touch:min-h-11 rounded-2xl border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 aria-label={`${prayerLabels[key]} reminder time`}
               />
               {!native && reminders[key].enabled ? (

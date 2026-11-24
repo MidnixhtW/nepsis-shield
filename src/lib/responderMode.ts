@@ -54,7 +54,7 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     card: "border-border/[0.72] bg-gradient-to-br from-white via-card to-cinnabar/5 dark:border-border/[0.72] dark:from-white/10 dark:via-card dark:to-cinnabar/10",
     badge: "border-border/[0.72] bg-white text-foreground dark:border-border/[0.72] dark:bg-white/10 dark:text-white",
     icon: "bg-white text-cinnabar ring-1 ring-ring/[0.48] dark:bg-white/10 dark:text-cinnabar dark:ring-ring/[0.48]",
-    button: "bg-white text-foreground ring-1 ring-ring/[0.48] hover:bg-card dark:bg-white dark:text-foreground dark:hover:bg-card",
+    button: "bg-white text-foreground ring-1 ring-ring/[0.48] hover:bg-card dark:bg-white dark:text-background dark:hover:bg-card dark:hover:text-foreground",
     soft: "border-border/[0.72] bg-white/80 dark:border-border/[0.72] dark:bg-white/10",
   },
   dispatch: {
@@ -68,7 +68,7 @@ export const responderModeAccentClasses: Record<ResponderMode, {
     card: "border-border/[0.72] bg-gradient-to-br from-card/10 via-card to-card/10",
     badge: "border-border/[0.72] bg-card text-foreground dark:text-foreground",
     icon: "bg-card text-foreground ring-1 ring-ring/[0.48] dark:text-foreground",
-    button: "bg-card text-white hover:bg-card dark:bg-card dark:text-foreground dark:hover:bg-card",
+    button: "bg-card text-foreground hover:bg-card dark:bg-card dark:text-foreground dark:hover:bg-card",
     soft: "border-border/[0.72] bg-card",
   },
   chaplain: {

@@ -16,6 +16,7 @@ export function WeekDots() {
         {week.map((day) => (
           <li key={day.key} className="grid justify-items-center gap-1.5">
             <span
+              role="img"
               aria-label={`${day.weekday}: ${day.active ? "prayed" : "no record"}`}
               className={cn(
                 "h-4 w-4 rounded-full border",

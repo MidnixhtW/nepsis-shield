@@ -112,7 +112,7 @@ export function ReaderVoiceSettings() {
                 role="radio"
                 aria-checked={selected}
                 onClick={() => setReader(item.id)}
-                className="flex min-w-0 flex-1 items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+                className="flex min-h-11 min-w-0 flex-1 items-center gap-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
               >
                 <span aria-hidden className={cn("grid h-4 w-4 shrink-0 place-items-center rounded-full border", selected ? "border-accent" : "border-muted-foreground")}>
                   {selected ? <span className="h-2 w-2 rounded-full bg-accent" /> : null}

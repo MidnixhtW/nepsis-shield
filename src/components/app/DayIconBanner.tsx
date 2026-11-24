@@ -61,7 +61,7 @@ export function DayIconBanner({
           }}
           fileName="today.png"
         />
-        <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-foreground">
+        <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-2 hover:text-foreground">
           Icon: {icon.credit}
         </a>
       </div>

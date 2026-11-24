@@ -29,7 +29,7 @@ export function DayTimeline() {
             <Link
               to={step.to}
               aria-label={`${step.label}: ${step.done ? "done" : "not yet"}`}
-              className="grid justify-items-center gap-1.5 rounded-lg px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="grid min-w-11 justify-items-center gap-1.5 rounded-lg px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span
                 className={cn(

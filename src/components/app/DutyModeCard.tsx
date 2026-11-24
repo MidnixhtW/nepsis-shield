@@ -202,9 +202,9 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       reset: "border-cinnabar/[0.44] bg-white/80 text-foreground dark:bg-white/10 dark:text-white",
       tag: "bg-white text-foreground ring-1 ring-ring/[0.48] dark:bg-white/10 dark:text-white dark:ring-ring/[0.48]",
       checklist: "border-border/[0.72] text-foreground dark:border-border/[0.72] dark:text-white",
-      primaryButton: "bg-white text-foreground ring-1 ring-ring/[0.48] hover:bg-card dark:bg-white dark:text-foreground dark:hover:bg-card",
+      primaryButton: "bg-white text-foreground ring-1 ring-ring/[0.48] hover:bg-card dark:bg-white dark:text-background dark:hover:bg-card dark:hover:text-foreground",
       modeButton: "border-border/[0.72] hover:bg-white hover:text-foreground dark:border-border/[0.72] dark:hover:bg-white/10 dark:hover:text-white",
-      modeButtonActive: "border-border/[0.72] bg-white text-foreground hover:bg-card dark:border-border/[0.72] dark:bg-white dark:text-foreground dark:hover:bg-card",
+      modeButtonActive: "border-border/[0.72] bg-white text-foreground hover:bg-card dark:border-border/[0.72] dark:bg-white dark:text-background dark:hover:bg-card dark:hover:text-foreground",
     },
   },
   dispatch: {
@@ -264,9 +264,9 @@ const responderModes: Record<ResponderMode, ResponderBrief> = {
       reset: "border-border/[0.72] bg-card text-foreground dark:text-foreground",
       tag: "bg-card text-foreground dark:text-foreground",
       checklist: "border-border/[0.72] text-foreground dark:text-foreground",
-      primaryButton: "bg-card text-white hover:bg-card dark:bg-card dark:text-foreground dark:hover:bg-card",
+      primaryButton: "bg-card text-foreground hover:bg-card dark:bg-card dark:text-foreground dark:hover:bg-card",
       modeButton: "border-border/[0.72] hover:bg-card hover:text-foreground dark:hover:text-foreground",
-      modeButtonActive: "border-border/[0.72] bg-card text-white hover:bg-card dark:border-border/[0.72] dark:bg-card dark:text-foreground dark:hover:bg-card",
+      modeButtonActive: "border-border/[0.72] bg-card text-foreground hover:bg-card dark:border-border/[0.72] dark:bg-card dark:text-foreground dark:hover:bg-card",
     },
   },
   chaplain: {
