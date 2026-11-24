@@ -20,14 +20,18 @@ import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { StationsGuide } from "@/components/app/StationsGuide";
 import { LectioDivina } from "@/components/app/LectioDivina";
+import { WesternCompline } from "@/components/app/WesternCompline";
+import { NovenaTracker } from "@/components/app/NovenaTracker";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
 
-export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio" | "compline-west" | "novena";
 
 // The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
 // though they keep their /pray?tab=... addresses so old links and favorites still work.
 const ROSARY_TILE = { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
+const COMPLINE_WEST_TILE = { to: "/pray?tab=compline-west", label: "Western Compline", hint: "The Western prayer before sleep", icon: MoonStar };
+const NOVENA_TILE = { to: "/pray?tab=novena", label: "Novenas", hint: "Nine days for one intention", icon: CenserIcon };
 const STATIONS_TILE = { to: "/pray?tab=stations", label: "Way of the Cross", hint: "Fourteen stations, for Fridays and Lent", icon: ThreeBarCrossIcon };
 
 const launcher: LauncherGroup[] = [
@@ -87,6 +91,8 @@ const titles: Record<PrayerTab, string> = {
   rosary: "Rosary and Angelus",
   stations: "Way of the Cross",
   lectio: "Lectio Divina",
+  "compline-west": "Western Compline",
+  novena: "Novenas",
 };
 
 const content: Record<PrayerTab, ReactNode> = {
@@ -109,6 +115,8 @@ const content: Record<PrayerTab, ReactNode> = {
   rosary: <RosaryGuide />,
   stations: <StationsGuide />,
   lectio: <LectioDivina />,
+  "compline-west": <WesternCompline />,
+  novena: <NovenaTracker />,
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
@@ -116,7 +124,7 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
   if (!tab) {
     // The Rosary and the Way of the Cross are for Western Rite parishes, so it shows only when that is turned on in Settings.
     const groups = settings.westernRite
-      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE] } : group))
+      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE, COMPLINE_WEST_TILE, NOVENA_TILE] } : group))
       : launcher;
     return (
       <div className="grid min-w-0 gap-5">

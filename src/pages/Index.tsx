@@ -73,7 +73,7 @@ const legacyMap: Record<
 };
 
 function isPrayerTab(x: string | null): x is PrayerTab {
-  return x === "daily" || x === "rule" || x === "family" || x === "prayers" || x === "names" || x === "services" || x === "groups" || x === "counter" || x === "prep" || x === "communion" || x === "journal" || x === "sleep" || x === "rosary" || x === "stations" || x === "lectio";
+  return x === "daily" || x === "rule" || x === "family" || x === "prayers" || x === "names" || x === "services" || x === "groups" || x === "counter" || x === "prep" || x === "communion" || x === "journal" || x === "sleep" || x === "rosary" || x === "stations" || x === "lectio" || x === "compline-west" || x === "novena";
 }
 
 function isReadTab(x: string | null): x is ReadTab {
