@@ -24,6 +24,7 @@ import { DayIconBanner } from "@/components/app/DayIconBanner";
 import { WeekDots } from "@/components/app/WeekDots";
 import { LearnReviewCard } from "@/components/app/LearnReviewCard";
 import { TodayFold } from "@/components/app/TodayFold";
+import { WesternAdventCard } from "@/components/app/WesternAdventCard";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl, readingText } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -73,6 +74,12 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
               { id: "memorials", label: "Memorial days", node: <MemorialsCard today={today} /> },
             ]}
           />
+
+          {settings.westernRite ? (
+            <div className="px-1 pb-6">
+              <WesternAdventCard today={today} />
+            </div>
+          ) : null}
 
           <section aria-labelledby="today-readings" className="border-t border-border/60 px-1 py-7">
             <h2 id="today-readings" className="text-2xl text-cinnabar">Today&rsquo;s readings</h2>
