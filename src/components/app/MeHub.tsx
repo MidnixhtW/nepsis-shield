@@ -58,7 +58,7 @@ export function MeHub() {
     <div className="mx-auto grid w-full max-w-3xl gap-4 sm:gap-5">
       {/* Settings has one home, the App list below; the header menu covers search and themes on every screen. */}
       <div className="px-1">
-        <h2 className="text-3xl sm:text-4xl">{t("me.title")}</h2>
+        <h1 className="text-3xl sm:text-4xl">{t("me.title")}</h1>
       </div>
 
       <WatchfulnessLog />

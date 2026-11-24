@@ -156,7 +156,7 @@ export function PrayerRule() {
 
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold tracking-tight">My prayer rule</h3>
+            <h2 className="text-base font-semibold tracking-tight">My prayer rule</h2>
             <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               {doneCount}/{steps.length}
             </Badge>

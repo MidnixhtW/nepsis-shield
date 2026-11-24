@@ -105,7 +105,7 @@ export function SectionBackBar({ backTo, backLabel, title, favoriteTo }: { backT
         </Link>
       </Button>
       <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground/60" />
-      <h2 className="min-w-0 flex-1 truncate text-lg font-semibold tracking-tight">{title}</h2>
+      <h1 className="min-w-0 flex-1 truncate text-lg font-semibold tracking-tight">{title}</h1>
       {favoriteTo ? <FavoriteStar to={favoriteTo} label={title} /> : null}
     </div>
   );

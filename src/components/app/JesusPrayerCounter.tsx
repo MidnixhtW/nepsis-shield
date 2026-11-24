@@ -66,6 +66,7 @@ export function JesusPrayerCounter() {
   const dayKey = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
   const [count, setCount] = useState(0);
   const [goal, setGoal] = useState(100);
+  const [ruleOpen, setRuleOpen] = useState(false);
   const [goalDraft, setGoalDraft] = useState("100");
   const [saveEnabled, setSaveEnabled] = useState(true);
 
@@ -165,7 +166,7 @@ export function JesusPrayerCounter() {
             </p>
           </div>
 
-          <Dialog>
+          <Dialog open={ruleOpen} onOpenChange={setRuleOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -196,6 +197,7 @@ export function JesusPrayerCounter() {
                     setGoal(g);
                     if (saveEnabled) setStoredItem(goalKey(), String(g));
                     setGoalDraft(String(g));
+                    setRuleOpen(false);
                   }}
                 >
                   Save rule

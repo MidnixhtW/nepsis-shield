@@ -28,10 +28,8 @@ const MeHub = lazy(() => loadMeHub().then((module) => ({ default: module.MeHub }
 // Fetch the other tabs once the first screen is up, so switching tabs never shows the loading placeholder.
 function preloadTabs() {
   const load = () => {
-    void loadPrayerHub();
-    void loadReadHub();
-    void loadLearnHub();
-    void loadMeHub();
+    // A preload cut short (leaving the page, no signal) is harmless: the tab loads again when opened.
+    for (const load of [loadPrayerHub, loadReadHub, loadLearnHub, loadMeHub]) load().catch(() => {});
   };
   if ("requestIdleCallback" in window) window.requestIdleCallback(load, { timeout: 3000 });
   else setTimeout(load, 1500);

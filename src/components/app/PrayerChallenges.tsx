@@ -213,7 +213,7 @@ export function PrayerChallenges() {
               <span>{completedCount} of {selected.days.length} days</span>
               <span>{progress}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} aria-label="Challenge progress" className="h-2" />
           </div>
 
           <Separator className="my-5" />

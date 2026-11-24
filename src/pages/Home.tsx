@@ -109,7 +109,7 @@ function TodayInTheChurchLive() {
         <h2 id="today-in-the-church" className="mb-8 text-center text-3xl sm:text-4xl">
           Today in the Church
         </h2>
-        <DayIconBanner today={today} calendar={settings.calendarMode} saints={query.data?.saints} tone={query.data?.tone?.value} />
+        <DayIconBanner headingLevel="h2" today={today} calendar={settings.calendarMode} saints={query.data?.saints} tone={query.data?.tone?.value} />
         {readings ? <p className="mt-4 text-center text-base text-foreground/85">The readings: {readings}.</p> : null}
         <div className="mt-6 flex justify-center">
           <Button asChild variant="outline" className="h-12 rounded-full px-6">

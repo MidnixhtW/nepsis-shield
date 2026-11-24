@@ -48,7 +48,7 @@ export function SaintStoriesFeed() {
                   {story.saint} · {story.day}
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{story.title}</h2>
-                <div className="mt-4 grid flex-1 content-start gap-3 overflow-y-auto pr-1 scripture-text text-[1.02rem] leading-relaxed">
+                <div tabIndex={0} role="region" aria-label={`${story.title}, full story`} className="mt-4 grid flex-1 content-start gap-3 overflow-y-auto pr-1 scripture-text text-[1.02rem] leading-relaxed">
                   {story.story.map((paragraph) => (
                     <p key={paragraph.slice(0, 32)}>{paragraph}</p>
                   ))}

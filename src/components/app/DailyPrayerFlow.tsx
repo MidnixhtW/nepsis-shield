@@ -244,6 +244,7 @@ export function DailyPrayerFlow() {
           ))}
         </div>
 
+        <h2 className="sr-only">Prayer options</h2>
         <Accordion type="single" collapsible className="mt-3">
           <AccordionItem value="options" className="border-0">
             <AccordionTrigger className="rounded-2xl px-1 py-2 text-left text-sm hover:no-underline">

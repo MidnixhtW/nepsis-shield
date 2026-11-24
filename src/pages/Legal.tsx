@@ -413,7 +413,7 @@ export default function Legal({ doc }: { doc: LegalDoc }) {
           </Button>
         }
       />
-      <nav aria-label="Policies" className="mx-1 mt-4 flex flex-wrap gap-2">
+      <nav aria-label="Policy pages" className="mx-1 mt-4 flex flex-wrap gap-2">
         {(Object.keys(DOCS) as LegalDoc[]).map((key) => (
           <NavLink
             key={key}

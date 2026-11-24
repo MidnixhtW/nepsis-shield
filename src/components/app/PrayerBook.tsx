@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { SHARED_PRAYERS, WESTERN_PRAYERS, type SharedPrayer } from "@/content/sharedPrayers";
 import { litanyOfHumility, LITANY_OF_HUMILITY_NOTE } from "@/content/litanyOfHumility";
 import { BookOpen, ExternalLink, Hand, MoonStar, Pin, Shield, Sparkles, Sun, Utensils } from "lucide-react";
@@ -79,8 +79,37 @@ function LinkRow({
   );
 }
 
+// Opened from a help choice (Angry, Proud, Missing church): the prayer for that moment comes first, open, above the book.
+const ST_EPHREM = SHARED_PRAYERS.find((prayer) => prayer.id === "st-ephrem");
+const FOR_NOW: Record<string, { title: string; first: string; prayers: SharedPrayer[] }> = {
+  angry: {
+    title: "When anger rises",
+    first: "Stop before you speak or act. Breathe slowly three times, and pray these words quietly.",
+    prayers: [
+      { id: "anger-jesus-prayer", title: "The Jesus Prayer", origin: "Say it slowly with each breath, as many times as you need.", lines: ["Lord Jesus Christ, Son of God, have mercy on me, a sinner."] },
+      { id: "anger-guard", title: "Guard my words", origin: "From the Field Manual.", lines: ["Lord Jesus Christ, guard my mind, my words, and my hands. Make me watchful without fear, firm without anger, and merciful without weakness. Amen."] },
+      ...(ST_EPHREM ? [ST_EPHREM] : []),
+    ],
+  },
+  proud: {
+    title: "Asking for humility",
+    first: "Pray slowly. Let each line land before the next.",
+    prayers: [
+      ...(ST_EPHREM ? [ST_EPHREM] : []),
+      { id: "litany-of-humility", title: "Litany of Humility", origin: LITANY_OF_HUMILITY_NOTE, lines: litanyOfHumility },
+    ],
+  },
+  away: {
+    title: "When you cannot be at Liturgy",
+    first: "Turn toward your parish in heart, and pray with the Church from where you are.",
+    prayers: [{ id: "absent-liturgy", title: "When I cannot be at Liturgy", origin: "Prayed in union with the Liturgy wherever it is served today.", lines: absentFromLiturgyPrayer }],
+  },
+};
+
 export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
   const [saintFilter, setSaintFilter] = useState<string>("all");
+  const [searchParams] = useSearchParams();
+  const forNow = FOR_NOW[searchParams.get("for") ?? ""];
   const rhythm = useDailyRhythm();
   const allowedCats =
     SAINT_FILTERS.find((f) => f.id === saintFilter)?.cats ??
@@ -92,7 +121,18 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
 
   return (
     <div className="grid gap-4">
-      {showRule ? <PrayerRule /> : null}
+      {forNow ? (
+        <Card aria-labelledby="for-now-title" className="candlelight-card rounded-3xl border p-5">
+          <h2 id="for-now-title" className="text-2xl font-semibold tracking-tight text-cinnabar">{forNow.title}</h2>
+          <p className="mt-2 text-base leading-relaxed text-foreground/85">{forNow.first}</p>
+          <div className="mt-4 grid gap-3">
+            {forNow.prayers.map((prayer) => (
+              <SharedPrayerBlock key={prayer.id} prayer={prayer} />
+            ))}
+          </div>
+        </Card>
+      ) : null}
+      {showRule && !forNow ? <PrayerRule /> : null}
 
       <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">

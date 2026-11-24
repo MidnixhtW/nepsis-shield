@@ -181,13 +181,13 @@ export function SleepMode() {
 
           <div className={dimmed ? "rounded-3xl border border-border/[0.72] bg-card p-4" : "rounded-3xl border border-border/60 bg-background/50 p-4"}>
             <p className="text-4xl font-semibold tabular-nums">{formatTime(remaining)}</p>
-            <Progress value={progress} className="mt-3 h-2" />
+            <Progress value={progress} aria-label="Sleep timer time passed" className="mt-3 h-2" />
             <div className="mt-4 flex gap-2">
               <Button type="button" className="flex-1 rounded-2xl" onClick={() => setRunning((v) => !v)}>
                 {running ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
                 {running ? "Pause" : "Start"}
               </Button>
-              <Button type="button" variant="outline" className="rounded-2xl" onClick={resetTimer}>
+              <Button type="button" variant="outline" className="rounded-2xl" onClick={resetTimer} aria-label="Reset timer">
                 <RotateCcw className="h-4 w-4" />
               </Button>
             </div>

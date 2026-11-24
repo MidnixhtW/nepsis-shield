@@ -4,7 +4,7 @@ import { saveGlobalResume, setQuickState, type QuickStateKey } from "@/lib/daily
 
 // The shield triggers: what is happening right now, and the one small action that answers it. Used by the header's
 // Help panel (all of them) and by Today (the first five, one tap from the home screen).
-export type HelpTarget = { section: AppSection; tab?: string; read?: string };
+export type HelpTarget = { section: AppSection; tab?: string; read?: string; /** Which prayer to open first (prayer texts). */ for?: string };
 
 export type HelpItem = {
   key: QuickStateKey;
@@ -33,21 +33,21 @@ export const helpItems: HelpItem[] = [
     key: "angry",
     label: "Angry",
     line: "Pause before acting.",
-    target: { section: "pray", tab: "prayers" },
+    target: { section: "pray", tab: "prayers", for: "angry" },
     icon: Flame,
   },
   {
     key: "away",
     label: "Missing church",
     line: "Pray with the Church from where you are.",
-    target: { section: "pray", tab: "prayers" },
+    target: { section: "pray", tab: "prayers", for: "away" },
     icon: Church,
   },
   {
     key: "proud",
     label: "Proud",
     line: "Ask for humility.",
-    target: { section: "pray", tab: "prayers" },
+    target: { section: "pray", tab: "prayers", for: "proud" },
     icon: Crown,
   },
   {
@@ -100,6 +100,7 @@ export function targetPath(target: HelpTarget) {
   const params = new URLSearchParams();
   if (target.tab) params.set("tab", target.tab);
   if (target.read) params.set("read", target.read);
+  if (target.for) params.set("for", target.for);
   const qs = params.toString();
   return qs ? `/${target.section}?${qs}` : `/${target.section}`;
 }
