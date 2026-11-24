@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { VerseFathers } from "@/components/app/VerseFathers";
 import {
   BookOpen,
   Bookmark,
@@ -640,7 +641,7 @@ export function OrthodoxBible() {
                       <Button
                         type="button"
                         variant="outline"
-                        className="h-11 w-11 rounded-2xl border-border/60 p-0"
+                        className="h-11 w-11 shrink-0 rounded-2xl border-border/60 p-0"
                         aria-label="Previous Bible chapter"
                         disabled={chapter === 1}
                         onClick={() => setChapter((c) => Math.max(1, c - 1))}
@@ -661,7 +662,7 @@ export function OrthodoxBible() {
                       <Button
                         type="button"
                         variant="outline"
-                        className="h-11 w-11 rounded-2xl border-border/60 p-0"
+                        className="h-11 w-11 shrink-0 rounded-2xl border-border/60 p-0"
                         aria-label="Next Bible chapter"
                         onClick={() => setChapter((c) => c + 1)}
                       >
@@ -780,7 +781,7 @@ export function OrthodoxBible() {
               ) : browseVerses.length ? (
                 <div data-bible-reader tabIndex={0} aria-label={`${browseTitle} reading text; J for previous chapter, K for next chapter`} className={cn(readerClass, "rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", memorizeMode ? "space-y-4" : "space-y-3")} style={readerStyle}>
                   {browseVerses.map((v, idx) => (
-                    <p key={idx} className="leading-relaxed">
+                    <div key={idx} className="leading-relaxed">
                       {memorizeMode ? (
                         <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
@@ -789,9 +790,10 @@ export function OrthodoxBible() {
                             {v.chapter}:{v.verse}
                           </span>
                           <span className="text-foreground/90">{truncateVerse(v.text)}</span>
+                          <VerseFathers book={bookName} chapter={v.chapter} verse={v.verse} />
                         </>
                       )}
-                    </p>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -908,7 +910,7 @@ export function OrthodoxBible() {
               ) : (refQuery.data?.verses?.length ?? 0) ? (
                 <div className={cn(readerClass, memorizeMode ? "space-y-4" : "space-y-3")} style={readerStyle}>
                   {(refQuery.data?.verses ?? []).map((v, idx) => (
-                    <p key={idx} className="leading-relaxed">
+                    <div key={idx} className="leading-relaxed">
                       {memorizeMode ? (
                         <span className="text-foreground/90">{truncateVerse(v.text)}</span>
                       ) : (
@@ -917,9 +919,10 @@ export function OrthodoxBible() {
                             {v.chapter}:{v.verse}
                           </span>
                           <span className="text-foreground/90">{truncateVerse(v.text)}</span>
+                          <VerseFathers book={refBook?.name ?? v.book_name} chapter={v.chapter} verse={v.verse} />
                         </>
                       )}
-                    </p>
+                    </div>
                   ))}
                 </div>
               ) : (

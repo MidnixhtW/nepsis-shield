@@ -24,6 +24,9 @@ export const RELEASE_NOTES: ReleaseNote[] = [
       "Lectio Divina: pray slowly with today's Gospel in four steps, from Pray or from Today's readings.",
       "Prayers shared by Catholics and Orthodox, a Western prayers section with the Litany of Humility, and the Way of the Cross. The Litany can be added to morning prayers, and Western Rite users can set an Angelus reminder at noon.",
       "A saying of the Fathers after each prayer, an Offline ready badge when readings come from your saved copy, and larger buttons and clearer text throughout.",
+      "Tap Fathers under any verse of the Gospels to read the Church Fathers on it: Chrysostom, Augustine, Cyril and more, without losing your place.",
+      "The lives of the day's saints, under Saints and fast on Today, saved for two weeks so they read with no signal.",
+      "The Te Deum, the Gloria and the Magnificat; a prayer for when you cannot be at Liturgy; Western Compline; a novena tracker; and the Advent wreath for Western Rite users.",
     ],
   },
   {
