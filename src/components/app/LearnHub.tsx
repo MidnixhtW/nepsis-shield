@@ -1,12 +1,9 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router";
-import { BookMarked, ExternalLink, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, Shield } from "lucide-react";
+import { BookMarked, Headphones, Library, MapPin, MessageCircleQuestion, Music, Route, Shield } from "lucide-react";
 import { useSettings } from "@/hooks/useSettings";
 import { ChurchDomeIcon, GospelBookIcon, IconPanelIcon, SaintHaloIcon, ThreeBarCrossIcon } from "@/components/app/OrthodoxMotifs";
 import { continueTile, LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { CatechesisQA } from "@/components/app/CatechesisQA";
 import { InclusiveChristianPath } from "@/components/app/InclusiveChristianPath";
 import { OrthodoxDailyGuide } from "@/components/app/OrthodoxDailyGuide";
@@ -17,6 +14,10 @@ import { OrthodoxAudioLibrary } from "@/components/app/OrthodoxAudioLibrary";
 import { PrayerChallenges } from "@/components/app/PrayerChallenges";
 import { PersonalizedPath } from "@/components/app/PersonalizedPath";
 import { PrayerMemorizer } from "@/components/app/PrayerMemorizer";
+import { WesternMassGuide } from "@/components/app/WesternMassGuide";
+import { TraditionLibrary } from "@/components/app/TraditionLibrary";
+import { ArabicPrayers } from "@/components/app/ArabicPrayers";
+import { getTradition, isEasternCatholic, type Tradition } from "@/lib/tradition";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
 import { ForThoseWhoServe } from "@/components/app/ForThoseWhoServe";
 import { BecomingOrthodox } from "@/components/app/BecomingOrthodox";
@@ -27,7 +28,7 @@ import { useResponderMode } from "@/lib/responderMode";
 import { cn } from "@/lib/utils";
 import { t } from "@/i18n";
 
-export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |"guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories";
+export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |"guide" | "qa" | "liturgy" | "audio" | "library" | "hymns" | "parish" | "serve" | "stories" | "mass";
 
 // The starting screen: topics as tiles, the same way Pray is laid out. Each topic keeps its own URL (?tab=...).
 // Older addresses still work: welcome, path and challenges are the three parts of "Your next step",
@@ -37,7 +38,8 @@ export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |
 const BECOMING_ORTHODOX = { to: "/learn?tab=welcome", art: "theophany", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon };
 const ORTHODOX_FOR_REFERENCE = { to: "/learn?tab=welcome", art: "theophany", label: "How people become Orthodox", hint: "The Orthodox road, for reference", icon: ThreeBarCrossIcon };
 
-function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = false): LauncherGroup[] {
+function buildLauncher(serving: boolean, philokalia: boolean, tradition: Tradition = "orthodox"): LauncherGroup[] {
+  const easternCatholic = isEasternCatholic(tradition);
   return [
     {
       title: "Start",
@@ -46,6 +48,9 @@ function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = 
         ...(easternCatholic
           ? [{ to: "/learn?tab=liturgy", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
           : [{ ...BECOMING_ORTHODOX, art: undefined }]),
+        ...(tradition === "western-rite"
+          ? [{ to: "/learn?tab=mass", label: "The Western Rite Mass", hint: "The Liturgy of St. Tikhon, part by part", icon: ChurchDomeIcon }]
+          : []),
       ],
     },
     {
@@ -74,7 +79,7 @@ function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = 
         { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
         ...(easternCatholic ? [{ ...ORTHODOX_FOR_REFERENCE, art: undefined }] : []),
         { to: "/learn?tab=audio", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
-        { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
+        { to: "/learn?tab=library", label: "Library", hint: "Articles and resources from your church", icon: Library },
       ],
     },
   ];
@@ -135,79 +140,6 @@ const onDuty = (
   </div>
 );
 
-const ocaLibrary = (
-  <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-
-    <h2 className="text-xl font-semibold tracking-tight">OCA library</h2>
-    <p className="mt-1 text-sm text-muted-foreground">Browse the full OCA collection.</p>
-
-    <Separator className="my-4" />
-
-    <div className="grid gap-2 sm:grid-cols-2">
-      <Button
-        asChild
-        variant="outline"
-        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-      >
-        <a
-          href="https://www.oca.org/questions"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="min-w-0"
-        >
-          Questions & Answers <ExternalLink className="h-4 w-4" />
-        </a>
-      </Button>
-      <Button
-        asChild
-        variant="outline"
-        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-      >
-        <a
-          href="https://www.oca.org/orthodoxy/prayers"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="min-w-0"
-        >
-          Prayers <ExternalLink className="h-4 w-4" />
-        </a>
-      </Button>
-      <Button
-        asChild
-        variant="outline"
-        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-      >
-        <a
-          href="https://www.oca.org/orthodoxy/the-orthodox-faith"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="min-w-0"
-        >
-          The Orthodox Faith <ExternalLink className="h-4 w-4" />
-        </a>
-      </Button>
-      <Button
-        asChild
-        variant="outline"
-        className="h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:bg-background/70"
-      >
-        <a
-          href="https://www.oca.org/readings"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="min-w-0"
-        >
-          Daily readings <ExternalLink className="h-4 w-4" />
-        </a>
-      </Button>
-    </div>
-
-    <p className="mt-4 break-words text-sm text-muted-foreground">
-      Sources: "https://www.oca.org/questions" • "https://www.oca.org/orthodoxy/prayers" •
-      "https://www.oca.org/orthodoxy/the-orthodox-faith"
-    </p>
-  </Card>
-);
 
 const content: Record<LearnTab, ReactNode> = {
   welcome: <NextStep tab="welcome" />,
@@ -215,17 +147,30 @@ const content: Record<LearnTab, ReactNode> = {
   challenges: <NextStep tab="challenges" />,
   // The old Creed address opens the Creed in Learn by heart.
   creed: <PrayerMemorizer defaultPrayer="creed" />,
-  byheart: <PrayerMemorizer />,
+  byheart: <ByHeart />,
   guide: onDuty,
   qa: <CatechesisQA />,
   liturgy: <DivineLiturgyCompanion />,
   audio: <OrthodoxAudioLibrary />,
   hymns: <HymnsAndPropers />,
   parish: <ParishFinder />,
-  library: ocaLibrary,
+  library: <TraditionLibrary />,
+  mass: <WesternMassGuide />,
   serve: onDuty,
   stories: <SaintStoriesFeed />,
 };
+
+// Learn by heart, with the short prayers in Arabic first for Melkite users and anyone who chose Arabic.
+function ByHeart() {
+  const { settings } = useSettings();
+  const arabic = settings.jurisdiction === "melkite" || settings.language === "ar";
+  return (
+    <div className="grid gap-6">
+      {arabic ? <ArabicPrayers /> : null}
+      <PrayerMemorizer />
+    </div>
+  );
+}
 
 export function LearnHub({ tab }: { tab: LearnTab | null }) {
   const [role] = useResponderMode();
@@ -233,7 +178,7 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
   const philokalia = isPhilokaliaUnlocked();
   const recent = useRecentPlaces();
   const { settings } = useSettings();
-  const groups = buildLauncher(serving, philokalia, settings.jurisdiction === "melkite" || settings.jurisdiction === "ruthenian");
+  const groups = buildLauncher(serving, philokalia, getTradition(settings));
   const lead = continueTile(groups, recent);
 
   if (!tab) {
@@ -259,7 +204,8 @@ export function LearnHub({ tab }: { tab: LearnTab | null }) {
     hymns: "Hymns of the day",
     audio: "Audio",
     parish: "Find a parish",
-    library: "OCA library",
+    library: "Library",
+    mass: "The Western Rite Mass",
     stories: "Saint stories",
   };
 

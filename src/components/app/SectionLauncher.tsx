@@ -12,6 +12,8 @@ export type LauncherTile = {
   icon: ComponentType<{ className?: string }>;
   /** How long it takes, as a short badge ("5 min"), when that is known. */
   duration?: string;
+  /** The word on the lead card's button; "Begin" unless set. */
+  cta?: string;
   /** The icon that pictures it, from public/icons/tiles (e.g. "pantocrator"). Tiles with art are shown as pictures. */
   art?: string;
 };
@@ -123,7 +125,7 @@ function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {
           {tile.duration ? <span className="meta-label mt-1 block text-[#F3EFEA]/80">{tile.duration}</span> : null}
         </span>
         <span className="shrink-0 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform duration-[240ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.985]">
-          Begin
+          {tile.cta ?? "Begin"}
         </span>
       </span>
     </Link>

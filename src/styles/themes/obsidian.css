@@ -25,6 +25,10 @@
     --sidebar-accent: 30 11% 11%;
     --sidebar-accent-foreground: 34 33% 93%;
     --sidebar-border: 30 6% 14%;
+    /* Links, labels and the chosen tab are candle gold in every season, so the season's color is kept for the one
+       main button on each screen and the feast's name. */
+    --accent: 40 52% 64%;
+    --accent-foreground: 30 30% 8%;
   }
 }
 

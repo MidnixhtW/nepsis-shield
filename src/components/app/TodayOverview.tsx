@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { DailyContentStatus } from "@/components/app/DailyContentStatus";
 import { format } from "date-fns";
-import { BookOpen, ChevronDown, ExternalLink, HeartPulse, Leaf, LifeBuoy, Shield } from "lucide-react";
+import { BookOpen, ChevronDown, ExternalLink, HeartPulse, Leaf, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AppSection } from "@/components/app/AppShell";
@@ -25,7 +25,9 @@ import { WeekDots } from "@/components/app/WeekDots";
 import { LearnReviewCard } from "@/components/app/LearnReviewCard";
 import { TodayFold } from "@/components/app/TodayFold";
 import { WesternAdventCard } from "@/components/app/WesternAdventCard";
-import { openHelpPanel } from "@/lib/appEvents";
+import { ShieldTriggers } from "@/components/app/ShieldTriggers";
+import { TraditionPrompt } from "@/components/app/TraditionPicker";
+import { fastingAdvice, getTradition, traditionChosen, westernSeasonLine } from "@/lib/tradition";
 import { buildOcaDailyUrl, readingText } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
 import { saveWidgetSnapshot } from "@/lib/widgetSnapshot";
@@ -35,6 +37,10 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   onOpenRoute?: (path: string) => void;
 }) {
   const { today, settings, query: q, retry } = useDailyCalendar();
+  const tradition = getTradition(settings);
+  const western = tradition === "western-rite";
+  // One invitation at a time: "How do you pray?" first, then setting up a rule.
+  const [askTradition, setAskTradition] = useState(() => !traditionChosen(settings));
   const sourceUrl = settings.jurisdiction === "goarch"
     ? `https://www.goarch.org/chapel?date=${encodeURIComponent(format(today, "M/d/yyyy"))}`
     : q.data?.sources.ocaDailyUrl ?? buildOcaDailyUrl(today);
@@ -58,9 +64,16 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
     <div className="grid gap-10">
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
         <div className="grid min-w-0 gap-8 shortphone:gap-3 lg:sticky lg:top-28">
-          <DayIconBanner today={today} calendar={settings.calendarMode} saints={q.data?.saints} tone={q.data?.tone?.value} fasting={q.data?.fasting} />
+          <DayIconBanner
+            today={today}
+            calendar={settings.calendarMode}
+            saints={q.data?.saints}
+            tone={western ? undefined : q.data?.tone?.value}
+            fasting={q.data?.fasting}
+            westernSeason={western ? westernSeasonLine(today, settings.calendarMode) : undefined}
+          />
           <PrayNowCard />
-          <SetupRuleCard />
+          {askTradition ? <TraditionPrompt onAnswered={() => setAskTradition(false)} /> : <SetupRuleCard />}
           {/* Only once setup is done, so a newcomer sees one invitation at a time. */}
           {isRuleSetUp() ? <ReminderOffer /> : null}
         </div>
@@ -84,6 +97,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
 
           <section aria-labelledby="today-readings" className="border-t border-border/60 px-1 py-7">
             <h2 id="today-readings" className="text-2xl">Today&rsquo;s readings</h2>
+            {western ? <p className="mt-1 text-sm text-muted-foreground">The Byzantine readings for today. Your parish reads the Western propers at Mass.</p> : null}
             <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
             {q.isLoading ? (
               <Skeleton className="mt-4 h-20 w-full rounded-xl" />
@@ -148,7 +162,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
                 {fastRule ? (
                   <p className="flex items-start gap-2 text-base">
                     <Leaf aria-hidden className="mt-1 h-4 w-4 shrink-0 text-accent" />
-                    <span>{fastRule}. Adapt fasting with your priest for health and duty needs.</span>
+                    <span>{fastRule}. {fastingAdvice(tradition)}</span>
                   </p>
                 ) : null}
               </div>
@@ -160,6 +174,14 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
               <Button asChild variant="ghost" size="sm" className="rounded-full">
                 <a href={sourceUrl} target="_blank" rel="noopener noreferrer"><span className="sr-only"> (opens in a new tab) </span>Daily source <ExternalLink className="ml-2 h-3.5 w-3.5" /></a>
               </Button>
+            </div>
+          </section>
+
+          <section aria-labelledby="when-hard" className="border-t border-border/60 px-1 py-7">
+            <h2 id="when-hard" className="text-2xl">When it&rsquo;s hard</h2>
+            <p className="mt-1 text-sm text-muted-foreground">One tap to the prayer for the moment.</p>
+            <div className="mt-3">
+              <ShieldTriggers />
             </div>
           </section>
 
@@ -182,17 +204,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           <div className="grid min-w-0 gap-5">
             {/* Help is in the top bar on every screen, so Today keeps only a short pointer and the reset. */}
             <section aria-label="Help now" className="rounded-3xl border bg-card px-5">
-              <div className="flex flex-wrap items-center gap-3 py-4">
-                <LifeBuoy aria-hidden className="h-5 w-5 shrink-0 text-accent" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">How are you, really?</p>
-                  <p className="text-sm text-foreground/75">Lonely, can&rsquo;t sleep, stuck scrolling, dry: pick one for a one-minute way back.</p>
-                </div>
-                <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={openHelpPanel}>
-                  I'm feeling…
-                </Button>
-              </div>
-              <div id="ground" className="flex flex-wrap items-center gap-3 border-t py-4">
+              <div id="ground" className="flex flex-wrap items-center gap-3 py-4">
                 <HeartPulse aria-hidden className="h-5 w-5 shrink-0 text-accent" />
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold">Under pressure?</p>

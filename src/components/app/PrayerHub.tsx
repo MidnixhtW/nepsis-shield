@@ -16,22 +16,33 @@ import { CommunionPrep } from "@/components/app/CommunionPrep";
 import { ServicesLibrary } from "@/components/app/ServicesLibrary";
 import { PrayerGroups } from "@/components/app/PrayerGroups";
 import { FamilyPrayer } from "@/components/app/FamilyPrayer";
-import { GroundMeNowSlim } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { StationsGuide } from "@/components/app/StationsGuide";
 import { LectioDivina } from "@/components/app/LectioDivina";
-import { WesternCompline } from "@/components/app/WesternCompline";
+import { WesternCompline, WesternEveningPrayer, WesternMorningPrayer } from "@/components/app/WesternCompline";
+import { GREAT_FEASTS } from "@/content/greatFeasts";
+import { feastDate } from "@/lib/churchGuide";
+import { isoDate, type ChurchCalendar } from "@/lib/fastingSeasons";
+import type { LauncherTile } from "@/components/app/SectionLauncher";
 import { NovenaTracker } from "@/components/app/NovenaTracker";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
 import { prayerMinutes } from "@/lib/prayerLength";
 
-export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio" | "compline-west" | "novena";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio" | "compline-west" | "lauds-west" | "vespers-west" | "novena";
 
 // The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
 // though they keep their /pray?tab=... addresses so old links and favorites still work.
 const ROSARY_TILE = { to: "/pray?tab=rosary", art: "annunciation", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
 const COMPLINE_WEST_TILE = { to: "/pray?tab=compline-west", art: "dormition", label: "Western Compline", hint: "The Western prayer before sleep", icon: MoonStar };
+const WESTERN_OFFICE: LauncherGroup = {
+  title: "Pray now",
+  tiles: [
+    { to: "/pray?tab=lauds-west", art: "pantocrator", label: "Morning prayer", hint: "The Western morning office", icon: Sun },
+    { to: "/pray?tab=vespers-west", art: "theotokos", label: "Evening prayer", hint: "With the Song of Mary", icon: Sunset },
+    { to: "/pray?tab=compline-west", art: "lamentation", label: "Compline", hint: "The Western prayer before sleep", icon: MoonStar },
+  ],
+};
 const NOVENA_TILE = { to: "/pray?tab=novena", art: "pentecost", label: "Novenas", hint: "Nine days for one intention", icon: CenserIcon };
 const STATIONS_TILE = { to: "/pray?tab=stations", art: "lamentation", label: "Way of the Cross", hint: "Fourteen stations, for Fridays and Lent", icon: ThreeBarCrossIcon };
 
@@ -76,12 +87,32 @@ function withDurations(groups: LauncherGroup[]): LauncherGroup[] {
 }
 
 /** The daily prayers that fit the hour: morning until noon, evening until eight, then night prayers. */
-function prayerForHour(now: Date) {
-  const [morning, evening, night] = launcher[0].tiles;
+function prayerForHour(now: Date, tiles: LauncherTile[] = launcher[0].tiles) {
+  const [morning, evening, night] = tiles;
   const hour = now.getHours();
   if (hour >= 4 && hour < 12) return morning;
   if (hour >= 12 && hour < 20) return evening;
   return night;
+}
+
+// On one of the Twelve Great Feasts (or Pascha), the feast leads Pray instead of the prayers for the hour.
+const FEAST_ART: Record<string, string> = {
+  pascha: "anastasis",
+  pentecost: "pentecost",
+  "nativity-of-the-theotokos": "theotokos",
+  "entry-of-the-theotokos": "theotokos",
+  "nativity-of-christ": "nativity",
+  theophany: "theophany",
+  annunciation: "annunciation",
+  transfiguration: "transfiguration",
+  dormition: "dormition",
+};
+
+function feastTile(now: Date, calendar: ChurchCalendar): LauncherTile | null {
+  const day = isoDate(now);
+  const feast = GREAT_FEASTS.find((item) => isoDate(feastDate(item, now.getFullYear(), calendar)) === day);
+  if (!feast) return null;
+  return { to: `/feasts/${feast.slug}`, art: FEAST_ART[feast.slug], label: feast.name, hint: "Today's feast", icon: CenserIcon, cta: "Open" };
 }
 
 // These open from Me, so their back link returns there.
@@ -103,7 +134,9 @@ const titles: Record<PrayerTab, string> = {
   rosary: "Rosary and Angelus",
   stations: "Way of the Cross",
   lectio: "Lectio Divina",
-  "compline-west": "Western Compline",
+  "compline-west": "Compline",
+  "lauds-west": "Morning prayer",
+  "vespers-west": "Evening prayer",
   novena: "Novenas",
 };
 
@@ -116,7 +149,7 @@ const content: Record<PrayerTab, ReactNode> = {
   services: <ServicesLibrary />,
   groups: <PrayerGroups />,
   counter: (
-    <div className="grid gap-4 sm:gap-5"><JesusPrayerCounter /><GroundMeNowSlim /><StillnessTimer /></div>
+    <div className="grid gap-4 sm:gap-5"><JesusPrayerCounter /><StillnessTimer /></div>
   ),
   sleep: <SleepMode />,
   prep: (
@@ -128,23 +161,38 @@ const content: Record<PrayerTab, ReactNode> = {
   stations: <StationsGuide />,
   lectio: <LectioDivina />,
   "compline-west": <WesternCompline />,
+  "lauds-west": <WesternMorningPrayer />,
+  "vespers-west": <WesternEveningPrayer />,
   novena: <NovenaTracker />,
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
   const { settings } = useSettings();
   if (!tab) {
-    // The Rosary and the Way of the Cross are for Western Rite parishes, so it shows only when that is turned on in Settings.
-    const groups = settings.westernRite
-      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE, COMPLINE_WEST_TILE, NOVENA_TILE] } : group))
-      : launcher;
-    const lead = prayerForHour(new Date());
+    // A Western Rite user prays the Western office first: it fills Pray now and leads for the hour, with the Rosary,
+    // Stations and Novenas beside the services. The Byzantine daily prayers stay one tap away, as a plain list.
+    const western = settings.westernRite && settings.jurisdiction !== "melkite" && settings.jurisdiction !== "ruthenian";
+    const withWestern = (group: LauncherGroup) =>
+      group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE, NOVENA_TILE] } : group;
+    const groups: LauncherGroup[] = western
+      ? [
+          { ...launcher[0], tiles: [...WESTERN_OFFICE.tiles, ...launcher[0].tiles.slice(3)] },
+          { title: "Byzantine daily prayers", tiles: launcher[0].tiles.slice(0, 3).map((tile) => ({ ...tile, art: undefined })) },
+          ...launcher.slice(1).map(withWestern),
+        ]
+      : settings.westernRite
+        ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE, COMPLINE_WEST_TILE, NOVENA_TILE] } : group))
+        : launcher;
+    const now = new Date();
+    const feast = feastTile(now, settings.calendarMode);
+    const lead = feast ?? prayerForHour(now, western ? WESTERN_OFFICE.tiles : undefined);
+    const eyebrow = feast ? "Today's feast" : t("pray.lead");
     return (
       <div className="grid min-w-0 gap-5">
         <LauncherIntro title={t("pray.title")} />
         <SectionLauncher
           groups={withDurations(groups.map((group) => ({ ...group, tiles: group.tiles.filter((tile) => tile.to !== lead.to) })))}
-          lead={{ eyebrow: t("pray.lead"), tile: withDurations([{ title: "", tiles: [lead] }])[0].tiles[0] }}
+          lead={{ eyebrow, tile: withDurations([{ title: "", tiles: [lead] }])[0].tiles[0] }}
         />
       </div>
     );

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Check, HandHeart, Send } from "lucide-react";
+import { Check, ChevronRight, HandHeart, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -103,6 +102,7 @@ export function PrayerPartner() {
   const [partners, setPartners] = useState<SavedGroup[]>(() => getSavedGroups().filter(isPartner));
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const refresh = () => setPartners(getSavedGroups().filter(isPartner));
@@ -123,10 +123,27 @@ export function PrayerPartner() {
     }
   }
 
+  // With no partner yet, one quiet row; the form opens only when the person chooses it.
+  if (!partners.length && !open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex min-h-14 w-full items-center gap-3 border-y border-border/80 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-lg">Pray with a friend</span>
+          <span className="block text-sm text-muted-foreground">Each of you prays for the other every day</span>
+        </span>
+        <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
+      </button>
+    );
+  }
+
   return (
-    <Card className="rounded-3xl border p-5">
-      <h3 className="text-xs font-semibold text-muted-foreground">Prayer partner</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+    <section aria-labelledby="partner-title" className="border-y border-border/80 py-5">
+      <h3 id="partner-title" className="font-display text-lg">Pray with a friend</h3>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
         Pray for one friend every day. Each of you taps "I prayed for you", and the other sees it. First names only, no account.
       </p>
       {partners.length ? (
@@ -139,13 +156,13 @@ export function PrayerPartner() {
         <form className="mt-4 grid gap-3" onSubmit={(event) => void start(event)}>
           <div className="grid gap-1.5">
             <Label htmlFor="partner-name">Your first name</Label>
-            <Input id="partner-name" value={name} maxLength={30} required autoComplete="given-name" onChange={(event) => setName(event.target.value)} />
+            <Input id="partner-name" value={name} maxLength={30} required autoComplete="given-name" autoFocus onChange={(event) => setName(event.target.value)} />
           </div>
-          <Button type="submit" className="w-fit rounded-full" disabled={busy || !name.trim()}>
+          <Button type="submit" variant="outline" className="w-fit rounded-full" disabled={busy || !name.trim()}>
             <Send className="mr-2 h-4 w-4" /> Invite a friend
           </Button>
         </form>
       )}
-    </Card>
+    </section>
   );
 }

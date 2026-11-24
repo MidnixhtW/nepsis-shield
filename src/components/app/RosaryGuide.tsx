@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, Info, Moon, RotateCcw, Square, Volume2 } from "lucide-react";
+import { ChevronLeft, Moon, RotateCcw, Square, Volume2 } from "lucide-react";
 import { DarkPrayerRope } from "@/components/app/DarkPrayerRope";
 import { RosaryBeads } from "@/components/app/RosaryBeads";
 import { isRosaryMarker, rosaryUnits } from "@/lib/rosaryBeads";
@@ -25,22 +25,9 @@ function isPaschaltide(date: Date) {
 
 function WesternRiteNote() {
   return (
-    <Card className="rounded-3xl border-primary/25 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
-      <div className="flex items-start gap-3">
-        <Info className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-        <div className="text-sm leading-relaxed text-muted-foreground">
-          <p>
-            <span className="font-semibold text-foreground">Added with Western Rite Orthodoxy in mind.</span> Western Rite
-            Orthodox parishes pray the Rosary and the Angelus. Here is the traditional form, with fifteen mysteries; practice
-            varies between parishes, and some also pray the Luminous Mysteries. Follow your parish.
-          </p>
-          <p className="mt-2">
-            Catholics, Eastern or Roman, can pray it too. Byzantine Christians have their own ways of praying with beads: the
-            Jesus Prayer on a prayer rope, and St Seraphim's rule of 150 "Rejoice, O Virgin Theotokos".
-          </p>
-        </div>
-      </div>
-    </Card>
+    <p className="px-1 text-sm leading-relaxed text-muted-foreground">
+      Prayed in Western Rite Orthodox parishes, with the fifteen traditional mysteries. Follow your parish.
+    </p>
   );
 }
 

@@ -35,7 +35,7 @@ export function SetupRuleCard() {
   }
 
   return (
-    <Card className="flex flex-wrap items-center gap-3 rounded-[1.5rem] border border-primary/30 p-4 sm:p-5" role="region" aria-label="Set up your daily rule">
+    <Card className="flex flex-wrap items-center gap-3 rounded-[1.5rem] border border-border/80 p-4 sm:p-5" role="region" aria-label="Set up your daily rule">
       <Compass aria-hidden className="h-5 w-5 shrink-0 text-accent" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold">Set up your daily rule</p>
@@ -45,7 +45,7 @@ export function SetupRuleCard() {
         <Button type="button" variant="ghost" size="sm" className="rounded-full" onClick={hide}>
           Not now
         </Button>
-        <Button type="button" size="sm" className="rounded-full" onClick={() => window.dispatchEvent(new Event(START_TUTORIAL_EVENT))}>
+        <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={() => window.dispatchEvent(new Event(START_TUTORIAL_EVENT))}>
           Set up <ChevronRight aria-hidden className="ml-1 h-4 w-4" />
         </Button>
       </div>

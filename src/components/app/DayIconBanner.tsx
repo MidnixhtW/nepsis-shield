@@ -15,6 +15,7 @@ export function DayIconBanner({
   tone,
   fasting,
   headingLevel = "h1",
+  westernSeason,
 }: {
   today: Date;
   calendar: ChurchCalendar;
@@ -23,6 +24,8 @@ export function DayIconBanner({
   fasting?: DailyData["fasting"];
   /** h2 where the page already has its own h1 (the landing page). */
   headingLevel?: "h1" | "h2";
+  /** For Western Rite users: the Western season ("Advent, first week"), said first. */
+  westernSeason?: string;
 }) {
   const Heading = headingLevel;
   const icon = dayIcon(today, calendar);
@@ -34,6 +37,7 @@ export function DayIconBanner({
   const active = currentSeason(today, calendar);
   const fast = fasting ? fastBadge(fasting) : null;
   const line = [
+    westernSeason ?? "",
     active
       ? icon.title === active.season.name
         ? `Day ${active.index + 1} of ${active.season.length}`

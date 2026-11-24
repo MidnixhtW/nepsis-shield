@@ -379,7 +379,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
 
     return (
       <section className="border-t border-border/60 px-1 py-7" aria-labelledby="season-journey-title">
-        <p className="text-sm font-semibold text-cinnabar">The fast</p>
+        <p className="text-sm font-semibold text-muted-foreground">The fast</p>
         <h2 id="season-journey-title" className="mt-1 text-2xl sm:text-3xl">{day.title}</h2>
         {bodyOpen ? (
           <div id="season-day-body" className="mt-4">
@@ -401,7 +401,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <Button
             type="button"
-            variant={keptToday ? "outline" : "default"}
+            variant="outline"
             aria-pressed={keptToday}
             className="rounded-full"
             onClick={toggleKept}

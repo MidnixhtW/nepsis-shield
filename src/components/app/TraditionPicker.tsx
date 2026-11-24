@@ -1,0 +1,52 @@
+import { Check } from "lucide-react";
+import { useSettings } from "@/hooks/useSettings";
+import { cn } from "@/lib/utils";
+import { getTradition, markTraditionChosen, traditionPatch, TRADITION_OPTIONS, type Tradition } from "@/lib/tradition";
+
+// "How do you pray?" One answer sets the jurisdiction, the Western Rite switch and the calendar for Melkite and
+// Byzantine Catholic parishes, so labels, fasting wording and church links follow it.
+export function TraditionPicker({ onChosen }: { onChosen?: (tradition: Tradition) => void }) {
+  const { settings, updateSettings } = useSettings();
+  const current = getTradition(settings);
+  return (
+    <div role="radiogroup" aria-label="How do you pray?" className="border-t border-border/80">
+      {TRADITION_OPTIONS.map((option) => {
+        const selected = current === option.id;
+        return (
+          <div key={option.id} className="border-b border-border/80">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => {
+                updateSettings(traditionPatch(option.id, settings));
+                markTraditionChosen();
+                onChosen?.(option.id);
+              }}
+              className="flex min-h-14 w-full items-center gap-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span className="min-w-0 flex-1">
+                <span className={cn("block font-display text-lg", selected && "text-accent")}>{option.title}</span>
+                <span className="block text-sm text-muted-foreground">{option.description}</span>
+              </span>
+              <Check aria-hidden className={cn("h-5 w-5 shrink-0 text-accent", selected ? "opacity-100" : "opacity-0")} />
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Asked once on Today, until the person answers or sets their church in Settings. */
+export function TraditionPrompt({ onAnswered }: { onAnswered: () => void }) {
+  return (
+    <section aria-labelledby="tradition-title" className="px-1 text-left">
+      <h2 id="tradition-title" className="text-2xl">How do you pray?</h2>
+      <p className="mt-1 text-sm text-muted-foreground">The prayers, fasting notes and church links follow your answer. You can change it in Settings.</p>
+      <div className="mt-3">
+        <TraditionPicker onChosen={onAnswered} />
+      </div>
+    </section>
+  );
+}

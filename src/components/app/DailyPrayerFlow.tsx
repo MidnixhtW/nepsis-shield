@@ -146,6 +146,7 @@ export function DailyPrayerFlow() {
   const [silenceLeft, setSilenceLeft] = useState(0);
   const ison = useIsonEnabled();
   // The one-line explanation of the chant drone shows until it has been tried once.
+  const [soundOpen, setSoundOpen] = useState(false);
   const [droneHintSeen, setDroneHintSeenState] = useState(() => getStoredItem<boolean>("reader:drone-hint-seen") === true);
   const setDroneHintSeen = (seen: boolean) => {
     setDroneHintSeenState(seen);
@@ -513,26 +514,47 @@ export function DailyPrayerFlow() {
               />
             ) : (
             <>
+            {/* Only what the prayer needs: a way out, how far along, and the sound choices folded behind one button. */}
             <header className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-              <p className="min-w-0 truncate whitespace-nowrap text-xs font-semibold text-accent">
-                {mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`} · {stepIndex + 1} / {steps.length}
+              <Dialog.Close asChild>
+                <Button type="button" variant="ghost" size="icon" className="-ml-2 rounded-full">
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close full-screen prayer</span>
+                </Button>
+              </Dialog.Close>
+              <p className="text-sm tabular-nums text-muted-foreground">
+                <span className="sr-only">{mode === "watch" ? "Watch rule" : mode === "seraphim" ? "St. Seraphim's rule" : `${prayerMeta[time].label} prayer`}, part </span>
+                {stepIndex + 1} of {steps.length}
               </p>
-              <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-expanded={soundOpen}
+                aria-controls="reader-sound"
+                className="-mr-2 h-11 rounded-full px-3 text-sm font-medium text-muted-foreground"
+                onClick={() => setSoundOpen((open) => !open)}
+              >
+                Sound
+              </Button>
+            </header>
+            <Progress value={progress} aria-hidden className="mx-auto mt-3 h-0.5 w-[min(42rem,calc(100%-2.5rem))]" />
+            {soundOpen ? (
+              <div id="reader-sound" className="mx-auto flex w-[min(42rem,calc(100%-2.5rem))] flex-wrap items-center justify-between gap-3 border-b border-border/60 py-2">
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   aria-pressed={ison}
-                  title="A low held note under the reading, as under Byzantine chant"
-                  className={"h-11 shrink-0 rounded-full px-2.5 text-sm font-medium " + (ison ? "text-accent" : "text-muted-foreground")}
+                  className={"h-11 rounded-full px-2 text-sm font-medium " + (ison ? "text-accent" : "text-muted-foreground")}
                   onClick={() => {
                     setIsonEnabled(!ison);
                     setDroneHintSeen(true);
                   }}
                 >
-                  {ison ? "Drone on" : "Chant drone"}
+                  {ison ? "Chant drone on" : "Chant drone off"}
                 </Button>
-                <select
+                  <select
                   aria-label="Voice reading aloud"
                   value={reader}
                   onChange={(event) => setReader(event.target.value as typeof reader)}
@@ -542,19 +564,7 @@ export function DailyPrayerFlow() {
                     <option key={item.id} value={item.id} className="bg-background text-foreground">{item.id === "device" ? "Device" : item.name}</option>
                   ))}
                 </select>
-                <Dialog.Close asChild>
-                  <Button type="button" variant="ghost" size="icon" className="rounded-full">
-                    <X className="h-5 w-5" />
-                    <span className="sr-only">Close full-screen prayer</span>
-                  </Button>
-                </Dialog.Close>
               </div>
-            </header>
-            <Progress value={progress} aria-hidden className="mx-auto mt-3 h-1 w-[min(42rem,calc(100%-2.5rem))]" />
-            {!droneHintSeen && stepIndex === 0 ? (
-              <p className="mx-auto mt-2 w-[min(42rem,calc(100%-2.5rem))] text-right text-sm text-muted-foreground">
-                Chant drone: a low held note under the reading, as in Byzantine chant.
-              </p>
             ) : null}
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">

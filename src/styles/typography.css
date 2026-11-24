@@ -38,12 +38,12 @@
 
 /* Small metadata, as a printed calendar sets it: the feast's rank, the fasting rule, a date. Sans, tracked, upper case. */
 @layer components {
+  /* Small quiet text for the fast, the tone and lengths: sentence case, read the way it is said. */
   .meta-label {
     font-family: var(--font-ui);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
     line-height: 1.4;
   }
 }
