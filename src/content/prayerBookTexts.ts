@@ -415,6 +415,15 @@ export const repentancePrayer = [
   "Lord Jesus Christ, Son of the living God, I have sinned in thought, word, deed, and neglect. Do not let shame drive me from You. Give me true repentance, courage to confess what must be confessed, and a humble heart that seeks mercy rather than excuses. Amen.",
 ];
 
+// Original, for those on deployment, on shift or far from a parish. It asks only what both Churches hold: longing for
+// the Holy Mysteries, union with the Church's prayer, and keeping until one can receive again.
+export const absentFromLiturgyPrayer = [
+  "Lord Jesus Christ, today I cannot stand with Your people at the Divine Liturgy. My duty keeps me here, and You know where I am.",
+  "I long for Your Holy Body and Precious Blood. Do not let my absence become forgetfulness, nor my hunger grow cold.",
+  "Join my small prayer to the prayer of Your Church in every place. Remember the priests who serve today, and all who will receive You.",
+  "Keep me in Your grace until I may come again to Your holy table, prepared, confessed and at peace. Wherever my duty takes me, let me stand before You with a watchful heart. Amen.",
+];
+
 export const griefPrayer = [
   "O Christ our God, Who wept at the tomb of Lazarus, be near to me in sorrow. Receive my tears, strengthen my hope in Your Resurrection, and grant rest, comfort, and peace to all who suffer and all who have departed this life in faith and hope. Amen.",
 ];
@@ -503,6 +512,7 @@ export const favoritePrayerOptions = [
   { id: "before-sleep", title: "Before sleep", lines: nightPrayer },
   { id: "theotokos", title: "Theotokos", lines: theotokosShort },
   { id: "litany-of-humility", title: "Litany of Humility", lines: litanyOfHumility },
+  { id: "absent-from-liturgy", title: "When I cannot be at Liturgy", lines: absentFromLiturgyPrayer },
   { id: "st-ephrem", title: "Prayer of St. Ephrem", lines: SHARED_PRAYERS.find((p) => p.id === "st-ephrem")?.lines ?? [] },
 ];
 

@@ -19,7 +19,7 @@ import { PrayerRule } from "@/components/app/PrayerRule";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toggleFavoritePrayer, useDailyRhythm } from "@/lib/dailyHabits";
 import { cn } from "@/lib/utils";
-import { morningTrinity, morningFather, morningTheotokos, morningAngel, morningPatron, eveningIntro, eveningFather, eveningChrist, eveningSpirit, eveningTheotokos, nightPrayer, theotokosShort, stMichaelInvocation, stMichaelBeforeWatch, stMichaelProtection, SAINT_PRAYERS, SAINT_FILTERS, sharedPrayerBasics, repentancePrayer, griefPrayer, thanksgivingPrayer, mercyPrayer, beforeMeals, afterMeals, ocaOccasions, favoritePrayerOptions, prayerSources } from "@/content/prayerBookTexts";
+import { morningTrinity, morningFather, morningTheotokos, morningAngel, morningPatron, eveningIntro, eveningFather, eveningChrist, eveningSpirit, eveningTheotokos, nightPrayer, theotokosShort, stMichaelInvocation, stMichaelBeforeWatch, stMichaelProtection, SAINT_PRAYERS, SAINT_FILTERS, sharedPrayerBasics, repentancePrayer, griefPrayer, absentFromLiturgyPrayer, thanksgivingPrayer, mercyPrayer, beforeMeals, afterMeals, ocaOccasions, favoritePrayerOptions, prayerSources } from "@/content/prayerBookTexts";
 
 function PrayerBlock({ title, lines }: { title: string; lines: string[] }) {
   return (
@@ -162,7 +162,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     How to use this section
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    The Lord's Prayer, Jesus Prayer, and Scripture prayer here use standard Orthodox wording. The short repentance, grief, thanksgiving, and mercy prayers below are original devotional aids, not replacements for parish prayer books or services.
+                    The Lord's Prayer, Jesus Prayer, and Scripture prayer here use standard Orthodox wording. The short repentance, grief, thanksgiving, mercy, and away-from-Liturgy prayers below are original devotional aids, not replacements for parish prayer books or services.
                   </p>
                 </div>
                 <PrayerBlock title="Common starting prayers" lines={sharedPrayerBasics} />
@@ -170,6 +170,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 <PrayerBlock title="Grief and hope" lines={griefPrayer} />
                 <PrayerBlock title="Thanksgiving" lines={thanksgivingPrayer} />
                 <PrayerBlock title="Mercy today" lines={mercyPrayer} />
+                <PrayerBlock title="When I cannot be at Liturgy" lines={absentFromLiturgyPrayer} />
               </div>
             </AccordionContent>
           </AccordionItem>
