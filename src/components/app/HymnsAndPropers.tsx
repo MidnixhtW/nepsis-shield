@@ -109,9 +109,9 @@ export function HymnsAndPropers() {
               type="button"
               variant="outline"
               className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 transition duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/70"
-              onClick={() => playTrack(getSanctuaryTrack("byzantine-ison"))}
+              onClick={() => playTrack(getSanctuaryTrack("afr-music"))}
             >
-              Play chant mode <PlayCircle className="h-4 w-4" />
+              Play live chant radio <PlayCircle className="h-4 w-4" />
             </Button>
           </div>
 

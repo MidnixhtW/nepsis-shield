@@ -1,11 +1,24 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { AmbientTrack, AudioTrack } from "@/lib/audioTracks";
 
+export type PlaybackStatus = "idle" | "loading" | "playing" | "paused" | "error";
+
 interface AudioContextType {
   currentTrack: AudioTrack | null;
   isPlaying: boolean;
+  /** What the player is doing right now, from the audio element itself (so "loading" and "error" are real). */
+  status: PlaybackStatus;
+  /** Which recorded piece of a prayer is playing. */
+  segmentIndex: number;
+  /** Seconds into the current piece, and its length (0 for live radio). */
+  position: number;
+  duration: number;
   playTrack: (track: AudioTrack) => void;
   pauseTrack: () => void;
+  resumeTrack: () => void;
+  stopTrack: () => void;
+  skipSegment: (direction: -1 | 1) => void;
+  seek: (seconds: number) => void;
   ambientTrack: AmbientTrack | null;
   setAmbientTrack: (track: AmbientTrack | null) => void;
   ambientVolume: number;
@@ -50,70 +63,22 @@ function createNoise(ctx: AudioContext) {
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [currentTrack, setCurrentTrack] = useState<AudioTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [status, setStatus] = useState<PlaybackStatus>("idle");
+  const [segmentIndex, setSegmentIndex] = useState(0);
+  const [position, setPosition] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const trackRef = useRef<AudioTrack | null>(null);
+  const segmentRef = useRef(0);
   const [ambientTrack, setAmbientTrackState] = useState<AmbientTrack | null>(null);
   const [ambientVolume, setAmbientVolumeState] = useState(0.3);
 
   const mainAudioRef = useRef<HTMLAudioElement | null>(null);
   const ambientAudioRef = useRef<HTMLAudioElement | null>(null);
-  const generatedMainRef = useRef<GeneratedSound | null>(null);
   const generatedAmbientRef = useRef<GeneratedSound | null>(null);
-
-  function stopGeneratedMain() {
-    stopGeneratedSound(generatedMainRef.current);
-    generatedMainRef.current = null;
-  }
 
   function stopGeneratedAmbient() {
     stopGeneratedSound(generatedAmbientRef.current);
     generatedAmbientRef.current = null;
-  }
-
-  function startGeneratedMain(track: AudioTrack) {
-    if (generatedMainRef.current?.trackId === track.id) {
-      void generatedMainRef.current.ctx.resume();
-      return;
-    }
-
-    stopGeneratedMain();
-
-    const ctx = new window.AudioContext();
-    const master = ctx.createGain();
-    master.gain.value = 0.0001;
-    master.connect(ctx.destination);
-
-    const palette =
-      track.category === "chant"
-        ? [110, 164.81, 220, 329.63]
-        : track.category === "patristic"
-          ? [130.81, 196, 261.63, 392]
-          : [146.83, 220, 293.66, 440];
-
-    const oscillators = palette.flatMap((frequency, index) => {
-      const tone = ctx.createOscillator();
-      const toneGain = ctx.createGain();
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-
-      tone.type = index === 0 ? "triangle" : "sine";
-      tone.frequency.value = frequency;
-      tone.detune.value = index * 3;
-      toneGain.gain.value = index === 0 ? 0.09 : 0.035;
-      lfo.frequency.value = 0.035 + index * 0.01;
-      lfoGain.gain.value = 2.5;
-
-      lfo.connect(lfoGain);
-      lfoGain.connect(tone.frequency);
-      tone.connect(toneGain);
-      toneGain.connect(master);
-      tone.start();
-      lfo.start();
-
-      return [tone, lfo];
-    });
-
-    master.gain.exponentialRampToValueAtTime(0.24, ctx.currentTime + 1.2);
-    generatedMainRef.current = { trackId: track.id, ctx, master, oscillators };
-    void ctx.resume();
   }
 
   function startGeneratedAmbient(track: AmbientTrack, volume: number) {
@@ -161,12 +126,32 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    mainAudioRef.current = new Audio();
-    mainAudioRef.current.onended = () => setIsPlaying(false);
+    const audio = new Audio();
+    audio.preload = "metadata";
+    mainAudioRef.current = audio;
+    audio.onwaiting = () => setStatus("loading");
+    audio.onplaying = () => setStatus("playing");
+    audio.onpause = () => setStatus((current) => (current === "error" ? current : "paused"));
+    audio.onerror = () => {
+      setStatus("error");
+      setIsPlaying(false);
+    };
+    audio.ontimeupdate = () => setPosition(audio.currentTime);
+    audio.onloadedmetadata = () => setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+    // A prayer plays piece by piece; at the end of the last piece it stops.
+    audio.onended = () => {
+      const segments = trackRef.current?.segments;
+      if (segments && segmentRef.current < segments.length - 1) {
+        segmentRef.current += 1;
+        setSegmentIndex(segmentRef.current);
+        return;
+      }
+      setIsPlaying(false);
+      setStatus("idle");
+    };
 
     return () => {
-      mainAudioRef.current?.pause();
-      stopGeneratedMain();
+      audio.pause();
     };
   }, []);
 
@@ -180,28 +165,36 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  // Load the piece that should be playing, and play or pause it.
   useEffect(() => {
-    if (!mainAudioRef.current || !currentTrack) return;
-
-    if (!currentTrack.url) {
-      mainAudioRef.current.pause();
-      if (isPlaying) startGeneratedMain(currentTrack);
-      else stopGeneratedMain();
-      return;
+    const audio = mainAudioRef.current;
+    if (!audio || !currentTrack) return;
+    const src = currentTrack.segments ? currentTrack.segments[segmentIndex]?.url : currentTrack.url;
+    if (!src) return;
+    const absolute = new URL(src, window.location.href).href;
+    if (audio.src !== absolute) {
+      audio.src = src;
+      setPosition(0);
+      setDuration(0);
     }
-
-    stopGeneratedMain();
-
-    if (mainAudioRef.current.src !== currentTrack.url) {
-      mainAudioRef.current.src = currentTrack.url;
-    }
-
     if (isPlaying) {
-      mainAudioRef.current.play().catch((err) => console.log("Audio play blocked", err));
+      setStatus((current) => (current === "playing" ? current : "loading"));
+      audio.play().catch(() => {
+        setStatus("error");
+        setIsPlaying(false);
+      });
     } else {
-      mainAudioRef.current.pause();
+      audio.pause();
     }
-  }, [currentTrack, isPlaying]);
+  }, [currentTrack, segmentIndex, isPlaying]);
+
+  // The lock screen and headphone buttons control the sanctuary too.
+  useEffect(() => {
+    if (!("mediaSession" in navigator) || !currentTrack) return;
+    navigator.mediaSession.metadata = new MediaMetadata({ title: currentTrack.title, artist: currentTrack.subtitle, album: "Nepsis Shield" });
+    navigator.mediaSession.setActionHandler("play", () => setIsPlaying(true));
+    navigator.mediaSession.setActionHandler("pause", () => setIsPlaying(false));
+  }, [currentTrack]);
 
   useEffect(() => {
     if (!ambientAudioRef.current) return;
@@ -229,14 +222,51 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   }, [ambientTrack, ambientVolume]);
 
   const playTrack = (track: AudioTrack) => {
+    trackRef.current = track;
+    segmentRef.current = 0;
+    setSegmentIndex(0);
+    setPosition(0);
+    setDuration(0);
+    setStatus("loading");
+    // Live radio starts from now, so a stream that was paused earlier is fetched fresh.
+    if (track.kind === "radio" && mainAudioRef.current) mainAudioRef.current.removeAttribute("src");
     setCurrentTrack(track);
     setIsPlaying(true);
-    if (!track.url) startGeneratedMain(track);
   };
 
-  const pauseTrack = () => {
+  const pauseTrack = () => setIsPlaying(false);
+
+  const resumeTrack = () => {
+    const audio = mainAudioRef.current;
+    if (currentTrack?.kind === "radio" && audio) {
+      // Resuming radio means joining it live again, so drop what was buffered when it paused.
+      audio.removeAttribute("src");
+      audio.load();
+    }
+    setIsPlaying(true);
+  };
+
+  const stopTrack = () => {
     setIsPlaying(false);
-    stopGeneratedMain();
+    mainAudioRef.current?.pause();
+    trackRef.current = null;
+    setCurrentTrack(null);
+    setStatus("idle");
+  };
+
+  const skipSegment = (direction: -1 | 1) => {
+    const segments = currentTrack?.segments;
+    if (!segments) return;
+    const next = Math.min(segments.length - 1, Math.max(0, segmentRef.current + direction));
+    segmentRef.current = next;
+    setSegmentIndex(next);
+    setIsPlaying(true);
+  };
+
+  const seek = (seconds: number) => {
+    const audio = mainAudioRef.current;
+    if (!audio || !Number.isFinite(audio.duration)) return;
+    audio.currentTime = Math.min(audio.duration, Math.max(0, seconds));
   };
 
   const setAmbientTrack = (track: AmbientTrack | null) => {
@@ -260,8 +290,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
       value={{
         currentTrack,
         isPlaying,
+        status,
+        segmentIndex,
+        position,
+        duration,
         playTrack,
         pauseTrack,
+        resumeTrack,
+        stopTrack,
+        skipSegment,
+        seek,
         ambientTrack,
         setAmbientTrack,
         ambientVolume,

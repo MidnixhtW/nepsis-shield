@@ -95,7 +95,11 @@ export function OrthodoxAudioLibrary() {
   const { playTrack } = useAudio();
 
   function openSanctuary() {
-    playTrack(getSanctuaryTrack("evening-prayer-demo"));
+    playTrack(getSanctuaryTrack("prayers-evening"));
+  }
+
+  function openRadio() {
+    playTrack(getSanctuaryTrack("afr-music"));
   }
 
   return (
@@ -115,12 +119,17 @@ export function OrthodoxAudioLibrary() {
             <div>
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Orthodox audio for the whole day</h2>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                Enter a quiet, full-screen player for guided prayer, chant, transcripts, ambient stillness, and a sleep-friendly timer.
+                Listen to the morning, evening and night prayers read aloud, with the words on screen, or to Ancient Faith Radio live: chant and hymns day and night, or talks. Add a quiet ambient sound and a sleep timer.
               </p>
             </div>
+            <div className="flex flex-wrap gap-2">
             <Button type="button" className="h-12 rounded-full px-6 font-bold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-95" onClick={openSanctuary}>
               <PlayCircle className="mr-2 h-5 w-5" /> Enter sanctuary
             </Button>
+            <Button type="button" variant="outline" className="h-12 rounded-full px-6 font-bold" onClick={openRadio}>
+              <Radio className="mr-2 h-5 w-5" /> Live chant radio
+            </Button>
+            </div>
           </div>
         </div>
       </Card>
