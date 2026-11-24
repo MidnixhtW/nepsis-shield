@@ -173,7 +173,7 @@ export function PrayerRule() {
       <div className="grid gap-4">
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <p className="text-sm font-semibold">Rule mode</p>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground">
             Standard suits most people. Keep it with humility, and ask your priest before increasing it.
           </p>
           <ToggleGroup
@@ -210,7 +210,7 @@ export function PrayerRule() {
             </label>
           ))}
           {!saveEnabled ? (
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Saving is off. Checkmarks won't persist.
 
             </p>
@@ -276,7 +276,7 @@ export function PrayerRule() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium">Include Before/After Meals</p>
-                    <p className="text-xs text-muted-foreground">Common prayers</p>
+                    <p className="text-sm text-muted-foreground">Common prayers</p>
                   </div>
 
                   <Switch
@@ -290,7 +290,7 @@ export function PrayerRule() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium">Include Psalm 50</p>
-                    <p className="text-xs text-muted-foreground">Optional</p>
+                    <p className="text-sm text-muted-foreground">Optional</p>
                   </div>
                   <Switch
                     checked={prefs.includePsalm50}
@@ -303,7 +303,7 @@ export function PrayerRule() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-medium">Include the Creed</p>
-                    <p className="text-xs text-muted-foreground">Optional</p>
+                    <p className="text-sm text-muted-foreground">Optional</p>
                   </div>
                   <Switch
                     checked={prefs.includeCreed}
@@ -378,14 +378,14 @@ export function PrayerRule() {
             </AccordionTrigger>
             <AccordionContent className="pt-3">
               <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   If enabled, checkmarks/preferences are stored locally. Progress auto-expires after 14 days.
                 </p>
 
                 <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
                   <div>
                     <p className="text-sm font-medium">Remember on this device</p>
-                    <p className="text-xs text-muted-foreground">On by default</p>
+                    <p className="text-sm text-muted-foreground">On by default</p>
                   </div>
                   <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
                 </div>
@@ -412,7 +412,7 @@ export function PrayerRule() {
           </AccordionItem>
         </Accordion>
 
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Tip: consult your priest/spiritual father for a larger rule.
         </p>
       </div>

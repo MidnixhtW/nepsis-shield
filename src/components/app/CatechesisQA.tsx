@@ -204,7 +204,7 @@ export function CatechesisQA() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground" aria-live="polite">
+          <p className="text-sm text-muted-foreground" aria-live="polite">
             Showing <span className="font-semibold text-foreground">{filtered.length}</span>.
           </p>
           <Button asChild variant="outline" className="btn-wrap rounded-2xl border-border/60">
@@ -343,7 +343,7 @@ export function CatechesisQA() {
             ))}
           </Accordion>
 
-          <p className="mt-4 break-words text-xs text-muted-foreground">
+          <p className="mt-4 break-words text-sm text-muted-foreground">
             Full OCA Q&A index: "https://www.oca.org/questions"
           </p>
         </Card>

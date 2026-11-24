@@ -42,7 +42,7 @@ function FeatureCard({
         </span>
         <div>
           <h3 className="text-sm font-semibold tracking-tight">{title}</h3>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
         </div>
       </div>
       <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">

@@ -110,7 +110,7 @@ function FastRemindersButton({ today, calendar }: { today: Date; calendar: Churc
 
   if (nativeOn) {
     return (
-      <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+      <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
         <BellRing className="h-3.5 w-3.5 text-accent" /> Fast reminders are on
       </p>
     );

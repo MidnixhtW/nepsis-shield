@@ -103,7 +103,7 @@ export default function About() {
 
             </p>
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
 
               "Orthodox Church in America" and "OCA" are trademarks of their respective owners. Names and links are used for identification of Orthodox sources only.
             </p>
@@ -126,10 +126,10 @@ export default function About() {
           <div className="grid gap-3 text-sm">
             <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
               <p className="font-semibold">Created by Empathik</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Nepsis Shield is built as an Orthodox watchfulness and prayer companion for daily life, family and work stress, first response, public safety, and service under pressure.
               </p>
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Free, with no ads, purchases or accounts. Questions, corrections and privacy requests:{" "}
                 <a href={CONTACT_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-foreground underline underline-offset-2">
                   the project's GitHub page<span className="sr-only"> (opens in a new tab)</span>
@@ -146,7 +146,7 @@ export default function About() {
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
 
               <p className="font-semibold">Orthodox Church in America (OCA)</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Used primarily for links to prayers, articles, and daily reading pages.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -165,7 +165,7 @@ export default function About() {
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="font-semibold">orthocal.info</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 The Church calendar: saints, fasts, tones and the day's readings, for both New and Old Calendar.
               </p>
               <Button asChild size="sm" variant="outline" className="mt-3 rounded-2xl border-border/60">
@@ -177,7 +177,7 @@ export default function About() {
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="font-semibold">Bible text sources</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Long-standing public Bible libraries that supply the Scripture text for each reading.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -196,14 +196,14 @@ export default function About() {
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="font-semibold">Icons and Scripture</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 The icons on Today are public-domain works from Wikimedia Commons, kept on this site; each one links to its Commons page. New King
                 James Version® copyright © 1982 by Thomas Nelson. Brenton's Septuagint, the KJV, the WEB and the Douay-Rheims are in the public
                 domain. Prayers are credited where they appear.
               </p>
             </div>
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               The next two weeks of the calendar are kept on your phone, so Today still opens with no signal. If a source is briefly
               unreachable, the app says so and links you straight to that source.
             </p>
@@ -228,7 +228,7 @@ export default function About() {
 
           </p>
 
-          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             If you may harm yourself or someone else, seek immediate help from emergency services, a trusted leader, chaplain, clinician, or crisis line. Provided "as-is" without warranties. Use at your own discretion.
           </p>
         </Card>

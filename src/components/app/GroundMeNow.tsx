@@ -152,6 +152,22 @@ export function GroundResetButton({
   );
 }
 
+/** The reset as one slim row, for pages where something else should lead (the prayer rope). Keeps the crisis line. */
+export function GroundMeNowSlim() {
+  return (
+    <Card id="ground" className="scroll-mt-24 rounded-3xl p-4 shadow-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <HeartPulse aria-hidden className="h-5 w-5 shrink-0 text-accent" />
+        <p className="min-w-0 flex-1 text-base font-semibold">Under pressure?</p>
+        <GroundResetButton variant="outline" className="rounded-full">
+          <TimerReset aria-hidden className="mr-2 h-4 w-4 shrink-0" /> 60-second reset
+        </GroundResetButton>
+      </div>
+      <CrisisResources />
+    </Card>
+  );
+}
+
 export function GroundMeNow() {
   const [mode] = useResponderMode();
   const theme = responderModeAccentClasses[mode];

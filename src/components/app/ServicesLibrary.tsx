@@ -163,7 +163,7 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
           </div>
         )}
       </Card>
-      <p className="px-2 text-xs leading-relaxed text-muted-foreground">Text: {service.source}</p>
+      <p className="px-2 text-sm leading-relaxed text-muted-foreground">Text: {service.source}</p>
     </article>
   );
 }

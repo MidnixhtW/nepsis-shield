@@ -111,7 +111,7 @@ export function MonasticAudioPlayer() {
           </Button>
           <div className="text-center">
             <p className="text-xs font-bold text-primary">Vigil Sanctuary</p>
-            <p className="mt-1 text-xs text-muted-foreground">{currentTrack.category}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{currentTrack.category}</p>
           </div>
           <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={() => setOpen(false)}>
             <Minus className="h-5 w-5" />

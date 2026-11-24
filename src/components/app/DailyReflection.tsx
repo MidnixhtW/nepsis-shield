@@ -236,7 +236,7 @@ export function DailyReflection() {
                 </AccordionTrigger>
                 <AccordionContent className="pt-3">
                   <div className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] p-4 text-liturgical-warm">
-                    <p className="text-xs leading-relaxed text-liturgical-warm">
+                    <p className="text-sm leading-relaxed text-liturgical-warm">
                       Journal notes are highly sensitive. If you enable saving, notes are always encrypted and stored on this device. Your passphrase is required to read them and is never stored.
                     </p>
 
@@ -244,7 +244,7 @@ export function DailyReflection() {
                       <div className="flex items-center justify-between gap-3 rounded-2xl border border-icon-gold/[0.58] bg-white/60 px-4 py-3">
                         <div>
                           <p className="text-sm font-medium">Save on this device (encrypted)</p>
-                          <p className="text-xs text-liturgical-warm">Off by default. Always encrypted when enabled.</p>
+                          <p className="text-sm text-liturgical-warm">Off by default. Always encrypted when enabled.</p>
                         </div>
                         <Switch aria-label="Save reflection encrypted on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
                       </div>
@@ -264,7 +264,7 @@ export function DailyReflection() {
                         >
                           <Trash2 className="mr-2 h-4 w-4" /> Delete saved notes
                         </Button>
-                        <p className="text-xs text-liturgical-warm">Notes auto-expire after 30 days.</p>
+                        <p className="text-sm text-liturgical-warm">Notes auto-expire after 30 days.</p>
                       </div>
                     </div>
 
@@ -301,7 +301,7 @@ export function DailyReflection() {
                           </Button>
                         </div>
                         <PassphraseMeter passphrase={passphrase} className="mt-3" />
-                        <p className="mt-2 text-xs text-liturgical-warm">
+                        <p className="mt-2 text-sm text-liturgical-warm">
                           Use a strong 12+ character passphrase. Short or common passphrases are vulnerable if someone gets your device storage or an export.
                         </p>
 
@@ -324,7 +324,7 @@ export function DailyReflection() {
                 className="mt-2 min-h-32 rounded-2xl"
                 disabled={saveEnabled && locked}
               />
-              <p className="mt-2 text-xs text-muted-foreground">
+              <p className="mt-2 text-sm text-muted-foreground">
                 {!saveEnabled
                   ? "Not saved locally. This text will be lost if you refresh."
                   : locked

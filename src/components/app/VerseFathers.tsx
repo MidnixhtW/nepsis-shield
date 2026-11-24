@@ -36,7 +36,7 @@ export function VerseFathers({ book, chapter, verse }: { book?: string; chapter?
               <blockquote className="mt-1 text-base leading-relaxed text-foreground/90">{quote.text}</blockquote>
             </figure>
           ))}
-          <p className="font-sans text-xs text-muted-foreground">
+          <p className="font-sans text-sm text-muted-foreground">
             Public domain translations, gathered by the Historical Christian Faith Commentaries Database. Read them with the Church: one Father is a witness, not the whole Tradition.
           </p>
         </div>

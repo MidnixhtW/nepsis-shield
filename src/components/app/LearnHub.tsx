@@ -191,7 +191,7 @@ const ocaLibrary = (
       </Button>
     </div>
 
-    <p className="mt-4 break-words text-xs text-muted-foreground">
+    <p className="mt-4 break-words text-sm text-muted-foreground">
       Sources: "https://www.oca.org/questions" • "https://www.oca.org/orthodoxy/prayers" •
       "https://www.oca.org/orthodoxy/the-orthodox-faith"
     </p>

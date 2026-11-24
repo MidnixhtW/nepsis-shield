@@ -259,7 +259,7 @@ export function DailyPrayerFlow() {
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm font-semibold">Prayer rule length</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 The Watch rule takes about a minute, St. Seraphim's rule suits shifts and deployments, short for busy days, standard for normal use, or longer when you have room.
               </p>
             </div>

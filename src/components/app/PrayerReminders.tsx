@@ -250,8 +250,8 @@ export function PrayerReminders() {
               />
               <div>
                 <p className="text-sm font-semibold">{prayerLabels[key]}</p>
-                {prayerHints[key] ? <p className="text-xs text-muted-foreground">{prayerHints[key]}</p> : null}
-                <p role="status" className="text-xs text-muted-foreground">{statusLine(key)}</p>
+                {prayerHints[key] ? <p className="text-sm text-muted-foreground">{prayerHints[key]}</p> : null}
+                <p role="status" className="text-sm text-muted-foreground">{statusLine(key)}</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 sm:justify-end">

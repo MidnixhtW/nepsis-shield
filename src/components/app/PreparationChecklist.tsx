@@ -98,7 +98,7 @@ export function PreparationChecklist() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-semibold">Helpful texts</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground">
               Use the Church's words to prepare with attention and humility.
             </p>
           </div>

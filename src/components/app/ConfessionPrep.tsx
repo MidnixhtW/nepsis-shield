@@ -277,7 +277,7 @@ export function ConfessionPrep() {
             />
           </label>
         ))}
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {doneCount}/{PROMPTS.length} marked. This is only for your preparation.
         </p>
       </div>
@@ -291,7 +291,7 @@ export function ConfessionPrep() {
           className="mt-2 min-h-28 rounded-2xl"
           disabled={isSavedLocked}
         />
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           {!saveEnabled
             ? "Not saved (clears on refresh)."
             : locked
@@ -343,7 +343,7 @@ export function ConfessionPrep() {
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium">Save on this device (encrypted)</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Off by default. Checklist selections and notes are encrypted together when enabled.
                   </p>
                 </div>
@@ -375,7 +375,7 @@ export function ConfessionPrep() {
                     </Button>
                   </div>
                   <PassphraseMeter passphrase={pass} />
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     Use a strong 12+ character passphrase. Short or common passphrases are vulnerable if someone gets your device storage or an export.
                   </p>
                 </div>

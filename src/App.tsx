@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { ChunkBoundary } from "@/components/app/ChunkBoundary";
 import { Toaster } from "@/components/ui/toaster";
 import { OfflineDaysKeeper } from "@/components/app/OfflineDaysKeeper";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -6,8 +7,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router";
 import { Analytics, type BeforeSendEvent } from "@vercel/analytics/react";
-import Index from "./pages/Index";
-import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "@/components/app/ThemeProvider";
 import { AccessibilityPreferences } from "@/components/app/AccessibilityPreferences";
@@ -23,6 +22,27 @@ import { RouteMetaSync } from "@/components/app/RouteMetaSync";
 import { isPhilokaliaUnlocked } from "@/lib/philokaliaUnlock";
 
 // Pages other than Today load on demand, keeping the first download small.
+// The landing page and the app are separate chunks, so a first visit downloads only what it shows.
+const loadIndex = () => import("./pages/Index");
+const Index = lazy(loadIndex);
+const Home = lazy(() => import("./pages/Home"));
+// Warm the app chunk once the page is idle, so the service worker has it and Today opens offline even if this visit
+// only saw the landing page.
+if (typeof window !== "undefined") {
+  // Today first, then the prayer, reading, learning and Me tabs, so a first visit leaves the whole app ready offline.
+  const warm = () => {
+    loadIndex()
+      .then(() => Promise.all([
+        import("@/components/app/PrayerHub"),
+        import("@/components/app/ReadHub"),
+        import("@/components/app/LearnHub"),
+        import("@/components/app/MeHub"),
+      ]))
+      .catch(() => {});
+  };
+  if ("requestIdleCallback" in window) window.requestIdleCallback(warm, { timeout: 4000 });
+  else setTimeout(warm, 2500);
+}
 const Privacy = lazy(() => import("./pages/Privacy"));
 const About = lazy(() => import("./pages/About"));
 const Legal = lazy(() => import("./pages/Legal"));
@@ -77,6 +97,7 @@ const App = () => (
             <WidgetRouteRouter />
             <ParishLinkReceiver />
             <IsonSync />
+            <ChunkBoundary>
             <Suspense fallback={<div className="boot-shell" role="status" aria-label="Loading" />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -102,6 +123,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             </Suspense>
+            </ChunkBoundary>
           </BrowserRouter>
         </AudioProvider>
       </TooltipProvider>

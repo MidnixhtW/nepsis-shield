@@ -245,7 +245,7 @@ function RosaryCounter() {
               <Moon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-sm font-semibold">Pray in the dark</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   The screen goes fully black. Tap anywhere for each bead, and feel a firm pulse after the tenth Hail Mary
                   of every decade. Hold for a second to leave; you pick up where you left off.
                 </p>

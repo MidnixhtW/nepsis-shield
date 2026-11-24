@@ -109,7 +109,7 @@ function MenuLinks() {
               <MenuLink key={destination.to} to={destination.to} icon={<ArrowRight className="h-4 w-4" />} label={destination.label} description={destination.area} />
             ))
           ) : (
-            <p className="px-3 text-xs leading-relaxed text-muted-foreground">Try another word, such as prayer, fast, saints or Bible.</p>
+            <p className="px-3 text-sm leading-relaxed text-muted-foreground">Try another word, such as prayer, fast, saints or Bible.</p>
           )}
         </MenuSection>
       ) : (

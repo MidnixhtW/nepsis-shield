@@ -41,7 +41,7 @@ function SharedPrayerBlock({ prayer }: { prayer: SharedPrayer }) {
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
       <p className="text-sm font-semibold">{prayer.title}</p>
-      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{prayer.origin}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{prayer.origin}</p>
       <div className="scripture-text mt-3 space-y-2 text-base">
         {prayer.lines.map((line, index) => (
           <p key={index}>{line}</p>
@@ -64,7 +64,7 @@ function LinkRow({
     <div className="flex flex-col gap-1 rounded-2xl border border-border/60 bg-background/40 p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         <p className="text-sm font-semibold">{label}</p>
-        {note ? <p className="mt-0.5 text-xs text-muted-foreground">{note}</p> : null}
+        {note ? <p className="mt-0.5 text-sm text-muted-foreground">{note}</p> : null}
       </div>
       <Button
         asChild
@@ -498,7 +498,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                       </ToggleGroupItem>
                     ))}
                   </ToggleGroup>
-                  <p className="mt-2 text-xs text-muted-foreground">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     Showing {filteredSaints.length}.
                   </p>
                 </div>
@@ -515,7 +515,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                             {p.title}
                           </p>
                           {p.subtitle ? (
-                            <p className="mt-0.5 text-xs text-muted-foreground">
+                            <p className="mt-0.5 text-sm text-muted-foreground">
                               {p.subtitle}
                             </p>
                           ) : null}

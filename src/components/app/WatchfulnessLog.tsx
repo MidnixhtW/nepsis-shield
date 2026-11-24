@@ -15,7 +15,7 @@ export function WatchfulnessLog() {
         <h2 id="watchfulness-log-title" className="text-xs font-semibold text-muted-foreground">
           Prayer log <span className="font-normal normal-case tracking-normal">(watchfulness)</span>
         </h2>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {ruleDays > 1 ? `${ruleDays} days in a row` : ruleDays === 1 ? "1 day" : "Begin today"} · {kept} in 12 weeks
         </p>
       </div>
@@ -41,7 +41,7 @@ export function WatchfulnessLog() {
           ))}
         </ol>
       </div>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         Private to this device. Any rule counts, even the one-minute Watch rule. If a day is missed, simply begin again.
       </p>
     </section>

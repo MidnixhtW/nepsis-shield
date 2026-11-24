@@ -6,7 +6,7 @@ import { PSALM_90_VERSES } from "@/content/prayersToLearn";
 export function ProtectionPsalm() {
   return (
     <div className="grid gap-3 pb-2">
-      <p className="text-xs leading-relaxed text-muted-foreground">
+      <p className="text-sm leading-relaxed text-muted-foreground">
         Prayed by Orthodox Christians in danger and fear, and carried by many soldiers. Read it slowly, aloud if you can.
       </p>
       <ol className="scripture-text grid gap-2 text-[1.05rem]">
@@ -17,7 +17,7 @@ export function ProtectionPsalm() {
           </li>
         ))}
       </ol>
-      <p className="text-xs text-muted-foreground">Psalm 90 (Psalm 91 in most English Bibles) · King James Version</p>
+      <p className="text-sm text-muted-foreground">Psalm 90 (Psalm 91 in most English Bibles) · King James Version</p>
       <Link to="/learn?tab=byheart&prayer=psalm-90" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
         Learn it by heart
       </Link>

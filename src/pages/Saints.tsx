@@ -104,7 +104,7 @@ export default function Saints() {
                   </div>
                 )}
               </div>
-              <p className="mt-3 text-xs text-muted-foreground">
+              <p className="mt-3 text-sm text-muted-foreground">
 
                 {patronNeeds.length} patron entries · local search updates daily
               </p>
@@ -194,7 +194,7 @@ export default function Saints() {
                       </div>
                       <span className="mt-0.5 shrink-0 text-xs font-medium text-muted-foreground group-open:hidden">Prayer</span>
                     </div>
-                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{item.note}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.note}</p>
                   </summary>
 
                   <div className="mt-3 border-t border-border/50 pt-3">
@@ -223,7 +223,7 @@ export default function Saints() {
             </div>
           ) : null}
 
-          <p className="mt-4 rounded-xl border border-border/50 bg-background/45 p-3 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-4 rounded-xl border border-border/50 bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
             If you may harm yourself or someone else, seek immediate help from emergency services, a trusted person, clergy, or a qualified clinician. Prayer and treatment are not enemies.
           </p>
         </Card>

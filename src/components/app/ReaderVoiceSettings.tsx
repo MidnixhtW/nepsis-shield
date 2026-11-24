@@ -51,7 +51,7 @@ function OfflineReader({ reader, name }: { reader: ReaderId; name: string }) {
   return (
     <div className="mt-4 rounded-2xl border border-border/60 bg-background/45 p-4">
       <p className="text-sm font-semibold">Listen with no signal</p>
-      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
         {complete
           ? `${name}'s ${total} recordings are on this device and play offline.`
           : `Save ${name}'s ${total} recordings (about 25 MB) so the prayers play on a flight or in the field.${saved ? ` ${saved} saved so far.` : ""}`}
@@ -68,7 +68,7 @@ function OfflineReader({ reader, name }: { reader: ReaderId; name: string }) {
           </Button>
         )}
       </div>
-      {error ? <p role="alert" className="mt-2 text-xs text-destructive">{error}</p> : null}
+      {error ? <p role="alert" className="mt-2 text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }

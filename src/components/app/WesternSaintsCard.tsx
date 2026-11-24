@@ -37,7 +37,7 @@ export function WesternSaintsCard() {
                 {MONTH_NAMES[saint.month - 1]} {saint.day} · {saint.region}
               </p>
               <h3 className="mt-1 text-sm font-semibold tracking-tight text-primary">{saint.name}</h3>
-              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{saint.line}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{saint.line}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button type="button" variant="outline" size="sm" className="rounded-xl border-border/60" onClick={() => choose(saint)} aria-label={`Make ${saint.name} my patron saint`}>
                   <Star className="mr-1.5 h-4 w-4" /> My patron

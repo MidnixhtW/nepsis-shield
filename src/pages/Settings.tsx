@@ -200,7 +200,7 @@ export default function Settings() {
           <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
             <div>
               <Label htmlFor="western-rite" className="text-sm font-medium">Western Rite parish</Label>
-              <p className="text-xs text-muted-foreground">Adds the Rosary and the Angelus to Pray.</p>
+              <p className="text-sm text-muted-foreground">Adds the Rosary and the Angelus to Pray.</p>
             </div>
             <Switch id="western-rite" checked={settings.westernRite} onCheckedChange={(checked) => updateSettings({ westernRite: checked })} />
           </div>
@@ -225,21 +225,21 @@ export default function Settings() {
             <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
               <div>
                 <Label htmlFor="large-text" className="text-sm font-medium">Larger text</Label>
-                <p className="text-xs text-muted-foreground">Increases the base reading size.</p>
+                <p className="text-sm text-muted-foreground">Increases the base reading size.</p>
               </div>
               <Switch id="large-text" checked={settings.accessibility.largeText} onCheckedChange={(checked) => updateSettings({ accessibility: { largeText: checked } })} />
             </div>
             <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
               <div>
                 <Label htmlFor="high-contrast" className="text-sm font-medium">High contrast</Label>
-                <p className="text-xs text-muted-foreground">Strengthens text and border contrast.</p>
+                <p className="text-sm text-muted-foreground">Strengthens text and border contrast.</p>
               </div>
               <Switch id="high-contrast" checked={settings.accessibility.highContrast} onCheckedChange={(checked) => updateSettings({ accessibility: { highContrast: checked } })} />
             </div>
             <div className="flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
               <div>
                 <Label htmlFor="reduce-motion" className="text-sm font-medium">Reduce motion</Label>
-                <p className="text-xs text-muted-foreground">Minimizes animations and transitions.</p>
+                <p className="text-sm text-muted-foreground">Minimizes animations and transitions.</p>
               </div>
               <Switch id="reduce-motion" checked={settings.accessibility.reduceMotion} onCheckedChange={(checked) => updateSettings({ accessibility: { reduceMotion: checked } })} />
             </div>
@@ -261,7 +261,7 @@ export default function Settings() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <Label htmlFor="show-grounding" className="text-sm font-medium">Show Ground Me Now on Today</Label>
-                <p className="text-xs text-muted-foreground">Keep the emergency reset visible on the dashboard.</p>
+                <p className="text-sm text-muted-foreground">Keep the emergency reset visible on the dashboard.</p>
               </div>
               <Switch
                 id="show-grounding"
@@ -297,7 +297,7 @@ export default function Settings() {
                     <CheckCircle2 className={cn("mt-0.5 h-4 w-4", offlineReady ? "text-primary" : "text-muted-foreground")} />
                     <div>
                       <p className="text-sm font-medium">{offlineReady ? "Ready offline" : "Not ready offline yet"}</p>
-                      <p className="mt-1 text-xs text-muted-foreground">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         Open the installed app once with signal to get it ready. Daily readings and saints from the web still need signal.
                       </p>
                     </div>

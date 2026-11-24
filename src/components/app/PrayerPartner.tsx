@@ -74,7 +74,7 @@ function PartnerRow({ group }: { group: SavedGroup }) {
   return (
     <div className="grid gap-3 rounded-2xl border border-border/60 p-4">
       <p className="text-sm font-semibold">{group.name.slice(PARTNER_PREFIX.length)}</p>
-      {error ? <p className="text-xs text-muted-foreground">{error}</p> : null}
+      {error ? <p className="text-sm text-muted-foreground">{error}</p> : null}
       {view ? (
         <p role="status" className="text-sm text-muted-foreground">
           {friends.length ? `${friends.join(" and ")} prayed for you today.` : "Your partner hasn't marked prayer yet today."}

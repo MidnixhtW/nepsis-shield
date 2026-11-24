@@ -134,7 +134,7 @@ export function RopeTrack({
       >
         {knots}
       </div>
-      <p aria-hidden className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-xs text-muted-foreground">
+      <p aria-hidden className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-sm text-muted-foreground">
         {locked ? "" : "Pull down"}
       </p>
     </div>

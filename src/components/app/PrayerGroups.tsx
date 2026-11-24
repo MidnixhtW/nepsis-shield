@@ -69,7 +69,7 @@ async function shareInvite(group: { id: string; name: string }) {
 
 function PrivacyNote() {
   return (
-    <p className="flex items-start gap-2 text-xs leading-relaxed text-muted-foreground">
+    <p className="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
       <Lock aria-hidden className="mt-0.5 h-3.5 w-3.5 shrink-0" />
       <span>
         Anyone with a group's link can join it and read it. Our server keeps the group's name, the requests you add, and the days you mark prayer, each with the first name you choose. Requests are deleted after 30 days, and a group left unused for 90 days is deleted.{" "}
@@ -131,7 +131,7 @@ export function PrayerGroups() {
           {groups.map((group) => (
             <Card key={group.id} className="flex flex-col rounded-3xl border p-5">
               <h3 className="text-lg font-semibold tracking-tight">{group.name}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">You pray here as {group.memberName}{group.adminKey ? " · you started this group" : ""}</p>
+              <p className="mt-1 text-sm text-muted-foreground">You pray here as {group.memberName}{group.adminKey ? " · you started this group" : ""}</p>
               <Button type="button" variant="outline" className="mt-4 w-fit rounded-full" onClick={() => setParam("group", group.id)}>
                 <Users className="mr-2 h-4 w-4" /> Open {group.name}
               </Button>

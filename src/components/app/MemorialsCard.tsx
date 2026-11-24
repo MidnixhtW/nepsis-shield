@@ -103,7 +103,7 @@ export function MemorialsCard({ today }: { today: Date }) {
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         Pray for them by name: “Give rest, O Lord, to the soul of Thy servant.” Ask your priest about a memorial service, and bring kolyva if your parish keeps the custom.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">

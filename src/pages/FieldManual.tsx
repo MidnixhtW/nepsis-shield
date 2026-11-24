@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { LOOK_AROUND_STATE } from "@/lib/appEvents";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   AlertTriangle,
   Ambulance,
@@ -14,6 +14,7 @@ import {
   Map,
   MoonStar,
   Radio,
+  Search,
   Shield,
   ShieldCheck,
   Sun,
@@ -21,6 +22,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import { DutyModeCard } from "@/components/app/DutyModeCard";
+import { CrisisResources } from "@/components/app/CrisisResources";
+import { Input } from "@/components/ui/input";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,7 +35,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
-import { responderModeAccentClasses, responderModeLabels, type ResponderMode } from "@/lib/responderMode";
+import { responderModeAccentClasses, responderModeLabels, useResponderMode, type ResponderMode } from "@/lib/responderMode";
 import { showError, showSuccess } from "@/utils/toast";
 import { PageContainer } from "@/components/app/PageContainer";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
@@ -191,20 +194,34 @@ function QuickCard({ title, description, icon }: { title: string; description: s
         <span className="icon-medallion h-10 w-10">{icon}</span>
         <div>
           <p className="text-sm font-semibold leading-tight">{title}</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
         </div>
       </div>
     </div>
   );
 }
 
+// Text a search can match, so "angry", "night shift" or "after a call" finds the right card.
+function haystack(...parts: Array<string | string[]>) {
+  return parts.flat().join(" ").toLowerCase();
+}
+
 export default function FieldManual() {
+  const [query, setQuery] = useState("");
+  const [mode] = useResponderMode();
+  const q = query.trim().toLowerCase();
+  const shownEntries = q ? entries.filter((e) => haystack(e.title, e.subtitle, e.prayer, e.practice).includes(q)) : entries;
+  const shownRoles = q
+    ? roleSections.filter((r) => haystack(r.title, r.focus, r.prayer, r.checklist, responderModeLabels[r.mode]).includes(q))
+    : roleSections;
+  const nothing = q && !shownEntries.length && !shownRoles.length;
+
   return (
     <PageContainer width="wide">
       <PremiumPageHeader
         eyebrow="Life & service guide"
         title="Orthodox Life & Service Guide"
-        description="Prayers, checklists, and daily practices for ordinary life, families, military, first responders, public safety, medical teams, and chaplains."
+        description="Short prayers and checklists for ordinary life, families, military, first responders, public safety, medical teams and chaplains."
         icon={<Crosshair className="h-5 w-5" />}
         actions={
           <>
@@ -215,144 +232,108 @@ export default function FieldManual() {
       />
 
       <div className="premium-card-stack mt-5">
-
-        <Card className="ornate-card">
-          <div className="relative overflow-hidden sacred-surface field-grid">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background/30 to-accent/15" />
-            <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full border border-primary/20" />
-            <OrthodoxCrossIcon className="absolute -right-8 bottom-2 h-44 w-44 text-primary/10" />
-            <div className="relative p-5 sm:p-7">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="rounded-full border border-primary/20 bg-primary/15 px-3 py-1 text-xs font-bold text-primary shadow-sm">
-                  <Shield className="mr-1 h-3.5 w-3.5" /> Service Orthodox rhythm
-                </Badge>
-                <Badge className="rounded-full border border-border/60 bg-background/60 px-3 py-1 text-xs font-semibold text-muted-foreground shadow-sm backdrop-blur">
-                  Copyable daily reference
-                </Badge>
-
-              </div>
-              <h2 className="mt-4 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">
-                Keep the watch. Guard the heart. Serve in Christ.
-              </h2>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                These are original short prayers and practical prompts for ordinary days and high-pressure moments. They support prayer and reflection; they do not replace emergency procedures, pastoral care, professional care, or clinical support.
-
-              </p>
-              <div className="my-6 h-px gold-hairline" />
-              <div className="grid gap-3 md:grid-cols-3">
-                <QuickCard title="Role-specific" description="Open the section for your occupation and copy a compact brief." icon={<BookOpen className="h-5 w-5" />} />
-                <QuickCard title="Short enough for daily use" description="Prayer, focus, and checklist without long reading." icon={<UsersRound className="h-5 w-5" />} />
-
-                <QuickCard title="Care-aware" description="Prayer belongs with priest, chaplain, clinician, and trusted support when needed." icon={<Map className="h-5 w-5" />} />
-              </div>
-            </div>
+        {/* Search first: someone under pressure should reach their card in two taps, not by scrolling. */}
+        <Card className="ornate-card p-4 sm:p-5">
+          <label htmlFor="manual-search" className="text-base font-semibold">What do you need right now?</label>
+          <div className="relative mt-2">
+            <Search aria-hidden className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="manual-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Try: anger, fear, grief"
+              className="h-12 rounded-2xl pl-10 text-base"
+              autoComplete="off"
+            />
           </div>
+          {q ? (
+            <p role="status" className="mt-2 text-sm text-muted-foreground">
+              {nothing ? "Nothing matches. Try a simpler word, or open the prayer book." : `${shownEntries.length + shownRoles.length} found`}
+            </p>
+          ) : null}
         </Card>
 
-        <DutyModeCard />
+        {shownEntries.length ? (
+          <Card className="ornate-card p-5">
+            <h2 className="text-xl font-bold tracking-tight">Situations</h2>
+            <p className="mt-1 text-base text-muted-foreground">Open the one you are in. A prayer, then what to do.</p>
+            <Accordion type="single" collapsible className="relative mt-4 w-full" defaultValue={q && shownEntries.length === 1 ? shownEntries[0].id : undefined} key={`entries-${q}`}>
+              {shownEntries.map((entry, index) => (
+                <AccordionItem key={entry.id} value={entry.id} className={index === 0 ? "border-none" : "mt-3 border-none"}>
+                  <AccordionTrigger className="min-h-12 rounded-2xl border border-border/60 bg-background/55 px-4 text-left text-base shadow-sm hover:border-primary/25 hover:bg-background/75 hover:no-underline">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary/10">{entry.icon}</span>
+                      <span>{entry.title}</span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-3">
+                    <div className="grid gap-3 rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm">
+                      <div>
+                        <p className="text-sm font-semibold text-muted-foreground">{entry.subtitle}</p>
+                        <p className="scripture-text mt-2 text-lg leading-relaxed text-foreground/90">{entry.prayer}</p>
+                      </div>
+                      <div className="rounded-2xl border border-border/60 bg-muted/25 p-4">
+                        <p className="text-sm font-bold text-primary">Practice</p>
+                        <ol className="mt-2 list-decimal space-y-1.5 pl-5 text-base leading-relaxed text-foreground/85">
+                          {entry.practice.map((item) => <li key={item}>{item}</li>)}
+                        </ol>
+                      </div>
+                      <Button type="button" variant="outline" className="w-fit rounded-2xl border-border/60" onClick={() => copyText(entry.title, `${entry.title}\n\n${entry.prayer}\n\nPractice:\n${entry.practice.map((item, i) => `${i + 1}. ${item}`).join("\n")}`)}>
+                        Copy prayer
+                      </Button>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </Card>
+        ) : null}
+
+        {shownRoles.length ? (
+          <Card className="ornate-card p-5">
+            <h2 className="text-xl font-bold tracking-tight">Briefs by role</h2>
+            <p className="mt-1 text-base text-muted-foreground">Daily, before a shift, or after a call. Yours is open.</p>
+            <Accordion type="single" collapsible className="mt-4 w-full" defaultValue={q && shownRoles.length === 1 ? shownRoles[0].mode : mode} key={`roles-${q}`}>
+              {shownRoles.map((section, index) => {
+                const theme = responderModeAccentClasses[section.mode];
+                const copy = `${section.title}\n${section.focus}\n\nPrayer:\n${section.prayer}\n\nChecklist:\n${section.checklist.map((item, i) => `${i + 1}. ${item}`).join("\n")}`;
+                return (
+                  <AccordionItem key={section.mode} value={section.mode} className={index === 0 ? "border-none" : "mt-3 border-none"}>
+                    <AccordionTrigger className="min-h-12 rounded-2xl border border-border/60 bg-background/55 px-4 text-left text-base shadow-sm hover:no-underline">
+                      <span className="inline-flex items-center gap-2">
+                        <span className={cn("grid h-8 w-8 shrink-0 place-items-center rounded-xl", theme.icon)}>{section.icon}</span>
+                        <span>{responderModeLabels[section.mode]}</span>
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-3">
+                      <div className={cn("rounded-3xl border p-4 shadow-sm", theme.card)}>
+                        <h3 className="text-lg font-semibold tracking-tight">{section.title}</h3>
+                        <p className="mt-1 text-base leading-relaxed text-foreground/85">{section.focus}</p>
+                        <blockquote className={cn("scripture-text mt-3 rounded-2xl border p-3 text-lg leading-relaxed", theme.soft)}>{section.prayer}</blockquote>
+                        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-base leading-relaxed text-foreground/85">
+                          {section.checklist.map((item) => <li key={item}>{item}</li>)}
+                        </ul>
+                        <Button type="button" size="sm" className={cn("mt-3 rounded-2xl", theme.button)} onClick={() => copyText(section.title, copy)}>
+                          Copy brief
+                        </Button>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </Card>
+        ) : null}
+
+        {!q ? <DutyModeCard /> : null}
 
         <Card className="ornate-card p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-primary">Mode sections</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight">Life and service briefs</h2>
-              <p className="mt-1 text-sm text-muted-foreground">Use these as quick daily, pre-shift, or post-call references.</p>
-
-            </div>
-            <div className="icon-medallion h-11 w-11"><Crosshair className="h-5 w-5" /></div>
-          </div>
-          <div className="my-4 h-px gold-hairline" />
-          <div className="grid gap-3 lg:grid-cols-2">
-            {roleSections.map((section) => {
-              const theme = responderModeAccentClasses[section.mode];
-              const copy = `${section.title}\n${section.focus}\n\nPrayer:\n${section.prayer}\n\nChecklist:\n${section.checklist.map((item, index) => `${index + 1}. ${item}`).join("\n")}`;
-              return (
-                <div key={section.mode} className={cn("rounded-3xl border p-4 shadow-sm", theme.card)}>
-                  <div className="flex items-start gap-3">
-                    <span className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-2xl", theme.icon)}>{section.icon}</span>
-                    <div className="min-w-0 break-words">
-                      <Badge className={cn("max-w-full whitespace-normal rounded-full border px-3 py-1 text-left text-xs font-bold leading-tight", theme.badge)}>{responderModeLabels[section.mode]}</Badge>
-                      <h3 className="mt-2 text-lg font-semibold tracking-tight">{section.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{section.focus}</p>
-                    </div>
-                  </div>
-                  <blockquote className={cn("mt-3 rounded-2xl border p-3 text-sm leading-relaxed", theme.soft)}>{section.prayer}</blockquote>
-                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
-                    {section.checklist.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <Button type="button" size="sm" className={cn("mt-3 rounded-2xl", theme.button)} onClick={() => copyText(section.title, copy)}>
-                    Copy brief
-                  </Button>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-
-        <Card className="ornate-card p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-primary">Ready reference</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight">Prayers for daily life and pressure</h2>
-
-              <p className="mt-1 text-sm text-muted-foreground">Open the situation you need. Keep it simple and attentive.</p>
-            </div>
-            <div className="icon-medallion h-11 w-11"><OrthodoxCrossIcon className="h-6 w-6" /></div>
-          </div>
-          <div className="my-4 h-px gold-hairline" />
-          <Accordion type="single" collapsible className="relative w-full">
-            {entries.map((entry, index) => (
-              <AccordionItem key={entry.id} value={entry.id} className={index === 0 ? "border-none" : "mt-3 border-none"}>
-                <AccordionTrigger className="rounded-2xl border border-border/60 bg-background/55 px-4 text-left shadow-sm backdrop-blur transition-colors hover:border-primary/25 hover:bg-background/75 hover:no-underline">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary/10">{entry.icon}</span>
-                    <span>{entry.title}</span>
-                  </span>
-                </AccordionTrigger>
-                <AccordionContent className="pt-3">
-                  <div className="grid gap-3 rounded-2xl border border-border/60 bg-background/70 p-4 shadow-sm backdrop-blur">
-                    <div>
-                      <p className="text-xs font-bold text-muted-foreground">{entry.subtitle}</p>
-                      <p className="mt-2 text-sm leading-relaxed text-foreground/90">{entry.prayer}</p>
-                    </div>
-                    <div className="rounded-2xl border border-border/60 bg-muted/25 p-4">
-                      <p className="text-xs font-bold text-primary">Practice</p>
-                      <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
-                        {entry.practice.map((item) => <li key={item}>{item}</li>)}
-                      </ul>
-                    </div>
-                    <Button type="button" variant="outline" className="w-fit rounded-2xl border-border/60" onClick={() => copyText(entry.title, `${entry.title}\n\n${entry.prayer}\n\nPractice:\n${entry.practice.map((item, i) => `${i + 1}. ${item}`).join("\n")}`)}>
-                      Copy prayer
-                    </Button>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </Card>
-
-        <Card className="ornate-card p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-xs font-bold text-primary">Care matters</p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight">Pastoral and safety note</h2>
-              <p className="mt-1 text-sm text-muted-foreground">This page supports prayer; it does not replace care.</p>
-            </div>
-            <div className="icon-medallion h-11 w-11"><ShieldCheck className="h-5 w-5" /></div>
-          </div>
-          <div className="my-4 h-px gold-hairline" />
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/60 bg-background/55 p-4 shadow-sm backdrop-blur">
-              <p className="text-sm leading-relaxed text-foreground/90">
-                For sacramental questions, confession preparation, fasting, Communion, or reception into Orthodoxy, speak with an Orthodox priest. If you are not Orthodox, you are welcome to use these prayers devotionally and to speak with your pastor or chaplain.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-icon-gold/[0.58] bg-secondary/[0.58] p-4 text-liturgical-warm shadow-sm backdrop-blur dark:text-liturgical-warm">
-              <p className="text-sm leading-relaxed">
-                If you may harm yourself or someone else, seek immediate help from emergency services, a trusted leader, chaplain, clinician, or crisis line. Prayer and professional care belong together.
-              </p>
-            </div>
-          </div>
+          <h2 className="text-xl font-bold tracking-tight">Prayer and care together</h2>
+          <p className="mt-2 text-base leading-relaxed text-foreground/90">
+            These are original short prayers and practical prompts. They support prayer; they do not replace emergency procedures, pastoral care, or clinical support. For confession, fasting, Communion or reception into Orthodoxy, speak with an Orthodox priest. If you are not Orthodox, you are welcome to use these prayers and to speak with your pastor or chaplain.
+          </p>
+          <CrisisResources />
         </Card>
       </div>
     </PageContainer>

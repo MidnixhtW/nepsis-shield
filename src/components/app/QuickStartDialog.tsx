@@ -313,11 +313,9 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const done = () => Boolean(getStoredItem<boolean>(ONBOARDING_KEY));
-  const [open, setOpen] = useState(() => {
-    if (done()) return false;
-    if ((location.state as { lookAround?: boolean } | null)?.lookAround) defer();
-    return !isDeferred();
-  });
+  // Never opens by itself: a first visit lands straight on Today, ready to pray, and the "Set up your daily rule" card
+  // under Begin opens this when the person chooses (as does the tutorial link in the menu).
+  const [open, setOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();

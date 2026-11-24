@@ -195,7 +195,7 @@ export function NameDayCard({ today }: { today: Date }) {
       </p>
       <h2 className="mt-2 text-2xl font-semibold tracking-tight">{patron.name}</h2>
       <p className="scripture-text mt-2 text-[1.05rem]">Holy {patron.name.replace(/^St\.?\s+/i, "")}, pray to God for me.</p>
-      <p className="mt-2 text-xs text-muted-foreground">
+      <p className="mt-2 text-sm text-muted-foreground">
         {status === "today"
           ? "Many years! A good day to go to the Divine Liturgy or Vespers, and to read the life of your patron."
           : "Prepare to keep the feast: read the life of your patron and plan to attend the services."}

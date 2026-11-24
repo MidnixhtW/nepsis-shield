@@ -187,7 +187,7 @@ export function OrthodoxDailyGuide() {
                         {t.sourceLabel} <ExternalLink className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
-                    <p className="break-words text-xs text-muted-foreground">
+                    <p className="break-words text-sm text-muted-foreground">
                       Source: "{t.sourceUrl}"
                     </p>
                   </div>
@@ -216,7 +216,7 @@ export function OrthodoxDailyGuide() {
                     Open catechism PDF <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <p className="break-words text-xs text-muted-foreground">
+                <p className="break-words text-sm text-muted-foreground">
                   Source: "https://www.oca.org/cdn/PDFs/2023-0609-EOCB.pdf"
                 </p>
               </div>

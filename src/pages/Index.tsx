@@ -8,6 +8,7 @@ import type { LearnTab } from "@/components/app/LearnHub";
 import type { PrayerTab } from "@/components/app/PrayerHub";
 import type { ReadTab } from "@/components/app/ReadHub";
 import { QuickStartDialog } from "@/components/app/QuickStartDialog";
+import { ChunkBoundary } from "@/components/app/ChunkBoundary";
 // Today is the first screen almost everyone sees, so it ships in the main bundle and never waits on a placeholder.
 import { TodayOverview } from "@/components/app/TodayOverview";
 import NotFound from "@/pages/NotFound";
@@ -208,9 +209,12 @@ const Index = () => {
     <QuickStartDialog>
     <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
       {/* The player loads on its own, so it never holds back the page behind the placeholder. */}
-      <Suspense fallback={null}>
-        <MonasticAudioPlayer />
-      </Suspense>
+      <ChunkBoundary fallback={null}>
+        <Suspense fallback={null}>
+          <MonasticAudioPlayer />
+        </Suspense>
+      </ChunkBoundary>
+      <ChunkBoundary resetKey={section}>
       <Suspense fallback={<SectionPlaceholder />}>
 
         <div className="grid gap-8 sm:gap-10 lg:gap-12">
@@ -233,6 +237,7 @@ const Index = () => {
 
         </div>
       </Suspense>
+      </ChunkBoundary>
     </AppShell>
     </QuickStartDialog>
   );

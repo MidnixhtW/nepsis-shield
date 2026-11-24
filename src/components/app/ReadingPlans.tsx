@@ -176,7 +176,7 @@ export function ReadingPlans() {
                         </Badge>
                       ) : null}
                     </div>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                       {p.description}
                     </p>
                     <p className="mt-2 text-sm font-semibold">Today: {p.todayLabel}</p>
@@ -257,7 +257,7 @@ export function ReadingPlans() {
           </div>
         </div>
 
-        <p className="mt-3 text-xs text-muted-foreground">
+        <p className="mt-3 text-sm text-muted-foreground">
           Note: reading plans are devotional helpers; adapt with your priest/spiritual father.
         </p>
       </Card>

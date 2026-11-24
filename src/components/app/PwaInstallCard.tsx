@@ -159,11 +159,11 @@ export function PwaInstallCard() {
       <div className="grid gap-3 text-sm sm:grid-cols-2">
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <p className="flex items-center gap-2 font-semibold"><Share2 className="h-4 w-4 text-primary" /> Manual web install</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{browserHint}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{browserHint}</p>
         </div>
         <div className="rounded-2xl border border-border/60 bg-background/45 p-4">
           <p className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-primary" /> Works offline</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             Install once with signal. After that, prayers and the next two weeks of readings open with no signal at all.
           </p>
         </div>

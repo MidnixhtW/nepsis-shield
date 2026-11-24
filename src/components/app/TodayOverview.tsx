@@ -141,7 +141,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
                         </div>
                       </details>
                     ))}
-                    <p className="text-xs text-muted-foreground">From orthocal.info. Saved on this device for the next two weeks, so the lives read with no signal.</p>
+                    <p className="text-sm text-muted-foreground">From orthocal.info. Saved on this device for the next two weeks, so the lives read with no signal.</p>
                   </div>
                 ) : null}
                 {fastRule ? (

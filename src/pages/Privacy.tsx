@@ -375,7 +375,7 @@ export default function Privacy() {
         icon={<Shield className="h-5 w-5" />}
         actions={<Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>}
       />
-      <p className="mx-1 mt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="mx-1 mt-3 text-sm leading-relaxed text-muted-foreground">
         <span className="font-semibold text-foreground">Independent project:</span> Nepsis Shield is not an official app of the Orthodox Church in America.
       </p>
 
@@ -397,7 +397,7 @@ export default function Privacy() {
           <div className="grid gap-3">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">What those services can observe</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 Requests are made from your browser. These providers may see your IP address and what you request (dates/passages). The app does not send your journal/confession notes to these services.
               </p>
             </div>
@@ -405,25 +405,25 @@ export default function Privacy() {
             <div className="grid gap-2 sm:grid-cols-2">
               <div className="rounded-2xl border border-border/60 bg-background p-4">
                 <p className="text-sm font-semibold">orthocal.info</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Daily calendar data (fasting/saints/readings).
                 </p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-background p-4">
                 <p className="text-sm font-semibold">bible-api.com</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Bible text for many references.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-background p-4">
                 <p className="text-sm font-semibold">bolls.life</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Bible text, including the NKJV and Brenton's Septuagint.
                 </p>
               </div>
               <div className="rounded-2xl border border-border/60 bg-background p-4">
                 <p className="text-sm font-semibold">github.com</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   The newest Android build, on the Install page only.
                 </p>
               </div>
@@ -431,33 +431,33 @@ export default function Privacy() {
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Visit counts on the website</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 nepsisshield.com counts page visits with Vercel Web Analytics so we know which parts of the app are used. It uses no cookies, does not identify you, and never sees anything you write or save in the app: prayers, names, notes, and progress stay on this device. Browsers that send Do Not Track or Global Privacy Control are not counted. The Android app does not count visits.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Prayer groups and prayer partners (only if you use them)</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 A prayer group (a prayer partner is simply a group of two) keeps these on our server: the group's name, the prayer requests you add, who marked prayer each day, and the first name you choose, shown with those. Anyone with the group's link can join and read it, so share the link only with people you trust. Requests are deleted after 30 days, daily prayer marks after 3 days, and a group left unused for 90 days is deleted. The group's creator can close it, which deletes everything in it at once. There are no accounts, and no email or phone number is ever asked for.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Prayer reminder notifications (only if you turn them on)</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 If you turn on prayer reminders in a browser or the web app, our server keeps what it needs to send them: the push address your browser gives us (it does not name you), your time zone, the reminder times you chose, and the date each reminder last went out. Turning every reminder off deletes it at once, and it is deleted automatically if you do not open the app for four months. The Android app's reminders never leave your phone.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Keeping a fast together (only if you tap "I'm keeping it")</p>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 During a fast, Today can show how many people are keeping it with the app. If you add yourself, the app sends which fast and a random number made on this device, tied to nothing about you. Only the total is ever shown, and the numbers are deleted about four months later.
               </p>
             </div>
 
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               Requests are sent with <span className="font-semibold text-foreground">no-referrer</span>, and copies are kept on this device so the same thing is not asked twice. The full details are in the{" "}
               <Link to="/privacy-policy" className="font-semibold text-foreground underline underline-offset-2">Privacy Policy</Link> and{" "}
               <Link to="/cookies" className="font-semibold text-foreground underline underline-offset-2">Cookie Policy</Link>.
@@ -508,7 +508,7 @@ export default function Privacy() {
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Export</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Choose a strong 12+ character passphrase. You'll need it to import later.
               </p>
               <div className="mt-3 grid gap-2">
@@ -529,7 +529,7 @@ export default function Privacy() {
 
             <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
               <p className="text-sm font-semibold">Import</p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Import will merge/overwrite matching keys in local storage.
               </p>
               <div className="mt-3 grid gap-2">
@@ -577,7 +577,7 @@ export default function Privacy() {
             </div>
           </div>
 
-          <p className="mt-4 text-xs text-muted-foreground">
+          <p className="mt-4 text-sm text-muted-foreground">
             Note: encryption is passphrase-based (PBKDF2 + AES-GCM). Short or common passphrases can be guessed offline if someone obtains browser storage or a backup file, so strong passphrases are required. If you forget the passphrase, the backup can't be recovered.
           </p>
 

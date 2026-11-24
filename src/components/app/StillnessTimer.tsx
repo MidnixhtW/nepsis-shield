@@ -122,7 +122,7 @@ export function StillnessTimer() {
               </Button>
             </div>
           </div>
-          <Progress value={pct} className="mt-3 h-2.5 rounded-full" />
+          <Progress value={pct} aria-label="Stillness time passed" className="mt-3 h-2.5 rounded-full" />
         </div>
       </div>
     </Card>

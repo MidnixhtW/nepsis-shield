@@ -105,7 +105,7 @@ export function DarkPrayerRope({
       <div className="pointer-events-none flex h-full flex-col items-center justify-between py-[max(2rem,env(safe-area-inset-top))] text-center">
         <p className="text-xs tracking-wide text-[#2a2a2a]">Tap anywhere · hold to leave</p>
         <p aria-live="off" className="text-5xl font-light tabular-nums text-[#262626]">{showCount ? (shownLabel ?? count) : ""}</p>
-        <p className="text-xs text-[#2a2a2a]">{footer ?? `A pulse every ${every}`}</p>
+        <p className="text-sm text-[#2a2a2a]">{footer ?? `A pulse every ${every}`}</p>
       </div>
       <button
         type="button"

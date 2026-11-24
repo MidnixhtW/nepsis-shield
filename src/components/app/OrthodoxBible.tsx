@@ -523,7 +523,7 @@ export function OrthodoxBible() {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Bible text comes from bible-api.com and bolls.life. New King James Version® copyright © 1982 by Thomas Nelson. Brenton's Septuagint (1851), the KJV, the WEB and the Douay-Rheims are in the public domain.
           </p>
         </div>
@@ -545,7 +545,7 @@ export function OrthodoxBible() {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium">Remember on this device</p>
-              <p className="text-xs text-muted-foreground">Last read auto-expires after 30 days.</p>
+              <p className="text-sm text-muted-foreground">Last read auto-expires after 30 days.</p>
             </div>
             <Switch aria-label="Remember Bible reading on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
           </div>
@@ -553,7 +553,7 @@ export function OrthodoxBible() {
           <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-background px-4 py-3">
             <div>
               <p className="text-sm font-medium">Memorize mode</p>
-              <p className="text-xs text-muted-foreground">Hide verse numbers to focus.</p>
+              <p className="text-sm text-muted-foreground">Hide verse numbers to focus.</p>
             </div>
             <Switch aria-label="Bible memorize mode" checked={memorizeMode} onCheckedChange={setMemorizeMode} />
           </div>
@@ -669,8 +669,8 @@ export function OrthodoxBible() {
                         <ChevronRight aria-hidden="true" className="h-4 w-4" />
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground">{textAvailabilityNote}</p>
-                    <p className="text-xs text-muted-foreground">Tip: focus the reading text, then use J/K to change chapters.</p>
+                    <p className="text-sm text-muted-foreground">{textAvailabilityNote}</p>
+                    <p className="text-sm text-muted-foreground">Tip: focus the reading text, then use J/K to change chapters.</p>
                   </div>
                 </div>
 
@@ -748,7 +748,7 @@ export function OrthodoxBible() {
                       </Badge>
                     ) : null}
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Translation: "{browseQuery.data?.translation_id || translation}"
                   </p>
                 </div>
@@ -830,7 +830,7 @@ export function OrthodoxBible() {
                       }}
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     The default, LXX + NKJV, reads the Old Testament in the Septuagint (Brenton) and the New Testament in the NKJV, the pattern of the Orthodox Study Bible. Some Orthodox books may not be in every public text.
                   </p>
                 </div>
@@ -858,7 +858,7 @@ export function OrthodoxBible() {
                       {refSource === "bolls" ? "Source: bolls.life" : "Source: bible-api.com"}
                     </Badge>
                   </div>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Text source translation: "{refQuery.data?.translation_id || base}"
                   </p>
                 </div>
@@ -979,7 +979,7 @@ export function OrthodoxBible() {
             </a>
           </Button>
         </div>
-        <p className="mt-3 text-xs text-muted-foreground">
+        <p className="mt-3 text-sm text-muted-foreground">
           Source: "https://www.oca.org/questions/scripture/canon-of-scripture"
         </p>
       </Card>

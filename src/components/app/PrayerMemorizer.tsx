@@ -236,7 +236,7 @@ function SectionPractice({ prayer, section, onNext }: { prayer: PrayerToLearn; s
               <Check className="mr-2 h-4 w-4" />{level === 0 ? "I've read it" : "I said it"}
             </Button>
           </div>
-          {peek ? <p className="text-xs text-muted-foreground">Hide it, then say it once without looking to move on.</p> : null}
+          {peek ? <p className="text-sm text-muted-foreground">Hide it, then say it once without looking to move on.</p> : null}
         </>
       )}
     </div>

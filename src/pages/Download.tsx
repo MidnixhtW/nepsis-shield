@@ -36,7 +36,7 @@ function Step({ title, description }: { title: string; description: string }) {
       <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
       <div>
         <p className="text-sm font-semibold leading-tight">{title}</p>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; inst
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
             The code opens this page, so anyone can install the app on their own phone in a few taps.
           </p>
-          <p className="mt-3 break-all rounded-2xl border border-border/60 bg-background/50 px-3 py-2 text-xs text-muted-foreground">
+          <p className="mt-3 break-all rounded-2xl border border-border/60 bg-background/50 px-3 py-2 text-sm text-muted-foreground">
             {installPageUrl}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -113,7 +113,7 @@ function ApkDownloadCard() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-semibold">Nepsis Shield for Android</p>
-            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
               {APK_RELEASE_DATE}. Downloads from {APK_DOWNLOAD_HOST}.
             </p>
           </div>

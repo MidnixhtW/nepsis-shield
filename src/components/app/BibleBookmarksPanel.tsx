@@ -88,7 +88,7 @@ export function BibleBookmarksPanel({
             >
               <div>
                 <p className="text-sm font-semibold">{b.ref}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Base: {b.base.toUpperCase()} • {new Date(b.createdAt).toLocaleDateString()}
                 </p>
               </div>

@@ -49,7 +49,7 @@ export function WesternAdventCard({ today }: { today: Date }) {
         <figcaption className="text-sm font-semibold">Collect for {format(sunday, "MMMM d")}</figcaption>
         <p className="scripture-text mt-2 text-base leading-relaxed">{current.collect}</p>
       </figure>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         A Western custom, kept in Western Rite parishes and by Catholics. The Nativity Fast continues as usual.
       </p>
     </Card>

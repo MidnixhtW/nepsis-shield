@@ -1,4 +1,4 @@
-const CACHE_NAME = "nepsis-shield-pwa-v15";
+const CACHE_NAME = "nepsis-shield-pwa-v16";
 const APP_SHELL = [
   "/",
   "/today",
@@ -41,6 +41,19 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// The first visit loads its code before this worker takes over, so those files never pass through the fetch handler.
+// The page sends their addresses once the worker is ready, and they are kept here so the app still opens offline.
+self.addEventListener("message", (event) => {
+  const data = event.data;
+  if (!data || data.type !== "cache-urls" || !Array.isArray(data.urls)) return;
+  const urls = data.urls.filter((url) => typeof url === "string" && new URL(url, self.location.origin).origin === self.location.origin);
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(urls.map((url) => cache.match(url, { ignoreVary: true }).then((hit) => hit || cache.add(url).catch(() => {})))),
+    ),
+  );
+});
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
@@ -61,7 +74,7 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(async () => {
-          const cached = await caches.match(request);
+          const cached = await caches.match(request, { ignoreVary: true });
           return cached || caches.match("/today") || caches.match("/offline.html");
         }),
     );
@@ -69,7 +82,8 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
+    // ignoreVary: a script fetched by the page (with an Origin header) must still match the copy stored without one.
+    caches.match(request, { ignoreVary: true }).then((cached) => {
       const network = fetch(request)
         .then((response) => {
           if (response.ok) {

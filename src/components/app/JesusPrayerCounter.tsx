@@ -279,7 +279,7 @@ export function JesusPrayerCounter() {
               </>
             )}
             {waiting ? <HoldToContinue onDone={() => setHeldMarker(count)} /> : null}
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {pct}% of today's goal
               {saveEnabled ? (
                 <>
@@ -350,7 +350,7 @@ export function JesusPrayerCounter() {
               <Moon className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-sm font-semibold">Watchfulness mode</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   The screen goes fully black to keep your night vision and save battery. Tap anywhere for each knot, and
                   feel a firm pulse at every marker. Hold for a second to leave.
                 </p>
@@ -393,7 +393,7 @@ export function JesusPrayerCounter() {
             <RotateCcw className="mr-2 h-4 w-4" /> Reset for today
           </Button>
 
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Tip: + / - to adjust, R to reset. On supported phones, each prayer tap gives a soft vibration like a prayer rope bead.
           </p>
         </div>
@@ -417,11 +417,11 @@ export function JesusPrayerCounter() {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium">Remember on this device</p>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Stored locally. Daily counts auto-expire after 14 days.
               </p>
             </div>
-            <Switch checked={saveEnabled} onCheckedChange={setSaveEnabled} />
+            <Switch aria-label="Remember on this device" checked={saveEnabled} onCheckedChange={setSaveEnabled} />
           </div>
           {saveEnabled ? (
             <div className="mt-3">

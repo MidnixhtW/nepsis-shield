@@ -115,7 +115,7 @@ export function HymnsAndPropers() {
             </Button>
           </div>
 
-          <p className="break-words text-xs text-muted-foreground">
+          <p className="break-words text-sm text-muted-foreground">
             Sources: "{buildOcaDailyUrl(today)}" • "{formatGoarchChapelUrl(today)}" •
             "https://www.oca.org/saints/troparia" • "https://dcs.goarch.org/goa/dcs/dcs.html"
           </p>

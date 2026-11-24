@@ -33,6 +33,18 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/sw.js").then((registration) => {
       void refreshWebPushOnOpen(getStoredItem(REMINDER_PREFS_KEY));
+      // Hand the worker every script and style this first visit already loaded (plus Today, warmed on idle),
+      // so the app opens offline even if the person only ever saw the landing page.
+      navigator.serviceWorker.ready.then((ready) => {
+        const send = () => {
+          const urls = performance.getEntriesByType("resource").map((entry) => entry.name)
+            .filter((url) => url.startsWith(window.location.origin + "/assets/"));
+          ready.active?.postMessage({ type: "cache-urls", urls });
+        };
+        // Twice, so the tabs fetched on idle after the first screen are kept too.
+        setTimeout(send, 6000);
+        setTimeout(send, 20000);
+      }).catch(() => {});
       // Look for a new version whenever the app comes back to the screen, not only on a fresh load.
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") registration.update().catch(() => {});

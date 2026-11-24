@@ -230,7 +230,7 @@ function PatronDetail({ patron, today }: { patron: MyPatron; today: Date }) {
       <p className="text-muted-foreground">{patron.life}</p>
       <blockquote className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
         <p className="font-serif text-base italic">"{patron.line}"</p>
-        <p className="mt-1 text-xs text-muted-foreground">{patron.lineSource}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{patron.lineSource}</p>
       </blockquote>
       <p><span className="font-semibold">Today: </span>{patron.practice}</p>
       <p className="rounded-2xl border border-border/60 bg-background/55 p-4">{patron.prayer}</p>
@@ -253,7 +253,7 @@ function PatronShelf() {
     <div className="grid gap-4">
       <SectionCard title={isFeast ? "Feast of your patron" : "Today's patron"} icon={<Sparkles className="h-4 w-4" />}>
         <p className="text-base font-semibold">{patron.name}</p>
-        <p className="text-xs text-muted-foreground">{patron.title} · {feastLine(patron, today)}</p>
+        <p className="text-sm text-muted-foreground">{patron.title} · {feastLine(patron, today)}</p>
         <div className="mt-4">
           <PatronDetail patron={patron} today={today} />
         </div>

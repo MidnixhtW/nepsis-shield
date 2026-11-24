@@ -16,7 +16,7 @@ import { CommunionPrep } from "@/components/app/CommunionPrep";
 import { ServicesLibrary } from "@/components/app/ServicesLibrary";
 import { PrayerGroups } from "@/components/app/PrayerGroups";
 import { FamilyPrayer } from "@/components/app/FamilyPrayer";
-import { GroundMeNow } from "@/components/app/GroundMeNow";
+import { GroundMeNowSlim } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
 import { StationsGuide } from "@/components/app/StationsGuide";
 import { LectioDivina } from "@/components/app/LectioDivina";
@@ -104,7 +104,7 @@ const content: Record<PrayerTab, ReactNode> = {
   services: <ServicesLibrary />,
   groups: <PrayerGroups />,
   counter: (
-    <div className="grid gap-4 sm:gap-5"><GroundMeNow /><JesusPrayerCounter /><StillnessTimer /></div>
+    <div className="grid gap-4 sm:gap-5"><JesusPrayerCounter /><GroundMeNowSlim /><StillnessTimer /></div>
   ),
   sleep: <SleepMode />,
   prep: (
