@@ -46,6 +46,25 @@ export const SHARED_PRAYERS: SharedPrayer[] = [
 
 export const WESTERN_PRAYERS: SharedPrayer[] = [
   {
+    id: "memorare",
+    title: "The Memorare",
+    origin: "A Western prayer to the Theotokos from the late Middle Ages, popular with Catholics. Pray it as your parish allows.",
+    lines: [
+      "Remember, O most gracious Virgin Mary, that never was it known that anyone who fled to thy protection, implored thy help, or sought thine intercession was left unaided.",
+      "Inspired by this confidence, I fly unto thee, O Virgin of virgins, my Mother; to thee do I come, before thee I stand, sinful and sorrowful.",
+      "O Mother of the Word Incarnate, despise not my petitions, but in thy mercy hear and answer me. Amen.",
+    ],
+  },
+  {
+    id: "angel-of-god",
+    title: "Angel of God",
+    origin: "A Western prayer to the guardian angel, often the first prayer children learn.",
+    lines: [
+      "Angel of God, my guardian dear, to whom God's love commits me here,",
+      "ever this day be at my side, to light and guard, to rule and guide. Amen.",
+    ],
+  },
+  {
     id: "collect-for-purity",
     title: "Collect for Purity",
     origin: "From the Western Mass before the Schism; said at the start of the Liturgy of St. Tikhon in Western Rite parishes.",

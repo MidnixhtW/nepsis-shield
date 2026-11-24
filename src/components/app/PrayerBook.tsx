@@ -215,6 +215,12 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                 >
                   The Rosary, the Angelus and the Regina Caeli
                 </Link>
+                <Link
+                  to="/pray?tab=stations"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-border/60 px-4 text-sm font-semibold hover:border-accent/50 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  The Way of the Cross
+                </Link>
               </div>
             </AccordionContent>
           </AccordionItem>

@@ -21,7 +21,7 @@ export function FavoriteStar({ to, label, className }: { to: string; label?: str
         toggleFavorite({ ...item, label: name });
       }}
       className={cn(
-        "grid h-9 w-9 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "grid h-9 w-9 touch:h-11 touch:w-11 shrink-0 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         active && "text-accent",
         className,
       )}

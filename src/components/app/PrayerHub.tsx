@@ -18,14 +18,16 @@ import { PrayerGroups } from "@/components/app/PrayerGroups";
 import { FamilyPrayer } from "@/components/app/FamilyPrayer";
 import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { RosaryGuide } from "@/components/app/RosaryGuide";
+import { StationsGuide } from "@/components/app/StationsGuide";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
 
-export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary";
+export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations";
 
 // The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
 // though they keep their /pray?tab=... addresses so old links and favorites still work.
 const ROSARY_TILE = { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
+const STATIONS_TILE = { to: "/pray?tab=stations", label: "Way of the Cross", hint: "Fourteen stations, for Fridays and Lent", icon: ThreeBarCrossIcon };
 
 const launcher: LauncherGroup[] = [
   {
@@ -81,6 +83,7 @@ const titles: Record<PrayerTab, string> = {
   communion: "Holy Communion",
   journal: "Journal",
   rosary: "Rosary and Angelus",
+  stations: "Way of the Cross",
 };
 
 const content: Record<PrayerTab, ReactNode> = {
@@ -101,14 +104,15 @@ const content: Record<PrayerTab, ReactNode> = {
   communion: <CommunionPrep />,
   journal: <DailyReflection />,
   rosary: <RosaryGuide />,
+  stations: <StationsGuide />,
 };
 
 export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
   const { settings } = useSettings();
   if (!tab) {
-    // The Rosary is for Western Rite parishes, so it shows only when that is turned on in Settings.
+    // The Rosary and the Way of the Cross are for Western Rite parishes, so it shows only when that is turned on in Settings.
     const groups = settings.westernRite
-      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE] } : group))
+      ? launcher.map((group) => (group.title === "With the Church" ? { ...group, tiles: [...group.tiles, ROSARY_TILE, STATIONS_TILE] } : group))
       : launcher;
     return (
       <div className="grid min-w-0 gap-5">
