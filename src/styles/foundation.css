@@ -144,6 +144,18 @@ html:not([data-role]) .tactical-radar-field {
     transition-duration: 0.001ms !important;
   }
 
+  /* The phone's own "reduce motion" setting does the same as the in-app switch above. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .water-page {
       animation: water-page-rise 160ms ease-out both;

@@ -84,7 +84,7 @@ export function MonasticAudioPlayer() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="candlelight-card group flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left backdrop-blur-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35"
+          className="candlelight-card group flex w-full items-center gap-3 rounded-full border px-4 py-3 text-left backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-primary/35"
         >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-105">
             {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -179,7 +179,7 @@ export function MonasticAudioPlayer() {
                         key={option.id}
                         type="button"
                         className={cn(
-                          "rounded-2xl border px-3 py-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
+                          "rounded-2xl border px-3 py-2 text-sm font-semibold transition duration-200 hover:-translate-y-0.5",
                           active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 text-muted-foreground hover:border-primary/35 hover:text-primary",
                         )}
                         onClick={() => setAmbientTrack(active ? null : option)}
@@ -229,7 +229,7 @@ function ToolButton({ active, icon, label, onClick }: { active: boolean; icon: R
       type="button"
       onClick={onClick}
       className={cn(
-        "flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-2 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5",
+        "flex min-h-12 items-center justify-center gap-2 rounded-2xl border px-2 text-sm font-semibold transition duration-200 hover:-translate-y-0.5",
         active ? "border-primary/50 bg-primary/15 text-primary" : "border-primary/15 bg-background/35 text-muted-foreground hover:border-primary/35 hover:text-primary",
       )}
     >

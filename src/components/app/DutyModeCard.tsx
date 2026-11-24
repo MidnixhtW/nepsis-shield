@@ -356,7 +356,7 @@ export function DutyModeCard({ onOpenFieldManual }: { onOpenFieldManual?: () => 
                     type="button"
                     variant="outline"
                     className={cn(
-                      "tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left leading-tight transition-all duration-200",
+                      "tap h-auto min-h-16 justify-start whitespace-normal rounded-2xl px-3 py-2 text-left leading-tight transition duration-200",
                       selected ? item.theme.modeButtonActive : item.theme.modeButton,
                     )}
                     onClick={() => setMode(key)}

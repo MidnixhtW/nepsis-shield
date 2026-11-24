@@ -18,10 +18,10 @@ export function softHaptic() {
 
 export function knotHaptic() {
   if (Capacitor.isNativePlatform()) {
-    Haptics.impact({ style: ImpactStyle.Light }).catch(() => vibrate(8));
+    Haptics.impact({ style: ImpactStyle.Light }).catch(() => vibrate(12));
     return;
   }
-  vibrate(8);
+  vibrate(12);
 }
 
 export function markerHaptic() {
@@ -29,8 +29,8 @@ export function markerHaptic() {
     Haptics.impact({ style: ImpactStyle.Heavy })
       .then(() => new Promise((resolve) => setTimeout(resolve, 140)))
       .then(() => Haptics.impact({ style: ImpactStyle.Heavy }))
-      .catch(() => vibrate([60, 80, 60]));
+      .catch(() => vibrate([25, 40, 25]));
     return;
   }
-  vibrate([60, 80, 60]);
+  vibrate([25, 40, 25]);
 }

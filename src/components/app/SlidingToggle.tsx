@@ -63,7 +63,7 @@ export function SlidingToggle<T extends string>({
       {box ? (
         <span
           aria-hidden
-          className="absolute left-0 top-0 rounded-full bg-accent/15 ring-1 ring-accent/50 transition-[transform,width] duration-300 motion-reduce:transition-none"
+          className="absolute left-0 top-0 rounded-full bg-accent/15 ring-1 ring-accent/50 transition-transform duration-300 motion-reduce:transition-none"
           style={{
             width: box.width,
             height: box.height,

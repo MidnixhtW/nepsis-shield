@@ -184,7 +184,7 @@ function StepDots({ index }: { index: number }) {
         <span
           key={step}
           className={cn(
-            "h-1.5 rounded-full transition-all",
+            "h-1.5 rounded-full transition",
             i <= index ? "w-7 bg-primary" : "w-2.5 bg-primary/20",
           )}
         />
@@ -217,7 +217,7 @@ function SelectionCard({
       onClick={onClick}
       aria-pressed={multiple ? selected : undefined}
       className={cn(
-        "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition-all duration-200",
+        "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition duration-200",
         "bg-card/60 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
@@ -228,7 +228,7 @@ function SelectionCard({
         </span>
         <span
           className={cn(
-            "grid h-7 w-7 shrink-0 place-items-center rounded-full border transition-all",
+            "grid h-7 w-7 shrink-0 place-items-center rounded-full border transition",
             selected ? "bg-primary border-primary/50 text-primary-foreground" : "border-primary/20 bg-background/70 text-transparent",
           )}
         >

@@ -114,7 +114,7 @@ export function DivineLiturgyCompanion() {
                     Read full guide <ExternalLink className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
-                <Button type="button" variant="outline" className="btn-wrap rounded-2xl border-border/60 bg-background/55 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/75" onClick={() => playTrack(getSanctuaryTrack("byzantine-ison"))}>
+                <Button type="button" variant="outline" className="btn-wrap rounded-2xl border-border/60 bg-background/55 transition duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/75" onClick={() => playTrack(getSanctuaryTrack("byzantine-ison"))}>
                   Open chant mode <Music className="ml-2 h-4 w-4" />
                 </Button>
               </div>

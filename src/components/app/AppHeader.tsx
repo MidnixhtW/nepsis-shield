@@ -164,7 +164,7 @@ function HelpNowButton() {
           type="button"
           variant="ghost"
           aria-label={t("header.help.aria")}
-          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
+          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60 hover:text-foreground"
         >
           <LifeBuoy className="h-[18px] w-[18px] text-accent" />
           <span className="text-sm font-semibold">{t("header.help")}</span>
@@ -246,7 +246,7 @@ export function AppHeader() {
         <GroundResetButton
           variant="ghost"
           aria-label={t("header.reset.aria")}
-          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60"
+          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60 hover:text-foreground"
         >
           <HeartPulse className="h-[18px] w-[18px] text-accent" />
           <span className="hidden text-sm font-semibold sm:inline">Reset</span>
@@ -254,7 +254,7 @@ export function AppHeader() {
         <HelpNowButton />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
-            <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-full text-foreground hover:bg-muted/60">
+            <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-full text-foreground hover:bg-muted/60 hover:text-foreground">
               <Menu className="h-[18px] w-[18px]" />
 
               <span className="sr-only">{t("header.menu")}</span>
