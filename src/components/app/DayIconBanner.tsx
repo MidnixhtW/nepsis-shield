@@ -45,14 +45,14 @@ export function DayIconBanner({
           src={icon.imageUrl}
           alt={icon.alt}
           onError={() => setFailed(true)}
-          className="mx-auto h-auto max-h-[min(13rem,26vh)] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
+          className="mx-auto h-auto max-h-[min(13rem,26vh)] shortphone:max-h-[20vh] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
         />
       ) : null}
-      <h1 className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>
+      <h1 className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight shortphone:mt-2 shortphone:text-2xl sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>
         {heading}
       </h1>
       {line ? <p className="scripture-text mx-auto mt-2 max-w-xl text-balance text-base text-foreground/85">{line}</p> : null}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-foreground/75">
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-foreground/75 shortphone:mt-1">
         <ShareCardButton
           card={{
             eyebrow: format(today, "EEEE, MMMM d"),

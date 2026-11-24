@@ -114,5 +114,8 @@ export default {
     tailwindcssAnimate,
     // touch: styles for finger input only (phones, tablets), so tap targets can grow to 44px without changing the mouse layout.
     plugin(({ addVariant }) => addVariant("touch", "@media (pointer: coarse)")),
+    // shortphone: small phones (narrow and under 760px tall), where Today tightens so Begin and the shield prayers fit
+    // on the first screen.
+    plugin(({ addVariant }) => addVariant("shortphone", "@media (max-width: 639px) and (max-height: 760px)")),
   ],
 } satisfies Config;

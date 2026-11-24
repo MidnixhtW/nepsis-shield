@@ -52,13 +52,13 @@ export function PrayNowCard() {
 
   return (
     <section aria-labelledby="pray-now-title" className="px-1 text-center">
-      <h2 id="pray-now-title" className="text-3xl text-cinnabar sm:text-4xl">
+      <h2 id="pray-now-title" className="text-3xl text-cinnabar shortphone:text-2xl sm:text-4xl">
         {LABELS[time].title}
       </h2>
-      <p className="scripture-text mx-auto mt-2 max-w-md text-lg text-foreground/85">
+      <p className="scripture-text mx-auto mt-2 max-w-md text-lg text-foreground/85 shortphone:mt-1 shortphone:text-base">
         {done ? (next ? `Glory to God. ${LABELS[next].title} come later today.` : "Glory to God. Rest in peace tonight.") : LABELS[time].line}
       </p>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 shortphone:mt-3">
         <Button asChild className="h-12 rounded-full px-8 text-base font-semibold" variant={done ? "outline" : "default"}>
           <Link to={`/pray?tab=daily&begin=${time}`}>
             {done ? <Check className="mr-2 h-4 w-4" /> : null}
@@ -66,13 +66,13 @@ export function PrayNowCard() {
           </Link>
         </Button>
       </div>
-      <p className="mt-3 text-sm text-foreground/75">
+      <p className="mt-3 text-sm text-foreground/75 shortphone:mt-2">
         {MODE_NAMES[mode]}, {lengthFor(time, mode).replace(/^About/, "about").replace(/\.$/, "")}.{" "}
         <Link to="/pray?tab=daily" className="font-semibold text-accent underline-offset-2 hover:underline">
           Change length
         </Link>
       </p>
-      <div className="mt-4 text-left">
+      <div className="mt-4 text-left shortphone:mt-2">
         <ShieldTriggers />
       </div>
       <div className="mt-5 text-left">
