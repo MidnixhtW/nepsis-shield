@@ -39,7 +39,7 @@ export function WesternAdventCard({ today }: { today: Date }) {
       <div className="mt-3 flex items-center gap-4">
         <Wreath lit={week} />
         <div className="min-w-0">
-          <h2 className="text-xl text-cinnabar">{current.theme}</h2>
+          <h2 className="text-xl">{current.theme}</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Light {week === 1 ? "the first candle" : `${week} candles`}{current.candle === "rose" ? ", now with the rose candle for Gaudete" : ""} at evening prayer.
           </p>

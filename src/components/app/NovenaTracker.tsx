@@ -80,7 +80,7 @@ export function NovenaTracker() {
             <p className="text-sm font-semibold text-muted-foreground">
               {complete ? "Completed" : `Day ${Math.min(count + (prayedToday ? 0 : 1), DAYS)} of ${DAYS}`} · begun {format(new Date(`${novena.startedAt}T12:00:00`), "MMM d")}
             </p>
-            <h2 className="mt-1 text-xl text-cinnabar">{novena.intention}</h2>
+            <h2 className="mt-1 text-xl">{novena.intention}</h2>
             {novena.prayer ? <p className="mt-1 text-sm text-muted-foreground">Praying: {novena.prayer}</p> : null}
             <ol className="mt-4 flex gap-1.5" aria-label={`${count} of ${DAYS} days prayed`}>
               {Array.from({ length: DAYS }, (_, index) => (
@@ -105,7 +105,7 @@ export function NovenaTracker() {
 
       {novenas.length < MAX ? (
         <Card className="rounded-3xl p-5">
-          <h2 className="text-xl text-cinnabar">Begin a novena</h2>
+          <h2 className="text-xl">Begin a novena</h2>
           <form
             className="mt-3 grid gap-3"
             onSubmit={(event) => {

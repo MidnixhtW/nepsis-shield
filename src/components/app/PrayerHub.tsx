@@ -30,36 +30,36 @@ export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "ser
 
 // The starting screen: ways to pray, as tiles. Your own things (rule, names, journal, groups) live on Me,
 // though they keep their /pray?tab=... addresses so old links and favorites still work.
-const ROSARY_TILE = { to: "/pray?tab=rosary", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
-const COMPLINE_WEST_TILE = { to: "/pray?tab=compline-west", label: "Western Compline", hint: "The Western prayer before sleep", icon: MoonStar };
-const NOVENA_TILE = { to: "/pray?tab=novena", label: "Novenas", hint: "Nine days for one intention", icon: CenserIcon };
-const STATIONS_TILE = { to: "/pray?tab=stations", label: "Way of the Cross", hint: "Fourteen stations, for Fridays and Lent", icon: ThreeBarCrossIcon };
+const ROSARY_TILE = { to: "/pray?tab=rosary", art: "annunciation", label: "Rosary and Angelus", hint: "Western Rite devotions", icon: Flower2 };
+const COMPLINE_WEST_TILE = { to: "/pray?tab=compline-west", art: "dormition", label: "Western Compline", hint: "The Western prayer before sleep", icon: MoonStar };
+const NOVENA_TILE = { to: "/pray?tab=novena", art: "pentecost", label: "Novenas", hint: "Nine days for one intention", icon: CenserIcon };
+const STATIONS_TILE = { to: "/pray?tab=stations", art: "lamentation", label: "Way of the Cross", hint: "Fourteen stations, for Fridays and Lent", icon: ThreeBarCrossIcon };
 
 const launcher: LauncherGroup[] = [
   {
     title: "Pray now",
     tiles: [
-      { to: "/pray?tab=daily&begin=morning", label: "Morning prayers", hint: "Offer the day to God", icon: Sun },
-      { to: "/pray?tab=daily&begin=evening", label: "Evening prayers", hint: "Give thanks, ask forgiveness", icon: Sunset },
-      { to: "/pray?tab=daily&begin=night", label: "Night prayers", hint: "Into Thy hands, O Lord", icon: MoonStar },
-      { to: "/pray?tab=counter", label: "Jesus Prayer", hint: "Prayer rope and stillness", icon: PrayerRopeIcon },
-      { to: "/pray?tab=lectio", label: "Lectio Divina", hint: "Pray slowly with today's Gospel", icon: GospelBookIcon },
+      { to: "/pray?tab=daily&begin=morning", art: "pantocrator", label: "Morning prayers", hint: "Offer the day to God", icon: Sun },
+      { to: "/pray?tab=daily&begin=evening", art: "theotokos", label: "Evening prayers", hint: "Give thanks, ask forgiveness", icon: Sunset },
+      { to: "/pray?tab=daily&begin=night", art: "lamentation", label: "Night prayers", hint: "Into Thy hands, O Lord", icon: MoonStar },
+      { to: "/pray?tab=counter", art: "ladder", label: "Jesus Prayer", hint: "Prayer rope and stillness", icon: PrayerRopeIcon },
+      { to: "/pray?tab=lectio", art: "transfiguration", label: "Lectio Divina", hint: "Pray slowly with today's Gospel", icon: GospelBookIcon },
     ],
   },
   {
     title: "With the Church",
     tiles: [
-      { to: "/pray?tab=services", label: "Services", hint: "Compline, the Hours, Akathist, Panikhida", icon: CenserIcon },
-      { to: "/pray?tab=prayers", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: GospelBookIcon },
-      { to: "/pray?tab=prep", label: "Confession", hint: "Examine the heart", icon: ThreeBarCrossIcon },
-      { to: "/pray?tab=communion", label: "Holy Communion", hint: "Before and after", icon: ChaliceIcon },
+      { to: "/pray?tab=services", art: "pentecost", label: "Services", hint: "Compline, the Hours, Akathist, Panikhida", icon: CenserIcon },
+      { to: "/pray?tab=prayers", art: "annunciation", label: "Prayer texts", hint: "Saints, meals, needs of the day", icon: GospelBookIcon },
+      { to: "/pray?tab=prep", art: "theophany", label: "Confession", hint: "Examine the heart", icon: ThreeBarCrossIcon },
+      { to: "/pray?tab=communion", art: "anastasis", label: "Holy Communion", hint: "Before and after", icon: ChaliceIcon },
     ],
   },
   {
     title: "At home",
     tiles: [
-      { to: "/pray?tab=family", label: "Family", hint: "Evening prayer and saint stories", icon: Home },
-      { to: "/pray?tab=sleep", label: "Sleep", hint: "Quiet prayers for the night", icon: Moon },
+      { to: "/pray?tab=family", art: "nativity", label: "Family", hint: "Evening prayer and saint stories", icon: Home },
+      { to: "/pray?tab=sleep", art: "dormition", label: "Sleep", hint: "Quiet prayers for the night", icon: Moon },
     ],
   },
 ];

@@ -83,7 +83,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           ) : null}
 
           <section aria-labelledby="today-readings" className="border-t border-border/60 px-1 py-7">
-            <h2 id="today-readings" className="text-2xl text-cinnabar">Today&rsquo;s readings</h2>
+            <h2 id="today-readings" className="text-2xl">Today&rsquo;s readings</h2>
             <DailyContentStatus date={today} data={q.data} failed={q.isError} refreshing={q.isFetching} onRetry={retry} />
             {q.isLoading ? (
               <Skeleton className="mt-4 h-20 w-full rounded-xl" />
@@ -109,7 +109,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
           </section>
 
           <section id="saints-fast" aria-labelledby="saints-fast-title" className="scroll-mt-24 border-t border-border/60 px-1 py-7">
-            <h2 id="saints-fast-title" className="text-2xl text-cinnabar">Saints and fast</h2>
+            <h2 id="saints-fast-title" className="text-2xl">Saints and fast</h2>
             {q.isLoading ? (
               <Skeleton className="mt-4 h-24 w-full rounded-xl" />
             ) : q.data ? (

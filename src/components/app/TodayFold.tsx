@@ -20,7 +20,7 @@ export function TodayFold({ title, hint, children }: { title: string; hint?: str
         className="flex min-h-11 w-full items-center gap-3 rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span className="min-w-0 flex-1">
-          <span className="block text-xl text-cinnabar">{title}</span>
+          <span className="block text-xl">{title}</span>
           {hint ? <span className="mt-0.5 block text-sm text-foreground/75">{hint}</span> : null}
         </span>
         <ChevronDown aria-hidden className="h-5 w-5 shrink-0 text-accent" />

@@ -42,7 +42,7 @@ export function WesternCompline() {
         <Progress value={((done ? WESTERN_COMPLINE.length : step + 1) / WESTERN_COMPLINE.length) * 100} aria-label={done ? "Compline complete" : `Part ${step + 1} of ${WESTERN_COMPLINE.length}`} className="h-1.5" />
         {done ? (
           <div className="py-8 text-center">
-            <h2 ref={headingRef} tabIndex={-1} className="text-3xl text-cinnabar focus:outline-none">Rest in peace</h2>
+            <h2 ref={headingRef} tabIndex={-1} className="text-3xl focus:outline-none">Rest in peace</h2>
             <p className="scripture-text mx-auto mt-4 max-w-md text-lg leading-relaxed">
               I will both lay me down in peace, and sleep: for thou, Lord, only makest me dwell in safety.
             </p>
@@ -53,7 +53,7 @@ export function WesternCompline() {
         ) : (
           <div className="mt-5">
             <p className="text-sm font-semibold text-muted-foreground tabular-nums">Part {step + 1} of {WESTERN_COMPLINE.length}</p>
-            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-2xl text-cinnabar focus:outline-none sm:text-3xl">{part.title}</h2>
+            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-2xl focus:outline-none sm:text-3xl">{part.title}</h2>
             <div className="scripture-text mt-4 space-y-3 text-lg leading-relaxed">
               {part.lines.map((line, index) => (
                 <p key={index}>{line}</p>

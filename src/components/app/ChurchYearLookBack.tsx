@@ -71,7 +71,7 @@ export function ChurchYearLookBack({ today, calendar }: { today: Date; calendar:
   return (
     <Card className="candlelight-card rounded-[2rem] border p-5 sm:p-7" aria-labelledby="church-year-title">
       <p className="text-sm text-muted-foreground">The Indiction, the beginning of the Church year</p>
-      <h2 id="church-year-title" className="mt-1 text-3xl text-cinnabar">
+      <h2 id="church-year-title" className="mt-1 text-3xl">
         Thou blessest the crown of the year with Thy goodness
       </h2>
       <div className="scripture-text mt-4 grid gap-2 text-lg">

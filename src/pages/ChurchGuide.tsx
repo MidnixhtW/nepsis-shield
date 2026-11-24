@@ -75,7 +75,7 @@ function Shell({ children }: { children: ReactNode }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-t border-border/60 py-7">
-      <h2 className="text-2xl text-cinnabar">{title}</h2>
+      <h2 className="text-2xl">{title}</h2>
       <div className="mt-3 grid gap-3 text-base leading-relaxed">{children}</div>
     </section>
   );

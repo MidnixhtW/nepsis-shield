@@ -56,7 +56,7 @@ export function StationsGuide() {
 
         {done ? (
           <div className="py-8 text-center">
-            <h2 ref={headingRef} tabIndex={-1} className="text-3xl text-cinnabar focus:outline-none">
+            <h2 ref={headingRef} tabIndex={-1} className="text-3xl focus:outline-none">
               Glory to Thy Passion, O Lord
             </h2>
             <p className="scripture-text mx-auto mt-4 max-w-md text-lg leading-relaxed">
@@ -69,7 +69,7 @@ export function StationsGuide() {
         ) : (
           <div className="mt-5">
             <p className="text-sm font-semibold text-muted-foreground tabular-nums">Station {index + 1} of {STATIONS.length}</p>
-            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-2xl text-cinnabar focus:outline-none sm:text-3xl">
+            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-2xl focus:outline-none sm:text-3xl">
               {station.title}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">{station.source}</p>

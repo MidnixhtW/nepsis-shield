@@ -81,7 +81,7 @@ export function LectioDivina() {
 
         {done ? (
           <div className="py-8 text-center">
-            <h2 ref={headingRef} tabIndex={-1} className="text-3xl text-cinnabar focus:outline-none">Carry the word with you</h2>
+            <h2 ref={headingRef} tabIndex={-1} className="text-3xl focus:outline-none">Carry the word with you</h2>
             <p className="scripture-text mx-auto mt-4 max-w-md text-lg leading-relaxed">
               Take the word or phrase into the day. Return to it when you wait, drive, or stand watch.
             </p>
@@ -94,7 +94,7 @@ export function LectioDivina() {
             <p className="text-sm font-semibold text-muted-foreground">
               Step {step + 1} of {STEPS.length} · <span lang="la">{current.latin}</span>
             </p>
-            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-3xl text-cinnabar focus:outline-none">{current.name}</h2>
+            <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-3xl focus:outline-none">{current.name}</h2>
             <p className="mt-2 text-base leading-relaxed text-foreground/90">{current.line}</p>
 
             <figure className="mt-5 rounded-2xl border border-border/60 bg-muted/20 p-4">

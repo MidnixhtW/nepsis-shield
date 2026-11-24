@@ -122,7 +122,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
     <div className="grid gap-4">
       {forNow ? (
         <Card aria-labelledby="for-now-title" className="candlelight-card rounded-3xl border p-5">
-          <h2 id="for-now-title" className="text-2xl font-semibold tracking-tight text-cinnabar">{forNow.title}</h2>
+          <h2 id="for-now-title" className="text-2xl font-semibold tracking-tight">{forNow.title}</h2>
           <p className="mt-2 text-base leading-relaxed text-foreground/85">{forNow.first}</p>
           <div className="mt-4 grid gap-3">
             {forNow.prayers.map((prayer) => (

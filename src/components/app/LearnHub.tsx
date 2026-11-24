@@ -34,52 +34,52 @@ export type LearnTab = "welcome" | "path" | "challenges" | "creed" | "byheart" |
 // and guide and serve both open the one page for faith at work and on duty.
 // For a Melkite or Byzantine Catholic (chosen in Settings), the path into Orthodoxy is not their next step, so Start
 // leads with their own path and the Orthodox road moves to the Library, kept for anyone who wants to read it.
-const BECOMING_ORTHODOX = { to: "/learn?tab=welcome", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon };
-const ORTHODOX_FOR_REFERENCE = { to: "/learn?tab=welcome", label: "How people become Orthodox", hint: "The Orthodox road, for reference", icon: ThreeBarCrossIcon };
+const BECOMING_ORTHODOX = { to: "/learn?tab=welcome", art: "theophany", label: "Becoming Orthodox", hint: "From a first visit to baptism", icon: ThreeBarCrossIcon };
+const ORTHODOX_FOR_REFERENCE = { to: "/learn?tab=welcome", art: "theophany", label: "How people become Orthodox", hint: "The Orthodox road, for reference", icon: ThreeBarCrossIcon };
 
 function buildLauncher(serving: boolean, philokalia: boolean, easternCatholic = false): LauncherGroup[] {
   return [
     {
       title: "Start",
       tiles: [
-        { to: "/learn?tab=path", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
+        { to: "/learn?tab=path", art: "ladder", label: "Your next step", hint: "A path for you, and small challenges", icon: Route },
         ...(easternCatholic
-          ? [{ to: "/learn?tab=liturgy", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
+          ? [{ to: "/learn?tab=liturgy", art: "anastasis", label: "Byzantine prayer life", hint: "The Divine Liturgy, step by step", icon: ChurchDomeIcon }]
           : [BECOMING_ORTHODOX]),
       ],
     },
     {
       title: "Faith",
       tiles: [
-        { to: "/learn?tab=byheart", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: GospelBookIcon },
-        { to: "/learn?tab=qa", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
+        { to: "/learn?tab=byheart", art: "pantocrator", label: "Learn by heart", hint: "The Creed, Our Father, Psalm 90 and more", icon: GospelBookIcon },
+        { to: "/learn?tab=qa", art: "annunciation", label: "Questions and answers", hint: "Icons, fasting, saints and more", icon: MessageCircleQuestion },
       ],
     },
     {
       title: "Worship",
       tiles: [
-        { to: "/learn?tab=liturgy", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
-        { to: "/learn?tab=hymns", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
+        { to: "/learn?tab=liturgy", art: "anastasis", label: "Divine Liturgy", hint: "Follow the service step by step", icon: ChurchDomeIcon },
+        { to: "/learn?tab=hymns", art: "nativity", label: "Hymns of the day", hint: "Troparia and kontakia", icon: Music },
       ],
     },
     {
       title: "Library",
       tiles: [
-        { to: "/learn?tab=stories", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: IconPanelIcon },
-        { to: "/saints", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
+        { to: "/learn?tab=stories", art: "george", label: "Saint stories", hint: "One-minute stories to swipe and hear", icon: IconPanelIcon },
+        { to: "/saints", art: "nicholas", label: "Saints", hint: "Lives, patrons and name days", icon: SaintHaloIcon },
         serving
-          ? { to: "/learn?tab=serve", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }
-          : { to: "/learn?tab=serve", label: "Faith at work", hint: "Prayer for work, stress and daily life", icon: Shield },
-        { to: "/learn?tab=parish", label: "Find a parish", hint: "Churches near you", icon: MapPin },
+          ? { to: "/learn?tab=serve", art: "michael", label: "On duty", hint: "Prayer before, during and after a shift", icon: Shield }
+          : { to: "/learn?tab=serve", art: "michael", label: "Faith at work", hint: "Prayer for work, stress and daily life", icon: Shield },
+        { to: "/learn?tab=parish", art: "dormition", label: "Find a parish", hint: "Churches near you", icon: MapPin },
         ...(easternCatholic ? [ORTHODOX_FOR_REFERENCE] : []),
-        ...(philokalia ? [{ to: "/philokalia", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
+        ...(philokalia ? [{ to: "/philokalia", art: "ladder", label: "Philokalia guide", hint: "The Fathers on watchfulness", icon: BookMarked }] : []),
       ],
     },
     {
       title: "More resources",
       tiles: [
-        { to: "/learn?tab=audio", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
-        { to: "/learn?tab=library", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
+        { to: "/learn?tab=audio", art: "theotokos", label: "Audio", hint: "Chant, talks and radio", icon: Headphones },
+        { to: "/learn?tab=library", art: "transfiguration", label: "OCA library", hint: "Articles on the OCA website", icon: Library },
       ],
     },
   ];

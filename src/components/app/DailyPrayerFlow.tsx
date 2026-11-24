@@ -389,7 +389,7 @@ export function DailyPrayerFlow() {
             <p className="text-xs font-semibold text-muted-foreground">
               Step {stepIndex + 1} of {steps.length}
             </p>
-            <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl text-cinnabar focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
+            <h3 ref={headingRef} tabIndex={-1} aria-label={`${done ? "Prayer complete. " : ""}Step ${stepIndex + 1} of ${steps.length}: ${current.title}`} className="mt-1 rounded text-2xl focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">{current.title}</h3>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {done ? (

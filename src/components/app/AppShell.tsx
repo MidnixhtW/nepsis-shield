@@ -38,8 +38,10 @@ function ShellNavigation({
     <nav
       aria-label={desktop ? t("nav.primary") : t("nav.primaryMobile")}
       className={cn(
-        "orthodox-nav-frame mx-auto grid w-full grid-cols-5 items-center gap-1 border border-primary/25 bg-card/90 p-1.5 shadow-xl",
-        desktop ? "max-w-[34rem] rounded-xl" : "max-w-[29rem] rounded-md",
+        // A plain row of five, as on a phone's own apps: no box, no filled block. The chosen tab is marked by its color
+        // and a short rule above it.
+        "mx-auto grid w-full grid-cols-5 items-center",
+        desktop ? "max-w-[34rem] gap-1" : "max-w-[29rem]",
       )}
     >
       <ToggleGroup
@@ -57,13 +59,14 @@ function ShellNavigation({
               value={key}
               aria-label={t(meta.aria)}
               className={cn(
-                "w-full justify-center whitespace-nowrap rounded-lg bg-transparent px-1 text-muted-foreground hover:bg-muted/70 hover:text-foreground data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:",
+                "relative w-full justify-center whitespace-nowrap rounded-none bg-transparent px-1 text-muted-foreground hover:bg-transparent hover:text-foreground data-[state=on]:bg-transparent data-[state=on]:text-foreground",
+                "before:absolute before:left-1/2 before:top-0 before:h-0.5 before:w-6 before:-translate-x-1/2 before:rounded-full before:bg-transparent before:transition-colors before:duration-300 data-[state=on]:before:bg-accent",
                 desktop ? "h-10" : "h-12",
               )}
             >
               <div className={cn("flex w-full items-center justify-center", desktop ? "gap-2" : "flex-col gap-1.5")}>
-                <Icon className={cn("h-[17px] w-[17px] shrink-0", active ? "text-primary-foreground" : "text-muted-foreground")} />
-                <span className={cn("font-bold leading-none", desktop ? "text-sm" : "text-xs", active ? "text-primary-foreground" : "text-muted-foreground")}>
+                <Icon className={cn("h-5 w-5 shrink-0", active ? "text-accent" : "text-muted-foreground")} />
+                <span className={cn("font-medium leading-none", desktop ? "text-sm" : "text-xs", active ? "text-foreground" : "text-muted-foreground")}>
                   {t(meta.label)}
                 </span>
               </div>
@@ -139,7 +142,7 @@ export function AppShell({
         <ReadAloudBar />
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-primary/25 bg-background/88 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-2 backdrop-blur-xl min-[1120px]:hidden">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-background/95 pb-[calc(0.35rem+env(safe-area-inset-bottom))] pl-[max(0.75rem,env(safe-area-inset-left))] pr-[max(0.75rem,env(safe-area-inset-right))] pt-2 backdrop-blur-xl min-[1120px]:hidden">
         <div className="pointer-events-auto mx-auto grid w-full max-w-[29rem] gap-2">
           <ReadAloudBar />
           <ShellNavigation section={section} items={items} onSectionChange={onSectionChange} />

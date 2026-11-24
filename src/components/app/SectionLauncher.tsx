@@ -12,7 +12,11 @@ export type LauncherTile = {
   icon: ComponentType<{ className?: string }>;
   /** How long it takes, as a short badge ("5 min"), when that is known. */
   duration?: string;
+  /** The icon that pictures it, from public/icons/tiles (e.g. "pantocrator"). Tiles with art are shown as pictures. */
+  art?: string;
 };
+
+export const tileArt = (key: string) => `/icons/tiles/${key}.webp`;
 
 export type LauncherGroup = { title: string; tiles: LauncherTile[] };
 
@@ -20,43 +24,71 @@ export type LauncherGroup = { title: string; tiles: LauncherTile[] };
 // compact list in a few groups. Stars live on each practice's own screen, so the list stays quiet.
 export function SectionLauncher({ groups, lead }: { groups: LauncherGroup[]; lead?: { eyebrow: string; tile: LauncherTile } | null }) {
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-9">
       {lead ? <LeadCard eyebrow={lead.eyebrow} tile={lead.tile} /> : null}
-      {groups.map((group) => (
-        <section key={group.title} aria-labelledby={groupId(group.title)}>
-          <h2 id={groupId(group.title)} className="mb-1.5 px-1 text-xs font-semibold text-muted-foreground">
-            {group.title}
-          </h2>
-          <ul className="grid overflow-hidden rounded-2xl border border-border/60 bg-card sm:grid-cols-2">
-            {group.tiles.map(({ to, label, hint, icon: Icon, duration }) => (
-              <li key={to} className="border-b border-border/40 last:border-b-0 sm:[&:nth-last-child(2):nth-child(odd)]:border-b-0">
-                <Link
-                  to={to}
-                  className="flex min-h-16 items-center gap-3 px-4 py-3 transition-colors hover:bg-accent/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-                >
-                  <Icon className="h-5 w-5 shrink-0 text-accent" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-semibold leading-tight">{label}</span>
-                    <span className="mt-0.5 block text-sm leading-snug text-muted-foreground">{hint}</span>
-                  </span>
-                  {duration ? <DurationBadge value={duration} /> : null}
-                  <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      {groups.map((group) =>
+        group.tiles.every((tile) => tile.art) ? <ArtShelf key={group.title} group={group} /> : <ListGroup key={group.title} group={group} />,
+      )}
     </div>
   );
 }
 
-// Hallow-style length badge: how long a practice takes, read at a glance before tapping.
-function DurationBadge({ value }: { value: string }) {
+// A row of icons you swipe through, the way a prayer book opens on a picture: the icon, its name, and how long it
+// takes. No line of explanation under each one; the picture and the name carry it.
+function ArtShelf({ group }: { group: LauncherGroup }) {
   return (
-    <span className="shrink-0 rounded-full border border-border/70 px-2.5 py-1 text-sm font-medium tabular-nums text-foreground/85">
-      {value}
-    </span>
+    <section aria-labelledby={groupId(group.title)}>
+      <h2 id={groupId(group.title)} className="mb-3 px-1 text-xl">
+        {group.title}
+      </h2>
+      <ul className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 pb-2 sm:scroll-px-0 [scrollbar-width:none] sm:-mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
+        {group.tiles.map((tile) => (
+          <li key={tile.to} className="w-[9.5rem] shrink-0 snap-start sm:w-44">
+            <Link
+              to={tile.to}
+              className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              <span className="relative block aspect-[3/4] overflow-hidden rounded-2xl bg-card">
+                <img
+                  src={tileArt(tile.art!)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.985] motion-reduce:transition-none"
+                />
+                <span aria-hidden className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
+              </span>
+              <span className="mt-2.5 block px-0.5 font-display text-base leading-snug">{tile.label}</span>
+              {tile.duration ? <span className="meta-label mt-0.5 block px-0.5 text-muted-foreground">{tile.duration}</span> : null}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function ListGroup({ group }: { group: LauncherGroup }) {
+  return (
+    <section aria-labelledby={groupId(group.title)}>
+      <h2 id={groupId(group.title)} className="mb-2 px-1 text-xl">
+        {group.title}
+      </h2>
+      <ul className="grid border-t border-border/80 sm:grid-cols-2">
+        {group.tiles.map(({ to, label, duration }) => (
+          <li key={to} className="border-b border-border/80">
+            <Link
+              to={to}
+              className="flex min-h-14 items-center gap-3 px-1 py-3 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+            >
+              <span className="min-w-0 flex-1 font-display text-lg leading-tight">{label}</span>
+              {duration ? <span className="meta-label shrink-0 text-muted-foreground">{duration}</span> : null}
+              <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -65,22 +97,35 @@ function groupId(title: string) {
   return `launcher-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 }
 
+// The prayer for this hour (or where you left off), large: its icon across the top, its name, and one way in.
 function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {
-  const Icon = tile.icon;
+  if (!tile.art) {
+    return (
+      <Link to={tile.to} className="block border-y border-border/80 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <span className="meta-label block text-muted-foreground">{eyebrow}</span>
+        <span className="mt-1 block font-display text-3xl leading-tight">{tile.label}</span>
+      </Link>
+    );
+  }
   return (
     <Link
       to={tile.to}
-      className="candlelight-card group flex items-center gap-4 rounded-[1.75rem] border p-5 transition-colors hover:border-accent/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group relative block overflow-hidden rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-accent/10 text-accent">
-        <Icon className="h-7 w-7" />
+      <span className="relative block aspect-[4/3] sm:aspect-[16/7]">
+        <img src={tileArt(tile.art)} alt="" decoding="async" className="h-full w-full object-cover object-[50%_22%]" />
+        <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#0D0C0B] via-[#0D0C0B]/55 to-transparent" />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-xs font-semibold text-accent">{eyebrow}</span>
-        <span className="mt-1 block text-xl font-semibold leading-tight tracking-tight">{tile.label}</span>
-        <span className="mt-0.5 block text-sm text-muted-foreground">{tile.hint}</span>
+      <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5">
+        <span className="min-w-0">
+          <span className="meta-label block text-[#F3EFEA]/80">{eyebrow}</span>
+          <span className="mt-1 block font-display text-3xl leading-tight text-[#F3EFEA]">{tile.label}</span>
+          {tile.duration ? <span className="meta-label mt-1 block text-[#F3EFEA]/80">{tile.duration}</span> : null}
+        </span>
+        <span className="shrink-0 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform duration-[240ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.985]">
+          Begin
+        </span>
       </span>
-      {tile.duration ? <DurationBadge value={tile.duration} /> : null}
     </Link>
   );
 }

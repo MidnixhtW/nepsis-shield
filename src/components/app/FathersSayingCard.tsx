@@ -6,7 +6,7 @@ export function FathersSayingCard({ today }: { today: Date }) {
   const saying = sayingForDay(today);
   return (
     <section className="border-t border-border/60 px-1 py-7" role="region" aria-label="A word from the Fathers">
-      <h2 className="text-2xl text-cinnabar">A word from the Fathers</h2>
+      <h2 className="text-2xl">A word from the Fathers</h2>
       <figure className="mt-3">
         <blockquote className="scripture-text text-xl leading-relaxed">{saying.text}</blockquote>
         <figcaption className="mt-2 text-sm font-semibold text-foreground/80">{saying.who}</figcaption>

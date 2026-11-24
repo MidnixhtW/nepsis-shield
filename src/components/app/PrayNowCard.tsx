@@ -43,7 +43,7 @@ export function PrayNowCard() {
 
   return (
     <section aria-labelledby="pray-now-title" className="px-1 text-center">
-      <h2 id="pray-now-title" className="text-3xl text-cinnabar shortphone:text-2xl sm:text-4xl">
+      <h2 id="pray-now-title" className="text-3xl shortphone:text-2xl sm:text-4xl">
         {LABELS[time].title}
       </h2>
       <p className="scripture-text mx-auto mt-2 max-w-md text-lg text-foreground/85 shortphone:mt-1 shortphone:text-base">

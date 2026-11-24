@@ -256,7 +256,7 @@ function KeepingTogether({ season }: { season: SeasonInstance }) {
 function FastEnding({ season, kept }: { season: SeasonInstance; kept: number[] }) {
   return (
     <Card className="candlelight-card rounded-[2rem] border p-5 text-center sm:p-7" aria-labelledby="season-ending-title">
-      <h2 id="season-ending-title" className="text-3xl text-cinnabar">
+      <h2 id="season-ending-title" className="text-3xl">
         {FEAST_AFTER_FAST[season.id] ?? season.name}
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">The {season.name} is complete.</p>

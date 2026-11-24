@@ -2,7 +2,6 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { format } from "date-fns";
 import {
   ArrowRight,
-  HeartPulse,
   HelpCircle,
   LifeBuoy,
   Menu,
@@ -21,7 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { GroundMeNow, GroundResetButton } from "@/components/app/GroundMeNow";
+import { GroundMeNow } from "@/components/app/GroundMeNow";
 import { NeedHelpNow } from "@/components/app/NeedHelpNow";
 import { ProtectionPsalm } from "@/components/app/ProtectionPsalm";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
@@ -241,16 +240,8 @@ export function AppHeader() {
       </Link>
 
       <div className="ml-auto flex shrink-0 items-center gap-2">
-        {/* Reset, Help and the menu share one quiet style. The reset stays one tap from every screen, for the moment
-            pressure rises; Help holds the crisis resources. */}
-        <GroundResetButton
-          variant="ghost"
-          aria-label={t("header.reset.aria")}
-          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60 hover:text-foreground"
-        >
-          <HeartPulse className="h-[18px] w-[18px] text-accent" />
-          <span className="hidden text-sm font-semibold sm:inline">Reset</span>
-        </GroundResetButton>
+        {/* Help and the menu only. The 60-second reset lives at the top of Help, one tap further, so the header stays
+            quiet; Help also holds the crisis resources. */}
         <HelpNowButton />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
