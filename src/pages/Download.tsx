@@ -1,234 +1,163 @@
-import { INSTALL_PAGE_URL } from "@/lib/publicSite";
-import { CURRENT_VERSION } from "@/lib/releaseInfo";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { LOOK_AROUND_STATE } from "@/lib/appEvents";
-import {
-  CheckCircle2,
-  Download as DownloadIcon,
-  Info,
-  QrCode,
-  ShieldCheck,
-  Smartphone,
-} from "lucide-react";
-import { ApkDownloadButton } from "@/components/app/ApkDownloadButton";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
-import { PwaInstallCard } from "@/components/app/PwaInstallCard";
-import { ShareDistributionCard } from "@/components/app/ShareDistributionCard";
-import { Badge } from "@/components/ui/badge";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { PageContainer } from "@/components/app/PageContainer";
-import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
-import {
-  APK_CHANNEL,
-  APK_CHANNEL_LABEL,
-  APK_DOWNLOAD_HOST,
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { clearInstallPrompt, isStandalone, subscribeToInstallPrompt, type BeforeInstallPromptEvent } from "@/components/app/PwaInstallCard";
+import { LOOK_AROUND_STATE } from "@/lib/appEvents";
+import { APK_DOWNLOAD_IS_DIRECT, APK_DOWNLOAD_URL } from "@/lib/apkDownload";
+import { INSTALL_PAGE_URL } from "@/lib/publicSite";
+import { showSuccess } from "@/utils/toast";
 
-  APK_DOWNLOAD_IS_DIRECT,
-  APK_RELEASE_DATE,
-  APK_VERSION,
-} from "@/lib/apkDownload";
+type Device = "iphone" | "android" | "desktop";
 
-function Step({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="flex gap-3 rounded-2xl border border-border/60 bg-background/45 p-4">
-      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-      <div>
-        <p className="text-sm font-semibold leading-tight">{title}</p>
-        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
-      </div>
-    </div>
-  );
+function detectDevice(): Device {
+  const ua = typeof navigator === "undefined" ? "" : navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(ua) || (ua.includes("macintosh") && typeof document !== "undefined" && "ontouchend" in document)) return "iphone";
+  if (ua.includes("android")) return "android";
+  return "desktop";
 }
 
-function QrDownloadCard({ qrCodeUrl, installPageUrl }: { qrCodeUrl: string; installPageUrl: string }) {
-  return (
-    <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-center">
-        <div>
-          <div className="flex items-center gap-2 text-primary">
-            <QrCode className="h-5 w-5" />
-            <p className="text-xs font-semibold">QR code</p>
-          </div>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Scan to install</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            The code opens this page, so anyone can install the app on their own phone in a few taps.
-          </p>
-          <p className="mt-3 break-all rounded-2xl border border-border/60 bg-background/50 px-3 py-2 text-sm text-muted-foreground">
-            {installPageUrl}
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button asChild className="rounded-2xl">
-              <a href={qrCodeUrl} download="nepsis-shield-install-qr.svg" target="_blank" rel="noopener noreferrer">
-                <DownloadIcon className="mr-2 h-4 w-4" /> Download QR
-              </a>
-            </Button>
-            <Button asChild variant="outline" className="rounded-2xl border-border/60">
-              <a href={installPageUrl} target="_blank" rel="noopener noreferrer">Open install page</a>
-            </Button>
-          </div>
-        </div>
+// What to tap, in the browser's own words, when it cannot offer the install itself.
+const STEPS: Record<Device, string[]> = {
+  iphone: ["Tap the Share button at the bottom of Safari.", "Scroll down and tap Add to Home Screen.", "Tap Add. Nepsis Shield is now on your home screen."],
+  android: ["Open the browser menu (the three dots at the top right).", "Tap Install app, or Add to Home screen.", "Tap Install. Nepsis Shield is now with your other apps."],
+  desktop: ["Look for the install icon at the right of the address bar.", "Click it, then Install.", "To put it on your phone, open this page there, or scan the code below."],
+};
 
-        <div className="qr-code-surface mx-auto w-full max-w-64 rounded-3xl border border-border/60 bg-white p-3 shadow-sm">
-          <img
-            src={qrCodeUrl}
-            alt="QR code that opens the Nepsis Shield install page"
-            className="aspect-square w-full rounded-2xl"
-          />
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-// The version people see: the one set for the Android build, else the app's own version (never a build label).
-const SHOWN_VERSION = APK_VERSION === "web-preview" ? CURRENT_VERSION : APK_VERSION;
-
-function ApkDownloadCard() {
-  return (
-    <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm sm:p-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <Badge className="rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
-          <Smartphone className="mr-1 h-3.5 w-3.5" /> Android only
-        </Badge>
-        <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          {APK_CHANNEL_LABEL} · v{SHOWN_VERSION}
-        </Badge>
-        <Badge className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
-          {APK_DOWNLOAD_IS_DIRECT ? "Ready to install" : "Coming soon"}
-        </Badge>
-      </div>
-
-      <h2 className="mt-4 text-2xl font-semibold tracking-tight">Android Direct Install (v{SHOWN_VERSION})</h2>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        {APK_CHANNEL === "release"
-          ? "Download the signed Android app and install it directly."
-          : "Optional. Most people only need the app above. On Android you can also install it directly: same app, works offline, and it updates as new versions come out."}
-      </p>
-
-      <Separator className="my-5" />
-
-      <div className="rounded-2xl border border-border/60 bg-background/60 p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold">Nepsis Shield for Android</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              {APK_RELEASE_DATE}. Downloads from {APK_DOWNLOAD_HOST}.
-            </p>
-          </div>
-          {APK_DOWNLOAD_IS_DIRECT ? (
-            <ApkDownloadButton className="rounded-2xl" label="Download APK" />
-          ) : (
-            <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 px-4 py-2 text-sm font-semibold text-muted-foreground">
-              Coming soon
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
-        <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          This file comes straight from the Nepsis Shield project. Because it is not from the Play Store, Android asks once to allow installs from your browser. That is normal, and you can turn it back off after.
-        </p>
-      </div>
-    </Card>
-  );
-}
-
+// Installing, one way for each device: the browser's own install where it offers one, otherwise three short steps.
+// The Android app file is a quiet link underneath, for those who want it.
 export default function Download() {
-  const installPageUrl = INSTALL_PAGE_URL;
-  // Made once from INSTALL_PAGE_URL and kept with the site, so showing it asks no other server.
-  const qrCodeUrl = "/install-qr.svg";
+  const [device, setDevice] = useState<Device>("desktop");
+  const [installed, setInstalled] = useState(false);
+  const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [stepsOpen, setStepsOpen] = useState(false);
+
+  useEffect(() => {
+    setDevice(detectDevice());
+    setInstalled(isStandalone());
+    const unsubscribe = subscribeToInstallPrompt(setPrompt);
+    const onInstalled = () => {
+      setInstalled(true);
+      clearInstallPrompt();
+    };
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      unsubscribe();
+      window.removeEventListener("appinstalled", onInstalled);
+    };
+  }, []);
+
+  async function install() {
+    if (!prompt) {
+      setStepsOpen(true);
+      return;
+    }
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    clearInstallPrompt();
+    if (choice.outcome === "accepted") showSuccess("Installing Nepsis Shield.");
+  }
+
+  const actionLabel = prompt ? "Install Nepsis Shield" : device === "desktop" ? "Install on this computer" : "Add to Home Screen";
+
+  async function share() {
+    const data = { title: "Nepsis Shield", text: "Orthodox prayer for every day. Free, no account, works with no signal.", url: INSTALL_PAGE_URL };
+    try {
+      if (navigator.share) {
+        await navigator.share(data);
+        return;
+      }
+      await navigator.clipboard.writeText(INSTALL_PAGE_URL);
+      showSuccess("Link copied.");
+    } catch {
+      // Closing the share sheet is not an error.
+    }
+  }
 
   return (
-    <PageContainer>
-      <PremiumPageHeader
-        eyebrow="Install & share"
-        title="Take Nepsis Shield with you"
-        description="Add it to your home screen in a few taps. It works offline and needs no account."
-        icon={<OrthodoxCrossIcon className="h-6 w-6" />}
-        actions={
-          <>
-            <Button asChild variant="outline" className="premium-action"><Link to="/today" state={LOOK_AROUND_STATE}>Back to app</Link></Button>
-            <Button asChild variant="outline" className="premium-action"><Link to="/about">About</Link></Button>
-          </>
-        }
-      />
+    <div className="min-h-dvh bg-background text-foreground">
+      <header className="mx-auto flex max-w-2xl items-center px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <Button asChild variant="ghost" className="rounded-full px-3">
+          <Link to="/today" state={LOOK_AROUND_STATE}>
+            <ArrowLeft aria-hidden className="h-4 w-4" /> Today
+          </Link>
+        </Button>
+      </header>
 
-      <div className="premium-card-stack mt-5">
+      <main id="main-content" className="mx-auto max-w-2xl px-5 pb-20">
+        <section className="pt-10 text-center sm:pt-16">
+          <h1 className="text-balance text-4xl leading-tight sm:text-5xl">Keep Nepsis Shield on your phone</h1>
+          <p className="scripture-text mx-auto mt-4 text-lg text-muted-foreground">
+            It opens from your home screen like any app, and the prayers and the next two weeks of the calendar are there with no signal.
+          </p>
 
-        <PwaInstallCard />
-        <QrDownloadCard qrCodeUrl={qrCodeUrl} installPageUrl={installPageUrl} />
-        <ApkDownloadCard />
-      </div>
+          <div className="mt-9 flex flex-col items-center gap-2">
+            {installed ? (
+              <>
+                <Button asChild className="h-14 rounded-full px-9 text-base font-semibold">
+                  <Link to="/today">Open today&rsquo;s prayers</Link>
+                </Button>
+                <p className="text-sm text-muted-foreground">It is already on this device.</p>
+              </>
+            ) : (
+              <Button type="button" onClick={() => void install()} className="h-14 rounded-full px-9 text-base font-semibold">
+                {actionLabel}
+              </Button>
+            )}
+            {APK_DOWNLOAD_IS_DIRECT && device !== "iphone" ? (
+              <a href={APK_DOWNLOAD_URL} className="inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+                Or download the Android app
+              </a>
+            ) : null}
+          </div>
+        </section>
 
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-base font-semibold tracking-tight">Install instructions</h2>
-              <p className="mt-1 text-sm text-muted-foreground">The web app is the simplest way, on any phone.</p>
+        <section aria-labelledby="share-title" className="mt-16 border-t border-border/80 pt-10">
+          <h2 id="share-title" className="text-2xl">Give it to someone</h2>
+          <p className="scripture-text mt-2 text-base text-muted-foreground">
+            Send the link, or let them scan the code from your screen. It opens this page on their phone.
+          </p>
+          <div className="mt-6 grid items-center gap-6 sm:grid-cols-[1fr_auto]">
+            <div className="flex flex-col items-start gap-2">
+              <Button type="button" variant="outline" onClick={() => void share()} className="h-12 rounded-full px-6">
+                Share the link
+              </Button>
+              <a href="/install-qr.svg" download="nepsis-shield-install-qr.svg" className="inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+                Save the code to print
+              </a>
             </div>
-            <Info className="h-5 w-5 text-muted-foreground" />
+            <img src="/install-qr.svg" alt="Code that opens the Nepsis Shield install page" className="h-36 w-36 rounded-xl bg-white p-2" />
           </div>
+        </section>
 
-          <Separator className="my-4" />
+        {APK_DOWNLOAD_IS_DIRECT ? (
+          <p className="mt-14 border-t border-border/80 pt-6 text-sm leading-relaxed text-muted-foreground">
+            The Android app comes straight from the project, outside the Play Store, so Android asks once to allow installs from your
+            browser. You can turn that back off afterward.
+          </p>
+        ) : null}
+      </main>
 
-          <div className="grid gap-3">
-            <Step
-              title="Web install"
-              description="Tap Install when your browser offers it, or use Add to Home Screen from the browser menu."
-            />
-            <Step
-              title="Share with someone"
-              description="Show or send the QR code; it opens this page on their phone."
-            />
-            <Step
-              title="Android public beta"
-              description="Optional. Download it on Android, open the file, and allow the install if Android asks."
-            />
-          </div>
-        </Card>
-
-        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-base font-semibold tracking-tight">Distribution checklist</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Use this as the handoff checklist before sending the app to a group.
-              </p>
-            </div>
-            <CheckCircle2 className="h-5 w-5 text-primary" />
-          </div>
-
-          <Separator className="my-4" />
-
-          <div className="grid gap-3">
-            <Step
-              title="Use QR for in-person rollout"
-              description="Print or text the QR image for parish, unit, station, or team distribution."
-            />
-            <Step
-              title="Share the install page for all devices"
-              description="The install page works on every device and keeps the web app and QR code together."
-            />
-            <Step
-              title="Point people to the web app first"
-              description="Offer the Android public beta to those who want it."
-            />
-            <Step
-              title="Tell users it is local-first"
-              description="Preferences stay on their device. External readings and links still need signal."
-            />
-          </div>
-        </Card>
-      </div>
-
-      <div className="mt-4">
-        <ShareDistributionCard />
-      </div>
-    </PageContainer>
+      <Dialog open={stepsOpen} onOpenChange={setStepsOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">{device === "desktop" ? "Install on this computer" : "Add to Home Screen"}</DialogTitle>
+            <DialogDescription>Three taps, once.</DialogDescription>
+          </DialogHeader>
+          <ol className="grid gap-4">
+            {STEPS[device].map((step, index) => (
+              <li key={step} className="flex gap-4">
+                <span className="font-display text-2xl leading-none text-accent tabular-nums">{index + 1}</span>
+                <span className="scripture-text text-base">{step}</span>
+              </li>
+            ))}
+          </ol>
+          <Button type="button" variant="outline" className="mt-2 h-12 rounded-full" onClick={() => setStepsOpen(false)}>
+            Done
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

@@ -7,6 +7,9 @@ export const RECENT_KEY = "recent-places:v1";
 const CHANGE_EVENT = "nepsis:recent-change";
 const MAX_RECENT = 6;
 
+// Set the first time someone opens the app itself, so the landing page sends them straight to Today after that.
+export const BEEN_HERE_KEY = "nepsis:been-here";
+
 export type RecentPlace = { to: string; label: string; area: string; at: number };
 
 // Today, Me and the Pray and Learn starting screens are home screens, not places someone goes back to.
@@ -42,6 +45,7 @@ export function getRecentPlaces(): RecentPlace[] {
 }
 
 export function recordVisit(pathname: string, search: string) {
+  if (!getStoredItem<boolean>(BEEN_HERE_KEY)) setStoredItem(BEEN_HERE_KEY, true);
   // A ?begin= link is removed as soon as the prayer opens; count the page it lands on, once.
   if (new URLSearchParams(search).has("begin")) return;
   const destination = matchDestination(pathname, search);

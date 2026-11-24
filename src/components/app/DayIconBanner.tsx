@@ -60,19 +60,16 @@ export function DayIconBanner({
       </Heading>
       {line ? <p className="scripture-text mx-auto mt-2 max-w-xl text-balance text-base text-foreground/85">{line}</p> : null}
       {fast || tone ? (
-        <ul aria-label="At a glance" className="mt-3 flex flex-wrap items-center justify-center gap-2 shortphone:mt-2">
+        // The day's rule and tone in small capitals, the way a printed Church calendar sets them under the feast.
+        <ul aria-label="At a glance" className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-muted-foreground shortphone:mt-2">
           {fast ? (
-            <li className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border/70 bg-card/70 px-3.5 text-sm font-medium text-foreground">
-              <span aria-hidden className={"h-2.5 w-2.5 rounded-full " + FAST_DOT[fast.kind]} />
+            <li className="meta-label inline-flex min-h-8 items-center gap-2">
+              <span aria-hidden className={"h-2 w-2 rounded-full " + FAST_DOT[fast.kind]} />
               <span className="sr-only">Fasting today: </span>
               {fast.label}
             </li>
           ) : null}
-          {tone ? (
-            <li className="inline-flex min-h-9 items-center rounded-full border border-border/70 bg-card/70 px-3.5 text-sm font-medium tabular-nums text-foreground">
-              Tone {tone}
-            </li>
-          ) : null}
+          {tone ? <li className="meta-label inline-flex min-h-8 items-center tabular-nums">Tone {tone}</li> : null}
         </ul>
       ) : null}
       <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-foreground/75 shortphone:mt-1">

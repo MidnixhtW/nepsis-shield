@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { showError, showSuccess } from "@/utils/toast";
 
-type BeforeInstallPromptEvent = Event & {
+export type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 };
@@ -24,18 +24,18 @@ if (typeof window !== "undefined") {
   });
 }
 
-function subscribeToInstallPrompt(listener: InstallPromptListener) {
+export function subscribeToInstallPrompt(listener: InstallPromptListener) {
   installPromptListeners.add(listener);
   listener(deferredInstallEvent);
   return () => installPromptListeners.delete(listener);
 }
 
-function clearInstallPrompt() {
+export function clearInstallPrompt() {
   deferredInstallEvent = null;
   installPromptListeners.forEach((listener) => listener(null));
 }
 
-function isStandalone() {
+export function isStandalone() {
   return window.matchMedia("(display-mode: standalone)").matches ||
     ("standalone" in window.navigator && Boolean((window.navigator as { standalone?: boolean }).standalone));
 }

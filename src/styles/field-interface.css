@@ -20,7 +20,7 @@
     background-position: center;
     background-size: auto, auto, 44px 44px, 44px 44px, auto;
     color: hsl(var(--foreground));
-    font-family: "Barlow", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-family: "Geist Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
     line-height: 1.55;
     letter-spacing: 0.006em;
   }

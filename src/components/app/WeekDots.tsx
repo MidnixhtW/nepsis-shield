@@ -10,7 +10,6 @@ export function WeekDots() {
     <Card className="rounded-3xl border p-5">
       <div className="flex items-baseline justify-between gap-3">
         <h3 className="text-xs font-semibold text-muted-foreground">This week</h3>
-        <p className="text-sm text-muted-foreground">{weekActiveDays} of 7 days</p>
       </div>
       <ol className="mt-4 grid grid-cols-7 gap-1 text-center" aria-label={`Prayed on ${weekActiveDays} of the last 7 days`}>
         {week.map((day) => (

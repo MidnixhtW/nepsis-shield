@@ -11,7 +11,6 @@ import {
 
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -181,9 +180,6 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
               Daily prayers in-app, plus official links for many occasions.
             </p>
           </div>
-          <Badge className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            Everyday
-          </Badge>
         </div>
 
         <Separator className="my-4" />

@@ -9,11 +9,14 @@ import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ONBOARDING_KEY } from "@/components/app/QuickStartDialog";
 import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import { getStoredItem } from "@/lib/deviceStorage";
+import { recommendedTime } from "@/content/dailyPrayerSteps";
+import { BEEN_HERE_KEY } from "@/lib/recentPlaces";
 
 // Someone who has set up their rule, or who opened the installed app, goes straight to Today.
 function shouldSkipHome() {
   if (Capacitor.isNativePlatform()) return true;
   if (getStoredItem<boolean>(ONBOARDING_KEY)) return true;
+  if (getStoredItem<boolean>(BEEN_HERE_KEY)) return true;
   try {
     return window.matchMedia("(display-mode: standalone)").matches;
   } catch {
@@ -88,15 +91,31 @@ const habits = [
   },
 ];
 
-// Today's icon and day, as the app shows them, so a first visit sees the real Church calendar rather than a picture of it.
-function TodayInTheChurch() {
+const BEGIN_LABEL = { morning: "Begin morning prayers", evening: "Begin evening prayers", night: "Begin night prayers" } as const;
+
+// The opening is today, as the Church keeps it: the day's icon and feast, the fast and tone, and one way to begin.
+// Shown once the page is running in the browser (the calendar is the visitor's own day); before that, and for search
+// engines, the plain statement of what the app is.
+function TodayHero() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  return mounted ? <TodayInTheChurchLive /> : null;
+  return mounted ? <TodayHeroLive /> : <HeroStatement />;
 }
 
-function TodayInTheChurchLive() {
+function HeroStatement() {
+  return (
+    <div className="mx-auto max-w-2xl px-5 pb-12 pt-12 text-center sm:pt-20">
+      <h1 className="text-balance text-4xl leading-[1.1] sm:text-6xl">Orthodox prayer for every day</h1>
+      <p className="scripture-text mx-auto mt-5 text-lg text-muted-foreground">
+        Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year.
+      </p>
+    </div>
+  );
+}
+
+function TodayHeroLive() {
   const { today, settings, query } = useDailyCalendar();
+  const time = recommendedTime(new Date());
   const readings = query.data
     ? [query.data.readings.epistle, query.data.readings.gospel]
         .filter(Boolean)
@@ -104,19 +123,23 @@ function TodayInTheChurchLive() {
         .join(" and ")
     : "";
   return (
-    <section aria-labelledby="today-in-the-church" className="border-t border-border/50">
-      <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-20">
-        <h2 id="today-in-the-church" className="mb-8 text-center text-3xl sm:text-4xl">
-          Today in the Church
-        </h2>
-        <DayIconBanner headingLevel="h2" today={today} calendar={settings.calendarMode} saints={query.data?.saints} tone={query.data?.tone?.value} />
-        {readings ? <p className="mt-4 text-center text-base text-foreground/85">The readings: {readings}.</p> : null}
-        <div className="mt-6 flex justify-center">
-          <Button asChild variant="outline" className="h-12 rounded-full px-6">
-            <Link to="/today" state={LOOK_AROUND_STATE}>Open today in the app</Link>
-          </Button>
-        </div>
+    <section aria-label="Today" className="mx-auto max-w-2xl px-5 pb-14 pt-6 sm:pt-10">
+      <DayIconBanner
+        today={today}
+        calendar={settings.calendarMode}
+        saints={query.data?.saints}
+        tone={query.data?.tone?.value}
+        fasting={query.data?.fasting}
+      />
+      <div className="mt-8 flex flex-col items-center gap-2">
+        <Button asChild className="h-14 rounded-full px-9 text-base font-semibold">
+          <Link to={`/pray?tab=daily&begin=${time}`}>{BEGIN_LABEL[time]}</Link>
+        </Button>
+        <Link to="/download" className="inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
+          Add it to your home screen
+        </Link>
       </div>
+      {readings ? <p className="scripture-text mx-auto mt-6 text-center text-base text-muted-foreground">Today&rsquo;s readings: {readings}.</p> : null}
     </section>
   );
 }
@@ -139,34 +162,35 @@ export default function Home() {
       </header>
 
       <main id="main-content">
-        {/* The opening is a page of the prayer book itself: what the app is, before anything is said about it. */}
-        <section className="mx-auto grid max-w-6xl items-start gap-x-16 px-5 pb-16 pt-12 sm:px-8 sm:pb-24 sm:pt-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div>
-          <h1 className="text-balance text-4xl leading-[1.1] sm:text-6xl">Orthodox prayer for every day</h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year. Free, with no
-            account, and it works with no signal.
-          </p>
-          <div className="mt-8">
-            <StartButtons />
-          </div>
-          </div>
+        <TodayHero />
 
-          <figure className="mt-14 border-t border-border/60 pt-8 lg:mt-2 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0" aria-label="From the morning prayers">
-            <p className="rubric">Make the sign of the Cross, and begin.</p>
-            <p className="scripture-text drop-cap mt-3 text-xl leading-relaxed sm:text-2xl">
-              In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
-            </p>
-            <p className="scripture-text mt-3 text-xl leading-relaxed sm:text-2xl">Glory to Thee, our God, glory to Thee.</p>
-            <p className="rubric mt-6">O Heavenly King</p>
-            <p className="scripture-text mt-2 text-lg leading-relaxed text-foreground/90">
-              O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings
-              and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.
-            </p>
-          </figure>
+        {/* Then a page of the prayer book itself, and what the app is, in a sentence. */}
+        <section aria-labelledby="what-it-is" className="border-t border-border/60">
+          <div className="mx-auto grid max-w-6xl items-start gap-x-16 gap-y-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <div>
+              <h2 id="what-it-is" className="text-balance text-3xl leading-tight sm:text-5xl">Orthodox prayer for every day</h2>
+              <p className="scripture-text mt-5 text-lg text-muted-foreground">
+                Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year. Free, with
+                no account, and it works with no signal.
+              </p>
+              <div className="mt-8">
+                <StartButtons />
+              </div>
+            </div>
+            <figure className="border-t border-border/60 pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0" aria-label="From the morning prayers">
+              <p className="rubric">Make the sign of the Cross, and begin.</p>
+              <p className="scripture-text drop-cap mt-3 text-xl sm:text-2xl">
+                In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
+              </p>
+              <p className="scripture-text mt-3 text-xl sm:text-2xl">Glory to Thee, our God, glory to Thee.</p>
+              <p className="rubric mt-6">O Heavenly King</p>
+              <p className="scripture-text mt-2 text-lg text-foreground/90">
+                O Heavenly King, the Comforter, the Spirit of Truth, Who art everywhere and fillest all things, Treasury of blessings
+                and Giver of life: come and abide in us, and cleanse us from every impurity, and save our souls, O Good One.
+              </p>
+            </figure>
+          </div>
         </section>
-
-        <TodayInTheChurch />
 
         <section aria-labelledby="real-life" className="border-y border-border/50 bg-card/30">
           <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">

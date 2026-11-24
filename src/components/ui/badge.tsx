@@ -9,12 +9,12 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent text-accent",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent text-muted-foreground",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
+          "border-transparent text-destructive",
+        outline: "text-muted-foreground",
       },
     },
     defaultVariants: {
@@ -27,9 +27,18 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
+// Badges read as small tracked metadata (a feast rank, a fasting rule, a count), never as colored pills: typography
+// carries the hierarchy. A color given by the caller is kept.
+const METADATA = "rounded-none border-0 bg-transparent px-0 py-0 shadow-none text-[11px] font-semibold uppercase tracking-[0.14em] hover:bg-transparent";
+
+// Text colors meant for sitting on a filled pill would vanish on the open page, so they are dropped.
+function withoutPillText(className?: string) {
+  return className?.split(/\s+/).filter((name) => !/^text-[a-z-]+-foreground$/.test(name)).join(" ");
+}
+
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div className={cn(badgeVariants({ variant }), withoutPillText(className), METADATA)} {...props} />
   );
 }
 

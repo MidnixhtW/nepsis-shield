@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { cn } from "@/lib/utils";
 
@@ -18,18 +17,16 @@ export function PremiumPageHeader({
   actions?: ReactNode;
   className?: string;
 }) {
+  // Set like the title page of a section in a printed book: the title in the reading serif, one line under it, and
+  // the page's few actions as quiet buttons. No box, no icon badge, no label over the title (`eyebrow` and `icon` are
+  // kept in the signature so older pages still compile).
+  void eyebrow;
+  void icon;
   return (
-    <header className={cn("premium-page-header", className)}>
-      <div className="flex min-w-0 items-start gap-3.5 sm:gap-4">
-        <span className="premium-icon-mark">
-          {icon ?? <OrthodoxCrossIcon className="h-6 w-6" />}
-        </span>
-
-        <div className="min-w-0">
-          <p className="premium-eyebrow">{eyebrow}</p>
-          <h1 className="mt-1 text-2xl font-semibold leading-tight tracking-[-0.035em] sm:text-3xl">{title}</h1>
-          {description ? <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-[0.95rem]">{description}</p> : null}
-        </div>
+    <header className={cn("flex flex-col gap-5 pb-2 pt-4 sm:pt-8 lg:flex-row lg:items-end lg:justify-between", className)}>
+      <div className="min-w-0">
+        <h1 className="text-balance text-4xl leading-[1.1] sm:text-5xl">{title}</h1>
+        {description ? <p className="scripture-text mt-3 text-lg text-muted-foreground">{description}</p> : null}
       </div>
 
       <div className="flex w-full max-w-full flex-wrap gap-2 lg:w-auto lg:shrink-0 lg:justify-end">
@@ -37,6 +34,5 @@ export function PremiumPageHeader({
         <ThemeToggle />
       </div>
     </header>
-
   );
 }

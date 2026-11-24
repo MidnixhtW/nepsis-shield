@@ -1,11 +1,14 @@
-/* Book-style reading face for Scripture and prayer texts; headings and controls stay in Barlow. */
+/* Book-style reading face (Newsreader) for Scripture, prayers and titles; controls and small labels are in Geist. */
 @layer components {
   .scripture-text {
-    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-family: "Newsreader Variable", Georgia, "Times New Roman", serif;
     font-weight: 400;
-    line-height: 1.75;
+    line-height: 1.7;
     letter-spacing: 0;
     font-variant-numeric: oldstyle-nums;
+    /* A book's measure: about 60 characters a line, so the eye never hunts for the next line. */
+    max-width: 62ch;
+    font-optical-sizing: auto;
   }
 
   .scripture-text :where(strong, b) {
@@ -14,7 +17,7 @@
 
   /* Rubrics, as in the Church's service books: titles, directions and repeat marks in cinnabar red. */
   .rubric {
-    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-family: "Newsreader Variable", Georgia, "Times New Roman", serif;
     font-size: 0.95rem;
     font-style: italic;
     line-height: 1.5;
@@ -25,10 +28,22 @@
   .drop-cap::first-letter {
     float: left;
     margin: 0.06em 0.12em 0 0;
-    font-family: "Literata", Georgia, "Times New Roman", serif;
+    font-family: "Newsreader Variable", Georgia, "Times New Roman", serif;
     font-size: 3.1em;
     font-weight: 600;
     line-height: 0.82;
     color: hsl(var(--cinnabar));
+  }
+}
+
+/* Small metadata, as a printed calendar sets it: the feast's rank, the fasting rule, a date. Sans, tracked, upper case. */
+@layer components {
+  .meta-label {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.4;
   }
 }

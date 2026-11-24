@@ -218,7 +218,7 @@ function SelectionCard({
       aria-pressed={multiple ? selected : undefined}
       className={cn(
         "group relative min-h-32 rounded-[1.75rem] border p-4 text-left transition duration-200",
-        "bg-card/60 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-card/80",
+        "bg-card/60 hover:border-primary/45 hover:bg-card/80",
         selected ? "border-primary/60 ring-1 ring-primary/45" : "border-primary/15",
       )}
     >

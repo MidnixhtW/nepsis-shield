@@ -1,17 +1,14 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import "@fontsource/barlow/400.css";
-import "@fontsource/barlow/400-italic.css";
-import "@fontsource/barlow/500.css";
-import "@fontsource/barlow/600.css";
-import "@fontsource/barlow/700.css";
+// Newsreader (a serif cut for reading, with optical sizes) for prayers, Scripture and titles; Geist for controls
+// and small labels; condensed Barlow only for the duty tools in a service role.
+import "@fontsource-variable/newsreader/opsz.css";
+import "@fontsource-variable/newsreader/opsz-italic.css";
+import "@fontsource-variable/geist/wght.css";
 import "@fontsource/barlow-condensed/500.css";
 import "@fontsource/barlow-condensed/600.css";
 import "@fontsource/barlow-condensed/700.css";
 import "@fontsource/barlow-condensed/800.css";
-import "@fontsource/literata/400.css";
-import "@fontsource/literata/400-italic.css";
-import "@fontsource/literata/600.css";
 import "./globals.css";
 import { announceUpdate, checkAndroidUpdate } from "@/lib/appUpdate";
 import { refreshWebPushOnOpen } from "@/lib/webPush";

@@ -22,10 +22,10 @@ export default {
     extend: {
       // The fonts the app actually loads (see styles/foundation.css and styles/typography.css).
       fontFamily: {
-        sans: ["Barlow", "ui-sans-serif", "system-ui", "sans-serif"],
-        // Literata, or condensed Barlow in a service role (see styles/foundation.css).
+        sans: ["Geist Variable", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Newsreader, or condensed Barlow in a service role (see styles/foundation.css).
         display: ["var(--font-heading)"],
-        serif: ["Literata", "Georgia", "Times New Roman", "serif"],
+        serif: ["Newsreader Variable", "Georgia", "Times New Roman", "serif"],
       },
       // Every color comes from the active theme's variables (styles/themes/). Use these instead of Tailwind's
       // stock palette (red-500, lime-700, ...), which would ignore the theme.

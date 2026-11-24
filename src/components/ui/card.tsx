@@ -5,17 +5,24 @@ import { cn } from "@/lib/utils";
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, surface = false, ...props }: React.HTMLAttributes<HTMLDivElement> & { surface?: boolean }, ref) => (
   <div
     ref={ref}
     className={cn(
       "rounded-lg border bg-card text-card-foreground shadow-sm",
       className,
+      // Reading content sits on the open page, set off by one hairline above it, like a section in a printed book.
+      // Only a `surface` card (something you tap or work with) keeps a box.
+      surface ? null : OPEN_SECTION,
     )}
+    data-section={surface ? undefined : ""}
     {...props}
   />
 ));
 Card.displayName = "Card";
+
+const OPEN_SECTION =
+  "rounded-none border-0 border-t border-border/80 bg-transparent bg-none shadow-none px-0 sm:px-0 backdrop-blur-none from-transparent via-transparent to-transparent";
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,

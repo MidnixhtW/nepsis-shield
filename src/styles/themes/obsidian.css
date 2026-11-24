@@ -1,0 +1,51 @@
+/*
+ * Warm obsidian: the neutral surfaces of the Church Year theme. Candlelit stone instead of cold blue-gray, the same in
+ * every season, so only the season's one color changes (buttons, rubric red, rings). Depth comes from small steps in
+ * lightness between canvas, surface and raised controls, never from shadows. Text is warm vellum, never pure white.
+ *   canvas #0D0C0B · surface #161412 · raised #1F1C19 · text #F3EFEA · muted #9A9288 · hairline about 8% white
+ * Imported after seasonal.css so it wins over each season's own neutrals.
+ */
+@layer base {
+  .seasonal,
+  .seasonal[data-season] {
+    --background: 30 8% 5%;
+    --foreground: 34 33% 93%;
+    --card: 30 10% 8%;
+    --card-foreground: 34 33% 93%;
+    --popover: 30 11% 11%;
+    --popover-foreground: 34 33% 93%;
+    --secondary: 30 11% 11%;
+    --secondary-foreground: 34 33% 93%;
+    --muted: 30 10% 10%;
+    --muted-foreground: 33 7% 57%;
+    --border: 30 6% 14%;
+    --input: 30 6% 26%;
+    --sidebar-background: 30 8% 6%;
+    --sidebar-foreground: 34 33% 93%;
+    --sidebar-accent: 30 11% 11%;
+    --sidebar-accent-foreground: 34 33% 93%;
+    --sidebar-border: 30 6% 14%;
+  }
+}
+
+/* No glows: the canvas is flat stone, and surfaces are told apart by lightness alone. !important in the base layer
+   outranks the older decorative rules (important declarations in earlier layers win). */
+@layer base {
+  html.seasonal body {
+    background-image: none !important;
+    background-color: hsl(var(--background)) !important;
+  }
+
+  html.seasonal :is(.candlelight-card, .ornate-card, .glass, .orthodox-drawer-header) {
+    background: hsl(var(--card)) !important;
+    border-color: hsl(0 0% 100% / 0.08) !important;
+    box-shadow: none !important;
+  }
+}
+
+/* An open section's title row once carried a decorative icon at its right edge. The title is enough. */
+@layer components {
+  [data-section] > .justify-between:first-child > svg:last-child {
+    display: none;
+  }
+}

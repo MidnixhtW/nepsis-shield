@@ -20,7 +20,7 @@ import { GroundResetButton } from "@/components/app/GroundMeNow";
 import { TodayMoments } from "@/components/app/TodayMoments";
 import { FathersSayingCard } from "@/components/app/FathersSayingCard";
 import { PrayNowCard } from "@/components/app/PrayNowCard";
-import { DayIconBanner } from "@/components/app/DayIconBanner";
+import { DayIconBanner, fastBadge } from "@/components/app/DayIconBanner";
 import { WeekDots } from "@/components/app/WeekDots";
 import { LearnReviewCard } from "@/components/app/LearnReviewCard";
 import { TodayFold } from "@/components/app/TodayFold";
@@ -52,7 +52,8 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
   // Today is one page of the day. Left (first on phones): the icon, the day in a sentence, and one Begin. Right: the
   // day set like a book, a red heading for each section and a rule between them. Last: your own things, together.
   const gospel = q.data ? readingText(q.data.readings.gospel, 220) : "";
-  const fastRule = q.data ? q.data.fasting.exception || q.data.fasting.description : "";
+  // The rule in plain words ("Fish, wine and oil allowed"), the same as under the day's feast at the top.
+  const fastRule = q.data ? (q.data.fasting.exception ? fastBadge(q.data.fasting).label : q.data.fasting.description) : "";
   return (
     <div className="grid gap-10">
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">

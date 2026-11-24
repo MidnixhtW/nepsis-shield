@@ -123,7 +123,7 @@ export function OrthodoxAudioLibrary() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-            <Button type="button" className="h-12 rounded-full px-6 font-bold text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-95" onClick={openSanctuary}>
+            <Button type="button" className="h-12 rounded-full px-6 font-bold text-primary-foreground transition-transform duration-200 active:scale-[0.985]" onClick={openSanctuary}>
               <PlayCircle className="mr-2 h-5 w-5" /> Enter sanctuary
             </Button>
             <Button type="button" variant="outline" className="h-12 rounded-full px-6 font-bold" onClick={openRadio}>
@@ -136,7 +136,7 @@ export function OrthodoxAudioLibrary() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {shelves.map((shelf) => (
-          <Card key={shelf.title} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-primary/25">
+          <Card key={shelf.title} className="rounded-3xl border-border/60 bg-card p-5 shadow-sm hover:border-primary/25">
 
             <div className="flex items-start gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary shadow-inner">

@@ -108,7 +108,7 @@ export function HymnsAndPropers() {
             <Button
               type="button"
               variant="outline"
-              className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 transition duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:bg-background/70"
+              className="btn-wrap h-11 justify-between rounded-2xl border-border/60 bg-background/50 hover:border-primary/35 hover:bg-background/70"
               onClick={() => playTrack(getSanctuaryTrack("afr-music"))}
             >
               Play live chant radio <PlayCircle className="h-4 w-4" />
