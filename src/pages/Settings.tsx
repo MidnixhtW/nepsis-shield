@@ -45,7 +45,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const calendarModes = ["gregorian", "julian"] as const;
-const jurisdictions = ["oca", "goarch", "antiochian", "rocor"] as const;
+const jurisdictions = ["oca", "goarch", "antiochian", "rocor", "melkite", "ruthenian"] as const;
 const languages = ["en", "el", "ru", "ar"] as const;
 
 function isCalendarMode(value: string): value is CalendarMode {
@@ -312,7 +312,7 @@ export default function Settings() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h2 className="text-base font-semibold tracking-tight">Jurisdiction</h2>
-                    <p id="jurisdiction-help" className="mt-1 text-sm text-muted-foreground">Changes which church websites the app links to.</p>
+                    <p id="jurisdiction-help" className="mt-1 text-sm text-muted-foreground">Changes which church websites and parish finders the app links to. Melkite and most Byzantine Catholic parishes in the U.S. keep the New Calendar, so leave the calendar above on New unless your parish says otherwise.</p>
                   </div>
                   <Church className="h-5 w-5 text-muted-foreground" />
                 </div>
@@ -328,6 +328,8 @@ export default function Settings() {
                       <SelectItem value="goarch">GOARCH</SelectItem>
                       <SelectItem value="antiochian">Antiochian</SelectItem>
                       <SelectItem value="rocor">ROCOR</SelectItem>
+                      <SelectItem value="melkite">Melkite Greek Catholic</SelectItem>
+                      <SelectItem value="ruthenian">Byzantine Catholic (Ruthenian)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

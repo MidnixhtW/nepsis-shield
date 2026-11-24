@@ -69,7 +69,6 @@ export function JesusPrayerCounter() {
   const [goalDraft, setGoalDraft] = useState("100");
   const [saveEnabled, setSaveEnabled] = useState(true);
 
-  const [streakDays, setStreakDays] = useState(0);
   const [dark, setDark] = useState(false);
   const [pulseEvery, setPulseEvery] = useState(() => {
     const saved = Number(getStoredItem<string>(PULSE_KEY));
@@ -143,53 +142,6 @@ export function JesusPrayerCounter() {
   }, [count, dayKey, saveEnabled]);
 
   useEffect(() => {
-    // compute a gentle streak from stored daily keys (up to TTL window)
-    if (!saveEnabled) {
-      setStreakDays(0);
-      return;
-    }
-
-    try {
-      const keys = Object.keys(window.localStorage).filter((k) =>
-        k.startsWith("jesus_prayer_count:"),
-      );
-
-      const days = keys
-        .map((k) => k.replace("jesus_prayer_count:", ""))
-        .filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x))
-        .sort()
-        .reverse();
-
-      // Count consecutive days ending today where count > 0
-      const todayStr = dayKey;
-      let streak = 0;
-      let expected = todayStr;
-
-      function prevDayStr(s: string) {
-        const [y, m, d] = s.split("-").map(Number);
-        const dt = new Date(Date.UTC(y, m - 1, d));
-        dt.setUTCDate(dt.getUTCDate() - 1);
-        const yy = dt.getUTCFullYear();
-        const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
-        const dd = String(dt.getUTCDate()).padStart(2, "0");
-        return `${yy}-${mm}-${dd}`;
-      }
-
-      for (const d of days) {
-        if (d !== expected) continue;
-        const val = getStoredItem<string>(storageKeyForDay(d));
-        if (!val || Number(val) <= 0) break;
-        streak += 1;
-        expected = prevDayStr(expected);
-      }
-
-      setStreakDays(streak);
-    } catch {
-      setStreakDays(0);
-    }
-  }, [dayKey, count, saveEnabled]);
-
-  useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (isInteractiveTarget(e.target)) return;
       if (e.key === "+" || e.key === "=") setCount((c) => c + 1);
@@ -201,7 +153,6 @@ export function JesusPrayerCounter() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const pct = goal > 0 ? Math.min(100, Math.round((count / goal) * 100)) : 0;
 
   return (
     <div className="grid gap-4">
@@ -221,14 +172,14 @@ export function JesusPrayerCounter() {
                 size="sm"
                 className="rounded-2xl border-border/60"
               >
-                <Target className="mr-2 h-4 w-4" /> Goal
+                <Target className="mr-2 h-4 w-4" /> Rule
               </Button>
             </DialogTrigger>
             <DialogContent className="rounded-3xl">
               <DialogHeader>
-                <DialogTitle>Set today's goal</DialogTitle>
+                <DialogTitle>Your daily rule</DialogTitle>
                 <DialogDescription>
-                  Choose a number that supports attention, not pressure.
+                  Ask your spiritual father or priest how many to pray, and keep a number you can hold every day. The count helps attention. Missing a day carries no penalty here.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-3">
@@ -247,7 +198,7 @@ export function JesusPrayerCounter() {
                     setGoalDraft(String(g));
                   }}
                 >
-                  Save goal
+                  Save rule
                 </Button>
               </div>
             </DialogContent>
@@ -279,13 +230,8 @@ export function JesusPrayerCounter() {
               </>
             )}
             {waiting ? <HoldToContinue onDone={() => setHeldMarker(count)} /> : null}
-            <p className="text-sm text-muted-foreground">
-              {pct}% of today's goal
-              {saveEnabled ? (
-                <>
-                  {" · "}Streak: <span className="font-semibold text-foreground">{streakDays}</span>
-                </>
-              ) : null}
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              {count >= goal ? "Today's rule is prayed. Glory to God." : `${goal - count} left in today's rule`}
             </p>
           </div>
 
@@ -405,7 +351,7 @@ export function JesusPrayerCounter() {
           <div>
             <h3 className="text-base font-semibold tracking-tight">Privacy</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Counts and goals are behavioral data.
+              Counts and your rule are behavioral data.
             </p>
           </div>
           <ShieldAlert className="h-5 w-5 text-muted-foreground" />

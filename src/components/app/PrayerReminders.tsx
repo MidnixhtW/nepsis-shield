@@ -227,7 +227,7 @@ export function PrayerReminders() {
     <Card id="prayer-reminders" className="scroll-mt-24 rounded-3xl border-border/60 bg-card p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold tracking-tight">Prayer reminders</h3>
+          <h2 className="text-lg font-semibold tracking-tight">Prayer reminders</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {native || push
               ? "A gentle notification at the time you choose, every day."

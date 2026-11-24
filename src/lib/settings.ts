@@ -1,7 +1,7 @@
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 export type CalendarMode = "gregorian" | "julian";
-export type Jurisdiction = "oca" | "goarch" | "antiochian" | "rocor";
+export type Jurisdiction = "oca" | "goarch" | "antiochian" | "rocor" | "melkite" | "ruthenian";
 export type LanguagePref = "en" | "el" | "ru" | "ar";
 
 export type ReminderPrefs = {

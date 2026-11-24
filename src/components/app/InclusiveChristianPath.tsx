@@ -130,7 +130,7 @@ export function InclusiveChristianPath({ compact = false }: { compact?: boolean 
                 Nepsis Shield is an Orthodox prayer companion. <em>Nepsis</em> means watchfulness: staying awake to God and guarding the heart. You do not need to be Orthodox to start. Begin with a short prayer, and learn the rest a little at a time.
               </p>
               <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-                Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers. Your calendar and some commemorations may differ, so follow your parish.
+                Eastern Catholics (Byzantine, Melkite, Ruthenian, Ukrainian) pray these same prayers. Your calendar and some commemorations may differ, so follow your parish. In Settings you can choose Melkite or Byzantine Catholic to get your own parish finder.
               </p>
             </div>
 

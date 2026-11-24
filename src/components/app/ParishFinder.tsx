@@ -114,6 +114,26 @@ function primaryLocatorsFor(jurisdiction: string): Locator[] {
     ];
   }
 
+  const EASTERN_CATHOLIC_DIRECTORY: Locator = {
+    label: "Eastern Catholic parish directory",
+    url: "https://www.byzcath.org/index.php/resources/directories/find-a-parish-mainmenu-112",
+    hint: "Byzantine, Melkite, Ukrainian and other Eastern Catholic parishes",
+  };
+
+  if (jurisdiction === "melkite") {
+    return [
+      { label: "Melkite Eparchy of Newton", url: "https://melkite.org/", hint: "Melkite Greek Catholic Church in the U.S." },
+      EASTERN_CATHOLIC_DIRECTORY,
+    ];
+  }
+
+  if (jurisdiction === "ruthenian") {
+    return [
+      { label: "Byzantine Catholic Archeparchy of Pittsburgh", url: "https://www.archpitt.org/", hint: "Byzantine Catholic Metropolitan Church (Ruthenian)" },
+      EASTERN_CATHOLIC_DIRECTORY,
+    ];
+  }
+
   // Default / OCA
   return [
     {
