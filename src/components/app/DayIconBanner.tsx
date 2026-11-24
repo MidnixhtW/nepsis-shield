@@ -4,7 +4,7 @@ import { currentSeason, type ChurchCalendar } from "@/lib/fastingSeasons";
 import { dayIcon } from "@/lib/dayIcon";
 import { ShareCardButton } from "@/components/app/ShareCardButton";
 
-// The top of Today: the day's icon first, whole and large, the way one venerates the icon on entering church. Below
+// The top of Today: the day's icon first, whole (kept smaller on phones so Begin shows without scrolling), the way one venerates the icon on entering church. Below
 // it, the day's feast or season in red, as feasts are printed in the Church's calendar, and one sentence for the rest
 // of the day: its tone, the day of the fast, the saint remembered. The date itself is in the header.
 export function DayIconBanner({
@@ -45,7 +45,7 @@ export function DayIconBanner({
           src={icon.imageUrl}
           alt={icon.alt}
           onError={() => setFailed(true)}
-          className="mx-auto h-auto max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
+          className="mx-auto h-auto max-h-[min(15rem,30vh)] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
         />
       ) : null}
       <h1 className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>

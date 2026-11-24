@@ -23,6 +23,7 @@ import { PrayNowCard } from "@/components/app/PrayNowCard";
 import { DayIconBanner } from "@/components/app/DayIconBanner";
 import { WeekDots } from "@/components/app/WeekDots";
 import { LearnReviewCard } from "@/components/app/LearnReviewCard";
+import { TodayFold } from "@/components/app/TodayFold";
 import { openHelpPanel } from "@/lib/appEvents";
 import { buildOcaDailyUrl, readingText } from "@/lib/orthocal";
 import { isWarriorSaint } from "@/lib/warriorSaints";
@@ -132,7 +133,9 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             </div>
           </section>
 
-          <FathersSayingCard today={today} />
+          <TodayFold title="A word from the Fathers" hint="A short saying for today. Tap to read.">
+            <FathersSayingCard today={today} />
+          </TodayFold>
         </div>
       </div>
 
