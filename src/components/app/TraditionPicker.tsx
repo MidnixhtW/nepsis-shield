@@ -8,7 +8,8 @@ import { getTradition, markTraditionChosen, traditionChosen, traditionPatch, TRA
 // "How do you pray?" One answer sets the jurisdiction, the Western Rite switch and the calendar for Melkite and
 // Byzantine Catholic parishes, so labels, fasting wording and church links follow it.
 // Until the person answers, nothing is checked: a Melkite should not open the question with "Orthodox" already chosen.
-export function TraditionPicker({ onChosen }: { onChosen?: (tradition: Tradition) => void }) {
+// quiet: inside the setup screens, where the check mark is confirmation enough and a toast would cover the Continue button.
+export function TraditionPicker({ onChosen, quiet = false }: { onChosen?: (tradition: Tradition) => void; quiet?: boolean }) {
   const { settings, updateSettings } = useSettings();
   const current = traditionChosen(settings) ? getTradition(settings) : null;
   return (
@@ -25,7 +26,7 @@ export function TraditionPicker({ onChosen }: { onChosen?: (tradition: Tradition
                 choiceHaptic();
                 updateSettings(traditionPatch(option.id, settings));
                 markTraditionChosen();
-                if (!selected) toast({ title: `Set to ${option.title}`, description: "You can change this anytime in Settings." });
+                if (!selected && !quiet) toast({ title: `Set to ${option.title}`, description: "You can change this anytime in Settings." });
                 onChosen?.(option.id);
               }}
               className="flex min-h-14 w-full items-center gap-3 py-3 text-left transition-colors active:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

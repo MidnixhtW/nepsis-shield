@@ -13,6 +13,12 @@ test("create a personalized daily rule during onboarding", async ({ page }) => {
   })).toBeVisible();
 
   await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
+  // How do you pray: nothing is chosen until the person answers.
+  await expect(onboarding.getByRole("heading", { name: "How do you pray?" })).toBeVisible();
+  await expect(onboarding.getByRole("radio", { checked: true })).toHaveCount(0);
+  await onboarding.getByRole("radio", { name: /^Orthodox/ }).click();
+  await expect(onboarding.getByRole("radio", { name: /^Orthodox/ })).toHaveAttribute("aria-checked", "true");
+  await onboarding.getByRole("button", { name: "Continue" }).click();
   // Every role keeps the same look; a role only tints the accent color.
   const html = page.locator("html");
   await onboarding.getByRole("button", { name: /^Military/ }).click();
@@ -64,7 +70,8 @@ test("from a public page, Back to app opens Today to look around, and setup is o
     sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
   });
   await page.goto("/about");
-  await page.getByRole("link", { name: "Back to app" }).click();
+  // About's link back to the app reads "Today".
+  await page.getByRole("link", { name: "Today", exact: true }).click();
   await expect(page).toHaveURL(/\/today$/);
   await expect(page.getByRole("dialog", { name: /Set up your daily rule/ })).toHaveCount(0);
 
@@ -88,4 +95,24 @@ test("Look around first closes setup for now and leaves a way back", async ({ pa
   await page.reload();
   await expect(setup).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Set up your daily rule" }).getByRole("button", { name: "Set up", exact: true })).toBeVisible();
+});
+
+test("a Melkite picks their church in setup, skips the calendar question and is not asked again on Today", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("test:cleared")) {
+      localStorage.clear();
+      sessionStorage.setItem("test:cleared", "1");
+    }
+    sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
+  });
+  await page.goto("/today");
+  const onboarding = page.getByRole("dialog", { name: /Set up your daily rule/ });
+  await onboarding.getByRole("button", { name: "Continue" }).click(); // welcome
+  await onboarding.getByRole("radio", { name: /Melkite Greek Catholic/ }).click();
+  await onboarding.getByRole("button", { name: "Continue" }).click();
+  await expect(onboarding.getByRole("heading", { name: /calling/ })).toBeVisible();
+  await expect(onboarding.getByText("Which calendar does your parish keep?")).toHaveCount(0);
+  await onboarding.getByRole("button", { name: "Begin later" }).click();
+  await expect(onboarding).toBeHidden();
+  await expect(page.getByRole("heading", { name: "How do you pray?" })).toHaveCount(0);
 });
