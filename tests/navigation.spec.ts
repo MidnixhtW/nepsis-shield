@@ -6,7 +6,7 @@ test("Me holds the prayer log and Settings, and the header menu holds search and
   await page.getByRole("navigation", { name: "Mobile primary navigation" }).getByRole("radio", { name: /Go to Me/ }).click();
   await expect(page).toHaveURL(/\/me$/);
   await expect(page.getByRole("heading", { name: "Your prayer life" })).toBeVisible();
-  await expect(page.getByRole("region", { name: /Prayer log/ })).toBeVisible();
+  await expect(page.getByRole("region", { name: "This week" })).toBeVisible();
   await expect(page.getByRole("link", { name: /^Settings/ }).first()).toBeVisible();
   await page.getByRole("button", { name: "Open menu" }).click();
   const menu = page.getByRole("dialog");
@@ -14,15 +14,15 @@ test("Me holds the prayer log and Settings, and the header menu holds search and
   await expect(menu.getByRole("button", { name: /Theme: Church Year/ })).toBeVisible();
 });
 
-test("I'm feeling… on Today opens the Help panel", async ({ page }) => {
+test("More under When it's hard on Today opens the Help panel", async ({ page }) => {
   await page.goto("/today");
-  await page.getByRole("button", { name: "I'm feeling…" }).click();
-  await expect(page.getByRole("dialog").getByText("Take 60 seconds. Breathe, pray, re-center.")).toBeVisible();
+  await page.getByRole("region", { name: "When it’s hard" }).getByRole("button", { name: "More" }).click();
+  await expect(page.getByRole("dialog", { name: "Need help now?" }).getByRole("heading", { name: "Take sixty seconds" })).toBeVisible();
 });
 
 test("Pray opens on tiles, and old links still open their practice", async ({ page }) => {
   await page.goto("/pray?tab=sleep");
-  await expect(page.getByRole("heading", { name: "Sleep", level: 2 })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sleep", level: 1 })).toBeVisible();
   await page.getByRole("link", { name: "Pray", exact: true }).click();
   await expect(page).toHaveURL(/\/pray$/);
   // Your own lists live on Me now, and open back to Me.
@@ -61,6 +61,6 @@ test("Begin on Today opens the prayer for the hour full screen", async ({ page }
   await page.goto("/today");
   await expect(page.getByRole("heading", { name: "Evening prayers", level: 2 })).toBeVisible();
   await page.getByRole("link", { name: "Begin" }).click();
-  await expect(page.getByRole("dialog").getByText(/Evening prayer, 1 \//)).toBeVisible();
+  await expect(page.getByRole("dialog").getByText(/Evening prayer, part 1 of/)).toBeVisible();
   await expect(page).toHaveURL(/tab=daily$/);
 });
