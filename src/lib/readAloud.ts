@@ -22,6 +22,8 @@ let runId = 0;
 let player: HTMLAudioElement | null = null;
 // The recording the player holds, by its original URL (a saved recording plays from a local blob URL).
 let playerSource: string | null = null;
+// Called once when a reading plays through to its end (not when it is stopped or replaced).
+let onFinished: (() => void) | null = null;
 
 export function canReadAloud() {
   return typeof window !== "undefined" && "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
@@ -91,8 +93,11 @@ function speakText(text: string, id: number, index: number) {
 function playFrom(index: number, resumeAudio = false) {
   const id = ++runId;
   if (index >= state.parts.length) {
+    const finished = onFinished;
+    onFinished = null;
     silence();
     setState(IDLE);
+    finished?.();
     return;
   }
   const part = state.parts[index];
@@ -128,9 +133,10 @@ function playFrom(index: number, resumeAudio = false) {
 }
 
 /** Read items aloud: each item plays its recording if it has one, or is read by the device voice in short pieces. */
-export function startNarration(title: string, items: ReadAloudPart[]) {
+export function startNarration(title: string, items: ReadAloudPart[], options: { onEnd?: () => void } = {}) {
   const parts = items.flatMap((item) => (item.audio ? [item] : splitForSpeech([item.text]).map((text) => ({ text }))));
   if (!parts.length || !canPlayItems(parts)) return;
+  onFinished = options.onEnd ?? null;
   state = { title, parts, index: 0, playing: true };
   playFrom(0);
 }
@@ -161,6 +167,7 @@ export function skipReadAloud(direction: -1 | 1) {
 
 export function stopReadAloud() {
   runId++;
+  onFinished = null;
   silence();
   setState(IDLE);
 }

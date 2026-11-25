@@ -11,7 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { DEFAULT_THEME, type AppTheme } from "@/components/app/ThemeProvider";
+import { DEFAULT_THEME, THEME_CHOSEN_KEY, followsSystemAppearance, systemChurchYearTheme, type AppTheme } from "@/components/app/ThemeProvider";
+import { removeStoredItem, setStoredItem } from "@/lib/deviceStorage";
 
 /** Shared by the theme picker and first-time setup. `preview` is background, text, and accent. */
 export const themeOptions: Array<{
@@ -27,6 +28,13 @@ export const themeOptions: Array<{
     description: "Follows the season: violet in Lent, red at Pascha, green at Pentecost, blue for the Theotokos",
     swatch: "bg-[#6f9fd8]",
     preview: ["#0c0f15", "#ede6d6", "#9fbbe0"],
+  },
+  {
+    value: "seasonal-light",
+    label: "Church Year, light",
+    description: "The season's colors on a warm light page",
+    swatch: "bg-[#f4efe4]",
+    preview: ["#f7f3ea", "#171c26", "#25528a"],
   },
   {
     value: "dark",
@@ -93,7 +101,10 @@ export function ThemeToggle({
   const activeTheme = mounted && themes.some((option) => option.value === theme)
     ? (theme as AppTheme)
     : DEFAULT_THEME;
-  const activeLabel = themes.find((option) => option.value === activeTheme)?.label ?? "Church Year";
+  // "Match my phone" is the default: the Church Year theme, light or dark as the phone is set.
+  const [auto, setAuto] = useState(false);
+  useEffect(() => setAuto(followsSystemAppearance(theme)), [theme]);
+  const activeLabel = auto ? "Match my phone" : themes.find((option) => option.value === activeTheme)?.label ?? "Church Year";
 
   return (
     <DropdownMenu>
@@ -123,14 +134,33 @@ export function ThemeToggle({
           Interface palette
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="gap-3 rounded-sm px-2.5 py-2.5 focus:bg-primary/10 focus:text-foreground"
+          onSelect={() => {
+            removeStoredItem(THEME_CHOSEN_KEY);
+            setAuto(true);
+            setTheme(systemChurchYearTheme());
+          }}
+        >
+          <span className="h-3.5 w-3.5 shrink-0 rounded-full border border-foreground/25 bg-[linear-gradient(90deg,#0c0f15_50%,#f4efe4_50%)]" />
+          <span className="min-w-0 flex-1">
+            <span className="block font-bold leading-tight">Match my phone</span>
+            <span className="mt-0.5 block text-xs leading-tight text-muted-foreground">Church Year colors, light or dark as your phone is set</span>
+          </span>
+          <Check className={cn("h-4 w-4 shrink-0 text-primary", auto ? "opacity-100" : "opacity-0")} />
+        </DropdownMenuItem>
         {themes.map((option) => {
-          const selected = option.value === activeTheme;
+          const selected = !auto && option.value === activeTheme;
 
           return (
             <DropdownMenuItem
               key={option.value}
               className="gap-3 rounded-sm px-2.5 py-2.5 focus:bg-primary/10 focus:text-foreground"
-              onSelect={() => setTheme(option.value)}
+              onSelect={() => {
+                setStoredItem(THEME_CHOSEN_KEY, true);
+                setAuto(false);
+                setTheme(option.value);
+              }}
             >
               <span className={cn("h-3.5 w-3.5 shrink-0 rounded-full border border-foreground/25", option.swatch)} />
 

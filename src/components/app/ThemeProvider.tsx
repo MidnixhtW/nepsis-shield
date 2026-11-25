@@ -6,15 +6,46 @@ import { useSettings } from "@/hooks/useSettings";
 import { liturgicalSeason } from "@/lib/liturgicalSeason";
 import { useResponderMode } from "@/lib/responderMode";
 import { useNow } from "@/lib/prayerHours";
+import { getStoredItem } from "@/lib/deviceStorage";
 
-export const APP_THEMES = ["seasonal", "dark", "parchment", "red-dark", "blue-cream", "lenten", "midnight", "paschal"] as const;
+export const APP_THEMES = ["seasonal", "seasonal-light", "dark", "parchment", "red-dark", "blue-cream", "lenten", "midnight", "paschal"] as const;
 
 /** New installs follow the Church year; a Military role starts on Olive & Brass (see first-time setup). */
 export const DEFAULT_THEME: AppTheme = "seasonal";
 
 /** Themes with a light background; the rest are dark. */
-export const LIGHT_THEMES: readonly string[] = ["parchment", "blue-cream", "paschal"];
+export const LIGHT_THEMES: readonly string[] = ["parchment", "blue-cream", "paschal", "seasonal-light"];
 export type AppTheme = (typeof APP_THEMES)[number];
+
+/** Set when the person picks a palette. Until then the Church Year theme follows the phone's light or dark mode. */
+export const THEME_CHOSEN_KEY = "nepsis:theme-chosen";
+const LIGHT_QUERY = "(prefers-color-scheme: light)";
+
+export function systemChurchYearTheme(): AppTheme {
+  return typeof window !== "undefined" && window.matchMedia?.(LIGHT_QUERY).matches ? "seasonal-light" : "seasonal";
+}
+
+/** True while nobody has picked a palette: the Church Year theme, light or dark as the phone is. */
+export function followsSystemAppearance(theme: string | undefined) {
+  if (getStoredItem<boolean>(THEME_CHOSEN_KEY)) return false;
+  return !theme || theme === "seasonal" || theme === "seasonal-light";
+}
+
+function SystemAppearanceSync() {
+  const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    if (!followsSystemAppearance(theme)) return;
+    const query = window.matchMedia?.(LIGHT_QUERY);
+    const apply = () => {
+      const next = systemChurchYearTheme();
+      if (next !== theme) setTheme(next);
+    };
+    apply();
+    query?.addEventListener?.("change", apply);
+    return () => query?.removeEventListener?.("change", apply);
+  }, [theme, setTheme]);
+  return null;
+}
 
 function ThemeClassSync() {
   const { theme } = useTheme();
@@ -84,6 +115,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       themes={[...APP_THEMES]}
     >
       <ThemeClassSync />
+      <SystemAppearanceSync />
       <SeasonalThemeSync />
       <HourLightSync />
       {children}

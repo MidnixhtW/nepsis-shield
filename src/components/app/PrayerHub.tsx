@@ -28,6 +28,7 @@ import { NovenaTracker } from "@/components/app/NovenaTracker";
 import { LauncherIntro, SectionBackBar, SectionLauncher, type LauncherGroup } from "@/components/app/SectionLauncher";
 import { t } from "@/i18n";
 import { prayerMinutes } from "@/lib/prayerLength";
+import { artAvoidingToday } from "@/lib/hourArt";
 
 export type PrayerTab = "daily" | "rule" | "family" | "prayers" | "names" | "services" | "groups" | "counter" | "prep" | "communion" | "journal" | "sleep" | "rosary" | "stations" | "lectio" | "compline-west" | "lauds-west" | "vespers-west" | "novena";
 
@@ -87,6 +88,10 @@ function withDurations(groups: LauncherGroup[]): LauncherGroup[] {
 }
 
 /** The daily prayers that fit the hour: morning until noon, evening until eight, then night prayers. */
+function withoutTodaysIcon(tile: LauncherTile, now: Date, calendar: ChurchCalendar): LauncherTile {
+  return tile.art ? { ...tile, art: artAvoidingToday(tile.art, now, calendar) } : tile;
+}
+
 function prayerForHour(now: Date, tiles: LauncherTile[] = launcher[0].tiles) {
   const [morning, evening, night] = tiles;
   const hour = now.getHours();
@@ -185,7 +190,7 @@ export function PrayerHub({ tab }: { tab: PrayerTab | null }) {
         : launcher;
     const now = new Date();
     const feast = feastTile(now, settings.calendarMode);
-    const lead = feast ?? prayerForHour(now, western ? WESTERN_OFFICE.tiles : undefined);
+    const lead = feast ?? withoutTodaysIcon(prayerForHour(now, western ? WESTERN_OFFICE.tiles : undefined), now, settings.calendarMode);
     const eyebrow = feast ? "Today's feast" : t("pray.lead");
     return (
       <div className="grid min-w-0 gap-5">

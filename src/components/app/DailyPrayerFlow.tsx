@@ -49,6 +49,10 @@ import { LEARN_ID_BY_STEP_TITLE } from "@/content/prayersToLearn";
 import { buildFlow, knownPrayerMode, recommendedTime, savedFlowExtras, type PrayerTime, type PrayerMode, type ReaderPrefs } from "@/content/dailyPrayerSteps";
 import { PrayerLines } from "@/components/app/PrayerLines";
 import { SlidingToggle } from "@/components/app/SlidingToggle";
+import { tileArt } from "@/components/app/SectionLauncher";
+import { artAvoidingToday } from "@/lib/hourArt";
+import { useSettings } from "@/hooks/useSettings";
+import type { Commemorations } from "@/lib/commemorations";
 
 const FLOW_PREFS_KEY = "daily_prayer_flow:prefs";
 
@@ -76,6 +80,73 @@ const prayerMeta: Record<PrayerTime, { label: string; icon: ReactNode; hint: str
   },
 };
 
+// The icon for each hour, the same one its tile shows on Pray, so the session opens on the picture that was tapped.
+const HOUR_ART: Record<PrayerTime, string> = { morning: "pantocrator", evening: "theotokos", night: "lamentation" };
+const SLEEP_TIMER_MINUTES = [10, 20, 30] as const;
+
+type Intention = { id?: string; label: string } | null;
+
+/** "Offer this prayer for": a name from the prayer list or a few words. compact: the one-line version in the session. */
+function IntentionPicker({
+  names,
+  intention,
+  setIntention,
+  text,
+  setText,
+  compact = false,
+}: {
+  names: Commemorations;
+  intention: Intention;
+  setIntention: (next: Intention) => void;
+  text: string;
+  setText: (next: string) => void;
+  compact?: boolean;
+}) {
+  const people = [...names.living, ...names.departed].slice(0, compact ? 4 : 8);
+  return (
+    <div className={compact ? "mt-5" : ""}>
+      {compact ? <p className="text-sm text-muted-foreground">Offer this prayer for someone, if you like.</p> : null}
+      {people.length ? (
+        <div className={"flex flex-wrap gap-2 " + (compact ? "mt-2" : "mt-3")}>
+          {people.map((entry) => (
+            <Button
+              key={entry.id}
+              type="button"
+              size="sm"
+              variant={intention?.id === entry.id ? "default" : "outline"}
+              aria-pressed={intention?.id === entry.id}
+              className="h-10 rounded-full"
+              onClick={() => setIntention(intention?.id === entry.id ? null : { id: entry.id, label: entry.name })}
+            >
+              {entry.name}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+      <form
+        className={"flex gap-2 " + (compact ? "mt-2" : "mt-3")}
+        onSubmit={(event) => {
+          event.preventDefault();
+          const trimmed = text.trim().slice(0, 80);
+          if (trimmed) setIntention({ label: trimmed });
+        }}
+      >
+        <input
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          placeholder="A few words: my exam, a friend who is ill"
+          aria-label="Intention for this prayer"
+          maxLength={80}
+          className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background/70 px-3 text-sm"
+        />
+        <Button type="submit" variant="outline" className="h-11 rounded-xl" disabled={!text.trim()}>
+          Offer
+        </Button>
+      </form>
+    </div>
+  );
+}
+
 export function DailyPrayerFlow() {
   const [time, setTime] = useState<PrayerTime>(() => recommendedTime());
   const [mode, setMode] = useState<PrayerMode>("short");
@@ -90,8 +161,12 @@ export function DailyPrayerFlow() {
   const today = useCurrentDay();
   const [searchParams, setSearchParams] = useSearchParams();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const sessionTitleRef = useRef<HTMLHeadingElement>(null);
   const focusNextStep = useRef(false);
   const rhythm = useDailyRhythm();
+  const { settings } = useSettings();
+  // The hour's picture, never the same as the icon Today already shows.
+  const artFor = (key: PrayerTime) => artAvoidingToday(HOUR_ART[key], today, settings.calendarMode);
 
   useEffect(() => {
     const saved = getStoredItem<{ time?: PrayerTime; mode?: PrayerMode; readerPrefs?: ReaderPrefs; humility?: boolean }>(FLOW_PREFS_KEY);
@@ -141,7 +216,7 @@ export function DailyPrayerFlow() {
   }, [time, mode, names, humility]);
   const progressKey = `${format(today, "yyyy-MM-dd")}:${time}:${mode}${humility && time === "morning" ? ":humility" : ""}`;
   // An intention for this prayer: a name from the prayer list (whose lamp is lit at the end) or a few words.
-  const [intention, setIntention] = useState<{ id?: string; label: string } | null>(null);
+  const [intention, setIntention] = useState<Intention>(null);
   const [intentionText, setIntentionText] = useState("");
   const [silenceLeft, setSilenceLeft] = useState(0);
   const ison = useIsonEnabled();
@@ -168,14 +243,48 @@ export function DailyPrayerFlow() {
   const stepAudio = clipUrl(reader, current.body);
   const canListen = canPlayItems([{ audio: stepAudio }]);
   const [readingAloud, setReadingAloud] = useState(false);
+  // Listening carries the prayer along: when a step's reading ends, a short pause, then the next step reads.
+  const goNextRef = useRef<() => void>(() => {});
   useEffect(() => {
-    if (!readingAloud || !immersive || silent) return;
-    startNarration(current.title, [{ text: stepAudio ? spokenText(current.body) : [current.title, ...current.body].join(". "), audio: stepAudio }]);
-    return () => stopReadAloud();
-  }, [readingAloud, immersive, current, stepAudio, silent]);
+    if (!readingAloud || !immersive || silent || finished) return;
+    let pause = 0;
+    startNarration(
+      current.title,
+      [{ text: stepAudio ? spokenText(current.body) : [current.title, ...current.body].join(". "), audio: stepAudio }],
+      { onEnd: () => { pause = window.setTimeout(() => goNextRef.current(), 1200); } },
+    );
+    return () => {
+      window.clearTimeout(pause);
+      stopReadAloud();
+    };
+  }, [readingAloud, immersive, current, stepAudio, silent, finished]);
   useEffect(() => {
     if (!immersive) setReadingAloud(false);
   }, [immersive]);
+  // A silence step, while listening, moves on by itself once its quiet has passed.
+  const silenceCounted = useRef(false);
+  useEffect(() => {
+    silenceCounted.current = false;
+  }, [stepIndex]);
+  useEffect(() => {
+    if (!silent) return;
+    if (silenceLeft > 0) silenceCounted.current = true;
+    else if (readingAloud && silenceCounted.current) {
+      silenceCounted.current = false;
+      goNextRef.current();
+    }
+  }, [silent, silenceLeft, readingAloud]);
+  // Night prayers can stop reading after a while, for someone praying themselves to sleep.
+  const [sleepMinutes, setSleepMinutes] = useState(0);
+  useEffect(() => {
+    if (!sleepMinutes) return;
+    const timer = window.setTimeout(() => {
+      stopReadAloud();
+      setReadingAloud(false);
+      setSleepMinutes(0);
+    }, sleepMinutes * 60_000);
+    return () => window.clearTimeout(timer);
+  }, [sleepMinutes]);
 
   useEffect(() => {
     if (!hydrated || done) return;
@@ -208,6 +317,7 @@ export function DailyPrayerFlow() {
       if (intention?.id) lightLamp(intention.id);
       else if (intention) addIntention(intention.label);
       setIntention(null);
+      setReadingAloud(false);
       if (immersive) setFinished(true);
       else showSuccess("Prayer marked complete for today.");
       return;
@@ -217,7 +327,11 @@ export function DailyPrayerFlow() {
     setStepIndex((i) => i + 1);
   }
 
+  goNextRef.current = goNext;
+
   const nextDisabled = silent && silenceLeft > 0;
+  // Shorter words in the session footer, where the play button sits between Back and Next.
+  const sessionNextLabel = stepIndex >= steps.length - 1 ? "Amen" : stepIndex === 0 ? "Begin" : "Next";
   const nextLabel = stepIndex >= steps.length - 1 ? "Mark complete" : stepIndex === 0 ? "Begin prayer" : "Next";
   const nextIcon = stepIndex >= steps.length - 1 ? <Check className="ml-2 h-4 w-4" /> : <ChevronRight className="ml-2 h-4 w-4" />;
 
@@ -231,21 +345,30 @@ export function DailyPrayerFlow() {
               type="button"
               aria-pressed={time === key}
               className={
-                "tap rounded-2xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " +
+                "tap rounded-2xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " +
                 (time === key
                   ? "border-primary/40 bg-primary/10"
                   : "border-border/60 bg-background/50 hover:bg-background/80")
               }
               onClick={() => start(key)}
             >
-              <span className="flex items-center gap-2 text-sm font-semibold">
-                <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary/10 text-primary">
-                  {prayerMeta[key].icon}
+              {/* Each hour shows its icon, the same picture as its tile on Pray and at the head of the prayer. */}
+              <span className="flex items-center gap-3">
+                <img
+                  src={tileArt(artFor(key))}
+                  alt=""
+                  loading="lazy"
+                  className="h-[72px] w-[54px] shrink-0 rounded-sm border border-[hsl(var(--icon-gold)/0.4)] object-cover object-top"
+                />
+                <span className="min-w-0">
+                  <span className="flex items-center gap-2 font-display text-lg">
+                    <span className="text-primary">{prayerMeta[key].icon}</span>
+                    {prayerMeta[key].label}
+                  </span>
+                  <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+                    {prayerMeta[key].hint}
+                  </span>
                 </span>
-                {prayerMeta[key].label}
-              </span>
-              <span className="mt-2 block text-xs leading-relaxed text-muted-foreground">
-                {prayerMeta[key].hint}
               </span>
             </button>
           ))}
@@ -337,41 +460,7 @@ export function DailyPrayerFlow() {
       {stepIndex === 0 && !done ? (
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <h3 className="text-lg">Offer this prayer for</h3>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[...names.living, ...names.departed].slice(0, 8).map((entry) => (
-              <Button
-                key={entry.id}
-                type="button"
-                size="sm"
-                variant={intention?.id === entry.id ? "default" : "outline"}
-                aria-pressed={intention?.id === entry.id}
-                className="rounded-full"
-                onClick={() => setIntention(intention?.id === entry.id ? null : { id: entry.id, label: entry.name })}
-              >
-                {entry.name}
-              </Button>
-            ))}
-          </div>
-          <form
-            className="mt-3 flex gap-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              const text = intentionText.trim().slice(0, 80);
-              if (text) setIntention({ label: text });
-            }}
-          >
-            <input
-              value={intentionText}
-              onChange={(event) => setIntentionText(event.target.value)}
-              placeholder="Or in a few words: my exam, a friend who is ill"
-              aria-label="Intention for this prayer"
-              maxLength={80}
-              className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-3 text-sm"
-            />
-            <Button type="submit" variant="outline" className="rounded-xl" disabled={!intentionText.trim()}>
-              Offer
-            </Button>
-          </form>
+          <IntentionPicker names={names} intention={intention} setIntention={setIntention} text={intentionText} setText={setIntentionText} />
           {intention ? (
             <p className="rubric mt-3">
               For {intention.label}
@@ -496,6 +585,11 @@ export function DailyPrayerFlow() {
         <Dialog.Portal>
           <Dialog.Content
             aria-describedby={undefined}
+            // Focus the prayer's heading on opening, so no focus ring sits on the close button.
+            onOpenAutoFocus={(event) => {
+              event.preventDefault();
+              sessionTitleRef.current?.focus();
+            }}
             className={
               "fixed inset-0 z-[70] flex h-dvh flex-col text-foreground outline-none " +
               (readerPrefs.night ? "bg-card text-foreground" : "bg-background")
@@ -564,13 +658,39 @@ export function DailyPrayerFlow() {
                     <option key={item.id} value={item.id} className="bg-background text-foreground">{item.id === "device" ? "Device" : item.name}</option>
                   ))}
                 </select>
+                {time === "night" ? (
+                  <div role="group" aria-label="Sleep timer" className="flex basis-full items-center gap-1">
+                    <span className="mr-1 text-sm text-muted-foreground">Stop reading after</span>
+                    {SLEEP_TIMER_MINUTES.map((minutes) => (
+                      <Button
+                        key={minutes}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        aria-pressed={sleepMinutes === minutes}
+                        className={"h-11 rounded-full px-3 text-sm " + (sleepMinutes === minutes ? "text-accent" : "text-muted-foreground")}
+                        onClick={() => setSleepMinutes(sleepMinutes === minutes ? 0 : minutes)}
+                      >
+                        {minutes} min
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ) : null}
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-              <div className="mx-auto w-full max-w-2xl px-5 py-8 sm:px-8 sm:py-12">
+              {/* The hour's icon at the head of the prayer, fading into the page, the way a listening app leads with art. */}
+              <div aria-hidden className="relative mx-auto mt-4 h-[min(22vh,170px)] w-[min(42rem,calc(100%-2.5rem))] overflow-hidden rounded-sm border border-[hsl(var(--icon-gold)/0.35)]">
+                <img src={tileArt(artFor(time))} alt="" className="h-full w-full object-cover object-[50%_28%]" />
+                <div className={"absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent " + (readerPrefs.night ? "to-card/80" : "to-background/80")} />
+              </div>
+              <div className="mx-auto w-full max-w-2xl px-5 py-6 sm:px-8 sm:py-10">
                 {intention ? <p className="rubric mb-2">For {intention.label}</p> : null}
-                <Dialog.Title className="text-3xl text-cinnabar sm:text-4xl">{current.title}</Dialog.Title>
+                <Dialog.Title ref={sessionTitleRef} tabIndex={-1} className="text-3xl text-cinnabar focus:outline-none sm:text-4xl">{current.title}</Dialog.Title>
+                {stepIndex === 0 && !intention ? (
+                  <IntentionPicker compact names={names} intention={intention} setIntention={setIntention} text={intentionText} setText={setIntentionText} />
+                ) : null}
                 {silent ? (
                   <SilenceStep key={`${progressKey}:${stepIndex}`} onRemaining={setSilenceLeft} />
                 ) : (
@@ -582,17 +702,24 @@ export function DailyPrayerFlow() {
             </div>
 
             <footer className="shrink-0 border-t border-border/50 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">
-              <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-5 sm:px-8">
-                <Button type="button" variant="outline" className="h-12 rounded-2xl border-border/60 px-5" onClick={goBack} disabled={stepIndex === 0}>
-                  <ChevronLeft className="mr-2 h-4 w-4" /> Back
+              {/* Listening leads: the play button sits in the middle, large, with Back and Next on either side. */}
+              <div className="mx-auto grid w-full max-w-2xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-5 sm:px-8">
+                <Button type="button" variant="ghost" size="icon" className="h-12 w-12 justify-self-start rounded-full" onClick={goBack} disabled={stepIndex === 0}>
+                  <ChevronLeft className="h-6 w-6" />
+                  <span className="sr-only">Back</span>
                 </Button>
-                {canListen ? <AudioRing on={readingAloud} onToggle={() => setReadingAloud((on) => !on)} /> : null}
+                {canListen ? (
+                  <AudioRing large on={readingAloud} onToggle={() => { softHaptic(); setReadingAloud((on) => !on); }} />
+                ) : (
+                  <span aria-hidden />
+                )}
                 <Button
                   type="button"
-                  className="h-12 flex-1 rounded-2xl sm:flex-none sm:px-8"
+                  variant="outline"
+                  className="h-12 justify-self-end rounded-full border-border/70 px-5"
                   onClick={() => (nextDisabled ? setSilenceLeft(0) : goNext())}
                 >
-                  {nextDisabled ? `Skip the silence (${silenceLeft})` : nextLabel}
+                  {nextDisabled ? `Skip (${silenceLeft})` : sessionNextLabel}
                   {nextDisabled ? null : nextIcon}
                 </Button>
               </div>
