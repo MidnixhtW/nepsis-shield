@@ -1,13 +1,16 @@
 import { Check } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 import { useSettings } from "@/hooks/useSettings";
+import { choiceHaptic } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
-import { getTradition, markTraditionChosen, traditionPatch, TRADITION_OPTIONS, type Tradition } from "@/lib/tradition";
+import { getTradition, markTraditionChosen, traditionChosen, traditionPatch, TRADITION_OPTIONS, type Tradition } from "@/lib/tradition";
 
 // "How do you pray?" One answer sets the jurisdiction, the Western Rite switch and the calendar for Melkite and
 // Byzantine Catholic parishes, so labels, fasting wording and church links follow it.
+// Until the person answers, nothing is checked: a Melkite should not open the question with "Orthodox" already chosen.
 export function TraditionPicker({ onChosen }: { onChosen?: (tradition: Tradition) => void }) {
   const { settings, updateSettings } = useSettings();
-  const current = getTradition(settings);
+  const current = traditionChosen(settings) ? getTradition(settings) : null;
   return (
     <div role="radiogroup" aria-label="How do you pray?" className="border-t border-border/80">
       {TRADITION_OPTIONS.map((option) => {
@@ -19,11 +22,13 @@ export function TraditionPicker({ onChosen }: { onChosen?: (tradition: Tradition
               role="radio"
               aria-checked={selected}
               onClick={() => {
+                choiceHaptic();
                 updateSettings(traditionPatch(option.id, settings));
                 markTraditionChosen();
+                if (!selected) toast({ title: `Set to ${option.title}`, description: "You can change this anytime in Settings." });
                 onChosen?.(option.id);
               }}
-              className="flex min-h-14 w-full items-center gap-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex min-h-14 w-full items-center gap-3 py-3 text-left transition-colors active:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span className="min-w-0 flex-1">
                 <span className={cn("block font-display text-lg", selected && "text-accent")}>{option.title}</span>

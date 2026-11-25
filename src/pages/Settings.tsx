@@ -32,6 +32,8 @@ import { OtherReminders } from "@/components/app/OtherReminders";
 import { PatronSaintSettings } from "@/components/app/NameDay";
 import { ReaderVoiceSettings } from "@/components/app/ReaderVoiceSettings";
 import { PremiumPageHeader } from "@/components/app/PremiumPageHeader";
+import { TraditionPicker } from "@/components/app/TraditionPicker";
+import { getTradition, isEasternCatholic } from "@/lib/tradition";
 import type { CalendarMode, Jurisdiction, LanguagePref } from "@/lib/settings";
 
 import { removeStoredItem } from "@/lib/deviceStorage";
@@ -179,6 +181,19 @@ export default function Settings() {
         <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
+              <h2 className="text-base font-semibold tracking-tight">How you pray</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Sets the prayers, fasting notes and church links. Your exact jurisdiction is under Advanced.</p>
+            </div>
+            <Church className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <div className="mt-4">
+            <TraditionPicker />
+          </div>
+        </Card>
+
+        <Card className="rounded-3xl border-border/60 bg-card p-5 shadow-sm">
+          <div className="flex items-start justify-between gap-3">
+            <div>
               <h2 className="text-base font-semibold tracking-tight">Calendar</h2>
               <p id="calendar-mode-help" className="mt-1 text-sm text-muted-foreground">Choose New Calendar (Gregorian) or Old Calendar (Julian).</p>
             </div>
@@ -197,13 +212,17 @@ export default function Settings() {
               </SelectContent>
             </Select>
           </div>
-          <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
-            <div>
-              <Label htmlFor="western-rite" className="text-sm font-medium">Western Rite parish</Label>
-              <p className="text-sm text-muted-foreground">Adds the Rosary and the Angelus to Pray.</p>
+          {/* Western Rite Orthodox is a choice in "How you pray". A Melkite or Byzantine Catholic who also keeps Latin
+              devotions turns them on here, without leaving the Byzantine rhythm. */}
+          {isEasternCatholic(getTradition(settings)) ? (
+            <div className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-border/60 bg-muted/20 px-4 py-3">
+              <div>
+                <Label htmlFor="western-rite" className="text-sm font-medium">Western devotions too</Label>
+                <p className="text-sm text-muted-foreground">Adds the Rosary, the Way of the Cross, Novenas and the Angelus to Pray.</p>
+              </div>
+              <Switch id="western-rite" checked={settings.westernRite} onCheckedChange={(checked) => updateSettings({ westernRite: checked })} />
             </div>
-            <Switch id="western-rite" checked={settings.westernRite} onCheckedChange={(checked) => updateSettings({ westernRite: checked })} />
-          </div>
+          ) : null}
         </Card>
 
         <PatronSaintSettings />
