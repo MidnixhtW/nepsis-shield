@@ -13,9 +13,9 @@ export function WatchfulnessLog() {
       : `You prayed on ${kept === 1 ? "one day" : `${kept} days`} this week. Glory to God.`;
 
   return (
-    <section aria-labelledby="watchfulness-log-title" className="border-t border-border/80 pt-6">
-      <h2 id="watchfulness-log-title" className="text-sm font-semibold text-muted-foreground">This week</h2>
-      <p className="scripture-text mt-1 text-lg">{line}</p>
+    <section aria-labelledby="watchfulness-log-title">
+      <h2 id="watchfulness-log-title" className="px-1 text-xl">This week</h2>
+      <p className="scripture-text mt-1 px-1 text-lg">{line}</p>
     </section>
   );
 }

@@ -104,7 +104,7 @@ export function PersonalizedPath() {
             </p>
           </div>
           <Badge variant="secondary" className="w-fit rounded-full px-3 py-1 text-xs font-semibold">
-            {selectedNeed.label} · {prefs.time} min
+            {selectedNeed.label}, {prefs.time} min
           </Badge>
         </div>
       </Card>

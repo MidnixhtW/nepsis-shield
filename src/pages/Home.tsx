@@ -3,13 +3,11 @@ import { Link, Navigate } from "react-router";
 import { DayIconBanner } from "@/components/app/DayIconBanner";
 import { useDailyCalendar } from "@/hooks/useDailyCalendar";
 import { Capacitor } from "@capacitor/core";
-import { Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { ONBOARDING_KEY } from "@/components/app/QuickStartDialog";
 import { LOOK_AROUND_STATE } from "@/lib/appEvents";
 import { getStoredItem } from "@/lib/deviceStorage";
-import { recommendedTime } from "@/content/dailyPrayerSteps";
 import { BEEN_HERE_KEY } from "@/lib/recentPlaces";
 
 // Someone who has set up their rule, or who opened the installed app, goes straight to Today.
@@ -24,76 +22,16 @@ function shouldSkipHome() {
   }
 }
 
-function StartButtons({ center = false }: { center?: boolean }) {
+function StartButton() {
   return (
-    <div className={center ? "flex flex-col items-center gap-3 sm:flex-row sm:justify-center" : "flex flex-col gap-3 sm:flex-row"}>
-      <Button asChild className="h-14 rounded-full px-8 text-base font-bold text-primary-foreground">
-        <Link to="/today">
-          Start now, it&rsquo;s free
-        </Link>
-      </Button>
-      <Button asChild variant="outline" className="h-14 rounded-full border-primary/35 bg-background/40 px-7 text-base backdrop-blur">
-        <Link to="/download">
-          <Smartphone className="mr-2 h-5 w-5" /> Install on your phone
-        </Link>
-      </Button>
-    </div>
+    <Button asChild className="h-14 rounded-full px-8 text-base font-bold text-primary-foreground">
+      <Link to="/today">Start now, it&rsquo;s free</Link>
+    </Button>
   );
 }
 
-// Real situations the app is built around. These are descriptions, not quotes from users.
-const lives = [
-  {
-    title: "Early career",
-    body: "Five minutes of morning prayer before the inbox, and a way back to calm when a meeting goes badly.",
-  },
-  {
-    title: "Studying",
-    body: "A two-minute rule that survives exam weeks, and evening prayers that help you put the phone down.",
-  },
-  {
-    title: "Serving",
-    body: "Military, police, fire, EMS, dispatch and chaplains get shift-length prayers and a reset built for the job.",
-  },
-  {
-    title: "Late nights",
-    body: "Compline, the Jesus Prayer with a prayer-rope counter, and a stillness timer for when sleep won’t come.",
-  },
-];
-
-const features = [
-  {
-    title: "Prayers you can keep",
-    body: "Morning, evening and night prayers in four lengths, prayed full-screen one step at a time, with read-aloud. You never lose your place.",
-  },
-  {
-    title: "Readings, saints and feasts",
-    body: "The day’s Epistle and Gospel, the saints and feasts, and the whole Bible, following the Church calendar, New or Old.",
-  },
-  {
-    title: "The fasts, day by day",
-    body: "Today’s fast at a glance, and a day-by-day companion through Great Lent and every fast of the year, with a short prayer for each day.",
-  },
-];
-
-const habits = [
-  {
-    title: "A quiet record",
-    body: "A quiet week of dots shows the days you prayed. Miss one and it is simply empty; nothing resets, nothing scolds.",
-  },
-  {
-    title: "Reminders at your hours",
-    body: "Morning, evening and night reminders in the Android app, whether you wake at five or finish a late shift.",
-  },
-  {
-    title: "Works with no signal",
-    body: "Prayers live on your phone, and the next two weeks of the calendar are saved ahead. No account, and your notes stay with you.",
-  },
-];
-
-const BEGIN_LABEL = { morning: "Begin morning prayers", evening: "Begin evening prayers", night: "Begin night prayers" } as const;
-
-// The opening is today, as the Church keeps it: the day's icon and feast, the fast and tone, and one way to begin.
+// The opening is today, as the Church keeps it: the day's icon and feast, the fast and tone, and the readings. The
+// icon changes every day, so the page is never the same twice.
 // Shown once the page is running in the browser (the calendar is the visitor's own day); before that, and for search
 // engines, the plain statement of what the app is.
 function TodayHero() {
@@ -115,7 +53,6 @@ function HeroStatement() {
 
 function TodayHeroLive() {
   const { today, settings, query } = useDailyCalendar();
-  const time = recommendedTime(new Date());
   const readings = query.data
     ? [query.data.readings.epistle, query.data.readings.gospel]
         .filter(Boolean)
@@ -131,15 +68,7 @@ function TodayHeroLive() {
         tone={query.data?.tone?.value}
         fasting={query.data?.fasting}
       />
-      <div className="mt-8 flex flex-col items-center gap-2">
-        <Button asChild className="h-14 rounded-full px-9 text-base font-semibold">
-          <Link to={`/pray?tab=daily&begin=${time}`}>{BEGIN_LABEL[time]}</Link>
-        </Button>
-        <Link to="/download" className="inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
-          Add it to your home screen
-        </Link>
-      </div>
-      {readings ? <p className="scripture-text mx-auto mt-6 text-center text-base text-muted-foreground">Today&rsquo;s readings: {readings}.</p> : null}
+      {readings ? <p className="scripture-text mt-4 px-1 text-base text-muted-foreground">Today&rsquo;s readings: {readings}.</p> : null}
     </section>
   );
 }
@@ -164,7 +93,7 @@ export default function Home() {
       <main id="main-content">
         <TodayHero />
 
-        {/* Then a page of the prayer book itself, and what the app is, in a sentence. */}
+        {/* Then what the app is, in a sentence, one way in, and a page of the prayer book itself. */}
         <section aria-labelledby="what-it-is" className="border-t border-border/60">
           <div className="mx-auto grid max-w-6xl items-start gap-x-16 gap-y-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <div>
@@ -173,8 +102,11 @@ export default function Home() {
                 Morning, evening and night prayers, the day&rsquo;s readings and saints, and the fasts of the Church year. Free, with
                 no account, and it works with no signal.
               </p>
+              <p className="scripture-text mt-4 text-lg text-muted-foreground">
+                <em>Nepsis</em> is the Church&rsquo;s word for watchfulness: keeping the heart awake to God.
+              </p>
               <div className="mt-8">
-                <StartButtons />
+                <StartButton />
               </div>
             </div>
             <figure className="border-t border-border/60 pt-8 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0" aria-label="From the morning prayers">
@@ -192,91 +124,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section aria-labelledby="real-life" className="border-y border-border/50 bg-card/30">
-          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
-            <h2 id="real-life" className="max-w-2xl text-3xl sm:text-4xl">A rule small enough to keep</h2>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Each prayer comes in four lengths, from one minute to a full rule, so it fits a school day, a long shift or a sleepless night.
-            </p>
-            <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-              {lives.map((item) => (
-                <article key={item.title}>
-                  <h3 className="text-xl">{item.title}</h3>
-                  <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="features" className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-            <div>
-              <h2 id="features" className="max-w-xl text-3xl sm:text-4xl">The day as the Church keeps it</h2>
-              <ul className="mt-8 grid gap-7">
-                {features.map((item) => (
-                  <li key={item.title}>
-                    <h3 className="text-xl">{item.title}</h3>
-                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
-              <div className="rounded-[2.75rem] border border-border/60 bg-black p-2.5">
-                <img
-                  src="/home/today.jpg"
-                  alt="The Today screen: the day's icon and feast, the prayers for the hour, and the fasting season's day."
-                  width={540}
-                  height={1080}
-                  loading="lazy"
-                  decoding="async"
-                  className="block h-auto w-full rounded-[2.2rem]"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="consistency" className="border-y border-border/50 bg-card/30">
-          <div className="mx-auto grid max-w-5xl items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-            <div className="mx-auto w-full max-w-[17rem] sm:max-w-xs">
-              <div className="rounded-[2.75rem] border border-border/60 bg-black p-2.5">
-                <img
-                  src="/home/full-screen-prayer.jpg"
-                  alt="A morning prayer full-screen: its title and first letter in red, and Back, Listen and Next below."
-                  width={540}
-                  height={1080}
-                  loading="lazy"
-                  decoding="async"
-                  className="block h-auto w-full rounded-[2.2rem]"
-                />
-              </div>
-            </div>
-            <div>
-              <h2 id="consistency" className="text-3xl sm:text-4xl">No streaks, no guilt</h2>
-              <ul className="mt-8 grid gap-7">
-                {habits.map((item) => (
-                  <li key={item.title}>
-                    <h3 className="text-xl">{item.title}</h3>
-                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">{item.body}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="begin" className="mx-auto max-w-3xl px-5 py-20 sm:px-8 sm:py-24">
-          <h2 id="begin" className="text-3xl sm:text-4xl">Begin with two minutes</h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            <em>Nepsis</em> is the Church&rsquo;s word for watchfulness: keeping the heart awake to God. Tomorrow morning, open the app and
-            pray the short morning prayers.
-          </p>
-          <div className="mt-8">
-            <StartButtons />
-          </div>
-        </section>
       </main>
 
       <footer className="border-t border-border/50">

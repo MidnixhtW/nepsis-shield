@@ -45,7 +45,7 @@ export function SaintStoriesFeed() {
                 className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-accent/25 bg-gradient-to-b from-primary/15 via-card to-card p-5 sm:p-7"
               >
                 <p className="text-xs font-semibold text-accent">
-                  {story.saint} · {story.day}
+                  {story.saint}, {story.day}
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold leading-tight tracking-tight sm:text-3xl">{story.title}</h2>
                 <div tabIndex={0} role="region" aria-label={`${story.title}, full story`} className="mt-4 grid flex-1 content-start gap-3 overflow-y-auto pr-1 scripture-text text-[1.02rem] leading-relaxed">
@@ -66,7 +66,7 @@ export function SaintStoriesFeed() {
                       {playing ? "Stop" : "Listen"}
                     </Button>
                   ) : null}
-                  <ShareCardButton card={{ eyebrow: `${story.saint} · ${story.day}`, text: story.lesson, attribution: story.title }} fileName="saint-story.png" />
+                  <ShareCardButton card={{ eyebrow: `${story.saint}, ${story.day}`, text: story.lesson, attribution: story.title }} fileName="saint-story.png" />
                   <span className="ml-auto text-xs text-muted-foreground">{index + 1} / {stories.length}</span>
                 </div>
               </article>

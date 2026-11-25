@@ -36,10 +36,10 @@ export default {
         "6xl": ["3rem", { lineHeight: "1.05" }],
       },
       fontFamily: {
-        sans: ["Geist Variable", "ui-sans-serif", "system-ui", "sans-serif"],
-        // Newsreader, or condensed Barlow in a service role (see styles/foundation.css).
+        sans: ["Atkinson Hyperlegible Next Variable", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Alegreya, or condensed Barlow in a service role (see styles/foundation.css).
         display: ["var(--font-heading)"],
-        serif: ["Newsreader Variable", "Georgia", "Times New Roman", "serif"],
+        serif: ["Alegreya Variable", "Georgia", "Times New Roman", "serif"],
       },
       // Every color comes from the active theme's variables (styles/themes/). Use these instead of Tailwind's
       // stock palette (red-500, lime-700, ...), which would ignore the theme.

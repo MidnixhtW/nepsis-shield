@@ -35,7 +35,7 @@ export function WesternAdventCard({ today }: { today: Date }) {
 
   return (
     <Card className="rounded-3xl p-5">
-      <p className="text-sm font-semibold text-muted-foreground">Western Advent · Week {week} of 4</p>
+      <p className="text-sm font-semibold text-muted-foreground">Western Advent, week {week} of 4</p>
       <div className="mt-3 flex items-center gap-4">
         <Wreath lit={week} />
         <div className="min-w-0">

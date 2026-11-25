@@ -54,32 +54,33 @@ export function PrayNowCard() {
   const to = western ? WESTERN[time].to : `/pray?tab=daily&begin=${time}`;
 
   return (
-    <section aria-labelledby="pray-now-title" className="px-1 text-center">
-      <h2 id="pray-now-title" className="text-3xl shortphone:text-2xl sm:text-4xl">
-        {label.title}
-      </h2>
-      <p className="scripture-text mx-auto mt-2 max-w-md text-lg text-foreground/85 shortphone:mt-1 shortphone:text-base">
-        {done ? (next ? `Glory to God. ${LABELS[next].title} come later today.` : "Glory to God. Rest in peace tonight.") : label.line}
-      </p>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 shortphone:mt-3">
-        <Button asChild className="h-12 rounded-full px-8 text-base font-semibold" variant={done ? "outline" : "default"}>
+    <section aria-labelledby="pray-now-title" className="px-1">
+      {/* The prayer for this hour and its Begin share one row, low on the screen where the thumb rests. */}
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <h2 id="pray-now-title" className="text-2xl leading-tight sm:text-3xl">
+            {label.title}
+          </h2>
+          <p className="scripture-text mt-1 text-base text-foreground/85">
+            {done ? (next ? `Glory to God. ${LABELS[next].title} come later today.` : "Glory to God. Rest in peace tonight.") : label.line}
+          </p>
+        </div>
+        <Button asChild className="h-12 shrink-0 rounded-full px-7 text-base font-semibold" variant={done ? "outline" : "default"}>
           <Link to={to}>
             {done ? <Check className="mr-2 h-4 w-4" /> : null}
             {done ? "Pray again" : "Begin"}
           </Link>
         </Button>
       </div>
-      {western ? null : <p className="mt-3 text-sm text-foreground/75 shortphone:mt-2">
+      {western ? null : <p className="mt-2 text-sm text-foreground/75">
         {MODE_NAMES[mode]}, {lengthFor(time, mode).replace(/^About/, "about").replace(/\.$/, "")}.{" "}
         <Link to="/pray?tab=daily" className="inline-flex min-h-11 items-center font-semibold text-accent underline-offset-2 hover:underline">
           Change length
         </Link>
       </p>}
-      <div className="mt-5 text-left">
-        <DayTimeline />
-      </div>
+      <DayTimeline />
       {favorites.length ? (
-        <nav aria-label="Favorites" className="mt-4 flex flex-wrap justify-center gap-2 border-t border-border/50 pt-4">
+        <nav aria-label="Favorites" className="mt-4 flex flex-wrap gap-2 border-t border-border/50 pt-4">
           {favorites.slice(0, 6).map((favorite) => (
             <Link
               key={favorite.to}

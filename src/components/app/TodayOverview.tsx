@@ -47,7 +47,7 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
 
 
   // Keep the Android home-screen widget current: two weeks of days, with today's fast once it has loaded.
-  const fastToday = q.data ? [q.data.fasting.description, q.data.fasting.exception].filter(Boolean).join(" · ") : undefined;
+  const fastToday = q.data ? [q.data.fasting.description, q.data.fasting.exception].filter(Boolean).join(", ") : undefined;
   useEffect(() => {
     void saveWidgetSnapshot(today, settings.calendarMode, fastToday);
   }, [today, settings.calendarMode, fastToday]);

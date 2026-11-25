@@ -18,7 +18,7 @@ test("the length chosen in the prayer is the one Today names and begins", async 
   await expect(page.getByText(/The Watch rule, about a minute\./)).toBeVisible();
   await page.getByRole("link", { name: /^Begin/ }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog.getByText(/Watch rule · 1 \//)).toBeVisible();
+  await expect(dialog.getByText(/Watch rule, 1 \//)).toBeVisible();
   await expect(dialog.getByText(/Holy God, Holy Mighty, Holy Immortal/).first()).toBeVisible({ timeout: 10_000 }).catch(() => {});
 });
 

@@ -3,7 +3,7 @@ import { expect, test } from "./fixtures";
 test("before the Nativity Fast, Today shows the countdown and a preview", async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 10, 2, 10, 0)); // November 2, 2026
   await page.goto("/today");
-  await expect(page.getByText("Coming up · in 13 days")).toBeVisible();
+  await expect(page.getByText("Coming up, in 13 days")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Nativity Fast begins Sunday, November 15" })).toBeVisible();
   await page.getByRole("button", { name: "Preview the journey" }).click();
   await expect(page.getByRole("heading", { name: "The Nativity Fast begins" })).toBeVisible();

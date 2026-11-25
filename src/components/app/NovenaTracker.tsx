@@ -78,7 +78,7 @@ export function NovenaTracker() {
         return (
           <Card key={novena.id} className="rounded-3xl p-5">
             <p className="text-sm font-semibold text-muted-foreground">
-              {complete ? "Completed" : `Day ${Math.min(count + (prayedToday ? 0 : 1), DAYS)} of ${DAYS}`} · begun {format(new Date(`${novena.startedAt}T12:00:00`), "MMM d")}
+              {complete ? "Completed" : `Day ${Math.min(count + (prayedToday ? 0 : 1), DAYS)} of ${DAYS}`}, begun {format(new Date(`${novena.startedAt}T12:00:00`), "MMM d")}
             </p>
             <h2 className="mt-1 text-xl">{novena.intention}</h2>
             {novena.prayer ? <p className="mt-1 text-sm text-muted-foreground">Praying: {novena.prayer}</p> : null}

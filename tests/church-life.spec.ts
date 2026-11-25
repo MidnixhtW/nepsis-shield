@@ -6,7 +6,7 @@ test("a repose date shows the next memorial and a card on Today", async ({ page 
   await page.getByRole("textbox", { name: "Add a name: For the repose of" }).fill("Helen");
   await page.getByLabel("Date of repose (optional)").fill("2026-11-02");
   await page.getByRole("button", { name: "Add", exact: true }).last().click();
-  await expect(page.getByText(/Reposed Nov 2, 2026 · next: 3rd day, Wed Nov 4/)).toBeVisible();
+  await expect(page.getByText(/Reposed Nov 2, 2026, next: 3rd day, Wed Nov 4/)).toBeVisible();
 
   await page.goto("/today");
   const card = page.getByRole("region", { name: "Remembering the departed" });
@@ -59,7 +59,7 @@ test("a busy day shows two occasions and folds the rest", async ({ page }) => {
   const memorials = page.getByRole("region", { name: "Remembering the departed" });
   await expect(memorials).toBeHidden();
   // The Nativity Fast's ending is also an occasion that day, so it folds with the memorials.
-  const more = page.getByRole("button", { name: /Also today · .*Memorial days/ });
+  const more = page.getByRole("button", { name: /Also today, .*Memorial days/ });
   await more.click();
   await expect(memorials).toBeVisible();
   await expect(page.getByRole("button", { name: "Show less" })).toHaveAttribute("aria-expanded", "true");

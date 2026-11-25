@@ -2,7 +2,7 @@
  * Warm obsidian: the neutral surfaces of the Church Year theme. Candlelit stone instead of cold blue-gray, the same in
  * every season, so only the season's one color changes (buttons, rubric red, rings). Depth comes from small steps in
  * lightness between canvas, surface and raised controls, never from shadows. Text is warm vellum, never pure white.
- *   canvas #0D0C0B · surface #161412 · raised #1F1C19 · text #F3EFEA · muted #9A9288 · hairline about 8% white
+ *   canvas #0D0C0B, surface #161412, raised #1F1C19, text #F3EFEA, muted #9A9288, hairline about 8% white
  * Imported after seasonal.css so it wins over each season's own neutrals.
  */
 @layer base {
@@ -25,10 +25,8 @@
     --sidebar-accent: 30 11% 11%;
     --sidebar-accent-foreground: 34 33% 93%;
     --sidebar-border: 30 6% 14%;
-    /* Links, labels and the chosen tab are candle gold in every season, so the season's color is kept for the one
-       main button on each screen and the feast's name. */
-    --accent: 40 52% 64%;
-    --accent-foreground: 30 30% 8%;
+    /* --accent is left to the season (seasonal.css): links, labels and the chosen tab take the vestment color of the
+       day, the way the Church changes color through the year. */
   }
 }
 

@@ -42,7 +42,7 @@ function MemorialLine({ name, reposed, today }: { name: string; reposed: string;
   return (
     <span className="block text-xs text-accent">
       Reposed {format(date, "MMM d, yyyy")}
-      {next ? ` · next: ${next.label}, ${format(next.date, "EEE MMM d")}` : ""}
+      {next ? `, next: ${next.label}, ${format(next.date, "EEE MMM d")}` : ""}
     </span>
   );
 }

@@ -92,7 +92,7 @@ export function LectioDivina() {
         ) : (
           <div className="mt-5">
             <p className="text-sm font-semibold text-muted-foreground">
-              Step {step + 1} of {STEPS.length} · <span lang="la">{current.latin}</span>
+              Step {step + 1} of {STEPS.length}, <span lang="la">{current.latin}</span>
             </p>
             <h2 ref={headingRef} tabIndex={-1} className="mt-1 text-3xl focus:outline-none">{current.name}</h2>
             <p className="mt-2 text-base leading-relaxed text-foreground/90">{current.line}</p>

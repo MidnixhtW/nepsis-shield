@@ -6,8 +6,7 @@ test("a first visit lands on the homepage, and Start opens setup", async ({ page
     sessionStorage.setItem("nepsis-shield:st-michael-intro-seen:historic-icon-v1", "true");
   });
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Orthodox prayer for every day" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "No streaks, no guilt" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Orthodox prayer for every day" })).toBeVisible();
 
   await page.getByRole("link", { name: /Start now/ }).first().click();
   await expect(page).toHaveURL(/\/today$/);

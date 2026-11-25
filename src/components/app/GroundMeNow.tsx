@@ -69,7 +69,7 @@ export function GroundResetPanel({ onExit, inDialog = false }: { onExit: () => v
           </span>
           <div>
             <p className="text-xs font-semibold text-muted-foreground">
-              60-second reset · Step {stepIndex + 1}/{steps.length}
+              60-second reset, step {stepIndex + 1} of {steps.length}
             </p>
             <Title className="mt-1 text-2xl font-semibold leading-tight">{current.title}</Title>
           </div>

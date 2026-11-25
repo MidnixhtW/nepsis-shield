@@ -14,7 +14,7 @@ export function LearnReviewCard() {
     <section aria-label="Review today" className="flex flex-wrap items-center gap-3 rounded-3xl border bg-card p-5">
       <ScrollText aria-hidden className="h-5 w-5 shrink-0 text-primary" />
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold">Review today · {due.length} section{due.length === 1 ? "" : "s"}, about {minutes} min</p>
+        <p className="text-sm font-semibold">Review today, {due.length} section{due.length === 1 ? "" : "s"}, about {minutes} min</p>
         <p className="truncate text-xs text-muted-foreground">{prayers.join(", ")}</p>
       </div>
       <Button asChild size="sm" className="rounded-full">

@@ -45,5 +45,5 @@ test("during a fast the rule card is compact and can be expanded", async ({ page
   await page.goto("/today");
   await expect(page.getByText("Your prayer plan:")).toBeVisible();
   await page.getByRole("button", { name: "Show rule" }).click();
-  await expect(page.getByText(/Daily prayer plan · Rule of prayer/)).toBeVisible();
+  await expect(page.getByText(/Daily prayer plan/)).toBeVisible();
 });

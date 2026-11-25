@@ -451,7 +451,7 @@ export function SeasonJourneyCard({ today, calendar }: { today: Date; calendar: 
     return (
       <Card className="rounded-[2rem] border p-5 sm:p-6" aria-labelledby="season-journey-title">
         <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent">
-          <CalendarDays className="h-3.5 w-3.5" /> Coming up · {daysUntil === 1 ? "tomorrow" : `in ${daysUntil} days`}
+          <CalendarDays className="h-3.5 w-3.5" /> Coming up, {daysUntil === 1 ? "tomorrow" : `in ${daysUntil} days`}
         </p>
         <h2 id="season-journey-title" className="mt-2 text-2xl font-semibold tracking-tight">
           {season.name} begins {format(season.start, "EEEE, MMMM d")}

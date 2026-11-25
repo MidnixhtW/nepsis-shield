@@ -48,9 +48,9 @@ function ArtShelf({ group }: { group: LauncherGroup }) {
           <li key={tile.to} className="w-[9.5rem] shrink-0 snap-start sm:w-44">
             <Link
               to={tile.to}
-              className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="group block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <span className="relative block aspect-[3/4] overflow-hidden rounded-2xl bg-card">
+              <span className="icon-panel relative block aspect-[3/4] overflow-hidden bg-card">
                 <img
                   src={tileArt(tile.art!)}
                   alt=""
@@ -58,8 +58,7 @@ function ArtShelf({ group }: { group: LauncherGroup }) {
                   decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-active:scale-[0.985] motion-reduce:transition-none"
                 />
-                <span aria-hidden className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
-              </span>
+                </span>
               <span className="mt-2.5 block px-0.5 font-display text-base leading-snug">{tile.label}</span>
               {tile.duration ? <span className="meta-label mt-0.5 block px-0.5 text-muted-foreground">{tile.duration}</span> : null}
             </Link>
@@ -112,7 +111,7 @@ function LeadCard({ eyebrow, tile }: { eyebrow: string; tile: LauncherTile }) {
   return (
     <Link
       to={tile.to}
-      className="group relative block overflow-hidden rounded-[1.75rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="icon-panel group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span className="relative block aspect-[4/3] sm:aspect-[16/7]">
         <img src={tileArt(tile.art)} alt="" decoding="async" className="h-full w-full object-cover object-[50%_22%]" />

@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode } from "react";
 import { Link } from "react-router";
-import { Bookmark, ChevronRight, Clock, Compass, Download, Info, NotebookPen, Pin, ScrollText, Settings as SettingsIcon, Shield, Users } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { ChevronRight } from "lucide-react";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
 import { WatchfulnessLog } from "@/components/app/WatchfulnessLog";
 import { PatronOpening } from "@/components/app/PatronOpening";
@@ -12,31 +11,32 @@ import { CURRENT_VERSION } from "@/lib/releaseInfo";
 import { PolicyLinks } from "@/components/app/PolicyLinks";
 import { t } from "@/i18n";
 
-function Row({ to, icon: Icon, label, hint, trailing }: { to: string; icon: ComponentType<{ className?: string }>; label: string; hint?: string; trailing?: ReactNode }) {
+// One row style and one heading style for the whole screen, the same as the lists on Learn: a title in the book face,
+// a plain line under it, a rule between rows.
+function Row({ to, label, hint, trailing }: { to: string; label: string; hint?: string; trailing?: ReactNode }) {
   return (
-    <li className="relative">
+    <li className="relative border-b border-border/80">
       <Link
         to={to}
-        className="flex min-h-14 items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="flex min-h-14 items-center gap-3 px-1 py-3 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       >
-        <Icon className="h-5 w-5 shrink-0 text-accent" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-semibold leading-tight">{label}</span>
-          {hint ? <span className="mt-0.5 block truncate text-xs text-muted-foreground">{hint}</span> : null}
+          <span className="block truncate font-display text-lg leading-tight">{label}</span>
+          {hint ? <span className="mt-0.5 block truncate text-sm text-muted-foreground">{hint}</span> : null}
         </span>
         {trailing ? <span className="w-9 shrink-0" /> : <ChevronRight aria-hidden className="h-4 w-4 shrink-0 text-muted-foreground" />}
       </Link>
-      {trailing ? <span className="absolute right-1.5 top-1/2 -translate-y-1/2">{trailing}</span> : null}
+      {trailing ? <span className="absolute right-0 top-1/2 -translate-y-1/2">{trailing}</span> : null}
     </li>
   );
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <Card className="rounded-3xl border p-2 sm:p-3">
-      <h3 className="px-3 pb-1 pt-2 text-xs font-semibold text-muted-foreground">{title}</h3>
+    <section>
+      <h2 className="mb-2 px-1 text-xl">{title}</h2>
       {children}
-    </Card>
+    </section>
   );
 }
 
@@ -56,7 +56,7 @@ export function MeHub() {
   const recent = useRecentPlaces();
 
   return (
-    <div className="mx-auto grid w-full max-w-3xl gap-4 sm:gap-5">
+    <div className="mx-auto grid w-full max-w-3xl gap-8">
       {/* Settings has one home, the App list below; the header menu covers search and themes on every screen. */}
       <div className="px-1">
         <h1 className="text-3xl sm:text-4xl">{t("me.title")}</h1>
@@ -70,13 +70,13 @@ export function MeHub() {
 
       <Section title="Favorites">
         {favorites.length ? (
-          <ul className="grid">
+          <ul className="grid border-t border-border/80">
             {favorites.map((favorite) => (
-              <Row key={favorite.to} to={favorite.to} icon={Bookmark} label={favorite.label} hint={favorite.area} trailing={<FavoriteStar to={favorite.to} label={favorite.label} />} />
+              <Row key={favorite.to} to={favorite.to} label={favorite.label} hint={favorite.area} trailing={<FavoriteStar to={favorite.to} label={favorite.label} />} />
             ))}
           </ul>
         ) : (
-          <p className="px-3 pb-3 text-sm leading-relaxed text-muted-foreground">
+          <p className="border-y border-border/80 px-1 py-3 text-sm leading-relaxed text-muted-foreground">
             Tap the star on any prayer, service or topic to add it to Favorites, here and on Today.
           </p>
         )}
@@ -84,32 +84,32 @@ export function MeHub() {
 
       {recent.length ? (
         <Section title="Recently opened">
-          <ul className="grid">
+          <ul className="grid border-t border-border/80">
             {recent.map((place) => (
-              <Row key={place.to} to={place.to} icon={Clock} label={place.label} hint={`${place.area} · ${timeAgo(place.at)}`} />
+              <Row key={place.to} to={place.to} label={place.label} hint={`${place.area}, ${timeAgo(place.at).toLowerCase()}`} />
             ))}
           </ul>
         </Section>
       ) : null}
 
       <Section title="Yours">
-        <ul className="grid sm:grid-cols-2">
-          <Row to="/pray?tab=rule" icon={Compass} label="My prayer plan" hint="Your rule of prayer: length and steps" />
-          <Row to="/pray?tab=names" icon={ScrollText} label="Prayer list" hint="Names of the living and the departed" />
-          <Row to="/pray?tab=journal" icon={NotebookPen} label="Journal" hint="Reflections and the day's examen" />
-          <Row to="/pray?tab=groups" icon={Users} label="Prayer groups" hint="Groups you have joined" />
-          <Row to="/pray?tab=prayers" icon={Pin} label="Pinned prayers" hint="Prayer texts you pinned" />
+        <ul className="grid border-t border-border/80 sm:grid-cols-2 sm:gap-x-6">
+          <Row to="/pray?tab=rule" label="My prayer plan" hint="Your rule of prayer: length and steps" />
+          <Row to="/pray?tab=names" label="Prayer list" hint="Names of the living and the departed" />
+          <Row to="/pray?tab=journal" label="Journal" hint="Reflections and the day's examen" />
+          <Row to="/pray?tab=groups" label="Prayer groups" hint="Groups you have joined" />
+          <Row to="/pray?tab=prayers" label="Pinned prayers" hint="Prayer texts you pinned" />
         </ul>
       </Section>
 
       <Section title="App">
-        <ul className="grid sm:grid-cols-2">
-          <Row to="/settings" icon={SettingsIcon} label="Settings" hint="Reminders, calendar, text size" />
-          <Row to="/privacy" icon={Shield} label="Your data and backup" hint="Your data stays on this device" />
-          <Row to="/download" icon={Download} label="Install / share" hint="Android app, home screen, QR code" />
-          <Row to="/about" icon={Info} label="About" hint="Purpose, sources and what's new" />
+        <ul className="grid border-t border-border/80 sm:grid-cols-2 sm:gap-x-6">
+          <Row to="/settings" label="Settings" hint="Reminders, calendar, text size" />
+          <Row to="/privacy" label="Your data and backup" hint="Your data stays on this device" />
+          <Row to="/download" label="Install / share" hint="Android app, home screen, QR code" />
+          <Row to="/about" label="About" hint="Purpose, sources and what's new" />
         </ul>
-        <div className="flex justify-end px-3 pb-2 pt-1">
+        <div className="px-1 pt-2">
           <span className="text-xs font-medium text-muted-foreground">Version {CURRENT_VERSION}</span>
         </div>
       </Section>

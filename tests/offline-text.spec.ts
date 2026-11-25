@@ -52,7 +52,7 @@ test("a Bible chapter read once still opens when the Bible sites are down", asyn
 test("each public page names itself as the canonical address", async ({ page }) => {
   await page.goto("/about");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.nepsisshield.com/about");
-  await expect(page).toHaveTitle("About · Nepsis Shield");
+  await expect(page).toHaveTitle("About | Nepsis Shield");
   await page.goto("/privacy");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.nepsisshield.com/privacy");
   await page.goto("/today");

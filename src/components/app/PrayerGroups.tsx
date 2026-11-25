@@ -131,7 +131,7 @@ export function PrayerGroups() {
           {groups.map((group) => (
             <Card key={group.id} className="flex flex-col rounded-3xl border p-5">
               <h3 className="text-lg font-semibold tracking-tight">{group.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">You pray here as {group.memberName}{group.adminKey ? " · you started this group" : ""}</p>
+              <p className="mt-1 text-sm text-muted-foreground">You pray here as {group.memberName}{group.adminKey ? ", you started this group" : ""}</p>
               <Button type="button" variant="outline" className="mt-4 w-fit rounded-full" onClick={() => setParam("group", group.id)}>
                 <Users className="mr-2 h-4 w-4" /> Open {group.name}
               </Button>
@@ -338,7 +338,7 @@ function GroupDetail({ group, onBack }: { group: SavedGroup; onBack: () => void 
                   <p className="scripture-text leading-relaxed">{item.text}</p>
                   <div className="mt-2 flex items-center justify-between gap-2">
                     <span className="text-xs font-semibold text-muted-foreground">
-                      {item.by} · {new Date(item.created).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                      {item.by}, {new Date(item.created).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                     </span>
                     {item.mine || group.adminKey ? (
                       <Button type="button" variant="ghost" size="sm" className="rounded-full" aria-label={`Remove the request from ${item.by}`} onClick={() => void run(() => removeRequest(group, item.id), "Request removed.")}>

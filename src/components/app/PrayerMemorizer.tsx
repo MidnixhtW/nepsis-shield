@@ -342,7 +342,7 @@ function ReviewSession() {
           <p className="text-xs font-semibold text-primary">Review {index + 1} of {queue.length}</p>
           <h2 className="mt-1 text-xl font-semibold">
             {current.prayer.title}
-            {current.prayer.sections.length > 1 ? <span className="text-muted-foreground"> · section {current.section + 1}</span> : null}
+            {current.prayer.sections.length > 1 ? <span className="text-muted-foreground">, section {current.section + 1}</span> : null}
           </h2>
         </div>
         {outcome === null ? (

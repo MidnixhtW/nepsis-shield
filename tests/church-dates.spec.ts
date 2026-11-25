@@ -62,7 +62,7 @@ test("the home-screen widget gets two weeks of days", async () => {
   const { buildWidgetDays } = await import("../src/lib/widgetSnapshot");
   const days = buildWidgetDays(d("2026-11-20"), "gregorian", "Fish, wine and oil are allowed");
   expect(days).toHaveLength(14);
-  expect(days[0]).toMatchObject({ date: "2026-11-20", headline: "Nativity Fast · Day 6 of 40", detail: "Fish, wine and oil are allowed" });
+  expect(days[0]).toMatchObject({ date: "2026-11-20", headline: "Nativity Fast, day 6 of 40", detail: "Fish, wine and oil are allowed" });
   expect(days[1].detail).toBe("");
   const christmas = buildWidgetDays(d("2026-12-25"), "gregorian")[0];
   expect(christmas.headline).toBe("Christ is born! Glorify Him!");

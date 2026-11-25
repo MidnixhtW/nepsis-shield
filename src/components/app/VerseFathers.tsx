@@ -31,7 +31,7 @@ export function VerseFathers({ book, chapter, verse }: { book?: string; chapter?
             <figure key={index}>
               <figcaption className="font-sans text-sm font-semibold">
                 {quote.father}
-                <span className="font-normal text-muted-foreground"> · {quote.source}{quote.range ? ` · on ${quote.range}` : ""}</span>
+                <span className="font-normal text-muted-foreground">, {quote.source}{quote.range ? `, on ${quote.range}` : ""}</span>
               </figcaption>
               <blockquote className="mt-1 text-base leading-relaxed text-foreground/90">{quote.text}</blockquote>
             </figure>

@@ -87,7 +87,7 @@ export function RuleOfVigilanceCard({
         <p className="min-w-0 flex-1 text-sm">
           <span className="text-muted-foreground">Your prayer plan: </span>
           <span className="font-semibold">{rule.title}</span>
-          <span className="text-muted-foreground"> · {rule.variantLabel}</span>
+          <span className="text-muted-foreground">, {rule.variantLabel}</span>
         </p>
         {/* Pray now above already begins the prayers, so this line only opens the rule. */}
         <Button type="button" variant="outline" size="sm" className="rounded-full" aria-expanded={false} onClick={() => setExpanded(true)}>
@@ -102,7 +102,7 @@ export function RuleOfVigilanceCard({
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start">
         <div className="min-w-0">
           <div className="inline-flex items-center rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-            <Compass className="mr-1.5 h-3.5 w-3.5" /> Daily prayer plan · Rule of prayer
+            <Compass className="mr-1.5 h-3.5 w-3.5" /> Daily prayer plan
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{rule.title}</h2>
           <button
@@ -111,7 +111,7 @@ export function RuleOfVigilanceCard({
             onClick={() => setChoosingVersion((open) => !open)}
             className="mt-2 inline-flex items-center gap-1 rounded-md text-sm font-semibold text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {rule.variantLabel} · Change version
+            Change version ({rule.variantLabel})
             <ChevronDown className={"h-4 w-4 transition-transform " + (choosingVersion ? "rotate-180" : "")} />
           </button>
           {choosingVersion ? (

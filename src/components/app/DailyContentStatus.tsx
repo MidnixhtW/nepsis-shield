@@ -17,7 +17,7 @@ export function DailyContentStatus({ date, data, failed, refreshing, onRetry }: 
     return (
       <div className="my-2 flex flex-wrap items-center gap-2">
         <span role="status" className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/30 px-3 py-1 text-xs font-semibold text-foreground/85">
-          <CloudOff aria-hidden className="h-3.5 w-3.5 text-accent" /> Offline ready · saved {format(new Date(data.cache.savedAt), "MMM d")}
+          <CloudOff aria-hidden className="h-3.5 w-3.5 text-accent" /> Offline ready, saved {format(new Date(data.cache.savedAt), "MMM d")}
         </span>
         <button
           type="button"

@@ -51,7 +51,7 @@ test("a starred practice shows on Me and Today, and Recently opened lists it", a
   await page.getByRole("button", { name: "Add Services to favorites" }).click();
   await page.goto("/me");
   await expect(page.getByRole("link", { name: /Services Pray$/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Services Services ·|Services Pray ·/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Services Services ·|Services Pray,/ })).toBeVisible();
   await page.goto("/today");
   await expect(page.getByRole("navigation", { name: "Favorites" }).getByRole("link", { name: "Services" })).toBeVisible();
 });
@@ -61,6 +61,6 @@ test("Begin on Today opens the prayer for the hour full screen", async ({ page }
   await page.goto("/today");
   await expect(page.getByRole("heading", { name: "Evening prayers", level: 2 })).toBeVisible();
   await page.getByRole("link", { name: "Begin" }).click();
-  await expect(page.getByRole("dialog").getByText(/Evening prayer · 1 \//)).toBeVisible();
+  await expect(page.getByRole("dialog").getByText(/Evening prayer, 1 \//)).toBeVisible();
   await expect(page).toHaveURL(/tab=daily$/);
 });

@@ -435,7 +435,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
           aria-describedby={undefined}
           onInteractOutside={(event) => event.preventDefault()}
         >
-          <Dialog.Title className="sr-only">Set up your daily rule · Step {stepIndex + 1} of {steps.length}</Dialog.Title>
+          <Dialog.Title className="sr-only">Set up your daily rule, Step {stepIndex + 1} of {steps.length}</Dialog.Title>
 
       <div className="relative mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pt-8">
         <header className="flex shrink-0 items-center justify-between gap-4">
@@ -636,7 +636,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <div className="hidden min-w-0 flex-1 sm:block">
             <p className="truncate text-sm text-muted-foreground">
-              {step === "rule" ? rule.title : `Step ${stepIndex + 1} of ${steps.length} · change anything later`}
+              {step === "rule" ? rule.title : `Step ${stepIndex + 1} of ${steps.length}, change anything later`}
             </p>
           </div>
           <Button

@@ -18,7 +18,7 @@ export function ReadAloudBar({ className }: { className?: string }) {
       <div className="min-w-0 flex-1 px-1.5">
         <p className="truncate text-sm font-semibold leading-tight">{title}</p>
         <p className="text-xs tabular-nums text-muted-foreground" aria-live="polite">
-          {playing ? "Reading" : "Paused"} · {index + 1} of {parts.length}
+          {playing ? "Reading" : "Paused"}, {index + 1} of {parts.length}
         </p>
       </div>
       <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-full" aria-label="Back one part" disabled={index === 0} onClick={() => skipReadAloud(-1)}>

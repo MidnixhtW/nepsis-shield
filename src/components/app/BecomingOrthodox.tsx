@@ -88,7 +88,7 @@ export function BecomingOrthodox() {
       </Card>
 
       <Card className="rounded-3xl border p-5 sm:p-6">
-        <p className="text-xs font-semibold text-muted-foreground">Step {index + 1} of {JOURNEY_STAGES.length} · {stage.short}</p>
+        <p className="text-xs font-semibold text-muted-foreground">Step {index + 1} of {JOURNEY_STAGES.length}, {stage.short}</p>
         <h3 className="mt-1 text-xl font-semibold tracking-tight">{stage.title}</h3>
         <p className="mt-2 text-sm leading-relaxed text-foreground/90">{stage.about}</p>
 

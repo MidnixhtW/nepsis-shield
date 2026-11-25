@@ -179,11 +179,11 @@ function HelpNowButton() {
           <NeedHelpNow onChoose={() => setOpen(false)} />
           <Accordion type="single" collapsible className="rounded-3xl border bg-card px-5">
             <AccordionItem value="ground">
-              <AccordionTrigger className="text-left">Ground me now · guided reset</AccordionTrigger>
+              <AccordionTrigger className="text-left">Ground me now, guided reset</AccordionTrigger>
               <AccordionContent><GroundMeNow /></AccordionContent>
             </AccordionItem>
             <AccordionItem value="psalm" className="border-0">
-              <AccordionTrigger className="text-left">Psalm 90 · prayer of protection</AccordionTrigger>
+              <AccordionTrigger className="text-left">Psalm 90, prayer of protection</AccordionTrigger>
               <AccordionContent><ProtectionPsalm /></AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -207,7 +207,7 @@ export function AppHeader() {
   const hourName = prayerHourName(now);
   // Service roles read the clock as 0600; everyone else sees the date with the hour of prayer.
   // On phones the hour name drops out so the date never gets cut off; it returns from the sm breakpoint up.
-  const clockDate = usesTwentyFourHourTime(role) ? `${format(now, "HHmm")} · ${format(now, "MMM d")}` : format(now, "EEE, MMM d");
+  const clockDate = usesTwentyFourHourTime(role) ? `${format(now, "HHmm")}, ${format(now, "MMM d")}` : format(now, "EEE, MMM d");
 
   function handleSecretTap() {
     const now = Date.now();
@@ -234,7 +234,7 @@ export function AppHeader() {
             title={t("header.hourTitle", { hour: hourName })}
           >
             {clockDate}
-            <span className="hidden sm:inline"> · {hourName}</span>
+            <span className="hidden sm:inline">, {hourName}</span>
           </p>
         </div>
       </Link>

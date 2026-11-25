@@ -18,7 +18,7 @@ export type WidgetDay = {
 
 function seasonLine(day: Date, calendar: ChurchCalendar) {
   const active = currentSeason(day, calendar);
-  if (active) return `${active.season.name} · Day ${active.index + 1} of ${active.season.length}`;
+  if (active) return `${active.season.name}, day ${active.index + 1} of ${active.season.length}`;
   const upcoming = nextSeason(day, calendar);
   if (upcoming && upcoming.daysUntil <= 7) {
     return upcoming.daysUntil === 1 ? `${upcoming.season.name} begins tomorrow` : `${upcoming.season.name} begins in ${upcoming.daysUntil} days`;
@@ -37,7 +37,7 @@ export function buildWidgetDays(from: Date, calendar: ChurchCalendar, todayFast?
       headline: greeting ? `${greeting.greeting} ${greeting.response}` : season || "Watch and pray",
       detail: i === 0 && todayFast ? todayFast : greeting ? season : "",
       saying: saying.text,
-      who: `${saying.who} · ${SAYINGS_SOURCE}`,
+      who: `${saying.who}, ${SAYINGS_SOURCE}`,
     };
   });
 }

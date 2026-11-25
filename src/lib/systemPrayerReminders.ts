@@ -44,7 +44,7 @@ function atTime(date: string, time: string) {
 
 // "Nativity Fast · Day 5 of 40" reads as "Nativity Fast, day 5 of 40."; a greeting keeps its own "!".
 function sentence(headline: string) {
-  const text = headline.replace(/ · Day /g, ", day ").replace(/ · /g, ", ");
+  const text = headline.replace(/, Day /g, ", day ").replace(/, /g, ", ");
   return /[.!?]$/.test(text) ? text : `${text}.`;
 }
 

@@ -1,10 +1,10 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-// Newsreader (a serif cut for reading, with optical sizes) for prayers, Scripture and titles; Geist for controls
+// Alegreya (a calligraphic book face, close to a printed service book) for prayers, Scripture and titles; Atkinson Hyperlegible Next for controls
 // and small labels; condensed Barlow only for the duty tools in a service role.
-import "@fontsource-variable/newsreader/opsz.css";
-import "@fontsource-variable/newsreader/opsz-italic.css";
-import "@fontsource-variable/geist/wght.css";
+import "@fontsource-variable/alegreya/wght.css";
+import "@fontsource-variable/alegreya/wght-italic.css";
+import "@fontsource-variable/atkinson-hyperlegible-next/wght.css";
 import "@fontsource/barlow-condensed/500.css";
 import "@fontsource/barlow-condensed/600.css";
 import "@fontsource/barlow-condensed/700.css";

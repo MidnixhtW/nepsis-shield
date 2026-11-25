@@ -5,9 +5,10 @@ import { dayIcon } from "@/lib/dayIcon";
 import { ShareCardButton } from "@/components/app/ShareCardButton";
 import type { DailyData } from "@/lib/orthocal";
 
-// The top of Today: the day's icon first, whole (kept smaller on phones so Begin shows without scrolling), the way one venerates the icon on entering church. Below
-// it, the day's feast or season in red, as feasts are printed in the Church's calendar, and one sentence for the rest
-// of the day: its tone, the day of the fast, the saint remembered. The date itself is in the header.
+// The top of Today: the day's icon across the full width, framed like a panel on an iconostasis. Nothing is written on
+// the icon itself, so no word covers a holy face. Under it, left aligned, the feast or season in red, as feasts are
+// printed in the Church's calendar, one sentence for the day, the fast and the tone, then the credit and Share.
+// The date itself is in the header.
 export function DayIconBanner({
   today,
   calendar,
@@ -49,34 +50,44 @@ export function DayIconBanner({
     .map((part) => `${part}.`)
     .join(" ");
 
-  return (
-    <section aria-label="Today's feast or season" className="px-1 pb-2 pt-1 text-center">
-      {!failed ? (
-        <img
-          src={icon.imageUrl}
-          alt={icon.alt}
-          onError={() => setFailed(true)}
-          className="mx-auto h-auto max-h-[min(13rem,26vh)] shortphone:max-h-[20vh] sm:max-h-[min(24rem,52vh)] lg:max-h-[min(22rem,36vh)] w-auto max-w-full rounded-md object-contain shadow-[0_18px_48px_hsl(0_0%_0%/0.45)]"
-        />
-      ) : null}
-      <Heading className={"mx-auto mt-5 max-w-2xl text-balance text-3xl leading-tight shortphone:mt-2 shortphone:text-2xl sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>
-        {heading}
-      </Heading>
-      {line ? <p className="scripture-text mx-auto mt-2 max-w-xl text-balance text-base text-foreground/85">{line}</p> : null}
+  const words = (
+    <>
+      <Heading className={"text-balance text-3xl leading-tight shortphone:text-2xl sm:text-4xl " + (ordinary ? "" : "text-cinnabar")}>{heading}</Heading>
+      {line ? <p className="scripture-text mt-1 text-balance text-base text-foreground/90">{line}</p> : null}
       {fast || tone ? (
-        // The day's rule and tone in small capitals, the way a printed Church calendar sets them under the feast.
-        <ul aria-label="At a glance" className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 text-muted-foreground shortphone:mt-2">
+        <ul aria-label="At a glance" className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-foreground/75">
           {fast ? (
-            <li className="meta-label inline-flex min-h-8 items-center gap-2">
+            <li className="meta-label inline-flex min-h-7 items-center gap-2">
               <span aria-hidden className={"h-2 w-2 rounded-full " + FAST_DOT[fast.kind]} />
               <span className="sr-only">Fasting today: </span>
               {fast.label}
             </li>
           ) : null}
-          {tone ? <li className="meta-label inline-flex min-h-8 items-center tabular-nums">Tone {tone}</li> : null}
+          {tone ? <li className="meta-label inline-flex min-h-7 items-center tabular-nums">Tone {tone}</li> : null}
         </ul>
       ) : null}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-foreground/75 shortphone:mt-1">
+    </>
+  );
+
+  return (
+    <section aria-label="Today's feast or season" className="pb-2 pt-1">
+      {!failed ? (
+        <>
+          <img
+            src={icon.imageUrl}
+            alt={icon.alt}
+            onError={() => setFailed(true)}
+            className="icon-panel block aspect-[5/4] max-h-[40vh] w-full bg-card object-cover object-[50%_16%] shortphone:max-h-[30vh] sm:aspect-[4/3] sm:max-h-[52vh]"
+          />
+          <div className="mt-4 px-1">{words}</div>
+        </>
+      ) : (
+        <div className="px-1">{words}</div>
+      )}
+      <div className="mt-1 flex items-center justify-between gap-4 px-1 text-sm text-foreground/75">
+        <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 min-w-0 items-center truncate underline underline-offset-2 hover:text-foreground">
+          Icon: {icon.credit}
+        </a>
         <ShareCardButton
           card={{
             eyebrow: format(today, "EEEE, MMMM d"),
@@ -85,9 +96,6 @@ export function DayIconBanner({
           }}
           fileName="today.png"
         />
-        <a href={icon.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center underline underline-offset-2 hover:text-foreground">
-          Icon: {icon.credit}
-        </a>
       </div>
     </section>
   );

@@ -1,12 +1,12 @@
 import { Link } from "react-router";
-import { Check } from "lucide-react";
 import { recommendedTime } from "@/content/dailyPrayerSteps";
 import { useDailyRhythm } from "@/lib/dailyHabits";
 import { useNow } from "@/lib/prayerHours";
 import { cn } from "@/lib/utils";
 
-// The day's practice as one short line: morning prayers, the readings, evening and night prayers. Each step fills
-// in when it is done, and the one for this hour is ringed. A quiet, finite shape for the day, not a score.
+// The day's practice as four oil lamps: morning prayers, the readings, evening and night prayers. A lamp is lit when
+// its prayer is done, and the one for this hour has its glass drawn in the season's color, waiting. At midnight all
+// four go dark again: nothing carries over to the next day, so there is no streak to keep or lose.
 export function DayTimeline() {
   const now = useNow();
   const { today } = useDailyRhythm();
@@ -20,31 +20,34 @@ export function DayTimeline() {
   const doneCount = steps.filter((step) => step.done).length;
 
   return (
-    <nav aria-label={`Today's prayer: ${doneCount} of ${steps.length} done`} className="relative mt-4 border-t border-border/50 pt-4">
-      <ol className="relative grid grid-cols-4">
-        {/* The line the steps sit on. */}
-        <span aria-hidden className="absolute left-[12.5%] right-[12.5%] top-3 h-px bg-border" />
+    <nav aria-label={`Today's prayer: ${doneCount} of ${steps.length} lamps lit`} className="mt-4 border-t border-border/50 pt-4">
+      <ol className="grid grid-cols-4">
         {steps.map((step) => (
-          <li key={step.key} className="relative grid justify-items-center">
+          <li key={step.key} className="grid justify-items-center">
             <Link
               to={step.to}
               aria-label={`${step.label}: ${step.done ? "done" : "not yet"}`}
-              className="grid min-w-11 justify-items-center gap-1.5 rounded-lg px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="grid min-h-11 min-w-11 justify-items-center gap-1 rounded-sm px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <span
-                className={cn(
-                  "grid h-6 w-6 place-items-center rounded-full border-2 bg-card",
-                  step.done ? "border-accent bg-accent text-accent-foreground" : "border-border",
-                  step.current && !step.done && "border-accent ring-4 ring-accent/20",
-                )}
-              >
-                {step.done ? <Check aria-hidden className="h-3.5 w-3.5" /> : null}
-              </span>
+              <Lamp lit={step.done} waiting={step.current && !step.done} />
               <span className={cn("text-xs", step.current ? "font-semibold text-foreground" : "text-muted-foreground")}>{step.label}</span>
             </Link>
           </li>
         ))}
       </ol>
     </nav>
+  );
+}
+
+/** A hanging lampada: chains, a glass cup, and a flame when lit. The flame is always warm; the glass takes the season. */
+function Lamp({ lit, waiting }: { lit: boolean; waiting: boolean }) {
+  const glass = lit || waiting ? "hsl(var(--accent))" : "hsl(var(--muted-foreground))";
+  return (
+    <svg aria-hidden viewBox="0 0 24 32" className="h-8 w-6" fill="none" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 1v5M12 6L6 13M12 6l6 7" stroke={glass} strokeOpacity={lit ? 0.7 : 0.45} />
+      <path d="M4.5 13h15l-1.8 7.6A6 6 0 0 1 12 25a6 6 0 0 1-5.7-4.4z" stroke={glass} fill={lit ? "hsl(var(--accent) / 0.55)" : waiting ? "hsl(var(--accent) / 0.12)" : "none"} />
+      <path d="M12 25v3" stroke={glass} strokeOpacity={0.6} />
+      {lit ? <path d="M12 7.6c1.9 1.9 2.2 3.6 0 5.4-2.2-1.8-1.9-3.5 0-5.4z" fill="hsl(42 92% 66%)" stroke="none" /> : null}
+    </svg>
   );
 }

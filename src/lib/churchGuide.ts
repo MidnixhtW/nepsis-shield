@@ -109,7 +109,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     slug: "feasts",
     path: "/feasts",
     name: "Feasts and fasts",
-    title: `Orthodox feasts and fasts: dates and meaning · ${SITE}`,
+    title: `Orthodox feasts and fasts: dates and meaning | ${SITE}`,
     description: "Pascha, the Twelve Great Feasts and the four fasts of the Orthodox Church year, with this year's dates on the New and Old Calendars.",
   },
   {
@@ -117,7 +117,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     slug: "saint-prayers",
     path: "/saint-prayers",
     name: "Prayers to the saints",
-    title: `Prayers to the saints: Orthodox patron saints · ${SITE}`,
+    title: `Prayers to the saints: Orthodox patron saints | ${SITE}`,
     description: "Short Orthodox prayers to the patron saints, for illness, work, travel, family, grief and every need, with their feast days.",
   },
   ...GREAT_FEASTS.map<GuidePage>((feast) => ({
@@ -125,7 +125,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     slug: feast.slug,
     path: `/feasts/${feast.slug}`,
     name: feast.name,
-    title: `${feast.name}: date and meaning · ${SITE}`,
+    title: `${feast.name}: date and meaning | ${SITE}`,
     description: `${feast.about[0]} This year's date on the New and Old Calendars.`.slice(0, 300),
   })),
   ...GUIDE_FASTS.map<GuidePage>((id) => ({
@@ -133,7 +133,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     slug: id,
     path: `/fasts/${id}`,
     name: fastName(id),
-    title: `The ${fastName(id)}: dates, rules and a prayer for each day · ${SITE}`,
+    title: `The ${fastName(id)}: dates, rules and a prayer for each day | ${SITE}`,
     description: `When the ${fastName(id)} begins and ends this year on the New and Old Calendars, how it is kept, and a short prayer and practice for each day.`,
   })),
   ...GUIDE_SAINTS.map<GuidePage>((saint) => ({
@@ -141,7 +141,7 @@ export const GUIDE_PAGES: GuidePage[] = [
     slug: saint.slug,
     path: `/saints/${saint.slug}`,
     name: saint.name,
-    title: `Prayer to ${saint.name.replace(/^Holy /, "the Holy ")} · ${SITE}`,
+    title: `Prayer to ${saint.name.replace(/^Holy /, "the Holy ")} | ${SITE}`,
     description: `A short Orthodox prayer to ${saint.name}, ${saint.needs.map((item) => item.note.replace(/\.$/, "").replace(/^For /, "for ")).join("; ")}.`.slice(0, 300),
   })),
 ];

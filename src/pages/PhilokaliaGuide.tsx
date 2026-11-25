@@ -221,7 +221,7 @@ function feastLine(patron: MyPatron, today: Date) {
   const feast = nextFeast(patron, today);
   const days = differenceInCalendarDays(feast, today);
   if (days === 0) return "His feast is today";
-  return `Feast ${format(feast, "MMMM d")} · in ${days} day${days === 1 ? "" : "s"}`;
+  return `Feast ${format(feast, "MMMM d")}, in ${days} day${days === 1 ? "" : "s"}`;
 }
 
 function PatronDetail({ patron, today }: { patron: MyPatron; today: Date }) {
@@ -253,7 +253,7 @@ function PatronShelf() {
     <div className="grid gap-4">
       <SectionCard title={isFeast ? "Feast of your patron" : "Today's patron"} icon={<Sparkles className="h-4 w-4" />}>
         <p className="text-base font-semibold">{patron.name}</p>
-        <p className="text-sm text-muted-foreground">{patron.title} · {feastLine(patron, today)}</p>
+        <p className="text-sm text-muted-foreground">{patron.title}, {feastLine(patron, today)}</p>
         <div className="mt-4">
           <PatronDetail patron={patron} today={today} />
         </div>

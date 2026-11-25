@@ -180,7 +180,7 @@ export function MonasticAudioPlayer() {
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-foreground">
                   {segment?.title}
-                  <span className="font-normal text-muted-foreground"> · part {segmentIndex + 1} of {segments.length}</span>
+                  <span className="font-normal text-muted-foreground">, part {segmentIndex + 1} of {segments.length}</span>
                 </p>
                 <input
                   type="range"

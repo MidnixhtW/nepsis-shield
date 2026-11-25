@@ -17,7 +17,7 @@ export function ProtectionPsalm() {
           </li>
         ))}
       </ol>
-      <p className="text-sm text-muted-foreground">Psalm 90 (Psalm 91 in most English Bibles) · King James Version</p>
+      <p className="text-sm text-muted-foreground">Psalm 90 (Psalm 91 in most English Bibles), King James Version</p>
       <Link to="/learn?tab=byheart&prayer=psalm-90" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
         Learn it by heart
       </Link>

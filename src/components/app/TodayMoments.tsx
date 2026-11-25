@@ -51,7 +51,7 @@ export function TodayMoments({ moments }: { moments: TodayMoment[] }) {
         >
           <span className="min-w-0">
             <span className="font-semibold">{open ? "Show less" : "Also today"}</span>
-            {open ? null : <span className="text-muted-foreground"> · {foldedLabels.join(", ")}</span>}
+            {open ? null : <span className="text-muted-foreground">, {foldedLabels.join(", ")}</span>}
           </span>
           <ChevronDown aria-hidden className={cn("h-4 w-4 shrink-0 transition-transform", open && "rotate-180")} />
         </button>

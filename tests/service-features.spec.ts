@@ -11,13 +11,13 @@ test("the header shows the hour of prayer, in 24-hour time for service roles", a
     localStorage.setItem("nepsis:responder-mode", JSON.stringify({ __wrapped: 1, v: "military", ts: Date.now() })),
   );
   await page.reload();
-  await expect(clock).toContainText("1530 · Oct 1");
+  await expect(clock).toContainText("1530, Oct 1");
 });
 
 test("the Help panel offers Psalm 90", async ({ page }) => {
   await page.goto("/today");
   await page.getByRole("button", { name: "Need help now" }).click();
-  await page.getByRole("button", { name: "Psalm 90 · prayer of protection" }).click();
+  await page.getByRole("button", { name: "Psalm 90, prayer of protection" }).click();
   await expect(page.getByText("He that dwelleth in the secret place of the most High")).toBeVisible();
 });
 

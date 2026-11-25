@@ -60,7 +60,7 @@ export function FamilyPrayer() {
 function TonightPrayer() {
   return (
     <Card className="rounded-3xl border p-5 sm:p-6">
-      <h3 className="text-lg font-semibold tracking-tight">Evening prayer together · about 5 minutes</h3>
+      <h3 className="text-lg font-semibold tracking-tight">Evening prayer together, about 5 minutes</h3>
       <ol className="mt-4 grid gap-4">
         {EVENING_PRAYER.map((step, index) => (
           <li key={step.title} className="grid grid-cols-[2rem_1fr] gap-3">
@@ -127,7 +127,7 @@ function SaintStories() {
             <AccordionTrigger className="text-left">
               <span>
                 <span className="block font-semibold">{story.title}</span>
-                <span className="block text-xs font-normal text-muted-foreground">{story.saint} · {story.day}</span>
+                <span className="block text-xs font-normal text-muted-foreground">{story.saint}, {story.day}</span>
               </span>
             </AccordionTrigger>
             <AccordionContent>

@@ -270,3 +270,22 @@
     }
   }
 }
+
+/* An icon is framed like a panel on an iconostasis: square corners and a thin gilt edge, with a dark line between
+   the edge and the board. Rounded corners belong to buttons and controls, so an icon never reads as a tappable card
+   from a streaming app. The gilt is the icon's own material and stays gold in every season. */
+@layer components {
+  .icon-panel {
+    border-radius: 2px;
+    box-shadow:
+      0 0 0 1px hsl(30 8% 5% / 0.9),
+      0 0 0 2px hsl(42 46% 54% / 0.7);
+  }
+
+  html.parchment .icon-panel,
+  html.blue-cream .icon-panel {
+    box-shadow:
+      0 0 0 1px hsl(40 30% 96%),
+      0 0 0 2px hsl(40 50% 40% / 0.7);
+  }
+}

@@ -106,7 +106,7 @@ export default function Saints() {
               </div>
               <p className="mt-3 text-sm text-muted-foreground">
 
-                {patronNeeds.length} patron entries · local search updates daily
+                {patronNeeds.length} patron entries, local search updates daily
               </p>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function Saints() {
                             ? "Today’s commemoration"
                             : item.source === "patron"
                               ? "Patron guide name"
-                              : `${item.dateKey} · saved update`}
+                              : `${item.dateKey}, saved update`}
                         </span>
                       </span>
                       <ExternalLink className="h-4 w-4" />
@@ -237,7 +237,7 @@ export default function Saints() {
                 <div>
                   <h2 className="text-lg font-semibold tracking-tight">Today’s commemorations</h2>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {format(today, "MMMM d")} · {settings.calendarMode === "julian" ? "Old" : "New"} Calendar · Auto-saved
+                    {format(today, "MMMM d")}, {settings.calendarMode === "julian" ? "Old" : "New"} Calendar, Auto-saved
                   </p>
                 </div>
                 <span className="text-xs font-medium text-muted-foreground">Open list</span>

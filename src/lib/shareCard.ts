@@ -104,11 +104,11 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
   let size = 84;
   let lines: string[] = [];
   for (; size >= 40; size -= 4) {
-    ctx.font = `500 ${size}px "Newsreader Variable", Georgia, serif`;
+    ctx.font = `500 ${size}px "Alegreya Variable", Georgia, serif`;
     lines = wrap(ctx, input.text, WIDTH - MARGIN * 2);
     if (lines.length * size * 1.38 <= textRoom) break;
   }
-  ctx.font = '600 42px "Geist Variable", system-ui, sans-serif';
+  ctx.font = '600 42px "Atkinson Hyperlegible Next Variable", system-ui, sans-serif';
   const attribution = input.attribution ? wrap(ctx, input.attribution, WIDTH - MARGIN * 2) : [];
   const blockHeight = (icon ? iconHeight + 90 : 0) + eyebrowGap + lines.length * size * 1.38 + (attribution.length ? 30 + attribution.length * 56 : 0);
   let y = Math.max(140, (HEIGHT - FOOTER - blockHeight) / 2);
@@ -129,7 +129,7 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
   y += eyebrowGap;
 
   ctx.fillStyle = foreground;
-  ctx.font = `500 ${size}px "Newsreader Variable", Georgia, serif`;
+  ctx.font = `500 ${size}px "Alegreya Variable", Georgia, serif`;
   for (const line of lines) {
     y += size;
     ctx.fillText(line, MARGIN, y);
@@ -139,7 +139,7 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
   if (attribution.length) {
     y += 30;
     ctx.fillStyle = muted;
-    ctx.font = '600 42px "Geist Variable", system-ui, sans-serif';
+    ctx.font = '600 42px "Atkinson Hyperlegible Next Variable", system-ui, sans-serif';
     for (const line of attribution) {
       y += 42;
       ctx.fillText(line, MARGIN, y);
@@ -153,8 +153,8 @@ export async function renderShareCard(input: ShareCardInput): Promise<Blob> {
   ctx.font = '700 48px "Barlow Condensed", "Arial Narrow", sans-serif';
   ctx.fillText("Nepsis Shield", MARGIN, HEIGHT - 140);
   ctx.fillStyle = muted;
-  ctx.font = '500 34px "Geist Variable", system-ui, sans-serif';
-  ctx.fillText("Orthodox prayer · free and private", MARGIN, HEIGHT - 92);
+  ctx.font = '500 34px "Atkinson Hyperlegible Next Variable", system-ui, sans-serif';
+  ctx.fillText("Orthodox prayer, free and private", MARGIN, HEIGHT - 92);
 
   return new Promise((resolve, reject) => canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("No image"))), "image/png"));
 }

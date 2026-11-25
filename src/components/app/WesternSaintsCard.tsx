@@ -34,7 +34,7 @@ export function WesternSaintsCard() {
           {WESTERN_SAINTS.map((saint) => (
             <li key={saint.name} className="rounded-xl border border-border/50 bg-background/45 p-3 shadow-sm sm:p-4">
               <p className="text-xs font-medium text-muted-foreground">
-                {MONTH_NAMES[saint.month - 1]} {saint.day} · {saint.region}
+                {MONTH_NAMES[saint.month - 1]} {saint.day}, {saint.region}
               </p>
               <h3 className="mt-1 text-sm font-semibold tracking-tight text-primary">{saint.name}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{saint.line}</p>

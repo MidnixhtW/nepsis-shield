@@ -99,7 +99,7 @@ export function MemorialsCard({ today }: { today: Date }) {
         {soon.map((memorial) => (
           <li key={`${memorialTitle(memorial)}-${memorial.date.toISOString()}`} className="text-sm">
             <span className="font-semibold">{relativeDay(today, memorial.date)}</span>
-            <span className="text-muted-foreground"> · {memorialTitle(memorial)}</span>
+            <span className="text-muted-foreground">, {memorialTitle(memorial)}</span>
           </li>
         ))}
       </ul>

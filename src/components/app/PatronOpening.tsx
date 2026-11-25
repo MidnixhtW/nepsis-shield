@@ -42,7 +42,7 @@ export function PatronOpening() {
   const feast = format(new Date(2024, patron.month - 1, patron.day), "MMMM d");
   return (
     <div className="flex items-center gap-4 px-1">
-      {art ? <img src={tileArt(art)} alt="" className="h-24 w-[4.5rem] shrink-0 rounded-xl object-cover" /> : null}
+      {art ? <img src={tileArt(art)} alt="" className="icon-panel h-24 w-[4.5rem] shrink-0 object-cover" /> : null}
       <div className="min-w-0">
         <p className="scripture-text text-xl leading-snug">Under the protection of {patron.name}</p>
         <p className="meta-label mt-1 text-muted-foreground">Name day {feast}</p>
