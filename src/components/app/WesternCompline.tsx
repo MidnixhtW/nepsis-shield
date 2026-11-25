@@ -1,11 +1,15 @@
-import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, RotateCcw, Square, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { WESTERN_COMPLINE, type ComplineStep } from "@/content/westernCompline";
 import { WESTERN_EVENING, WESTERN_MORNING } from "@/content/westernOffice";
 import { softHaptic } from "@/lib/haptics";
+import { westernOfficeNarration } from "@/content/westernOffice";
+import { clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
+import { canPlayItems, startNarration, stopReadAloud, useReadAloud } from "@/lib/readAloud";
 
 // The Western offices for Western Rite users, one part per screen: morning prayer, evening prayer and Compline. The
 // Byzantine prayers stay in Daily prayers; these are their Western counterparts.
@@ -48,6 +52,13 @@ export function WesternEveningPrayer() {
 }
 
 function WesternOffice({ steps, intro, endTitle, endLine, label }: OfficeProps) {
+  // Read aloud part by part in the chosen voice, from the recordings when they exist and the phone's voice otherwise.
+  const [reader] = useReader();
+  const reading = useReadAloud();
+  const narration = useMemo(
+    () => westernOfficeNarration(steps).map((lines) => ({ text: spokenText(lines), audio: clipUrl(reader, lines) })),
+    [reader, steps],
+  );
   const [step, setStep] = useState(0);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const moved = useRef(false);
@@ -67,7 +78,20 @@ function WesternOffice({ steps, intro, endTitle, endLine, label }: OfficeProps) 
 
   return (
     <div className="grid gap-4">
-      <p className="px-1 text-sm leading-relaxed text-muted-foreground">{intro}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3 px-1">
+        <p className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground">{intro}</p>
+        {canPlayItems(narration) ? (
+          reading.title === label ? (
+            <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={stopReadAloud}>
+              <Square aria-hidden className="mr-1.5 h-4 w-4" /> Stop
+            </Button>
+          ) : (
+            <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={() => startNarration(label, narration)}>
+              <Volume2 aria-hidden className="mr-1.5 h-4 w-4" /> Read it to me
+            </Button>
+          )
+        ) : null}
+      </div>
 
 
       <Card className="rounded-3xl p-5 sm:p-6">

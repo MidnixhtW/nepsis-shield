@@ -130,3 +130,11 @@ export const WESTERN_EVENING: ComplineStep[] = [
     ],
   },
 ];
+
+/** What the reader says for each part: the title, then the lines, without the notes for Lent in parentheses. */
+export function westernOfficeNarration(steps: ComplineStep[]): string[][] {
+  return steps.map((step) => [
+    `${step.title}.`,
+    ...step.lines.map((line) => line.replace(/\s*\(In Lent:[^)]*\)/, "").trim()).filter(Boolean),
+  ]);
+}

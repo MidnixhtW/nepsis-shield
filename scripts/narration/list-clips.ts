@@ -4,6 +4,8 @@ import { longExtras, seraphimRule, shortFlows, standardExtras } from "../../src/
 import { SAINT_STORIES } from "../../src/content/familyPrayer.ts";
 import { angelus, marianAntiphonNarration, reginaCaeli, rosaryNarration } from "../../src/content/rosary.ts";
 import { clipId, spokenText } from "../../src/lib/narrationText.ts";
+import { WESTERN_EVENING, WESTERN_MORNING, westernOfficeNarration } from "../../src/content/westernOffice.ts";
+import { WESTERN_COMPLINE } from "../../src/content/westernCompline.ts";
 
 type Clip = { id: string; label: string; text: string };
 const clips = new Map<string, Clip>();
@@ -23,6 +25,9 @@ for (const set of ["joyful", "luminous", "sorrowful", "glorious"] as const) {
 }
 add("angelus", marianAntiphonNarration(angelus));
 add("regina caeli", marianAntiphonNarration(reginaCaeli));
+for (const [name, steps] of [["western morning", WESTERN_MORNING], ["western evening", WESTERN_EVENING], ["western compline", WESTERN_COMPLINE]] as const) {
+  westernOfficeNarration(steps).forEach((lines, index) => add(`${name} ${index}`, lines));
+}
 for (const story of SAINT_STORIES) add(`story: ${story.title}`, [`${story.title}.`, ...story.story, story.lesson]);
 
 const list = [...clips.values()];
