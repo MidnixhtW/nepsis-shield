@@ -73,7 +73,9 @@ export function TodayOverview({ onNavigate, onOpenRoute }: {
             westernSeason={western ? westernSeasonLine(today, settings.calendarMode) : undefined}
           />
           <PrayNowCard />
-          {askTradition ? <TraditionPrompt onAnswered={() => setAskTradition(false)} /> : <SetupRuleCard />}
+          {/* Before setup, the setup card (whose first screen asks how they pray). After it, the church question alone,
+              for anyone who skipped it there. */}
+          {!isRuleSetUp() ? <SetupRuleCard /> : askTradition ? <TraditionPrompt onAnswered={() => setAskTradition(false)} /> : null}
           {/* Only once setup is done, so a newcomer sees one invitation at a time. */}
           {isRuleSetUp() ? <ReminderOffer /> : null}
         </div>

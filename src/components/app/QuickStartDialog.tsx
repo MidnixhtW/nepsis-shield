@@ -44,6 +44,8 @@ import { showSuccess } from "@/utils/toast";
 import { OrthodoxCrossIcon } from "@/components/app/OrthodoxCrossIcon";
 import { useSettings } from "@/hooks/useSettings";
 import type { CalendarMode } from "@/lib/settings";
+import { TraditionPicker } from "@/components/app/TraditionPicker";
+import { getTradition, isEasternCatholic, traditionChosen } from "@/lib/tradition";
 
 export const ONBOARDING_KEY = "onboarding:quickstart_done";
 // "Look around first": setup waits until the next visit, and a small button on Today brings it back.
@@ -66,8 +68,9 @@ function defer() {
 }
 export const START_TUTORIAL_EVENT = "nepsis:start-tutorial";
 
-// Five short screens. Theme lives in the menu, and the calendar shares a screen with the calling.
-type OnboardingStep = "welcome" | "about" | "need" | "rhythm" | "rule";
+// Six short screens. Church comes first because the prayers, fasting notes and calendar follow it. Theme lives in the
+// menu, and the calendar shares a screen with the calling.
+type OnboardingStep = "welcome" | "church" | "about" | "need" | "rhythm" | "rule";
 
 type NeedOption = {
   id: VigilanceNeed;
@@ -83,7 +86,7 @@ type RhythmOption = {
   icon: React.ReactNode;
 };
 
-const steps: OnboardingStep[] = ["welcome", "about", "need", "rhythm", "rule"];
+const steps: OnboardingStep[] = ["welcome", "church", "about", "need", "rhythm", "rule"];
 
 // Fasts, feasts, readings, and journeys all follow this choice.
 const calendarOptions: Array<{ id: CalendarMode; title: string; description: string }> = [
@@ -313,12 +316,18 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const done = () => Boolean(getStoredItem<boolean>(ONBOARDING_KEY));
-  // Never opens by itself: a first visit lands straight on Today, ready to pray, and the "Set up your daily rule" card
-  // under Begin opens this when the person chooses (as does the tutorial link in the menu).
-  const [open, setOpen] = useState(false);
+  // Opens by itself on a first visit, unless the person chose "Look around first" (then the "Set up your daily rule"
+  // card on Today and the tutorial link in the menu bring it back). "Need a moment of quiet" on the first screen skips
+  // straight to prayer, so no one in a hard moment is held up by setup.
+  const [open, setOpen] = useState(() => {
+    if (done()) return false;
+    if ((location.state as { lookAround?: boolean } | null)?.lookAround) defer();
+    return !isDeferred();
+  });
   const [stepIndex, setStepIndex] = useState(0);
   const [selectedRole, setSelectedRole] = useState<ResponderMode>(() => getStoredResponderMode());
   const { settings, updateSettings } = useSettings();
+  const easternCatholic = traditionChosen(settings) && isEasternCatholic(getTradition(settings));
   // Starts empty so the first tap becomes the lead need; the rule falls back to peace if none is chosen.
   const [selectedNeeds, setSelectedNeeds] = useState<VigilanceNeed[]>([]);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(undefined);
@@ -481,7 +490,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                 A small rule of prayer you can keep
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                Answer three short questions and we&rsquo;ll set out morning and evening prayers that fit your day. You can change them any
+                Answer a few short questions and we&rsquo;ll set out morning and evening prayers that fit your day. You can change them any
                 time.
               </p>
               <button
@@ -496,6 +505,23 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
               </button>
+            </section>
+          ) : null}
+
+          {step === "church" ? (
+            <section>
+              <div className="max-w-2xl">
+                <p className="text-xs font-semibold text-primary">Your church</p>
+                <h1 id="onboarding-title" className="mt-3 text-3xl font-semibold tracking-tight sm:text-5xl">
+                  How do you pray?
+                </h1>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                  The prayers, fasting notes and church links follow your answer. Not sure yet? Continue, and the app asks again on Today.
+                </p>
+              </div>
+              <div className="mt-8 max-w-2xl">
+                <TraditionPicker quiet />
+              </div>
             </section>
           ) : null}
 
@@ -526,6 +552,8 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                 })}
               </div>
 
+              {/* Melkite and Byzantine Catholic parishes in the U.S. keep the New Calendar, and choosing them set it already. */}
+              {easternCatholic ? null : (<>
               <h2 className="mt-10 text-xl font-semibold tracking-tight sm:text-2xl">Which calendar does your parish keep?</h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                 Fasts, feasts, and readings follow it. Nativity on December 25 is New Calendar; on January 7, Old Calendar. Not sure? Keep New Calendar.
@@ -542,6 +570,7 @@ export function QuickStartDialog({ children }: { children: ReactNode }) {
                   />
                 ))}
               </div>
+              </>)}
             </section>
           ) : null}
 

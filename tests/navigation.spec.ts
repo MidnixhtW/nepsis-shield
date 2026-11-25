@@ -38,7 +38,7 @@ test("the Rosary shows on Pray only for Western Rite parishes", async ({ page })
   await page.goto("/pray");
   await expect(page.getByRole("link", { name: /^Rosary and Angelus/ })).toHaveCount(0);
   await page.goto("/settings");
-  await page.getByRole("switch", { name: "Western Rite parish" }).click();
+  await page.getByRole("radio", { name: /^Western Rite Orthodox/ }).click();
   await page.goto("/pray");
   await expect(page.getByRole("link", { name: /^Rosary and Angelus/ })).toBeVisible();
 });

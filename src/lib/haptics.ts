@@ -17,6 +17,15 @@ export function softHaptic() {
   vibrate(5);
 }
 
+/** A firm, silent bump for a choice that changes the app, like picking your church. */
+export function choiceHaptic() {
+  if (Capacitor.isNativePlatform()) {
+    Haptics.impact({ style: ImpactStyle.Medium }).catch(() => vibrate(30));
+    return;
+  }
+  vibrate(30);
+}
+
 // A knot is a clear single bump. Phone motors barely spin up in under about 20 ms, so the browser buzz is 30 ms.
 export function knotHaptic() {
   knotClick();
