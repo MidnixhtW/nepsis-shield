@@ -162,7 +162,7 @@ export function PrayerRule() {
             </Badge>
           </div>
           <p className="mt-1 text-sm text-muted-foreground">
-            A sufficient Orthodox daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.
+            A sufficient daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.
           </p>
         </div>
         <ListChecks className="h-5 w-5 text-muted-foreground" />
@@ -342,7 +342,7 @@ export function PrayerRule() {
                       );
                       const ics = createSimpleIcs({
                         title: "Morning prayer (Nepsis Shield)",
-                        description: "Orthodox daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.",
+                        description: "A daily anchor: prayer, Scripture, repentance, work, intercession, and mercy.",
                         start,
                         end,
                       });

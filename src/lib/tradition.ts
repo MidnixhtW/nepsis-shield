@@ -55,6 +55,18 @@ export const TRADITION_OPTIONS: Array<{ id: Tradition; title: string; descriptio
   { id: "byzantine-catholic", title: "Byzantine Catholic", description: "Ruthenian and other Byzantine Catholic parishes." },
 ];
 
+/** The person's own church, for headings that name it ("Daily Melkite life"). Shared prayers say "Byzantine" instead. */
+export function churchWord(tradition: Tradition) {
+  switch (tradition) {
+    case "melkite":
+      return "Melkite";
+    case "byzantine-catholic":
+      return "Byzantine Catholic";
+    default:
+      return "Orthodox";
+  }
+}
+
 /** The closing line under the day's fast, in the words each church would use. */
 export function fastingAdvice(tradition: Tradition) {
   return isEasternCatholic(tradition)
