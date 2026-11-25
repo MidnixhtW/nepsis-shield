@@ -6,6 +6,9 @@ import { angelus, marianAntiphonNarration, reginaCaeli, rosaryNarration } from "
 import { clipId, spokenText } from "../../src/lib/narrationText.ts";
 import { WESTERN_EVENING, WESTERN_MORNING, westernOfficeNarration } from "../../src/content/westernOffice.ts";
 import { WESTERN_COMPLINE } from "../../src/content/westernCompline.ts";
+import * as book from "../../src/content/prayerBookTexts.ts";
+import akathist from "../../src/content/services/akathist.ts";
+import { prayerNarration, serviceNarration } from "../../src/content/services/narration.ts";
 
 type Clip = { id: string; label: string; text: string };
 const clips = new Map<string, Clip>();
@@ -28,6 +31,23 @@ add("regina caeli", marianAntiphonNarration(reginaCaeli));
 for (const [name, steps] of [["western morning", WESTERN_MORNING], ["western evening", WESTERN_EVENING], ["western compline", WESTERN_COMPLINE]] as const) {
   westernOfficeNarration(steps).forEach((lines, index) => add(`${name} ${index}`, lines));
 }
+// Prayer texts: the short prayers for an occasion, as each block's Listen button says them.
+const BOOK: Array<[string, string[]]> = [
+  ["Common starting prayers", book.sharedPrayerBasics],
+  ["Repentance", book.repentancePrayer],
+  ["Grief and hope", book.griefPrayer],
+  ["Thanksgiving", book.thanksgivingPrayer],
+  ["Mercy today", book.mercyPrayer],
+  ["When I cannot be at Liturgy", book.absentFromLiturgyPrayer],
+  ["Invocation", book.stMichaelInvocation],
+  ["Before watch or duty", book.stMichaelBeforeWatch],
+  ["Protection without hatred", book.stMichaelProtection],
+  ["Before meals", book.beforeMeals],
+  ["After meals", book.afterMeals],
+  ["Short prayers to the Theotokos", book.theotokosShort],
+];
+for (const [title, lines] of BOOK) add(`book: ${title}`, prayerNarration(title, lines));
+serviceNarration(akathist.blocks).forEach((lines, index) => add(`akathist ${index}`, lines));
 for (const story of SAINT_STORIES) add(`story: ${story.title}`, [`${story.title}.`, ...story.story, story.lesson]);
 
 const list = [...clips.values()];

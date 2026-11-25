@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { SHARED_PRAYERS, WESTERN_PRAYERS, type SharedPrayer } from "@/content/sharedPrayers";
 import { litanyOfHumility, LITANY_OF_HUMILITY_NOTE } from "@/content/litanyOfHumility";
-import { BookOpen, ExternalLink, Hand, MoonStar, Pin, Shield, Sparkles, Sun, Utensils } from "lucide-react";
+import { BookOpen, ExternalLink, Hand, MoonStar, Pin, Shield, Sparkles, Square, Sun, Utensils, Volume2 } from "lucide-react";
+import { prayerNarration } from "@/content/services/narration";
+import { clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
+import { canPlayItems, startNarration, stopReadAloud, useReadAloud } from "@/lib/readAloud";
 
 import {
   Accordion,
@@ -20,13 +24,31 @@ import { toggleFavoritePrayer, useDailyRhythm } from "@/lib/dailyHabits";
 import { cn } from "@/lib/utils";
 import { morningTrinity, morningFather, morningTheotokos, morningAngel, morningPatron, eveningIntro, eveningFather, eveningChrist, eveningSpirit, eveningTheotokos, nightPrayer, theotokosShort, stMichaelInvocation, stMichaelBeforeWatch, stMichaelProtection, SAINT_PRAYERS, SAINT_FILTERS, sharedPrayerBasics, repentancePrayer, griefPrayer, absentFromLiturgyPrayer, thanksgivingPrayer, mercyPrayer, beforeMeals, afterMeals, ocaOccasions, favoritePrayerOptions, prayerSources } from "@/content/prayerBookTexts";
 
+// Each prayer can be read aloud on its own, from the chosen reader's recording or the phone's voice.
 function PrayerBlock({ title, lines }: { title: string; lines: string[] }) {
+  const [reader] = useReader();
+  const reading = useReadAloud();
+  const spoken = prayerNarration(title, lines);
+  const part = { text: spokenText(spoken), audio: clipUrl(reader, spoken) };
+  const playing = reading.title === title;
   return (
     <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
-
-      <p className="text-xs font-semibold tracking-wide text-muted-foreground">
-        {title}
-      </p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-semibold tracking-wide text-muted-foreground">{title}</p>
+        {canPlayItems([part]) ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="-my-2 -mr-2 h-11 rounded-full px-3 text-muted-foreground"
+            aria-label={playing ? `Stop reading ${title}` : `Listen to ${title}`}
+            onClick={() => (playing ? stopReadAloud() : startNarration(title, [part]))}
+          >
+            {playing ? <Square aria-hidden className="h-4 w-4" /> : <Volume2 aria-hidden className="h-4 w-4" />}
+            <span className="ml-1.5 text-xs">{playing ? "Stop" : "Listen"}</span>
+          </Button>
+        ) : null}
+      </div>
       <div className="scripture-text mt-2 space-y-2 text-base">
         {lines.map((l, idx) => (
           <p key={idx}>{l}</p>

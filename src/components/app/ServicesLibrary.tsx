@@ -8,7 +8,10 @@ import { SERVICES, isServiceId, type ServiceInfo } from "@/content/services";
 import type { ServiceBlock } from "@/content/services/types";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { cn } from "@/lib/utils";
-import { canReadAloud, startReadAloud, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { canPlayItems, startNarration, stopReadAloud, useReadAloud } from "@/lib/readAloud";
+import { serviceNarration } from "@/content/services/narration";
+import { clipUrl, useReader } from "@/lib/narration";
+import { spokenText } from "@/lib/narrationText";
 import { FavoriteStar } from "@/components/app/FavoriteStar";
 
 const FONT_KEY = "services:font-size";
@@ -68,7 +71,12 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
   const [fontSize, setFontSize] = useState(readFontSize);
   const reading = useReadAloud();
   const speaking = reading.title === service.title;
-  const canSpeak = canReadAloud();
+  const [reader] = useReader();
+  const narration = useMemo(
+    () => serviceNarration(blocks ?? []).map((lines) => ({ text: spokenText(lines), audio: clipUrl(reader, lines) })),
+    [blocks, reader],
+  );
+  const canSpeak = canPlayItems(narration);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,14 +105,15 @@ function ServiceReader({ service, onBack }: { service: ServiceInfo; onBack: () =
     document.getElementById(`service-part-${index}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // Read the prayers aloud with the device's voice. Instructions are skipped. The player bar keeps going between screens.
+  // Read the service aloud part by part: the chosen reader's recording where there is one, the phone's voice otherwise.
+  // Instructions are skipped. The player bar keeps going between screens.
   function toggleSpeech() {
     if (!canSpeak || !blocks) return;
     if (speaking) {
       stopReadAloud();
       return;
     }
-    startReadAloud(service.title, blocks.filter((block) => block.kind !== "rubric").map((block) => block.text));
+    startNarration(service.title, narration);
   }
 
   return (
