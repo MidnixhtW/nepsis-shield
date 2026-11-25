@@ -22,6 +22,7 @@ import { ShareSelectionButton } from "@/components/app/ShareSelectionButton";
 import { getStoredItem, setStoredItem } from "@/lib/deviceStorage";
 import { prefsKey, type ReadPrefs } from "@/lib/bible/reader";
 import { markHabitComplete } from "@/lib/dailyHabits";
+import { GospelFathers } from "@/components/app/GospelFathers";
 
 function ReadingsSkeleton() {
   return (
@@ -251,6 +252,8 @@ export function DailyReadings() {
                 />
               );
             })()}
+
+            <GospelFathers reading={q.data.readings.gospel} />
 
             {q.data.readings.others.length ? (
               <Accordion type="single" collapsible className="w-full">

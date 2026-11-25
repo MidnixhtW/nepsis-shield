@@ -17,14 +17,31 @@ test("the menu's Go to search finds sections by name or keyword", async ({ page 
 });
 
 test("every theme can be chosen, including the new ones", async ({ page }) => {
-  for (const [label, cls] of [["Olive & Brass", "dark"], ["Lenten Violet", "lenten"], ["Midnight", "midnight"], ["Paschal White", "paschal"], ["Church Year", "seasonal"]] as const) {
+  // Patterns, since "Church Year" also begins "Church Year, light". Light themes carry no "dark" class.
+  for (const [label, cls] of [["^Olive & Brass", "dark"], ["^Lenten Violet", "lenten"], ["^Midnight", "midnight"], ["^Paschal White", "paschal"], ["^Church Year, light", "seasonal-light"], ["^Church Year(?!,)", "seasonal"]] as const) {
     await page.goto("/today");
     await page.getByRole("button", { name: "Open menu" }).click();
     await page.getByRole("button", { name: /^Theme: / }).click();
     await page.getByRole("menuitem", { name: new RegExp(label) }).click();
     const classes = async () => ((await page.locator("html").getAttribute("class")) ?? "").split(" ");
     await expect.poll(classes).toContain(cls);
-    if (cls !== "paschal") await expect.poll(classes).toContain("dark");
-    else await expect.poll(classes).not.toContain("dark"); // Paschal White is light
+    if (cls !== "paschal" && cls !== "seasonal-light") await expect.poll(classes).toContain("dark");
+    else await expect.poll(classes).not.toContain("dark");
   }
+});
+
+test("Match my phone follows the phone's light or dark setting until a palette is picked", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/today");
+  const classes = async () => ((await page.locator("html").getAttribute("class")) ?? "").split(" ");
+  await expect.poll(classes).toContain("seasonal-light");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect.poll(classes).toContain("seasonal");
+  await expect.poll(classes).toContain("dark");
+  // Picking a palette stops following the phone.
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("button", { name: /^Theme: Match my phone/ }).click();
+  await page.getByRole("menuitem", { name: /^Midnight/ }).click();
+  await page.emulateMedia({ colorScheme: "light" });
+  await expect.poll(classes).toContain("midnight");
 });

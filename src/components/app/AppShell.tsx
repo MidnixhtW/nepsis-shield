@@ -122,7 +122,8 @@ export function AppShell({
       </div>
 
       <div className="sticky top-0 z-30 border-b border-primary/25 bg-background/85 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-6xl items-center gap-6 pb-3.5 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(0.875rem,env(safe-area-inset-top))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8">
+        {/* Today carries the name and date; the other tabs get a slimmer bar so their own heading leads. */}
+        <div className={"mx-auto flex w-full max-w-6xl items-center gap-6 pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] sm:pl-[max(1.5rem,env(safe-area-inset-left))] sm:pr-[max(1.5rem,env(safe-area-inset-right))] lg:px-8 " + (section === "today" ? "pb-3.5 pt-[max(0.875rem,env(safe-area-inset-top))]" : "pb-2 pt-[max(0.5rem,env(safe-area-inset-top))]")}>
           <div className="min-w-0 flex-1">{header}</div>
           <div className="hidden w-[34rem] shrink-0 min-[1120px]:block">
             <ShellNavigation section={section} items={items} onSectionChange={onSectionChange} desktop />

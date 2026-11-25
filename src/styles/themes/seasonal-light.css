@@ -1,0 +1,154 @@
+/*
+ * Church Year, light: the same season colors as Church Year, on a warm light page, for phones set to light mode.
+ * It shares Parchment's structure (parchment.css styles this class too) and changes only colors. Each season's
+ * --primary and --accent are the dark theme's hue made deep enough for AA text on the light page; the solid
+ * vestment color for buttons (--season-solid) is the same as the dark theme's. Imported after paschal.css.
+ */
+@layer base {
+  /* Ordinary time: night blue on warm white. */
+  .seasonal-light {
+    --season-solid: 213 55% 40%;
+    --season-solid-foreground: 40 30% 97%;
+    --background: 40 30% 96%;
+    --foreground: 222 24% 12%;
+    --card: 40 40% 99%;
+    --card-foreground: 222 24% 12%;
+    --popover: 40 40% 99%;
+    --popover-foreground: 222 24% 12%;
+    --primary: 213 58% 34%;
+    --primary-foreground: 40 30% 97%;
+    --secondary: 40 22% 90%;
+    --secondary-foreground: 222 24% 12%;
+    --muted: 40 20% 91%;
+    --muted-foreground: 222 10% 34%;
+    --accent: 213 50% 32%;
+    --accent-foreground: 40 30% 97%;
+    --destructive: 356 64% 40%;
+    --destructive-foreground: 40 30% 97%;
+    --border: 36 16% 80%;
+    --input: 36 16% 78%;
+    --ring: 213 50% 36%;
+    --icon-gold: 213 50% 32%;
+    --liturgical-warm: 213 50% 32%;
+    --byzantine-blue: 213 58% 34%;
+    --cinnabar: 356 64% 40%;
+    --success: 140 40% 26%;
+    --season-glow: 213 52% 54%;
+    --sidebar-background: 40 30% 95%;
+    --sidebar-foreground: 222 24% 12%;
+    --sidebar-primary: 213 58% 34%;
+    --sidebar-primary-foreground: 40 30% 97%;
+    --sidebar-accent: 40 22% 90%;
+    --sidebar-accent-foreground: 222 24% 12%;
+    --sidebar-border: 36 16% 80%;
+    --sidebar-ring: 213 50% 36%;
+  }
+
+  .seasonal-light[data-season="lent"] {
+    --season-solid: 272 40% 42%;
+    --primary: 272 42% 36%;
+    --accent: 272 38% 34%;
+    --ring: 272 38% 38%;
+    --icon-gold: 272 38% 34%;
+    --liturgical-warm: 272 38% 34%;
+    --sidebar-primary: 272 42% 36%;
+    --sidebar-ring: 272 38% 38%;
+  }
+
+  .seasonal-light[data-season="pascha"] {
+    --season-solid: 356 72% 44%;
+    --primary: 356 66% 38%;
+    --accent: 2 70% 36%;
+    --ring: 2 70% 40%;
+    --icon-gold: 2 70% 36%;
+    --liturgical-warm: 2 70% 36%;
+    --sidebar-primary: 356 66% 38%;
+    --sidebar-ring: 2 70% 40%;
+  }
+
+  .seasonal-light[data-season="pentecost"] {
+    --season-solid: 148 48% 30%;
+    --primary: 145 50% 25%;
+    --accent: 145 46% 24%;
+    --ring: 145 46% 28%;
+    --icon-gold: 145 46% 24%;
+    --liturgical-warm: 145 46% 24%;
+    --sidebar-primary: 145 50% 25%;
+    --sidebar-ring: 145 46% 28%;
+  }
+
+  .seasonal-light[data-season="theotokos"] {
+    --season-solid: 208 68% 40%;
+    --primary: 208 70% 32%;
+    --accent: 208 62% 30%;
+    --ring: 208 62% 34%;
+    --icon-gold: 208 62% 30%;
+    --liturgical-warm: 208 62% 30%;
+    --sidebar-primary: 208 70% 32%;
+    --sidebar-ring: 208 62% 34%;
+  }
+
+  .seasonal-light[data-season="nativity-fast"] {
+    --season-solid: 348 62% 36%;
+    --primary: 350 62% 34%;
+    --accent: 356 60% 34%;
+    --ring: 356 60% 38%;
+    --icon-gold: 356 60% 34%;
+    --liturgical-warm: 356 60% 34%;
+    --sidebar-primary: 350 62% 34%;
+    --sidebar-ring: 356 60% 38%;
+  }
+
+  /* Gold reads too pale as text on white, so Nativity's text color is a deep gold-brown; buttons stay gold. */
+  .seasonal-light[data-season="nativity"] {
+    --season-solid: 42 72% 54%;
+    --season-solid-foreground: 38 40% 8%;
+    --primary: 36 78% 26%;
+    --accent: 34 76% 26%;
+    --ring: 34 76% 30%;
+    --icon-gold: 34 76% 26%;
+    --liturgical-warm: 34 76% 26%;
+    --sidebar-primary: 36 78% 26%;
+    --sidebar-ring: 34 76% 30%;
+  }
+
+  /* A service role tints the primary color, as in the dark theme, but deep enough for the light page. */
+  .seasonal-light[data-role="military"] { --primary: 80 40% 24%; --sidebar-primary: 80 40% 24%; --season-solid: 80 30% 34%; --season-solid-foreground: 60 30% 95%; }
+  .seasonal-light[data-role="law"] { --primary: 217 70% 34%; --sidebar-primary: 217 70% 34%; --season-solid: 217 62% 42%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal-light[data-role="fire"] { --primary: 4 72% 36%; --sidebar-primary: 4 72% 36%; --season-solid: 4 70% 44%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal-light[data-role="ems"] { --primary: 222 30% 18%; --sidebar-primary: 222 30% 18%; --season-solid: 222 30% 18%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal-light[data-role="dispatch"] { --primary: 262 50% 38%; --sidebar-primary: 262 50% 38%; --season-solid: 262 48% 46%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal-light[data-role="custody"] { --primary: 215 20% 30%; --sidebar-primary: 215 20% 30%; --season-solid: 215 16% 38%; --season-solid-foreground: 40 30% 96%; }
+  .seasonal-light[data-role="chaplain"] { --primary: 36 78% 26%; --sidebar-primary: 36 78% 26%; --season-solid: 38 76% 52%; --season-solid-foreground: 38 40% 8%; }
+
+  /* Outranks Parchment's olive page: a plain warm page with the season's light from the top corner. */
+  html.seasonal-light:not(.dark):not(.red-dark):not(.lenten) body {
+    background-image:
+      radial-gradient(circle at 80% -6%, hsl(var(--season-glow) / 0.1), transparent 32rem),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background))) !important;
+  }
+}
+
+/* Parchment's hero is dark olive; here it takes the season's deep tone. Buttons are the solid vestment color. */
+@layer components {
+  html.seasonal-light .premium-hero-shell {
+    background: hsl(var(--foreground)) !important;
+  }
+
+  html.seasonal-light .premium-hero-veil {
+    background: linear-gradient(90deg, hsl(var(--foreground) / 0.96), hsl(var(--foreground) / 0.84) 52%, hsl(var(--foreground) / 0.4)) !important;
+  }
+}
+
+@layer utilities {
+  html.seasonal-light :is(.bg-primary, .gold-foil) {
+    background-color: hsl(var(--season-solid)) !important;
+    background-image: none !important;
+    color: hsl(var(--season-solid-foreground)) !important;
+    box-shadow: none !important;
+  }
+
+  html.seasonal-light :is(.bg-primary, .gold-foil) :is(svg, .text-primary-foreground) {
+    color: inherit !important;
+  }
+}

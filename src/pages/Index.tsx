@@ -206,7 +206,7 @@ const Index = () => {
 
   return (
     <QuickStartDialog>
-    <AppShell header={<AppHeader />} section={section} onSectionChange={onSectionChange}>
+    <AppShell header={<AppHeader compact={section !== "today"} />} section={section} onSectionChange={onSectionChange}>
       {/* The player loads on its own, so it never holds back the page behind the placeholder. */}
       <ChunkBoundary fallback={null}>
         <Suspense fallback={null}>

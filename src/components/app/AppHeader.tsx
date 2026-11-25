@@ -148,7 +148,7 @@ function MenuLinks() {
 }
 
 // Always-visible entry to the "Need help now?" choices, so nobody has to scroll Today to find them.
-function HelpNowButton() {
+function HelpNowButton({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const show = () => setOpen(true);
@@ -163,10 +163,11 @@ function HelpNowButton() {
           type="button"
           variant="ghost"
           aria-label={t("header.help.aria")}
-          className="h-10 touch:min-w-11 gap-1.5 rounded-full px-3 text-foreground hover:bg-muted/60 hover:text-foreground"
+          className={"h-11 touch:min-w-11 gap-1.5 rounded-full text-foreground hover:bg-muted/60 hover:text-foreground " + (compact ? "w-11 px-0" : "px-3")}
         >
           <LifeBuoy className="h-[18px] w-[18px] text-accent" />
-          <span className="text-sm font-semibold">{t("header.help")}</span>
+          {/* On the slim bar the label folds into the icon; screen readers still hear "Need help now". */}
+          <span className={compact ? "sr-only" : "text-sm font-semibold"}>{t("header.help")}</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="flex h-dvh w-[min(26rem,100vw)] flex-col gap-0 overflow-hidden border-l-border bg-background p-0">
@@ -193,7 +194,8 @@ function HelpNowButton() {
   );
 }
 
-export function AppHeader() {
+/** compact: the slim bar on every tab but Today, with the mark alone and Help as an icon. */
+export function AppHeader({ compact = false }: { compact?: boolean }) {
   const navigate = useNavigate();
   const secretTaps = useRef<number[]>([]);
   const now = useNow();
@@ -224,10 +226,11 @@ export function AppHeader() {
   return (
     <header className="flex min-w-0 items-center justify-between gap-3">
       <Link to="/today" className="group flex min-h-11 min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-        <div className="premium-icon-mark h-10 w-10 transition-transform group-hover:scale-[1.04]">
+        <div className={"premium-icon-mark transition-transform group-hover:scale-[1.04] " + (compact ? "h-9 w-9" : "h-10 w-10")}>
           <OrthodoxCrossIcon className="h-5 w-5" />
         </div>
-        <div className="min-w-0">
+        <span className="sr-only">{compact ? "Nepsis Shield, go to Today" : ""}</span>
+        <div className={compact ? "hidden" : "min-w-0"}>
           <p className="truncate font-display text-base font-semibold tracking-[-0.02em] text-foreground">Nepsis Shield</p>
           <p
             className="truncate text-xs font-bold text-muted-foreground tabular-nums max-[340px]:hidden"
@@ -242,7 +245,7 @@ export function AppHeader() {
       <div className="ml-auto flex shrink-0 items-center gap-2">
         {/* Help and the menu only. The 60-second reset lives at the top of Help, one tap further, so the header stays
             quiet; Help also holds the crisis resources. */}
-        <HelpNowButton />
+        <HelpNowButton compact={compact} />
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger asChild>
             <Button aria-label={t("header.menu")} size="icon" variant="ghost" className="h-10 w-10 rounded-full text-foreground hover:bg-muted/60 hover:text-foreground">
