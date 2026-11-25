@@ -176,7 +176,7 @@ export const PRAYERS_TO_LEARN: PrayerToLearn[] = [
 ];
 
 export const PRAYER_GROUPS: { id: PrayerToLearn["group"]; title: string }[] = [
-  { id: "core", title: "Prayers every Orthodox Christian knows" },
+  { id: "core", title: "Core prayers to know by heart" },
   { id: "psalms", title: "Psalms" },
   { id: "children", title: "With children" },
 ];

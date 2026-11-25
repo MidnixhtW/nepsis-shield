@@ -296,8 +296,8 @@ export const ruleVariants: Record<VigilanceNeed, RuleVariant[]> = {
     {
       id: "basics",
       label: "Learn the basics",
-      description: "The prayers Orthodox Christians pray every day.",
-      pastoralNote: "Begin with the Lord’s Prayer, the Trisagion, and the Creed, the prayers Orthodox Christians pray every day.",
+      description: "The prayers the Church prays every day.",
+      pastoralNote: "Begin with the Lord’s Prayer, the Trisagion, and the Creed, the prayers the Church prays every day.",
       practice: "Learn one short prayer this week and pray it each morning.",
       primaryAction: "Open the Creed",
       target: { section: "learn", tab: "creed" },

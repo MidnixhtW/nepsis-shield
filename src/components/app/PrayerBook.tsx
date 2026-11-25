@@ -507,7 +507,7 @@ export function PrayerBook({ showRule = true }: { showRule?: boolean }) {
                     How to use this
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    These are Orthodox invocations and quick prayers you can say any time. For full hymn texts (troparia/kontakia) and lives, open the official OCA links.
+                    These are Byzantine invocations and quick prayers you can say any time. For full hymn texts (troparia/kontakia) and lives, open the official OCA links.
                   </p>
 
                   <div className="mt-3 flex flex-wrap gap-2">

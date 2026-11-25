@@ -145,7 +145,7 @@ const needOptions: NeedOption[] = [
   {
     id: "exploring",
     title: "Just exploring",
-    description: "A gentle first step into prayer, reading, and Orthodox watchfulness.",
+    description: "A gentle first step into prayer, reading, and watchfulness (nepsis).",
     icon: <Sun className="h-5 w-5" />,
   },
 ];
